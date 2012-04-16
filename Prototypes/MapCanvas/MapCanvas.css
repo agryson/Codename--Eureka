@@ -4,6 +4,16 @@
     left: 50%;
     margin-top: -350px;
     margin-left: -350px;
+    z-index: 1;
+}
+
+#borderPanel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -360px;
+    margin-left: -360px;
+    z-index: 1;
 }
 
 #map {
