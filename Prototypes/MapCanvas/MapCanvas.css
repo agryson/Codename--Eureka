@@ -1,0 +1,13 @@
+#mainPanel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -350px;
+    margin-left: -350px;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
