@@ -25,7 +25,7 @@ function keydown(e) {
 }
 
 
-function drawBack() {                                                           //this function is just a placeholder to give us a background
+function drawBack() {                                                           //this function is just a placeholder to give us a background on teh elements so we can see
     var backPanel = document.getElementById('borderPanel').getContext('2d');
     backPanel.fillStyle= "#00FF00";
     backPanel.fillRect(0,0,720,720);
