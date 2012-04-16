@@ -4,7 +4,6 @@
     left: 50%;
     margin-top: -350px;
     margin-left: -350px;
-    z-index: 1;
 }
 
 #borderPanel {
@@ -13,11 +12,11 @@
     left: 50%;
     margin-top: -360px;
     margin-left: -360px;
-    z-index: 1;
 }
 
 #map {
     position: absolute;
     top: 0;
     right: 0;
+    z-index: 1;
 }

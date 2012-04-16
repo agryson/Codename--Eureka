@@ -13,12 +13,32 @@ function init() {
     tile.onload = function() {
         drawZoomMap();
     };
+    document.onkeydown = keydown;
 }
 
-function drawBack() {
+/*detect when the up key is depressed and mark relevant var*/
+function keydown(e) {
+    if (e.keyCode == 38) {
+        drawZoomMap();
+    }
+
+}
+
+
+function drawBack() {                                                           //this function is just a placeholder to give us a background
     var backPanel = document.getElementById('borderPanel').getContext('2d');
-    backPanel.fillStyle="#555555";
-    backPanel.fillRect(0,0,710,710);
+    backPanel.fillStyle= "#00FF00";
+    backPanel.fillRect(0,0,720,720);
+    backPanel.beginPath();
+    backPanel.arc(360,350,350,0,Math.PI*2,true);
+    backPanel.fillStyle= "#000";
+    backPanel.fill();
+    map.fillStyle= "#FF0000";
+    map.fillRect(0,0,720,720);
+    map.beginPath();
+    map.arc(100,100,95,0,Math.PI*2,true);
+    map.fillStyle= "#000";
+    map.fill();
 }
 
 function drawTile(tileType, tilePosX, tilePosY) {
