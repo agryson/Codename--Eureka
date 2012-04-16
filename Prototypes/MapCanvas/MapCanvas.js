@@ -6,12 +6,12 @@ function init() {
     drawBack();
     sourceWidth = 400;
     sourceHeight = 346;
-    destinationWidth = 200;
-    destinationHeight = 173;
+    destinationWidth = 70; //If I want 13 tiles across... for s=35
+    destinationHeight = 61;
     tile = new Image();
     tile.src = 'images/tiles.png';
     tile.onload = function() {
-        mainLogic();
+        drawZoomMap();
     };
 }
 
@@ -21,7 +21,13 @@ function drawBack() {
     backPanel.fillRect(0,0,710,710);
 }
 
-function drawTile(tileType, tilePos) {
+function drawTile(tileType, tilePosX, tilePosY) {
+    destinationX = Math.floor(tilePosX*(destinationWidth*0.75));                //0.75 is the equivalent to h+s
+    if (tilePosX%2 !== 0) {                                                     //if the column is odd...
+        destinationY = Math.floor((tilePosY+1)*(destinationHeight));            //we need to displace it vertically
+    } else {                                                                    //if it’s even though
+	    destinationY = Math.floor(tilePosY*destinationHeight+destinationHeight/2);              //we just set the vertical displace normally
+    }
     switch (tileType) {
         case 1:
             sourceX = 0;
@@ -66,38 +72,55 @@ function drawTile(tileType, tilePos) {
         default:
             break;
     }
-    switch (tilePos) {
-        case 1:
-            destinationX = 0;
-            destinationY = 0;
-            break;
-        case 2:
-            destinationX = 300;
-            destinationY = 0;
-            break;
-        case 3:
-            destinationX = 600;
-            destinationY = 0;
-            break;
-        case 4:
-            destinationX = 150;
-            destinationY = 86;
-            break;
-        case 5:
-            destinationX = 450;
-            destinationY = 86;
-            break;
-        default:
-            break;
-    }
     mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
               destinationX, destinationY, destinationWidth, destinationHeight); 
 }
 
-function mainLogic() {
-    drawTile(1,1);
-    drawTile(3,2);
-    drawTile(4,3);
-    drawTile(8,4);
-    drawTile(5,5);
+function drawZoomMap() {
+    var i;
+    var j=0;
+    
+    for(i=3; i<10; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=2; i<11; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=1; i<12; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=1; i<12; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=0; i<13; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=0; i<13; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=1; i<12; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=2; i<11; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=2; i<11; i++) {
+        drawTile(randTile(),i,j);
+    }
+    j+=1;
+    for(i=4; i<9; i++) {
+        drawTile(randTile(),i,j);
+    }
+}
+
+function randTile() {
+    return Math.floor((Math.random()*9)+1);
 }
