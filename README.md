@@ -1,7 +1,7 @@
 *Codename: Eureka* is the working title for a rather ambitious project...
 
 The web is most certainly the future (and arguably the present) of computing, but when it comes to games there's still something lacking.
-The vast majority (arguably _all_) modern browser based games are what could be considered "causual", the type of game designed to be played for short periods of time, with little personal investment in the experience over a longer period of time.
+The vast majority (arguably _all_) modern browser based games are what could be considered "casual", the type of game designed to be played for short periods of time, with little personal investment in the experience over a longer period of time.
 While I love casual games, I also love marshmallows - that doesn't mean marshmallows should be all I eat.
 
 With *Codename: Eureka*, we on the team are hoping to provide a richer, more in-depth and engaging game.
