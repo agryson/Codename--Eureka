@@ -1,0 +1,28 @@
+#mainPanel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -350px;
+    margin-left: -350px;
+}
+
+#borderPanel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -360px;
+    margin-left: -360px;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+#mapOverlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+}
