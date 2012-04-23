@@ -1,151 +1,190 @@
-var mPanel, map, tile; //General page vars
-var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
+//TODO: clean up variable names, improve comments
+
+var mPanel, radar, radarLoc, map, tile, retX, retY, animate, radLimit, zoomMap; //General page vars
 
 //Set up any global stuff that won't ever change after page load
 function init() {
+    /*get the canvas contexts*/
     mPanel = document.getElementById('mainPanel').getContext('2d');
-    map = document.getElementById('map').getContext('2d');
+    radar = document.getElementById('map').getContext('2d');
+    radarLoc = document.getElementById('mapOverlay').getContext('2d');
+    
+    /*colour the canvases so we can see their relative sizes*/
     drawMockup();
-    sourceWidth = 400;                                                          //original tile width
-    sourceHeight = 346;                                                         //original tile height
-    destinationWidth = 70;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
-    destinationHeight = 61;                                                     //tile height on zoomMap
+    
+    /*create the zoomed map grid references for use later*/ 
+    zoomMap =new Array;
+    zoomMap = [
+    [3,10],
+    [2,11],
+    [1,12],
+    [1,12],
+    [0,13],
+    [0,13],
+    [1,12],
+    [2,11],
+    [2,11],
+    [4,9]
+    ];
+    
+    /*set any initial values we will need*/
+    retX=100;
+    retY=100;
+    animate=0;
+    radLimit=95;
+    
+    /*create the game's map*/
+    map = new Array(200);
+    createMap();
+
     tile = new Image();                                                         //create the spritesheet object
     tile.src = 'images/tiles.png';                                              //tell script where spritesheet is
     tile.onload = function() {                                                  //for some reason I need this to be an anonymous function... why?
         drawZoomMap();                                                          //draw the zoomMap
     };
-    document.onkeydown = keydown;                                               //key listener
+    
+    document.onkeydown = keydown;                                               //key listener 
+    drawLoc();
+    mainLoop();
+}
+
+/*the main game loop*/
+function mainLoop() {
+    if (animate==4){
+       animate = 0;
+    } else {
+        animate +=1;
+    }
+    drawZoomMap();
+     setTimeout(mainLoop, 200); //set the framerate here
 }
 
 /*detect when the up key is pressed*/
 function keydown(e) {
-    if (e.keyCode == 38) {
-        drawZoomMap();
+    if (e.keyCode == 38 && radius(retX,upY)<radLimit) {
+        move('up');
     }
+    drawLoc();
+}
 
+//shifts our reference reticule (if possible), then redraws the map
+function move(dir) {
+    var upY = retY-2;
+    var downY=retY+2;
+    var leftX=retX-2;
+    var rightX=retX+2;
+    
+    switch(dir) {
+        case 'up':
+	        if(radius(retX,upY)<radLimit) {
+	          retY = upY;
+          };
+          break;
+          
+        case 'down':
+        	 if(radius(retX,downY)<radLimit) {
+	         	retY = downY;
+          };
+          break;
+          
+        case 'left':
+        	 if(radius(leftX,retY)<radLimit) {
+	         	retX = leftX;
+          };
+          break;
+          
+        case 'right':
+        	 if(radius(rightX,retY)<radLimit) {
+	         	retX = rightX;
+          };
+          break;
+          
+        default:
+          break;
+  }
+  drawZoomMap();
+  drawLoc();
 }
 
 //this function is just a placeholder to give us a background on the elements so we can see placement
 function drawMockup() {
     var backPanel = document.getElementById('borderPanel').getContext('2d');
-    backPanel.fillStyle= "#00FF00";
+    backPanel.fillStyle= "#FF0000";
     backPanel.fillRect(0,0,720,720);
-    backPanel.beginPath();
-    backPanel.arc(360,350,350,0,Math.PI*2,true);
-    backPanel.fillStyle= "#000";
-    backPanel.fill();
-    map.fillStyle= "#FF0000";
-    map.fillRect(0,0,720,720);
-    map.beginPath();
-    map.arc(100,100,95,0,Math.PI*2,true);
-    map.fillStyle= "#000";
-    map.fill();
+    radar.beginPath();
+    radar.arc(100,100,100,0,Math.PI*2,true);
+    radar.fillStyle= "#000";
+    radar.fill();
 }
 
-//this function accepts the type of tile to draw, the x column number and the y column number
+//accepts the type of tile to draw, the x column number and the y column number, then draws it
 function drawTile(tileType, tilePosX, tilePosY) {
+	 	var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight, test; //Canvas vars
+	 	sourceWidth = 400;                                                          //original tile width
+   	sourceHeight = 346;                                                         //original tile height
+    	destinationWidth = 70;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
+    	destinationHeight = 61; 																						 //tile height on zoomMap                                                 
+    sourceX = animate*400;
+    sourceY = tileType*346;
     destinationX = Math.floor(tilePosX*(destinationWidth*0.75));                //0.75 is the equivalent to h+s
     if (tilePosX%2 !== 0) {                                                     //if the column is odd...
         destinationY = Math.floor((tilePosY+1)*(destinationHeight));            //we need to displace it vertically
     } else {                                                                    //if it’s even though
+
 	    destinationY = Math.floor(tilePosY*destinationHeight+destinationHeight/2);//we just set the vertical displace normally
     }
-    switch (tileType) {                                                         //we cut the desired tile out of the spritesheet here, this switch is likely to get VERY long!
-        case 1:
-            sourceX = 0;
-            sourceY = 0;
-            break;
-        case 2:
-            sourceX = 400;
-            sourceY = 0;
-            break;
-        case 3:
-            sourceX = 800;
-            sourceY = 0;
-            break;
-        case 4:
-            sourceX = 1200;
-            sourceY = 0;
-            break;
-        case 5:
-            sourceX = 1600;
-            sourceY = 0;
-            break;
-        case 6:
-            sourceX = 0;
-            sourceY = 346;
-            break;
-        case 7:
-            sourceX = 400;
-            sourceY = 346;
-            break;
-        case 8:
-            sourceX = 800;
-            sourceY = 346;
-            break;
-        case 9:
-            sourceX = 1200;
-            sourceY = 346;
-            break;
-        case 10:
-            sourceX = 1600;
-            sourceY = 346;
-            break;
-        default:
-            break;
-    }
+
     mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
               destinationX, destinationY, destinationWidth, destinationHeight); 
 }
 
-//this draws the tiles but will need to be changed when we're not in the prototype
+//creates the map
+function createMap() {
+	var x;
+	var y;
+	for(y=0;y<200;y++) {
+		map[y]=new Array(200); //create an array to hold the x cell, we now have a 200x200 2d array
+		for(x=0; x<200; x++) {
+			 map[y][x]=new Array(2); //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when i set tiles as objects
+			if(radius(x,y)<=100) { //check the radius, mark true if it's mapped, mark false if it's not in the circle
+				map[y][x][0]=true; //invert axes because referencing the array is not like referencing a graph
+				map[y][x][1]=randTile(); //if we're in the circle, assign a tile value
+			}else{
+				map[y][x][0]=false;
+			}
+		}
+	}
+}
+
+//returns the distance of the given point from the centrepoint
+function radius(xVal,yVal) {
+	 return Math.sqrt((xVal-100)*(xVal-100)+(yVal-100)*(yVal-100));
+}
+
+//this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile
 function drawZoomMap() {
-    var i;
-    var j=0;
-    
-    for(i=3; i<10; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=2; i<11; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=1; i<12; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=1; i<12; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=0; i<13; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=0; i<13; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=1; i<12; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=2; i<11; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=2; i<11; i++) {
-        drawTile(randTile(),i,j);
-    }
-    j+=1;
-    for(i=4; i<9; i++) {
-        drawTile(randTile(),i,j);
+    var j,k;
+    for(j=0;j<zoomMap.length;j++) {
+        k=zoomMap[j][0];
+        end=zoomMap[j][1];
+        while (k<end) {
+            drawTile(map[(retY+j-5)][(retX+k-6)][1],k,j);
+            k++;
+        }
     }
 }
 
 //This function just generates random tiles for us to test performance
 function randTile() {
-    return Math.floor((Math.random()*9)+1);
+    return Math.floor(Math.random()*2);
+}
+
+//draws the current location on the small radar map
+function drawLoc() {   
+    radarLoc.clearRect(0,0,200,200);
+    radarLoc.beginPath();
+    radarLoc.arc(retX,retY,7,0,Math.PI*2,true);
+    radarLoc.fillStyle= "#FFF";
+    radarLoc.fill();
+    radarLoc.closePath();
 }
