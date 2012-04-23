@@ -1,9 +1,9 @@
-//TODO: clean up variable names, improve comments
+//TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
 var mPanel, radar, radarLoc, map, zoomMap, tile, retX, retY, animate, radLimit; //General page vars
 var upY, downY, leftX, rightX;                                                  //movement vars
 
-//Set up any global stuff that won't ever change after page load
+/*Set up any global stuff that won't ever change after page load*/
 function init() {
     /*get the canvas contexts*/
     mPanel = document.getElementById('mainPanel').getContext('2d');
@@ -76,13 +76,13 @@ function keydown(e) {
             move('right');
             break;  
         default:
-            console.log("Uhm... that key doesn't do anything... " + e);
+            console.log("Uhm... that key doesn't do anything... ");
           break;
     }
     drawLoc();
 }
 
-//shifts our reference reticule (if possible), then redraws the map
+/*shifts our reference reticule (if possible), then redraws the map*/
 function move(dir) {
     upY = retY-2;
     downY = retY+2;
@@ -116,7 +116,7 @@ function move(dir) {
     drawLoc();
 }
 
-//this function is just a placeholder to give us a background on the elements so we can see placement
+/*this function is just a placeholder to give us a background on the elements so we can see placement*/
 function drawMockup() {
     var backPanel = document.getElementById('borderPanel').getContext('2d');
     backPanel.fillStyle= "#FF0000";
@@ -127,7 +127,7 @@ function drawMockup() {
     radar.fill();
 }
 
-//accepts the type of tile to draw, the x column number and the y column number, then draws it
+/*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
     sourceWidth = 400;                                                          //original tile width
@@ -148,17 +148,17 @@ function drawTile(tileType, tilePosX, tilePosY) {
               destinationX, destinationY, destinationWidth, destinationHeight); 
 }
 
-//creates the map
+/*creates the map*/
 function createMap() {
 	var x;
 	var y;
 	for(y=0;y<200;y++) {
-		map[y]=new Array(200); //create an array to hold the x cell, we now have a 200x200 2d array
+		map[y]=new Array(200);                                                  //create an array to hold the x cell, we now have a 200x200 2d array
 		for(x=0; x<200; x++) {
-            map[y][x]=new Array(2); //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when i set tiles as objects
-			if(radius(x,y)<=100) { //check the radius, mark true if it's mapped, mark false if it's not in the circle
-				map[y][x][0]=true; //invert axes because referencing the array is not like referencing a graph
-				map[y][x][1]=randTile(); //if we're in the circle, assign a tile value
+            map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when i set tiles as objects
+			if(radius(x,y)<=100) {                                              //check the radius, mark true if it's mapped, mark false if it's not in the circle
+				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
+				map[y][x][1]=randTile();                                        //if we're in the circle, assign a tile value
 			}else{
 				map[y][x][0]=false;
 			}
@@ -166,12 +166,12 @@ function createMap() {
 	}
 }
 
-//returns the distance of the given point from the centrepoint
+/*returns the distance of the given point from the centrepoint*/
 function radius(xVal,yVal) {
     return Math.sqrt((xVal-100)*(xVal-100)+(yVal-100)*(yVal-100));
 }
 
-//this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile
+/*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile*/
 function drawZoomMap() {
     var j,k,end;
     for(j=0;j<zoomMap.length;j++) {
@@ -184,12 +184,12 @@ function drawZoomMap() {
     }
 }
 
-//This function just generates random tiles for us to test performance
+/*This function just generates random tiles for us to test performance*/
 function randTile() {
     return Math.floor(Math.random()*2);
 }
 
-//draws the current location on the small radar map
+/*draws the current location on the small radar map*/
 function drawLoc() {   
     radarLoc.clearRect(0,0,200,200);
     radarLoc.beginPath();
