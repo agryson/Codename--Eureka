@@ -1,6 +1,7 @@
 //TODO: clean up variable names, improve comments
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
-var mPanel, radar, radarLoc, map, tile, retX, retY, animate, radLimit, zoomMap, upY, downY, leftX, rightX; //General page vars
+var mPanel, radar, radarLoc, map, zoomMap, tile, retX, retY, animate, radLimit; //General page vars
+var upY, downY, leftX, rightX;                                                  //movement vars
 
 //Set up any global stuff that won't ever change after page load
 function init() {
@@ -11,7 +12,7 @@ function init() {
     
     /*colour the canvases so we can see their relative sizes*/
     drawMockup();
-    
+
     /*create the zoomed map grid references for use later*/ 
     zoomMap =new Array(10);
     zoomMap = [
@@ -61,8 +62,22 @@ function mainLoop() {
 
 /*detect when the up key is pressed*/
 function keydown(e) {
-    if (e.keyCode == 38 && radius(retX,upY)<radLimit) {
-        move('up');
+    switch(e.keyCode) {
+        case 38:
+            move('up');
+            break;
+        case 40:
+            move('down');
+            break;         
+        case 37:
+            move('left');
+            break;         
+        case 39:
+            move('right');
+            break;  
+        default:
+            console.log("Uhm... that key doesn't do anything... " + e);
+          break;
     }
     drawLoc();
 }
@@ -73,37 +88,32 @@ function move(dir) {
     downY = retY+2;
     leftX = retX-2;
     rightX = retX+2;
-    
     switch(dir) {
         case 'up':
             if(radius(retX,upY)<radLimit) {
                 retY = upY;
-          }
-          break;
-          
+            }
+            break;         
         case 'down':
             if(radius(retX,downY)<radLimit) {
                 retY = downY;
-        }
-          break;
-          
+            }
+            break;         
         case 'left':
             if(radius(leftX,retY)<radLimit) {
                 retX = leftX;
             }
-          break;
-          
+            break;          
         case 'right':
             if(radius(rightX,retY)<radLimit) {
                 retX = rightX;
             }
-          break;
-          
+            break;         
         default:
-          break;
-  }
-  drawZoomMap();
-  drawLoc();
+            break;
+    }
+    drawZoomMap();
+    drawLoc();
 }
 
 //this function is just a placeholder to give us a background on the elements so we can see placement
