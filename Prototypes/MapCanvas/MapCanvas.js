@@ -236,3 +236,14 @@ function drawLoc() {
     radarLoc.fill();
     radarLoc.closePath();
 }
+
+function jump() {
+    var x = mouseX;
+    var y = mouseY;
+    
+    if (radius(x,y) < radLimit) {
+        retX = x;
+        retY = y;
+        drawLoc();
+    }
+}
