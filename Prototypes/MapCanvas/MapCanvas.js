@@ -1,11 +1,14 @@
 //TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
-var mPanel, radar, radarLoc, map, zoomMap, tile, retX, retY, animate, radLimit; //General page vars
+var mPanCanvas, radarCanvas, mPanel, radar, radarLoc, map, zoomMap, tile, retX, retY, animate, radLimit; //General page vars
 var upY, downY, leftX, rightX;                                                  //movement vars
+var mouseX, mouseY, mPanTrack, ovwTrack;                                                             //mouse trackers for main panel
 
 /*Set up any global stuff that won't ever change after page load*/
 function init() {
     /*get the canvas contexts*/
+    mPanCanvas = document.getElementById('mainPanel');
+    radarCanvas = document.getElementById('mapOverlay');
     mPanel = document.getElementById('mainPanel').getContext('2d');
     radar = document.getElementById('map').getContext('2d');
     radarLoc = document.getElementById('mapOverlay').getContext('2d');
@@ -44,7 +47,19 @@ function init() {
         drawZoomMap();                                                          //draw the zoomMap
     };
     
-    document.onkeydown = keydown;                                               //key listener 
+    document.onkeydown = keydown;                                               //key listener
+    
+    /*
+    * Event listeners track the mouse movements. 
+    * N.B.: You need to track on the topmost layer!!!
+    */
+    mPanCanvas.addEventListener('mousemove', function(evt){
+        getMousePos(mPanCanvas, evt);
+    }, false);
+    radarCanvas.addEventListener('mousemove', function(evt){
+        getMousePos(radarCanvas, evt);
+    }, false);
+    
     drawLoc();
     mainLoop();
 }
@@ -57,7 +72,8 @@ function mainLoop() {
         animate +=1;
     }
     drawZoomMap();
-     setTimeout(mainLoop, 200); //set the framerate here
+    console.log("x: " + mouseX + " y: " + mouseY + " mPanTrack = " + mPanTrack + " ovwTrack = " + ovwTrack);
+    setTimeout(mainLoop, 200); //set the framerate here
 }
 
 /*detect when the up key is pressed*/
@@ -80,6 +96,28 @@ function keydown(e) {
           break;
     }
     drawLoc();
+}
+
+function getMousePos(canvas, evt){
+    // get canvas position
+    var obj = canvas;
+    var top = 0;
+    var left = 0;
+    
+    while (obj && obj.tagName != 'BODY') {
+        top += obj.offsetTop;
+        left += obj.offsetLeft;
+        obj = obj.offsetParent;
+    }
+    
+    // return relative mouse position
+    mouseX = evt.clientX - left + window.pageXOffset;
+    mouseY = evt.clientY - top + window.pageYOffset;
+
+    return {
+        x: mouseX,
+        y: mouseY
+    };
 }
 
 /*shifts our reference reticule (if possible), then redraws the map*/
