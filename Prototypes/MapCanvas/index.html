@@ -11,16 +11,16 @@
 	</head>
 
 	<body onload="init()">
-        <canvas id="borderPanel" width="720" height="720">
+        <canvas id="mainPanel" width="700" height="700">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
-        <canvas id="mainPanel" width="700" height="700">
+        <canvas id="mPanOverlay" width="700" height="700" onmouseover="mPanTrack = true" onMouseOut="mPanTrack = false; drawmPanLoc();">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         <canvas id="map" width="200" height="200">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
-        <canvas id="mapOverlay" width="200" height="200">
+        <canvas id="mapOverlay" width="200" height="200" onclick="jump()">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
         <button onclick="move('up')">up</button>
