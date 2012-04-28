@@ -1,23 +1,21 @@
 //TODO: clean up variable names, remove mPanTrack value when testing is done?
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
-var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc, map, zoomMap, tile, retX, retY, animate, radLimit; //General page vars
+var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
+var map, zoomMap, tile, retX, retY, animate, radLimit;                          //hold info for various bits and bobs
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                             //mouse trackers for main panel
 
 /*Set up any global stuff that won't ever change after page load*/
 function init() {
-    
+    /*get the topmost canvases that we'll need*/
     mPanCanvas = document.getElementById('mPanOverlay');
     radarCanvas = document.getElementById('mapOverlay');
     
-    /*get the canvas contexts*/
+    /*get all the canvas contexts*/
     mPanel = document.getElementById('mainPanel').getContext('2d');
     mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
     radar = document.getElementById('map').getContext('2d');
     radarLoc = document.getElementById('mapOverlay').getContext('2d');
-    
-    /*draw the radar once on load*/
-    drawRadar();
 
     /*create the zoomed map grid references for use later*/ 
     zoomMap =new Array(10);
@@ -43,6 +41,9 @@ function init() {
     /*create the game's map*/
     map = new Array(200);
     createMap();
+    
+    /*draw the radar background once on load*/
+    drawRadar();
 
     tile = new Image();                                                         //create the spritesheet object
     tile.src = 'images/tiles.png';                                              //tell script where spritesheet is
@@ -252,7 +253,7 @@ function drawmPanLoc() {
     }
 }
 
-/*When teh radar is clicked, moves the map to that location*/
+/*When the radar is clicked, moves the map to that location*/
 function jump() {
     var x = mouseX;
     var y = mouseY;
