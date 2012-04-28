@@ -1,6 +1,6 @@
 //TODO: clean up variable names, remove mPanTrack value when testing is done?
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
-var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
+var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc, radarRad;                  //General canvas page vars
 var map, zoomMap, tile, retX, retY, animate, radLimit;                          //hold info for various bits and bobs
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                             //mouse trackers for main panel
@@ -33,10 +33,9 @@ function init() {
     ];
     
     /*set any initial values we will need*/
-    retX=100;
-    retY=100;
+    retX = retY = radarRad = 100;
     animate=0;
-    radLimit=95;
+    radLimit=radarRad-5;
     
     /*create the game's map*/
     map = new Array(200);
@@ -70,7 +69,7 @@ function init() {
 
 /*the main game loop*/
 function mainLoop() {
-    if (animate==4){
+    if (animate==1){        //the value here tells us how many frames to play (0 = 1 frame)
        animate = 0;
     } else {
         animate +=1;
@@ -163,7 +162,7 @@ function move(dir) {
 /*this function is just a placeholder to give us a background on the elements so we can see placement*/
 function drawRadar() {
     radar.beginPath();
-    radar.arc(100,100,100,0,Math.PI*2,true);
+    radar.arc(radarRad,radarRad,radarRad,0,Math.PI*2,true);
     radar.fillStyle= "#000";
     radar.fill();
 }
@@ -171,15 +170,15 @@ function drawRadar() {
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
-    sourceWidth = 400;                                                          //original tile width
-    sourceHeight = 346;                                                         //original tile height
+    sourceWidth = 346;                                                          //original tile width
+    sourceHeight = 400;                                                         //original tile height
     destinationWidth = 70;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
     destinationHeight = 61;                                                     //tile height on zoomMap                                                 
-    sourceX = animate*400;
-    sourceY = tileType*346;
-    destinationX = Math.floor(tilePosX*(destinationWidth*0.75));                //0.75 is the equivalent to h+s
+    sourceX = animate*346;
+    sourceY = tileType*400;
+    destinationX = Math.floor(tilePosX*(destinationWidth/2));                   //shift the tile horizontally by half
     if (tilePosX%2 !== 0) {                                                     //if the column is odd...
-        destinationY = Math.floor((tilePosY+1)*(destinationHeight));            //we need to displace it vertically
+        destinationY = Math.floor((tilePosY+1)*(destinationHeight*0.75));       //we need to displace it vertically
     } else {                                                                    //if it’s even though
 
         destinationY = Math.floor(tilePosY*destinationHeight+destinationHeight/2);//we just set the vertical displace normally
@@ -193,11 +192,11 @@ function drawTile(tileType, tilePosX, tilePosY) {
 function createMap() {
 	var x;
 	var y;
-	for(y=0;y<200;y++) {
-		map[y]=new Array(200);                                                  //create an array to hold the x cell, we now have a 200x200 2d array
-		for(x=0; x<200; x++) {
+	for(y=0;y<radarRad*2;y++) {
+		map[y]=new Array(radarRad*2);                                                  //create an array to hold the x cell, we now have a 200x200 2d array
+		for(x=0; x<radarRad*2; x++) {
             map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when i set tiles as objects
-			if(radius(x,y)<=100) {                                              //check the radius, mark true if it's mapped, mark false if it's not in the circle
+			if(radius(x,y)<=radarRad) {                                              //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]=randTile();                                        //if we're in the circle, assign a tile value
 			}else{
@@ -209,7 +208,7 @@ function createMap() {
 
 /*returns the distance of the given point from the centrepoint*/
 function radius(xVal,yVal) {
-    return Math.sqrt((xVal-100)*(xVal-100)+(yVal-100)*(yVal-100));
+    return Math.sqrt((xVal-radarRad)*(xVal-radarRad)+(yVal-radarRad)*(yVal-radarRad));
 }
 
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile*/
@@ -232,7 +231,7 @@ function randTile() {
 
 /*draws the current location on the small radar map*/
 function drawLoc() {   
-    radarLoc.clearRect(0,0,200,200);
+    radarLoc.clearRect(0,0,radarRad*2,radarRad*2);
     radarLoc.beginPath();
     radarLoc.arc(retX,retY,7,0,Math.PI*2,true);
     radarLoc.fillStyle= "#FFF";
@@ -241,7 +240,7 @@ function drawLoc() {
 }
 
 /*Draws a spot under the mouse pointer when on the main map, we'll later replace
-this with code to highlight the selected octagon*/
+this with code to highlight the selected hexagon*/
 function drawmPanLoc() {
     mPanLoc.clearRect(0,0,700,700);
     if (mPanTrack === true) {
@@ -254,13 +253,10 @@ function drawmPanLoc() {
 }
 
 /*When the radar is clicked, moves the map to that location*/
-function jump() {
-    var x = mouseX;
-    var y = mouseY;
-    
-    if (radius(x,y) < radLimit) {
-        retX = x;
-        retY = y;
+function jump() {    
+    if (radius(mouseX,mouseY) < radLimit) {
+        retX = mouseX;
+        retY = mouseY;
         drawLoc();
     }
 }
