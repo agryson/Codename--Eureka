@@ -1,13 +1,13 @@
 //TODO: clean up variable names, remove mPanTrack value when testing is done?
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-var map, zoomMap, tile, retX, retY, animate, radLimit;                          //hold info for various bits and bobs
+var map, zoomMap, tile, retX, retY, animate, radLimit, radarRad;                          //hold info for various bits and bobs
 var upY, downY, leftX, rightX;                                                  //movement vars
-var mouseX, mouseY, mPanTrack;                                                             //mouse trackers for main panel
+var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
 /*Set up any global stuff that won't ever change after page load*/
 function init() {
-    /*get the topmost canvases that we'll need*/
+    /*get the topmost canvases that we'll need for mouse tracking*/
     mPanCanvas = document.getElementById('mPanOverlay');
     radarCanvas = document.getElementById('mapOverlay');
     
@@ -36,7 +36,7 @@ function init() {
     retX=100;
     retY=100;
     animate=0;
-    radLimit=95;
+    radLimit=radarRad-5;
     
     /*create the game's map*/
     map = new Array(200);
@@ -171,18 +171,18 @@ function drawRadar() {
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
-    sourceWidth = 400;                                                          //original tile width
-    sourceHeight = 346;                                                         //original tile height
+    sourceWidth = 346/2;                                                          //original tile width
+    sourceHeight = 200;                                                         //original tile height
     destinationWidth = 70;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
     destinationHeight = 61;                                                     //tile height on zoomMap                                                 
-    sourceX = animate*400;
-    sourceY = tileType*346;
-    destinationX = Math.floor(tilePosX*(destinationWidth*0.75));                //0.75 is the equivalent to h+s
-    if (tilePosX%2 !== 0) {                                                     //if the column is odd...
-        destinationY = Math.floor((tilePosY+1)*(destinationHeight));            //we need to displace it vertically
+    sourceX = animate*(346/2);
+    sourceY = tileType*200;
+    destinationX = Math.floor(tilePosX*(destinationWidth/2));                   //shift it by r
+    if (tilePosX%2 === 0) {                                                     //if the column is odd...
+        destinationY = Math.floor((tilePosY)*(destinationHeight*0.75));         //we need to displace it vertically
     } else {                                                                    //if it’s even though
 
-        destinationY = Math.floor(tilePosY*destinationHeight+destinationHeight/2);//we just set the vertical displace normally
+        destinationY = Math.floor(tilePosY*destinationHeight/*+destinationHeight/2*/);//we just set the vertical displace normally
     }
 
     mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
@@ -214,13 +214,13 @@ function radius(xVal,yVal) {
 
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile*/
 function drawZoomMap() {
-    var j,k,end;
-    for(j=0;j<zoomMap.length;j++) {
-        k=zoomMap[j][0];
-        end=zoomMap[j][1];
-        while (k<end) {
-            drawTile(map[(retY+j-5)][(retX+k-6)][1],k,j);
-            k++;
+    var y,x,end;
+    for(y=0;y<zoomMap.length;y++) {
+        x=zoomMap[y][0];
+        end=zoomMap[y][1];
+        while (x<end) {
+            drawTile(map[(retY+y-5)][(retX+x-6)][1],x,y);
+            x++;
         }
     }
 }
@@ -232,7 +232,7 @@ function randTile() {
 
 /*draws the current location on the small radar map*/
 function drawLoc() {   
-    radarLoc.clearRect(0,0,200,200);
+    radarLoc.clearRect(0,0,radarRad*2,radarRad*2);
     radarLoc.beginPath();
     radarLoc.arc(retX,retY,7,0,Math.PI*2,true);
     radarLoc.fillStyle= "#FFF";
@@ -241,7 +241,7 @@ function drawLoc() {
 }
 
 /*Draws a spot under the mouse pointer when on the main map, we'll later replace
-this with code to highlight the selected octagon*/
+this with code to highlight the selected hexagon*/
 function drawmPanLoc() {
     mPanLoc.clearRect(0,0,700,700);
     if (mPanTrack === true) {
