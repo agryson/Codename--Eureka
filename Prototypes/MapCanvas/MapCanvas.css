@@ -1,4 +1,4 @@
-#mainPanel {
+#mainPanel, #mPanOverlay {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -6,23 +6,9 @@
     margin-left: -350px;
 }
 
-#mPanOverlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: -360px;
-    margin-left: -360px;
-}
-
-#map {
+#map, #mapOverlay {
     position: absolute;
     top: 0;
     right: 0;
     z-index: 1;
-}
-#mapOverlay {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 2;
 }
