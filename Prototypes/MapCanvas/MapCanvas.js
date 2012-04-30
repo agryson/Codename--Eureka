@@ -1,7 +1,7 @@
-//TODO: clean up variable names, remove mPanTrack value when testing is done?
+//TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-var map, zoomMap, tile, retX, retY, animate, radLimit, radarRad;                          //hold info for various bits and bobs
+var map, zoomMap, tile, retX, retY, animate, radLimit, radarRad;                //hold info for various bits and bobs
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
@@ -33,10 +33,11 @@ function init() {
     ];
     
     /*set any initial values we will need*/
-    retX=100;
-    retY=100;
+    radarRad = 100;
+    retX = radarRad;
+    retY = radarRad;
     animate=0;
-    radLimit=radarRad-5;
+    radLimit=radarRad-6;
     
     /*create the game's map*/
     map = new Array(200);
@@ -70,7 +71,7 @@ function init() {
 
 /*the main game loop*/
 function mainLoop() {
-    if (animate==4){
+    if (animate==1){
        animate = 0;
     } else {
         animate +=1;
@@ -182,7 +183,7 @@ function drawTile(tileType, tilePosX, tilePosY) {
         destinationY = Math.floor((tilePosY)*(destinationHeight*0.75));         //we need to displace it vertically
     } else {                                                                    //if it’s even though
 
-        destinationY = Math.floor(tilePosY*destinationHeight/*+destinationHeight/2*/);//we just set the vertical displace normally
+        destinationY = Math.floor(tilePosY*destinationHeight+destinationHeight/2);//we just set the vertical displace normally
     }
 
     mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
