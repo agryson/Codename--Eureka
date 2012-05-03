@@ -20,19 +20,19 @@ function init() {
     /*create the zoomed map grid references for use later*/ 
     zoomMap =new Array(13);
     zoomMap = [
-    [2,10],
-    [1,10],
+    [3,9],
+    [2,9],
+    [1,11],
+    [0,11],
     [1,11],
     [0,11],
     [0,12],
     [0,11],
-    [0,12],
-    [0,11],
-    [0,12],
+    [1,11],
     [0,11],
     [1,11],
-    [1,10],
-    [2,10]
+    [2,9],
+    [3,9]
     ];
     
     /*set any initial values we will need*/
