@@ -248,7 +248,7 @@ function drawLoc() {
 /*Draws a spot under the mouse pointer when on the main map, we'll later replace
 this with code to highlight the selected hexagon*/
 function drawmPanLoc() {
-    mPanLoc.clearRect(0,0,700,700);
+    mPanLoc.clearRect(0,0,720,720);
     if (mPanTrack === true) {
         mPanLoc.beginPath();
         mPanLoc.arc(mouseX,mouseY,7,0,Math.PI*2,true);
