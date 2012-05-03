@@ -40,7 +40,7 @@ function init() {
     retX = radarRad;
     retY = radarRad;
     animate=0;
-    radLimit=radarRad-6;
+    radLimit=radarRad-8;
     
     /*create the game's map*/
     map = new Array(200);
