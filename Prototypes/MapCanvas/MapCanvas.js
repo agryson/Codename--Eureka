@@ -1,13 +1,15 @@
-//TODO: clean up variable names, remove mPanTrack value when testing is done?
+//TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-var map, zoomMap, tile, retX, retY, animate, radLimit, radarRad;                          //hold info for various bits and bobs
+
+var map, zoomMap, tile, retX, retY, animate, radLimit, radarRad;                //hold info for various bits and bobs
+
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
 /*Set up any global stuff that won't ever change after page load*/
 function init() {
-    /*get the topmost canvases that we'll need*/
+    /*get the topmost canvases that we'll need for mouse tracking*/
     mPanCanvas = document.getElementById('mPanOverlay');
     radarCanvas = document.getElementById('mapOverlay');
     
@@ -18,29 +20,29 @@ function init() {
     radarLoc = document.getElementById('mapOverlay').getContext('2d');
 
     /*create the zoomed map grid references for use later*/ 
-    zoomMap =new Array(10);
+    zoomMap =new Array(13);
     zoomMap = [
-    [3,10],
-    [2,11],
-    [1,12],
-    [1,12],
-    [0,13],
-    [0,13],
-    [1,12],
-    [2,11],
-    [2,11],
-    [4,9]
+    [2,10],
+    [1,10],
+    [1,11],
+    [0,11],
+    [0,12],
+    [0,11],
+    [0,12],
+    [0,11],
+    [0,12],
+    [0,11],
+    [1,11],
+    [1,10],
+    [2,10]
     ];
     
     /*set any initial values we will need*/
     radarRad = 100;
-    retX=radarRad;
-    retY=radarRad;
+    retX = radarRad;
+    retY = radarRad;
     animate=0;
-    radLimit= radarRad - 5;
-    
-    /*draw the radar once on load*/
-    drawRadar();
+    radLimit=radarRad-8;
     
     /*create the game's map*/
     map = new Array(radarRad*2);
@@ -74,7 +76,7 @@ function init() {
 
 /*the main game loop*/
 function mainLoop() {
-    if (animate==4){
+    if (animate==1){
        animate = 0;
     } else {
         animate +=1;
@@ -134,8 +136,8 @@ function getMousePos(canvas, evt){
 function move(dir) {
     upY = retY-2;
     downY = retY+2;
-    leftX = retX-2;
-    rightX = retX+2;
+    leftX = retX-1;
+    rightX = retX+1;
     switch(dir) {
         case 'up':
             if(radius(retX,upY)<radLimit) {
@@ -175,18 +177,18 @@ function drawRadar() {
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
-    sourceWidth = 400;                                                          //original tile width
-    sourceHeight = 346;                                                         //original tile height
-    destinationWidth = 70;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
-    destinationHeight = 61;                                                     //tile height on zoomMap                                                 
-    sourceX = animate*400;
-    sourceY = tileType*346;
-    destinationX = Math.floor(tilePosX*(destinationWidth*0.75));                //0.75 is the equivalent to h+s
-    if (tilePosX%2 !== 0) {                                                     //if the column is odd...
-        destinationY = Math.floor((tilePosY+1)*(destinationHeight));            //we need to displace it vertically
+    sourceWidth = 346;                                                          //original tile width
+    sourceHeight = 400;                                                         //original tile height
+    destinationWidth = 60;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
+    destinationHeight = 70;                                                     //tile height on zoomMap                                                 
+    sourceX = animate*346;
+    sourceY = tileType*400;
+    destinationY = Math.floor(tilePosY*destinationWidth*0.88);                   //shift it by r
+    if (tilePosY%2 === 0) {                                                     //if the column is odd...
+        destinationX = Math.floor(tilePosX*destinationWidth);             //we need to displace it vertically
     } else {                                                                    //if it’s even though
 
-        destinationY = Math.floor(tilePosY*destinationHeight+destinationHeight/2);//we just set the vertical displace normally
+        destinationX = Math.floor(tilePosX*destinationWidth+destinationWidth/2);//we just set the vertical displace normally
     }
 
     mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
@@ -218,13 +220,13 @@ function radius(xVal,yVal) {
 
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile*/
 function drawZoomMap() {
-    var j,k,end;
-    for(j=0;j<zoomMap.length;j++) {
-        k=zoomMap[j][0];
-        end=zoomMap[j][1];
-        while (k<end) {
-            drawTile(map[(retY+j-5)][(retX+k-6)][1],k,j);
-            k++;
+    var y,x,end;
+    for(y=0;y<zoomMap.length;y++) {
+        x=zoomMap[y][0];
+        end=zoomMap[y][1];
+        while (x<end) {
+            drawTile(map[(retY+y-5)][(retX+x-6)][1],x,y);
+            x++;
         }
     }
 }
@@ -245,7 +247,7 @@ function drawLoc() {
 }
 
 /*Draws a spot under the mouse pointer when on the main map, we'll later replace
-this with code to highlight the selected octagon*/
+this with code to highlight the selected hexagon*/
 function drawmPanLoc() {
     mPanLoc.clearRect(0,0,700,700);
     if (mPanTrack === true) {
