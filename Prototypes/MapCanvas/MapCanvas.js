@@ -22,14 +22,15 @@ function init() {
     zoomMap = [
     [3,10],
     [2,11],
-    [1,12],
+    //[1,12],
     [1,12],
     [0,13],
-    [0,13],
+    //[0,13],
     [1,12],
     [2,11],
-    [2,11],
-    [4,9]
+    //[2,11],
+    //[4,9]
+    [3,10]
     ];
     
     /*set any initial values we will need*/
@@ -172,18 +173,18 @@ function drawRadar() {
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
-    sourceWidth = 346/2;                                                          //original tile width
-    sourceHeight = 200;                                                         //original tile height
+    sourceWidth = 346;                                                          //original tile width
+    sourceHeight = 400;                                                         //original tile height
     destinationWidth = 70;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
     destinationHeight = 61;                                                     //tile height on zoomMap                                                 
-    sourceX = animate*(346/2);
-    sourceY = tileType*200;
-    destinationX = Math.floor(tilePosX*(destinationWidth/2));                   //shift it by r
+    sourceX = animate*346;
+    sourceY = tileType*400;
+    destinationX = Math.floor(tilePosX*destinationWidth/2);                   //shift it by r
     if (tilePosX%2 === 0) {                                                     //if the column is odd...
-        destinationY = Math.floor((tilePosY)*(destinationHeight*0.75));         //we need to displace it vertically
+        destinationY = Math.floor(tilePosY*destinationHeight*1.5);             //we need to displace it vertically
     } else {                                                                    //if it’s even though
 
-        destinationY = Math.floor(tilePosY*destinationHeight+destinationHeight/2);//we just set the vertical displace normally
+        destinationY = Math.floor(tilePosY*destinationHeight*1.5+destinationHeight*0.75);//we just set the vertical displace normally
     }
 
     mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
