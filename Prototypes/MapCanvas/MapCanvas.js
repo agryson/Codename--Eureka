@@ -18,19 +18,21 @@ function init() {
     radarLoc = document.getElementById('mapOverlay').getContext('2d');
 
     /*create the zoomed map grid references for use later*/ 
-    zoomMap =new Array(10);
+    zoomMap =new Array(13);
     zoomMap = [
-    [3,10],
-    [2,11],
-    //[1,12],
-    [1,12],
-    [0,13],
-    //[0,13],
-    [1,12],
-    [2,11],
-    //[2,11],
-    //[4,9]
-    [3,10]
+    [2,8],
+    [1,8],
+    [1,9],
+    [0,9],
+    [0,10],
+    [0,9],
+    [0,10],
+    [0,9],
+    [0,10],
+    [0,9],
+    [1,9],
+    [1,8],
+    [2,8]
     ];
     
     /*set any initial values we will need*/
@@ -132,8 +134,8 @@ function getMousePos(canvas, evt){
 function move(dir) {
     upY = retY-2;
     downY = retY+2;
-    leftX = retX-2;
-    rightX = retX+2;
+    leftX = retX-1;
+    rightX = retX+1;
     switch(dir) {
         case 'up':
             if(radius(retX,upY)<radLimit) {
@@ -175,16 +177,16 @@ function drawTile(tileType, tilePosX, tilePosY) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
     sourceWidth = 346;                                                          //original tile width
     sourceHeight = 400;                                                         //original tile height
-    destinationWidth = 70;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
-    destinationHeight = 61;                                                     //tile height on zoomMap                                                 
+    destinationWidth = 60;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
+    destinationHeight = 70;                                                     //tile height on zoomMap                                                 
     sourceX = animate*346;
     sourceY = tileType*400;
-    destinationX = Math.floor(tilePosX*destinationWidth/2);                   //shift it by r
-    if (tilePosX%2 === 0) {                                                     //if the column is odd...
-        destinationY = Math.floor(tilePosY*destinationHeight*1.5);             //we need to displace it vertically
+    destinationY = Math.floor(tilePosY*destinationWidth*0.88);                   //shift it by r
+    if (tilePosY%2 === 0) {                                                     //if the column is odd...
+        destinationX = Math.floor(tilePosX*destinationWidth);             //we need to displace it vertically
     } else {                                                                    //if it’s even though
 
-        destinationY = Math.floor(tilePosY*destinationHeight*1.5+destinationHeight*0.75);//we just set the vertical displace normally
+        destinationX = Math.floor(tilePosX*destinationWidth+destinationWidth/2);//we just set the vertical displace normally
     }
 
     mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
