@@ -1,3 +1,7 @@
+body {
+    background: #191919;   
+}
+
 #mainPanel, #mPanOverlay {
     position: fixed;
     top: 50%;

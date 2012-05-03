@@ -218,6 +218,7 @@ function radius(xVal,yVal) {
 
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile*/
 function drawZoomMap() {
+    mPanel.clearRect(0,0,720,720);
     var y,x,end;
     for(y=0;y<zoomMap.length;y++) {
         x=zoomMap[y][0];
