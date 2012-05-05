@@ -347,3 +347,15 @@ function jump() {
         drawLoc();
     }
 }
+
+//testing how to write to main map array
+function clickTest() {
+    var type = map[(retY+getTile('y')-5)][(retX+getTile('x')-6)][1];
+    if (type === 0) {
+        type = 1;
+    } else {
+        type = 0;
+    }
+    map[(retY+getTile('y')-5)][(retX+getTile('x')-6)][1] = type;
+    drawZoomMap();
+}
