@@ -43,7 +43,7 @@ function init() {
     radLimit=radarRad-8;
     
     /*create the game's map*/
-    map = new Array(200);
+    map = new Array(radarRad*2);
     createMap();
     
     /*draw the radar background once on load*/
@@ -197,11 +197,11 @@ function drawTile(tileType, tilePosX, tilePosY) {
 function createMap() {
 	var x;
 	var y;
-	for(y=0;y<200;y++) {
-		map[y]=new Array(200);                                                  //create an array to hold the x cell, we now have a 200x200 2d array
-		for(x=0; x<200; x++) {
+	for(y=0;y<radarRad*2;y++) {
+		map[y]=new Array(radarRad*2);                                                  //create an array to hold the x cell, we now have a 200x200 2d array
+		for(x=0; x<radarRad*2; x++) {
             map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when i set tiles as objects
-			if(radius(x,y)<=100) {                                              //check the radius, mark true if it's mapped, mark false if it's not in the circle
+			if(radius(x,y)<=radarRad) {                                              //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]=randTile();                                        //if we're in the circle, assign a tile value
 			}else{
@@ -213,7 +213,7 @@ function createMap() {
 
 /*returns the distance of the given point from the centrepoint*/
 function radius(xVal,yVal) {
-    return Math.sqrt((xVal-100)*(xVal-100)+(yVal-100)*(yVal-100));
+    return Math.sqrt((xVal-radarRad)*(xVal-radarRad)+(yVal-radarRad)*(yVal-radarRad));
 }
 
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile*/
@@ -248,7 +248,7 @@ function drawLoc() {
 /*Draws a spot under the mouse pointer when on the main map, we'll later replace
 this with code to highlight the selected hexagon*/
 function drawmPanLoc() {
-    mPanLoc.clearRect(0,0,700,700);
+    mPanLoc.clearRect(0,0,720,720);
     if (mPanTrack === true) {
         mPanLoc.beginPath();
         mPanLoc.arc(mouseX,mouseY,7,0,Math.PI*2,true);
@@ -262,7 +262,10 @@ function drawmPanLoc() {
 function jump() {
     var x = mouseX;
     var y = mouseY;
-    
+    //ensure we're dealing with a multiple of two (since we move up and down in twos)
+    if (y%2 !== 0) {
+        y -= 1;
+    }
     if (radius(x,y) < radLimit) {
         retX = x;
         retY = y;
