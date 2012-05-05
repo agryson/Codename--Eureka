@@ -268,6 +268,14 @@ function drawLoc() {
 /*Highlights the appropriate hexagon when the mouse is over it*/
 function drawmPanLoc() {
     mPanLoc.clearRect(0,0,720,720);
+
+    if (mPanTrack === true) {
+        drawTile(1,getTile('x'),getTile('y'),true);                             //send our reference, with the optional "true" to tell drawTile that we want a hgihlight
+    }
+}
+
+/*Get the tile x or y value for the tile the mouse is currently over*/
+function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
     
     //set the general cases
@@ -317,9 +325,10 @@ function drawmPanLoc() {
         }
 
     }
-    
-    if (mPanTrack === true) {
-        drawTile(1,x,y,true);                                                   //Finally! send our reference, with the optional "true" to tell drawTile that we want a hgihlight
+    if(axis === 'x') {                                                          //return the appropriate tile axis reference
+        return x;
+    } else {
+        return y;
     }
 }
 
