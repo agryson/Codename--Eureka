@@ -1,7 +1,7 @@
 //TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-var map, zoomMap, tile, retX, retY, animate, radLimit, radarRad;                //hold info for various bits and bobs
+var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad;                //hold info for various bits and bobs
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
@@ -51,10 +51,10 @@ function init() {
 
     tile = new Image();                                                         //create the spritesheet object
     tile.src = 'images/tiles.png';                                              //tell script where spritesheet is
-    tile.onload = function() {                                                  //for some reason I need this to be an anonymous function... why?
-        drawZoomMap();                                                          //draw the zoomMap
-    };
-    
+
+    tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
+    tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
+
     document.onkeydown = keydown;                                               //keyboard listener
     
     /*
@@ -173,24 +173,41 @@ function drawRadar() {
 }
 
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
-function drawTile(tileType, tilePosX, tilePosY) {
-    var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
-    sourceWidth = 346;                                                          //original tile width
-    sourceHeight = 400;                                                         //original tile height
-    destinationWidth = 60;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
-    destinationHeight = 70;                                                     //tile height on zoomMap                                                 
-    sourceX = animate*346;
-    sourceY = tileType*400;
-    destinationY = Math.floor(tilePosY*destinationWidth*0.88);                   //shift it by r
-    if (tilePosY%2 === 0) {                                                     //if the column is odd...
-        destinationX = Math.floor(tilePosX*destinationWidth);             //we need to displace it vertically
-    } else {                                                                    //if it’s even though
-
-        destinationX = Math.floor(tilePosX*destinationWidth+destinationWidth/2);//we just set the vertical displace normally
-    }
-
-    mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
-              destinationX, destinationY, destinationWidth, destinationHeight); 
+function drawTile(tileType, tilePosX, tilePosY, highlight) {
+    try
+        {if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
+            //this if checks to make sure we requested a tile we can draw, mainly to prevent highlighting outside of the map
+        } else {
+            var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
+            sourceWidth = 346;                                                          //original tile width
+            sourceHeight = 400;                                                         //original tile height
+            destinationWidth = 60;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
+            destinationHeight = 70;                                                     //tile height on zoomMap                                                 
+            destinationY = Math.floor(tilePosY*destinationWidth*0.88);                   //shift it by r
+                
+                if (tilePosY%2 === 0) {                                                     //if the column is odd...
+                    destinationX = Math.floor(tilePosX*destinationWidth);             //we need to displace it vertically
+                } else {                                                                    //if it’s even though
+        
+                    destinationX = Math.floor(tilePosX*destinationWidth+destinationWidth/2);//we just set the vertical displace normally
+                }
+                
+            if (highlight === true){
+                // INSERT HIGHLIGHT CODE
+                sourceX = 0;
+                sourceY = 0;
+                        
+                mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight,
+                      destinationX, destinationY, destinationWidth, destinationHeight);
+            } else {
+                sourceX = animate*346;
+                sourceY = tileType*400;
+        
+                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
+                      destinationX, destinationY, destinationWidth, destinationHeight);
+            }
+        }    
+    } catch(e){}
 }
 
 /*creates the map*/
@@ -249,12 +266,56 @@ function drawLoc() {
 this with code to highlight the selected hexagon*/
 function drawmPanLoc() {
     mPanLoc.clearRect(0,0,720,720);
+    var x, yDiff;
+    var y = Math.floor(mouseY/(70*0.75));
+    
+    if (y%2 !== 0) {
+        x = Math.floor((mouseX-30)/60);
+    } else {
+        x = Math.floor(mouseX/60);
+    }
+    
+    //corner case code
+    yDiff = (mouseY/(70*0.75))-y;
+    if (yDiff < 0.33) {
+        //tells which intermediate block we're in...
+        var xDiff, left, right;
+        if (y%2 !== 0) {
+            xDiff = (((mouseX-30)/60)-x);
+            //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
+            if(xDiff<0.5) {
+                left=0.5-xDiff;
+                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {                  //I multiply by 10 so that I'm not dealing with numbers less than 1 
+                    y -=1;
+                }
+            } else {
+                right = xDiff-0.5;
+                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                    x += 1;
+                }
+            }
+            
+        } else {
+            xDiff = ((mouseX/60)-x);
+            if(xDiff<0.5) {
+                left=0.5-xDiff;
+                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                    x -= 1;
+                }
+            } else {
+                right = xDiff-0.5;
+                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                }
+            }
+        }
+
+    }
+    
     if (mPanTrack === true) {
-        mPanLoc.beginPath();
-        mPanLoc.arc(mouseX,mouseY,7,0,Math.PI*2,true);
-        mPanLoc.fillStyle= "#FFF";
-        mPanLoc.fill();
-        mPanLoc.closePath();
+        drawTile(1,x,y,true);
     }
 }
 
