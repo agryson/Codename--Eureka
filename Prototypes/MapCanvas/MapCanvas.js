@@ -266,13 +266,51 @@ function drawLoc() {
 this with code to highlight the selected hexagon*/
 function drawmPanLoc() {
     mPanLoc.clearRect(0,0,720,720);
-    var x;
+    var x, yDiff;
     var y = Math.floor(mouseY/(70*0.75));
     
     if (y%2 !== 0) {
         x = Math.floor((mouseX-30)/60);
     } else {
         x = Math.floor(mouseX/60);
+    }
+    
+    //corner case code
+    yDiff = (mouseY/(70*0.75))-y;
+    if (yDiff < 0.33) {
+        //tells which intermediate block we're in...
+        var xDiff, left, right;
+        if (y%2 !== 0) {
+            xDiff = (((mouseX-30)/60)-x);
+            
+            if(xDiff<0.5) {
+                left=0.5-xDiff;
+                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                }
+            } else {
+                right = xDiff-0.5;
+                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                    x += 1;
+                }
+            }
+        } else {
+            xDiff = ((mouseX/60)-x);
+            if(xDiff<0.5) {
+                left=0.5-xDiff;
+                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                    x -= 1;
+                }
+            } else {
+                right = xDiff-0.5;
+                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                }
+            }
+        }
+
     }
     
     if (mPanTrack === true) {
