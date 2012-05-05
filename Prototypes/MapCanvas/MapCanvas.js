@@ -1,7 +1,7 @@
 //TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad;                //hold info for various bits and bobs
+var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad; //hold info for various bits and bobs
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
@@ -36,7 +36,7 @@ function init() {
     ];
     
     /*set any initial values we will need*/
-    radarRad = 100;
+    radarRad = 100;                                                             //this is the radius of the map that we want, changing it here should change it everywhere except the html
     retX = radarRad;
     retY = radarRad;
     animate=0;
@@ -74,16 +74,16 @@ function init() {
 
 /*the main game loop*/
 function mainLoop() {
-    if (animate==1){
+    if (animate==1){                                                            //number of frames = n+1
        animate = 0;
     } else {
         animate +=1;
     }
     drawZoomMap();
-    setTimeout(mainLoop, 200); //set the framerate here
+    setTimeout(mainLoop, radarRad*2);                                           //set the framerate here
 }
 
-/*detect when the up key is pressed*/
+/*detect when an arrow key is pressed and move accordingly*/
 function keydown(e) {
     switch(e.keyCode) {
         case 38:
@@ -164,50 +164,52 @@ function move(dir) {
     drawLoc();
 }
 
-/*this function is just a placeholder to give us a background on the elements so we can see placement*/
+/*a placeholder to fill in our radar*/
 function drawRadar() {
     radar.beginPath();
-    radar.arc(100,100,100,0,Math.PI*2,true);
-    radar.fillStyle= "#000";
+    radar.arc(radarRad,radarRad,radarRad,0,Math.PI*2,true);
+    radar.fillStyle= "#138A0C";
     radar.fill();
 }
 
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY, highlight) {
-    try
-        {if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
-            //this if checks to make sure we requested a tile we can draw, mainly to prevent highlighting outside of the map
+    try {
+        if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
+            //this if checks to make sure we requested a tile we can draw, 
+            //mainly to prevent highlighting outside of the map
         } else {
-            var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
-            sourceWidth = 346;                                                          //original tile width
-            sourceHeight = 400;                                                         //original tile height
-            destinationWidth = 60;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
-            destinationHeight = 70;                                                     //tile height on zoomMap                                                 
-            destinationY = Math.floor(tilePosY*destinationWidth*0.88);                   //shift it by r
+            var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, 
+                destinationY, destinationWidth, destinationHeight;              //Canvas vars
+            sourceWidth = 346;                                                  //original tile width
+            sourceHeight = 400;                                                 //original tile height
+            destinationWidth = 60;                                              //tile width on zoomMap... If I want 13 tiles across... for s=35
+            destinationHeight = 70;                                             //tile height on zoomMap                                                 
+            destinationY = Math.floor(tilePosY*destinationWidth*0.88);          //shift it, the number here is a constant that depends ont eh hexagon deformation
                 
-                if (tilePosY%2 === 0) {                                                     //if the column is odd...
-                    destinationX = Math.floor(tilePosX*destinationWidth);             //we need to displace it vertically
-                } else {                                                                    //if it’s even though
+                if (tilePosY%2 === 0) {                                         //if the row is even...
+                    destinationX = Math.floor(tilePosX*destinationWidth);       //we set its X normally
+                } else {                                                        //if it’s odd though
         
-                    destinationX = Math.floor(tilePosX*destinationWidth+destinationWidth/2);//we just set the vertical displace normally
+                    destinationX = Math.floor(tilePosX*destinationWidth + 
+                                    destinationWidth/2);                        //we need a little bit of displacement
                 }
                 
-            if (highlight === true){
-                // INSERT HIGHLIGHT CODE
+            if (highlight === true){                                            //highlight is an optional parameter to see which canvas to draw to and how
                 sourceX = 0;
-                sourceY = 0;
-                        
+                sourceY = 0;        
                 mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight,
                       destinationX, destinationY, destinationWidth, destinationHeight);
             } else {
                 sourceX = animate*346;
                 sourceY = tileType*400;
-        
                 mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
                       destinationX, destinationY, destinationWidth, destinationHeight);
             }
         }    
-    } catch(e){}
+    } catch(e){
+        //Do Nothing, we expect this error... unfortunately
+    }
 }
 
 /*creates the map*/
@@ -215,10 +217,10 @@ function createMap() {
 	var x;
 	var y;
 	for(y=0;y<radarRad*2;y++) {
-		map[y]=new Array(radarRad*2);                                                  //create an array to hold the x cell, we now have a 200x200 2d array
+		map[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
 		for(x=0; x<radarRad*2; x++) {
-            map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when i set tiles as objects
-			if(radius(x,y)<=radarRad) {                                              //check the radius, mark true if it's mapped, mark false if it's not in the circle
+            map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
+			if(radius(x,y)<=radarRad) {                                         //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]=randTile();                                        //if we're in the circle, assign a tile value
 			}else{
@@ -233,7 +235,7 @@ function radius(xVal,yVal) {
     return Math.sqrt((xVal-radarRad)*(xVal-radarRad)+(yVal-radarRad)*(yVal-radarRad));
 }
 
-/*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile*/
+/*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
 function drawZoomMap() {
     mPanel.clearRect(0,0,720,720);
     var y,x,end;
@@ -257,38 +259,39 @@ function drawLoc() {
     radarLoc.clearRect(0,0,radarRad*2,radarRad*2);
     radarLoc.beginPath();
     radarLoc.arc(retX,retY,7,0,Math.PI*2,true);
-    radarLoc.fillStyle= "#FFF";
+    radarLoc.fillStyle= "#FFFBE5";
     radarLoc.fill();
     radarLoc.closePath();
 }
 
-/*Draws a spot under the mouse pointer when on the main map, we'll later replace
-this with code to highlight the selected hexagon*/
+/*Highlights the appropriate hexagon when the mouse is over it*/
 function drawmPanLoc() {
     mPanLoc.clearRect(0,0,720,720);
-    var x, yDiff;
-    var y = Math.floor(mouseY/(70*0.75));
+    var x, y, yDiff, xDiff, left, right;
+    
+    //set the general cases
+    y = Math.floor(mouseY/(70*0.75));
     
     if (y%2 !== 0) {
-        x = Math.floor((mouseX-30)/60);
+        x = Math.floor((mouseX-30)/60);                                         //We need an offset for the shifted rows
     } else {
         x = Math.floor(mouseX/60);
     }
     
     //corner case code
     yDiff = (mouseY/(70*0.75))-y;
-    if (yDiff < 0.33) {
+    if (yDiff < 0.33) {                                                         //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
-        var xDiff, left, right;
         if (y%2 !== 0) {
             xDiff = (((mouseX-30)/60)-x);
             //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
+            //Are we on the left or right hand side fo the top third?
             if(xDiff<0.5) {
-                left=0.5-xDiff;
+                left=0.5-xDiff;                                                 //Adjust to get the opposite length of the 60° internal angle
                 if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {                  //I multiply by 10 so that I'm not dealing with numbers less than 1 
-                    y -=1;
+                    y -=1;                                                      //change the reference appropriately
                 }
-            } else {
+            } else {                                                            //rinse repeat for all cases
                 right = xDiff-0.5;
                 if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
                     y -=1;
@@ -315,7 +318,7 @@ function drawmPanLoc() {
     }
     
     if (mPanTrack === true) {
-        drawTile(1,x,y,true);
+        drawTile(1,x,y,true);                                                   //Finally! send our reference, with the optional "true" to tell drawTile that we want a hgihlight
     }
 }
 
@@ -327,6 +330,7 @@ function jump() {
     if (y%2 !== 0) {
         y -= 1;
     }
+    //then set the new values and draw
     if (radius(x,y) < radLimit) {
         retX = x;
         retY = y;
