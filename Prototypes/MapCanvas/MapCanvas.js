@@ -174,38 +174,40 @@ function drawRadar() {
 
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY, highlight) {
-    if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
-        //this if checks to make sure we requested a tile we can draw, mainly to prevent highlighting outside of the map
-    } else {
-        var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
-        sourceWidth = 346;                                                          //original tile width
-        sourceHeight = 400;                                                         //original tile height
-        destinationWidth = 60;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
-        destinationHeight = 70;                                                     //tile height on zoomMap                                                 
-        destinationY = Math.floor(tilePosY*destinationWidth*0.88);                   //shift it by r
-            
-            if (tilePosY%2 === 0) {                                                     //if the column is odd...
-                destinationX = Math.floor(tilePosX*destinationWidth);             //we need to displace it vertically
-            } else {                                                                    //if it’s even though
-    
-                destinationX = Math.floor(tilePosX*destinationWidth+destinationWidth/2);//we just set the vertical displace normally
-            }
-            
-        if (highlight === true){
-            // INSERT HIGHLIGHT CODE
-            sourceX = 0;
-            sourceY = 0;
-                    
-            mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight,
-                  destinationX, destinationY, destinationWidth, destinationHeight);
+    try
+        {if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
+            //this if checks to make sure we requested a tile we can draw, mainly to prevent highlighting outside of the map
         } else {
-            sourceX = animate*346;
-            sourceY = tileType*400;
-    
-            mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
-                  destinationX, destinationY, destinationWidth, destinationHeight);
-        }
-    }
+            var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
+            sourceWidth = 346;                                                          //original tile width
+            sourceHeight = 400;                                                         //original tile height
+            destinationWidth = 60;                                                      //tile width on zoomMap... If I want 13 tiles across... for s=35
+            destinationHeight = 70;                                                     //tile height on zoomMap                                                 
+            destinationY = Math.floor(tilePosY*destinationWidth*0.88);                   //shift it by r
+                
+                if (tilePosY%2 === 0) {                                                     //if the column is odd...
+                    destinationX = Math.floor(tilePosX*destinationWidth);             //we need to displace it vertically
+                } else {                                                                    //if it’s even though
+        
+                    destinationX = Math.floor(tilePosX*destinationWidth+destinationWidth/2);//we just set the vertical displace normally
+                }
+                
+            if (highlight === true){
+                // INSERT HIGHLIGHT CODE
+                sourceX = 0;
+                sourceY = 0;
+                        
+                mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight,
+                      destinationX, destinationY, destinationWidth, destinationHeight);
+            } else {
+                sourceX = animate*346;
+                sourceY = tileType*400;
+        
+                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
+                      destinationX, destinationY, destinationWidth, destinationHeight);
+            }
+        }    
+    } catch(e){}
 }
 
 /*creates the map*/
@@ -272,14 +274,9 @@ function drawmPanLoc() {
     } else {
         x = Math.floor(mouseX/60);
     }
-    drawTile(1,x,y,true);
     
     if (mPanTrack === true) {
-        mPanLoc.beginPath();
-        mPanLoc.arc(mouseX,mouseY,7,0,Math.PI*2,true);
-        mPanLoc.fillStyle= "#FFF";
-        mPanLoc.fill();
-        mPanLoc.closePath();
+        drawTile(1,x,y,true);
     }
 }
 
