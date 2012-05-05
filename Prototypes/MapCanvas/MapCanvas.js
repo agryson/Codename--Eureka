@@ -265,7 +265,8 @@ this with code to highlight the selected hexagon*/
 function drawmPanLoc() {
     mPanLoc.clearRect(0,0,720,720);
     var x;
-    var y = Math.floor(mouseY/70);
+    var y = Math.floor(mouseY/(70*0.75));
+    
     if (y%2 !== 0) {
         x = Math.floor((mouseX-30)/60);
     } else {
