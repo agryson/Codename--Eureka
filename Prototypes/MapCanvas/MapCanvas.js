@@ -262,7 +262,10 @@ function drawmPanLoc() {
 function jump() {
     var x = mouseX;
     var y = mouseY;
-    
+    //ensure we're dealing with a multiple of two (since we move up and down in twos)
+    if (y%2 !== 0) {
+        y -= 1;
+    }
     if (radius(x,y) < radLimit) {
         retX = x;
         retY = y;
