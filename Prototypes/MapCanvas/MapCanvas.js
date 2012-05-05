@@ -244,7 +244,7 @@ function drawZoomMap() {
         x=zoomMap[y][0];
         end=zoomMap[y][1];
         while (x<end) {
-            drawTile(map[(retY+y-5)][(retX+x-6)][1],x,y);
+            drawTile(map[(retY+y-5)][(retX+x-5)][1],x,y);
             x++;
         }
     }
@@ -350,12 +350,14 @@ function jump() {
 
 //testing how to write to main map array
 function clickTest() {
-    var type = map[(retY+getTile('y')-5)][(retX+getTile('x')-6)][1];
+    var type = map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1];
     if (type === 0) {
         type = 1;
     } else {
         type = 0;
     }
-    map[(retY+getTile('y')-5)][(retX+getTile('x')-6)][1] = type;
+    map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1] = type;
     drawZoomMap();
+    
+    console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
 }
