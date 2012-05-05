@@ -259,7 +259,7 @@ function randTile() {
 function drawLoc() {   
     radarLoc.clearRect(0,0,radarRad*2,radarRad*2);
     radarLoc.beginPath();
-    radarLoc.arc(retX,retY,7,0,Math.PI*2,true);
+    radarLoc.arc(retX,retY,8,0,Math.PI*2,true);
     radarLoc.fillStyle= "#FFFBE5";
     radarLoc.fill();
     radarLoc.closePath();
