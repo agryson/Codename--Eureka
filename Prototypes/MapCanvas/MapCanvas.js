@@ -282,10 +282,10 @@ function drawmPanLoc() {
         var xDiff, left, right;
         if (y%2 !== 0) {
             xDiff = (((mouseX-30)/60)-x);
-            
+            //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
             if(xDiff<0.5) {
                 left=0.5-xDiff;
-                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {                  //I multiply by 10 so that I'm not dealing with numbers less than 1 
                     y -=1;
                 }
             } else {
