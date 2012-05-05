@@ -80,11 +80,7 @@ function mainLoop() {
         animate +=1;
     }
     drawZoomMap();
-<<<<<<< HEAD
-    setTimeout(mainLoop, radarRad*2); //set the framerate here
-=======
     setTimeout(mainLoop, radarRad*2);                                           //set the framerate here
->>>>>>> prototype
 }
 
 /*detect when an arrow key is pressed and move accordingly*/
@@ -172,11 +168,7 @@ function move(dir) {
 function drawRadar() {
     radar.beginPath();
     radar.arc(radarRad,radarRad,radarRad,0,Math.PI*2,true);
-<<<<<<< HEAD
-    radar.fillStyle= "#000";
-=======
     radar.fillStyle= "#138A0C";
->>>>>>> prototype
     radar.fill();
 }
 
@@ -206,13 +198,14 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
             if (highlight === true){                                            //highlight is an optional parameter to see which canvas to draw to and how
                 sourceX = 0;
                 sourceY = 0;        
-                mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight,
-                      destinationX, destinationY, destinationWidth, destinationHeight);
+                mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
+                    sourceHeight, destinationX, destinationY, destinationWidth, 
+                    destinationHeight);
             } else {
                 sourceX = animate*346;
                 sourceY = tileType*400;
                 mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
-                      destinationX, destinationY, destinationWidth, destinationHeight);
+                    destinationX, destinationY, destinationWidth, destinationHeight);
             }
         }    
     } catch(e){
