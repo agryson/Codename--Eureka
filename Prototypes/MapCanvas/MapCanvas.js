@@ -166,10 +166,31 @@ function move(dir) {
 
 /*a placeholder to fill in our radar*/
 function drawRadar() {
-    radar.beginPath();
-    radar.arc(radarRad,radarRad,radarRad,0,Math.PI*2,true);
-    radar.fillStyle= "#138A0C";
-    radar.fill();
+    var radarPixels = radar.createImageData(radarRad*2, radarRad*2);
+    
+    for (var x = 0; x < radarPixels.width; x++)  {
+        for (var y = 0; y < radarPixels.height; y++)  {
+ 
+            // Index of the pixel in the array
+            var idx = (x + y * radarPixels.width) * 4;
+
+            if (map[y][x][1] === 0) {
+                radarPixels.data[idx + 0] = 255;
+                radarPixels.data[idx + 1] = 231;
+                radarPixels.data[idx + 2] = 10;
+                radarPixels.data[idx + 3] = 255;
+            } else if (map[y][x][1] === 1) {
+                radarPixels.data[idx + 0] = 8;
+                radarPixels.data[idx + 1] = 138;
+                radarPixels.data[idx + 2] = 8;
+                radarPixels.data[idx + 3] = 255;
+            } else {
+                //do nothing because there's no tile here! :)
+            }
+        }
+    }
+    
+    radar.putImageData(radarPixels, 0, 0);
 }
 
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
@@ -358,6 +379,6 @@ function clickTest() {
     }
     map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1] = type;
     drawZoomMap();
-    
+    drawRadar();
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
 }
