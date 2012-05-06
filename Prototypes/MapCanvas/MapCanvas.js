@@ -174,19 +174,28 @@ function drawRadar() {
  
             // Index of the pixel in the array
             var idx = (x + y * radarPixels.width) * 4;
-
-            if (map[y][x][1] === 0) {
-                radarPixels.data[idx + 0] = 255;
-                radarPixels.data[idx + 1] = 231;
-                radarPixels.data[idx + 2] = 10;
-                radarPixels.data[idx + 3] = 255;
-            } else if (map[y][x][1] === 1) {
-                radarPixels.data[idx + 0] = 8;
-                radarPixels.data[idx + 1] = 138;
-                radarPixels.data[idx + 2] = 8;
-                radarPixels.data[idx + 3] = 255;
-            } else {
-                //do nothing because there's no tile here! :)
+            var type = map[y][x][1];
+            switch(type) {
+                case 0:
+                    radarPixels.data[idx + 0] = 255;
+                    radarPixels.data[idx + 1] = 231;
+                    radarPixels.data[idx + 2] = 10;
+                    radarPixels.data[idx + 3] = 255;
+                    break;
+                case 1:
+                    radarPixels.data[idx + 0] = 8;
+                    radarPixels.data[idx + 1] = 138;
+                    radarPixels.data[idx + 2] = 8;
+                    radarPixels.data[idx + 3] = 255;
+                    break;
+                case 2:
+                    radarPixels.data[idx + 0] = 255-8;
+                    radarPixels.data[idx + 1] = 231-138;
+                    radarPixels.data[idx + 2] = 2;
+                    radarPixels.data[idx + 3] = 255;
+                    break;
+                default:
+                    //do nothing
             }
         }
     }
@@ -284,13 +293,43 @@ function createMountains(num, steps) {
         for (steps; steps >= 0; steps--) {
             try{
                 if(map[y][x][0] === true) {
-                    map[y][x][1]=1;
+                    map[y][x][1]=2;
                     x += randWalk();
                     y += randWalk();
                 }
             } catch(e) { //Do Nothing
             }
         }      
+    }
+    smoothMountains();
+}
+
+function smoothMountains() {
+    for (var y = 0; y < radarRad*2; y++) {
+        for (var x = 0; x < radarRad*2; x++) {
+            try{
+                if(y-1 > 0 && y+1 < radarRad*2 && x-1 > 0 && x+1 < radarRad*2 && map[y][x][0]===true && map[y][x][1]===2) {
+                    if(map[y-1][x][0]===true && map[y-1][x][1]===0){
+                        map[y-1][x][1]=1;
+                    }
+                    if(map[y-1][x+1][0]===true && map[y-1][x+1][1]===0){
+                        map[y-1][x+1][1]=1;
+                    }
+                    if(map[y][x+1][0]===true && map[y][x+1][1]===0){
+                        map[y][x+1][1]=1;
+                    }
+                    if(map[y+1][x+1][0]===true && map[y+1][x+1][1]===0){
+                        map[y+1][x+1][1]=1;
+                    }
+                    if(map[y+1][x][0]===true && map[y+1][x][1]===0){
+                        map[y+1][x][1]=1;
+                    }
+                    if(map[y][x-1][0]===true && map[y][x-1][1]===0){
+                        map[y][x-1][1]=1;
+                    }
+                }
+            } catch(e){console.log('hmm... y:' + y + '  x:'+x);}
+        }
     }
 }
 
