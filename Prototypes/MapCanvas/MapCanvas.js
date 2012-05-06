@@ -248,6 +248,9 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
 function createMap() {
 	var x;
 	var y;
+    var mountainNum = 30;
+    var mountainThickness = 600;
+    var mountainSmoothness = 70;
 	for(y=0;y<radarRad*2;y++) {
 		map[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
 		for(x=0; x<radarRad*2; x++) {
@@ -260,8 +263,7 @@ function createMap() {
 			}
 		}
 	}
-
-    createMountains(60, 600);
+    createMountains(mountainNum, mountainThickness, mountainSmoothness);
 }
 
 /*returns the distance of the given point from the centrepoint*/
@@ -284,7 +286,7 @@ function drawZoomMap() {
 }
 
 /*Generates the mountains*/
-function createMountains(num, steps) {
+function createMountains(num, steps, smoothness) {
     var stepHolder = steps;
     for (num; num >= 0; num--) {
         var x = Math.floor(Math.random()*radarRad*2);
@@ -301,34 +303,25 @@ function createMountains(num, steps) {
             }
         }      
     }
-    smoothMountains();
+    smoothMountains(smoothness);
 }
 
-function smoothMountains() {
+function smoothMountains(smoothness) {
     for (var y = 0; y < radarRad*2; y++) {
         for (var x = 0; x < radarRad*2; x++) {
             try{
-                if(y-1 > 0 && y+1 < radarRad*2 && x-1 > 0 && x+1 < radarRad*2 && map[y][x][0]===true && map[y][x][1]===2) {
-                    if(map[y-1][x][0]===true && map[y-1][x][1]===0){
-                        map[y-1][x][1]=1;
-                    }
-                    if(map[y-1][x+1][0]===true && map[y-1][x+1][1]===0){
-                        map[y-1][x+1][1]=1;
-                    }
-                    if(map[y][x+1][0]===true && map[y][x+1][1]===0){
-                        map[y][x+1][1]=1;
-                    }
-                    if(map[y+1][x+1][0]===true && map[y+1][x+1][1]===0){
-                        map[y+1][x+1][1]=1;
-                    }
-                    if(map[y+1][x][0]===true && map[y+1][x][1]===0){
-                        map[y+1][x][1]=1;
-                    }
-                    if(map[y][x-1][0]===true && map[y][x-1][1]===0){
-                        map[y][x-1][1]=1;
+                if(map[y][x][0]===true && map[y][x][1]===2) {
+                    var xTemp = x;
+                    var yTemp = y;
+                    for(var steps = smoothness; steps > 0; steps--){
+                        if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1] === 0) {
+                            map[yTemp][xTemp][1]=1;
+                        }
+                        xTemp += randWalk();
+                        yTemp += randWalk();
                     }
                 }
-            } catch(e){console.log('hmm... y:' + y + '  x:'+x);}
+            } catch(e){console.log('hmm... y:' + y + '  x:'+x+ e);}
         }
     }
 }
