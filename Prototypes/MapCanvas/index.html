@@ -2,7 +2,7 @@
 <html dir="ltr" lang="en">
     <head>
         <!--Import font and stylesheet, set characterset and title.-->
-        <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
 		<link href="MapCanvas.css" rel="stylesheet" type="text/css" media="all">
 		<meta charset="UTF-8">
 		<title>Prototype MapV1</title>
@@ -12,13 +12,19 @@
 
 	<body onload="init()">
         <div id="leftMenu">
-            <div id="testItem">
+            <div class="testItem" id="test1" onClick="construct(this.id)">
+                Yellow Tile
+            </div>
+            <div class="testItem" id="test2" onClick="construct(this.id)">
+                Green Tile
             </div>
         </div>
         <canvas id="mainPanel" width="720" height="720">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
-        <canvas id="mPanOverlay" width="720" height="720" onmouseover="mPanTrack = true" onMouseOut="mPanTrack = false; drawmPanLoc();" onclick="clickTest()">
+        <canvas id="mPanOverlay" width="720" height="720" 
+            onMouseOver="mPanTrack = true" onMouseOut="mPanTrack = false; drawmPanLoc();" 
+            onMouseUp="clickTest()">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         <canvas id="map" width="200" height="200">

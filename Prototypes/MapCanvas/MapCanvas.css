@@ -2,6 +2,7 @@ body, html {
     background: #191919;
     height: 100%;
     margin: 0;
+
 }
 
 #mainPanel, #mPanOverlay {
@@ -28,9 +29,14 @@ body, html {
     z-index: 1;
 }
 
-#testItem {
+.testItem {
     width: 100%;
-    min-width: 150px;
     height: 50px;
     background: #000;
+    color: #FFF;
+    font-family:"Droid Sans", Times, serif;
+    text-align: center;
+    padding-top: 2em;
+    box-shadow: inset 0 0 5px 5px #FFF;
+    cursor:pointer; 
 }

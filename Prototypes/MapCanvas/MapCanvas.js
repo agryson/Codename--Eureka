@@ -1,7 +1,8 @@
 //TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad; //hold info for various bits and bobs
+var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
+    clickedOn; //hold info for various bits and bobs
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
@@ -80,7 +81,7 @@ function mainLoop() {
         animate +=1;
     }
     drawZoomMap();
-    setTimeout(mainLoop, radarRad*2);                                           //set the framerate here
+    setTimeout(mainLoop, 200);                                                  //set the framerate here
 }
 
 /*detect when an arrow key is pressed and move accordingly*/
@@ -376,14 +377,36 @@ function jump() {
 
 //testing how to write to main map array
 function clickTest() {
-    var type = map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1];
-    if (type === 0) {
-        type = 1;
-    } else {
-        type = 0;
+    var type;
+    switch (clickedOn) {
+        case 'test1':
+            type = 0;
+            clickedOn = null;
+            break;
+        case 'test2':
+            type = 1;
+            clickedOn = null;
+            break;
+        case null:
+            type = null;
+            break;
+        default:
+            break;
     }
-    map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1] = type;
-    drawZoomMap();
-    drawRadar();
+    if (type !== null){
+        map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1] = type;
+        drawZoomMap();
+        drawRadar();
+    }
+    document.body.style.cursor="default";
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
+}
+
+function construct(id) {
+    if (clickedOn === id) {
+        clickedOn = null;
+    } else {
+        clickedOn = id;
+    }
+    document.body.style.cursor="url('images/bdozePointer.png'), default";
 }
