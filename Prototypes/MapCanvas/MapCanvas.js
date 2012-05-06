@@ -405,8 +405,9 @@ function clickTest() {
 function construct(id) {
     if (clickedOn === id) {
         clickedOn = null;
+        document.body.style.cursor="default";
     } else {
         clickedOn = id;
+        document.body.style.cursor="url('images/bdozePointer.png'), default";
     }
-    document.body.style.cursor="url('images/bdozePointer.png'), default";
 }
