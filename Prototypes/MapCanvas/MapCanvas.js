@@ -280,9 +280,14 @@ function randTile() {
 function drawLoc() {   
     radarLoc.clearRect(0,0,radarRad*2,radarRad*2);
     radarLoc.beginPath();
-    radarLoc.arc(retX,retY,8,0,Math.PI*2,true);
-    radarLoc.fillStyle= "#FFFBE5";
+    radarLoc.arc(retX,retY,7,0,Math.PI*2,true);
+    radarLoc.fillStyle= 'rgba(255,251,229,0.7)';
     radarLoc.fill();
+    radarLoc.closePath();
+    radarLoc.beginPath();
+    radarLoc.arc(retX,retY,8,0,Math.PI*2,true);
+    radarLoc.strokeStyle = '#BD222A';
+    radarLoc.stroke();
     radarLoc.closePath();
 }
 
