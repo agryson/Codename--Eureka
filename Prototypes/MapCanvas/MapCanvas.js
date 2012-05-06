@@ -245,12 +245,14 @@ function createMap() {
             map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
 			if(radius(x,y)<=radarRad) {                                         //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
-				map[y][x][1]=randTile();                                        //if we're in the circle, assign a tile value
+				map[y][x][1]=0;                                                 //if we're in the circle, assign a tile value
 			}else{
 				map[y][x][0]=false;
 			}
 		}
 	}
+
+    createMountains(60, 600);
 }
 
 /*returns the distance of the given point from the centrepoint*/
@@ -272,9 +274,39 @@ function drawZoomMap() {
     }
 }
 
-/*This function just generates random tiles for us to test performance*/
-function randTile() {
-    return Math.floor(Math.random()*2);
+/*Generates the mountains*/
+function createMountains(num, steps) {
+    var stepHolder = steps;
+    for (num; num >= 0; num--) {
+        var x = Math.floor(Math.random()*radarRad*2);
+        var y = Math.floor(Math.random()*radarRad*2);
+        steps = stepHolder;
+        for (steps; steps >= 0; steps--) {
+            try{
+                if(map[y][x][0] === true) {
+                    map[y][x][1]=1;
+                    x += randWalk();
+                    y += randWalk();
+                }
+            } catch(e) { //Do Nothing
+            }
+        }      
+    }
+}
+
+/*Random walk function for "clumpy" randomness*/
+function randWalk() {
+    var walk = Math.floor(Math.random()*3);
+        switch(walk) {
+        case 0:
+            return -1;
+        case 1:
+            return 0;
+        case 2:
+            return 1;
+        default:
+            break;
+    }
 }
 
 /*draws the current location on the small radar map*/
@@ -393,7 +425,7 @@ function clickTest() {
         default:
             break;
     }
-    if (type !== null){
+    if (type === 0 || type ===1){
         map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1] = type;
         drawZoomMap();
         drawRadar();
