@@ -269,9 +269,6 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
 function createMap() {
 	var x;
 	var y;
-    var mountainNum = 30;
-    var mountainThickness = 600;
-    var mountainSmoothness = 70;
 	for(y=0;y<radarRad*2;y++) {
 		map[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
 		for(x=0; x<radarRad*2; x++) {
@@ -280,7 +277,7 @@ function createMap() {
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
                 map[y][x][1].type = 0;
-                map[y][x][1].resources= new Array(2);
+                map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
                 generateResources(x,y,0);
 			}else{
 				map[y][x][0]=false;
@@ -288,11 +285,10 @@ function createMap() {
 		}
         
 	}
-    console.log('terrain: '+map[100][100][1].type);
-    createMountains(mountainNum, mountainThickness, mountainSmoothness);
+    createMountains(60,600,70);
 }
 
-/*Generates the mountains*/
+/*Generates the mountains, num=number of mountain spawn points, steps=length of the random walk, smoothness= how smootht he gradient should be*/
 function createMountains(num, steps, smoothness) {
     var stepHolder = steps;
     for (num; num >= 0; num--) {
@@ -335,6 +331,7 @@ function smoothMountains(smoothness) {
     }
 }
 
+/*sets the resources appropriately for the terrain type at x,y*/
 function generateResources(x,y,terrain) {
     switch (terrain) {
         case 0:
@@ -342,12 +339,12 @@ function generateResources(x,y,terrain) {
             map[y][x][1].resources[1]=randGen(2,0);
             break;
         case 1:
-            map[y][x][1].resources[0]+=randGen(5,10);
-            map[y][x][1].resources[1]+=randGen(5,10);
+            map[y][x][1].resources[0]=randGen(5,10);
+            map[y][x][1].resources[1]=randGen(5,10);
             break;
         case 2:
-            map[y][x][1].resources[0]+=randGen(5,20);
-            map[y][x][1].resources[1]+=randGen(5,20);
+            map[y][x][1].resources[0]=randGen(5,20);
+            map[y][x][1].resources[1]=randGen(5,20);
             break;
         default:
             //do nothing
