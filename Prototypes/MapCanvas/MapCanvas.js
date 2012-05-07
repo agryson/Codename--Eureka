@@ -50,7 +50,7 @@ function init() {
     ];
     
     /*set any initial values we will need*/
-    radarRad = 100;                                                             //this is the radius of the map that we want, changing it here should change it everywhere except the html
+    radarRad = 150;                                                             //this is the radius of the map that we want, changing it here should change it everywhere except the html
     retX = radarRad;
     retY = radarRad;
     animate=0;
