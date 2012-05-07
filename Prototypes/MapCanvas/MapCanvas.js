@@ -86,7 +86,9 @@ function init() {
     mainLoop();
 }
 
-/*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min*/
+/*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
+Thinkof num as the modifier, min as the base
+*/
 function randGen(num, min){
     return Math.floor(Math.random()*num)+min;
 }
@@ -278,6 +280,8 @@ function createMap() {
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
                 map[y][x][1].type = 0;
+                map[y][x][1].resources= new Array(2);
+                generateResources(x,y,0);
 			}else{
 				map[y][x][0]=false;
 			}
@@ -286,6 +290,25 @@ function createMap() {
 	}
     console.log('terrain: '+map[100][100][1].type);
     createMountains(mountainNum, mountainThickness, mountainSmoothness);
+}
+
+function generateResources(x,y,terrain) {
+    switch (terrain) {
+        case 0:
+            map[y][x][1].resources[0]=randGen(2,5);
+            map[y][x][1].resources[1]=randGen(2,8);
+            break;
+        case 1:
+            map[y][x][1].resources[0]+=randGen(5,10);
+            map[y][x][1].resources[1]+=randGen(5,10);
+            break;
+        case 2:
+            map[y][x][1].resources[0]+=randGen(5,20);
+            map[y][x][1].resources[1]+=randGen(5,20);
+            break;
+        default:
+            //do nothing
+    }
 }
 
 /*returns the distance of the given point from the centrepoint*/
@@ -318,6 +341,7 @@ function createMountains(num, steps, smoothness) {
             try{
                 if(map[y][x][0] === true) {
                     map[y][x][1].type=2;
+                    generateResources(x,y,2);
                     x += randWalk();
                     y += randWalk();
                 }
@@ -338,6 +362,7 @@ function smoothMountains(smoothness) {
                     for(var steps = smoothness; steps > 0; steps--){
                         if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type === 0) {
                             map[yTemp][xTemp][1].type=1;
+                            generateResources(x,y,1);
                         }
                         xTemp += randWalk();
                         yTemp += randWalk();
@@ -486,6 +511,7 @@ function clickTest() {
     }
     document.body.style.cursor="default";
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
+    console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
 }
 
 function construct(id) {
