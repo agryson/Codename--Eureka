@@ -237,7 +237,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
             sourceHeight = 400;                                                 //original tile height
             destinationWidth = 60;                                              //tile width on zoomMap... If I want 13 tiles across... for s=35
             destinationHeight = 70;                                             //tile height on zoomMap                                                 
-            destinationY = Math.floor(tilePosY*destinationWidth*0.88);          //shift it, the number here is a constant that depends ont eh hexagon deformation
+            destinationY = Math.floor(tilePosY*destinationWidth*0.86);          //shift it, the number here is a constant that depends ont eh hexagon deformation
                 
                 if (tilePosY%2 === 0) {                                         //if the row is even...
                     destinationX = Math.floor(tilePosX*destinationWidth);       //we set its X normally
@@ -309,7 +309,7 @@ function createMountains(num, steps, smoothness) {
     }
     smoothMountains(smoothness);
 }
-
+/*takes the smoothness parameter and appropriately smooths out the mountains*/
 function smoothMountains(smoothness) {
     for (var y = 0; y < radarRad*2; y++) {
         for (var x = 0; x < radarRad*2; x++) {
@@ -360,7 +360,7 @@ function radius(xVal,yVal) {
 function drawZoomMap() {
     mPanel.clearRect(0,0,720,720);
     var y,x,end;
-    var yellow = false;
+    var yellow = false;//test for conditional display of menu items
     for(y=0;y<zoomMap.length;y++) {
         x=zoomMap[y][0];
         end=zoomMap[y][1];
@@ -372,6 +372,7 @@ function drawZoomMap() {
             }
         }
     }
+    //tests for conditional display of menu items
     if (yellow===true) {
         document.getElementById('test1').style.display='block';
     } else {
