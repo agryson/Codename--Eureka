@@ -292,44 +292,6 @@ function createMap() {
     createMountains(mountainNum, mountainThickness, mountainSmoothness);
 }
 
-function generateResources(x,y,terrain) {
-    switch (terrain) {
-        case 0:
-            map[y][x][1].resources[0]=randGen(2,5);
-            map[y][x][1].resources[1]=randGen(2,8);
-            break;
-        case 1:
-            map[y][x][1].resources[0]+=randGen(5,10);
-            map[y][x][1].resources[1]+=randGen(5,10);
-            break;
-        case 2:
-            map[y][x][1].resources[0]+=randGen(5,20);
-            map[y][x][1].resources[1]+=randGen(5,20);
-            break;
-        default:
-            //do nothing
-    }
-}
-
-/*returns the distance of the given point from the centrepoint*/
-function radius(xVal,yVal) {
-    return Math.sqrt((xVal-radarRad)*(xVal-radarRad)+(yVal-radarRad)*(yVal-radarRad));
-}
-
-/*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
-function drawZoomMap() {
-    mPanel.clearRect(0,0,720,720);
-    var y,x,end;
-    for(y=0;y<zoomMap.length;y++) {
-        x=zoomMap[y][0];
-        end=zoomMap[y][1];
-        while (x<end) {
-            drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y);
-            x++;
-        }
-    }
-}
-
 /*Generates the mountains*/
 function createMountains(num, steps, smoothness) {
     var stepHolder = steps;
@@ -362,13 +324,51 @@ function smoothMountains(smoothness) {
                     for(var steps = smoothness; steps > 0; steps--){
                         if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type === 0) {
                             map[yTemp][xTemp][1].type=1;
-                            generateResources(x,y,1);
+                            generateResources(xTemp,yTemp,1);
                         }
                         xTemp += randWalk();
                         yTemp += randWalk();
                     }
                 }
             } catch(e){console.log('hmm... y:' + y + '  x:'+x+ e);}
+        }
+    }
+}
+
+function generateResources(x,y,terrain) {
+    switch (terrain) {
+        case 0:
+            map[y][x][1].resources[0]=randGen(2,0);
+            map[y][x][1].resources[1]=randGen(2,0);
+            break;
+        case 1:
+            map[y][x][1].resources[0]+=randGen(5,10);
+            map[y][x][1].resources[1]+=randGen(5,10);
+            break;
+        case 2:
+            map[y][x][1].resources[0]+=randGen(5,20);
+            map[y][x][1].resources[1]+=randGen(5,20);
+            break;
+        default:
+            //do nothing
+    }
+}
+
+/*returns the distance of the given point from the centrepoint*/
+function radius(xVal,yVal) {
+    return Math.sqrt((xVal-radarRad)*(xVal-radarRad)+(yVal-radarRad)*(yVal-radarRad));
+}
+
+/*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
+function drawZoomMap() {
+    mPanel.clearRect(0,0,720,720);
+    var y,x,end;
+    for(y=0;y<zoomMap.length;y++) {
+        x=zoomMap[y][0];
+        end=zoomMap[y][1];
+        while (x<end) {
+            drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y);
+            x++;
         }
     }
 }
