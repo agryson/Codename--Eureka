@@ -40,3 +40,7 @@ body, html {
     box-shadow: inset 0 0 5px 5px #FFF;
     cursor:pointer; 
 }
+
+#test1 {
+    display: none;
+}

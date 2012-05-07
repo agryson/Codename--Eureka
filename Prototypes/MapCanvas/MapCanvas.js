@@ -360,13 +360,22 @@ function radius(xVal,yVal) {
 function drawZoomMap() {
     mPanel.clearRect(0,0,720,720);
     var y,x,end;
+    var yellow = false;
     for(y=0;y<zoomMap.length;y++) {
         x=zoomMap[y][0];
         end=zoomMap[y][1];
         while (x<end) {
             drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y);
             x++;
+            if (map[(retY+y-5)][(retX+x-5)][1].type===1) {
+                yellow=true;
+            }
         }
+    }
+    if (yellow===true) {
+        document.getElementById('test1').style.display='block';
+    } else {
+        document.getElementById('test1').style.display='none';
     }
 }
 
