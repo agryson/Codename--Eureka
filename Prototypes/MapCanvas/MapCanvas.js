@@ -6,6 +6,19 @@ var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
+/*Define our Constructors*/
+function Terrain() {
+    this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared, 5=MinedOut
+    this.resources; //an array that holds the different metal and resource types
+}
+
+function Building() {
+    this.type; //type of building
+    this.health; //health of building
+    this.air; //boolean, does building have air?
+    this.age;
+}
+
 /*Set up any global stuff that won't ever change after page load*/
 function init() {
     /*get the topmost canvases that we'll need for mouse tracking*/
@@ -71,6 +84,11 @@ function init() {
     
     drawLoc();
     mainLoop();
+}
+
+/*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min*/
+function randGen(num, min){
+    return Math.floor(Math.random()*num)+min;
 }
 
 /*the main game loop*/
@@ -171,31 +189,32 @@ function drawRadar() {
     
     for (var x = 0; x < radarPixels.width; x++)  {
         for (var y = 0; y < radarPixels.height; y++)  {
- 
-            // Index of the pixel in the array
-            var idx = (x + y * radarPixels.width) * 4;
-            var type = map[y][x][1];
-            switch(type) {
-                case 0:
-                    radarPixels.data[idx + 0] = 255;
-                    radarPixels.data[idx + 1] = 231;
-                    radarPixels.data[idx + 2] = 10;
-                    radarPixels.data[idx + 3] = 255;
-                    break;
-                case 1:
-                    radarPixels.data[idx + 0] = 8;
-                    radarPixels.data[idx + 1] = 138;
-                    radarPixels.data[idx + 2] = 8;
-                    radarPixels.data[idx + 3] = 255;
-                    break;
-                case 2:
-                    radarPixels.data[idx + 0] = 255-8;
-                    radarPixels.data[idx + 1] = 231-138;
-                    radarPixels.data[idx + 2] = 2;
-                    radarPixels.data[idx + 3] = 255;
-                    break;
-                default:
-                    //do nothing
+            if (map[y][x][0] === true) {
+                // Index of the pixel in the array
+                var idx = (x + y * radarPixels.width) * 4;
+                var kind = map[y][x][1].type;
+                switch(kind) {
+                    case 0:
+                        radarPixels.data[idx + 0] = 255;
+                        radarPixels.data[idx + 1] = 231;
+                        radarPixels.data[idx + 2] = 10;
+                        radarPixels.data[idx + 3] = 255;
+                        break;
+                    case 1:
+                        radarPixels.data[idx + 0] = 8;
+                        radarPixels.data[idx + 1] = 138;
+                        radarPixels.data[idx + 2] = 8;
+                        radarPixels.data[idx + 3] = 255;
+                        break;
+                    case 2:
+                        radarPixels.data[idx + 0] = 255-8;
+                        radarPixels.data[idx + 1] = 231-138;
+                        radarPixels.data[idx + 2] = 2;
+                        radarPixels.data[idx + 3] = 255;
+                        break;
+                    default:
+                        //do nothing
+                }
             }
         }
     }
@@ -257,12 +276,15 @@ function createMap() {
             map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
 			if(radius(x,y)<=radarRad) {                                         //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
-				map[y][x][1]=0;                                                 //if we're in the circle, assign a tile value
+				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
+                map[y][x][1].type = 0;
 			}else{
 				map[y][x][0]=false;
 			}
 		}
+        
 	}
+    console.log('terrain: '+map[100][100][1].type);
     createMountains(mountainNum, mountainThickness, mountainSmoothness);
 }
 
@@ -279,7 +301,7 @@ function drawZoomMap() {
         x=zoomMap[y][0];
         end=zoomMap[y][1];
         while (x<end) {
-            drawTile(map[(retY+y-5)][(retX+x-5)][1],x,y);
+            drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y);
             x++;
         }
     }
@@ -295,7 +317,7 @@ function createMountains(num, steps, smoothness) {
         for (steps; steps >= 0; steps--) {
             try{
                 if(map[y][x][0] === true) {
-                    map[y][x][1]=2;
+                    map[y][x][1].type=2;
                     x += randWalk();
                     y += randWalk();
                 }
@@ -310,12 +332,12 @@ function smoothMountains(smoothness) {
     for (var y = 0; y < radarRad*2; y++) {
         for (var x = 0; x < radarRad*2; x++) {
             try{
-                if(map[y][x][0]===true && map[y][x][1]===2) {
+                if(map[y][x][0]===true && map[y][x][1].type===2) {
                     var xTemp = x;
                     var yTemp = y;
                     for(var steps = smoothness; steps > 0; steps--){
-                        if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1] === 0) {
-                            map[yTemp][xTemp][1]=1;
+                        if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type === 0) {
+                            map[yTemp][xTemp][1].type=1;
                         }
                         xTemp += randWalk();
                         yTemp += randWalk();
@@ -441,24 +463,24 @@ function jump() {
 
 //testing how to write to main map array
 function clickTest() {
-    var type;
+    var kind;
     switch (clickedOn) {
         case 'test1':
-            type = 0;
+            kind = 0;
             clickedOn = null;
             break;
         case 'test2':
-            type = 1;
+            kind = 1;
             clickedOn = null;
             break;
         case null:
-            type = null;
+            kind = null;
             break;
         default:
             break;
     }
-    if (type === 0 || type ===1){
-        map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1] = type;
+    if (kind === 0 || kind ===1){
+        map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type = kind;
         drawZoomMap();
         drawRadar();
     }
