@@ -8,7 +8,7 @@ var mouseX, mouseY, mPanTrack;                                                  
 
 /*Define our Constructors*/
 function Terrain() {
-    this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared, 5=MinedOut
+    this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut
     this.resources; //an array that holds the different metal and resource types
 }
 
@@ -360,24 +360,24 @@ function radius(xVal,yVal) {
 function drawZoomMap() {
     mPanel.clearRect(0,0,720,720);
     var y,x,end;
-    var yellow = false;//test for conditional display of menu items
+    //var yellow = false;//test for conditional display of menu items
     for(y=0;y<zoomMap.length;y++) {
         x=zoomMap[y][0];
         end=zoomMap[y][1];
         while (x<end) {
             drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y);
             x++;
-            if (map[(retY+y-5)][(retX+x-5)][1].type===1) {
-                yellow=true;
-            }
+            //if (map[(retY+y-5)][(retX+x-5)][1].type===1) {
+                //yellow=true;
+            //}
         }
     }
     //tests for conditional display of menu items
-    if (yellow===true) {
-        document.getElementById('test1').style.display='block';
-    } else {
-        document.getElementById('test1').style.display='none';
-    }
+    //if (yellow===true) {
+        //document.getElementById('test1').style.display='block';
+    //} else {
+        //document.getElementById('test1').style.display='none';
+    //}
 }
 
 /*Random walk function for "clumpy" randomness*/
@@ -498,7 +498,7 @@ function clickTest() {
     var kind;
     switch (clickedOn) {
         case 'test1':
-            kind = 0;
+            kind = 3;
             clickedOn = null;
             break;
         case 'test2':
@@ -511,7 +511,7 @@ function clickTest() {
         default:
             break;
     }
-    if (kind === 0 || kind ===1){
+    if (kind >= 0){
         map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type = kind;
         drawZoomMap();
         drawRadar();
