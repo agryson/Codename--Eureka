@@ -159,22 +159,22 @@ function move(dir) {
     rightX = retX+1;
     switch(dir) {
         case 'up':
-            if(radius(retX,upY)<radLimit) {
+            if(distance(retX,upY, radarRad,radarRad)<radLimit) {
                 retY = upY;
             }
             break;         
         case 'down':
-            if(radius(retX,downY)<radLimit) {
+            if(distance(retX,downY, radarRad,radarRad)<radLimit) {
                 retY = downY;
             }
             break;         
         case 'left':
-            if(radius(leftX,retY)<radLimit) {
+            if(distance(leftX,retY, radarRad,radarRad)<radLimit) {
                 retX = leftX;
             }
             break;          
         case 'right':
-            if(radius(rightX,retY)<radLimit) {
+            if(distance(rightX,retY, radarRad,radarRad)<radLimit) {
                 retX = rightX;
             }
             break;         
@@ -197,21 +197,27 @@ function drawRadar() {
                 var kind = map[y][x][1].type;
                 switch(kind) {
                     case 0:
-                        radarPixels.data[idx + 0] = 255;
-                        radarPixels.data[idx + 1] = 231;
-                        radarPixels.data[idx + 2] = 10;
+                        radarPixels.data[idx + 0] = 212;
+                        radarPixels.data[idx + 1] = 197;
+                        radarPixels.data[idx + 2] = 174;
                         radarPixels.data[idx + 3] = 255;
                         break;
                     case 1:
-                        radarPixels.data[idx + 0] = 8;
-                        radarPixels.data[idx + 1] = 138;
-                        radarPixels.data[idx + 2] = 8;
+                        radarPixels.data[idx + 0] = 201;
+                        radarPixels.data[idx + 1] = 179;
+                        radarPixels.data[idx + 2] = 165;
                         radarPixels.data[idx + 3] = 255;
                         break;
                     case 2:
-                        radarPixels.data[idx + 0] = 255-8;
-                        radarPixels.data[idx + 1] = 231-138;
-                        radarPixels.data[idx + 2] = 2;
+                        radarPixels.data[idx + 0] = 231;
+                        radarPixels.data[idx + 1] = 226;
+                        radarPixels.data[idx + 2] = 223;
+                        radarPixels.data[idx + 3] = 255;
+                        break;
+                    case 3:
+                        radarPixels.data[idx + 0] = 16;
+                        radarPixels.data[idx + 1] = 82;
+                        radarPixels.data[idx + 2] = 4;
                         radarPixels.data[idx + 3] = 255;
                         break;
                     default:
@@ -273,7 +279,7 @@ function createMap() {
 		map[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
 		for(x=0; x<radarRad*2; x++) {
             map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-			if(radius(x,y)<=radarRad) {                                         //check the radius, mark true if it's mapped, mark false if it's not in the circle
+			if(distance(x,y,radarRad,radarRad)<=radarRad) {                                         //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
                 map[y][x][1].type = 0;
@@ -331,6 +337,27 @@ function smoothMountains(smoothness) {
     }
 }
 
+function calcAltitude() {
+    for (var y = 0; y < radarRad*2; y++) {
+        for (var x = 0; x < radarRad*2; x++) {
+            try{
+                
+            } catch(e){console.log('hmm... y:' + y + '  x:'+x+ e);}
+        }
+    }
+}
+
+/*will spread out from the tile at x,y until it encounters a tile of type, then returns distance*/
+function distance(x,y,type){
+    var xTemp, yTemp;
+    if (y%2 !==0) {
+        
+    } else {
+        
+    }
+    return 
+}
+
 /*sets the resources appropriately for the terrain type at x,y*/
 function generateResources(x,y,terrain) {
     switch (terrain) {
@@ -352,8 +379,8 @@ function generateResources(x,y,terrain) {
 }
 
 /*returns the distance of the given point from the centrepoint*/
-function radius(xVal,yVal) {
-    return Math.sqrt((xVal-radarRad)*(xVal-radarRad)+(yVal-radarRad)*(yVal-radarRad));
+function distance(x1,y1,x2,y2) {
+    return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 }
 
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
