@@ -9,6 +9,7 @@ var mouseX, mouseY, mPanTrack;                                                  
 /*Define our Constructors*/
 function Terrain() {
     this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut
+    this.altitude; //a function of distance from mountains
     this.resources; //an array that holds the different metal and resource types
 }
 
@@ -282,7 +283,8 @@ function createMap() {
 			if(distance(x,y,radarRad,radarRad)<=radarRad) {                                         //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
-                map[y][x][1].type = 0;
+                map[y][x][1].type = 3;
+                map[y][x][1].altitude=0;
                 map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
                 generateResources(x,y,0);
 			}else{
@@ -305,6 +307,7 @@ function createMountains(num, steps, smoothness) {
             try{
                 if(map[y][x][0] === true) {
                     map[y][x][1].type=2;
+                    map[y][x][1].altitude+=10;
                     generateResources(x,y,2);
                     x += randWalk();
                     y += randWalk();
@@ -315,6 +318,7 @@ function createMountains(num, steps, smoothness) {
     }
     smoothMountains(smoothness);
 }
+
 /*takes the smoothness parameter and appropriately smooths out the mountains*/
 function smoothMountains(smoothness) {
     for (var y = 0; y < radarRad*2; y++) {
@@ -324,38 +328,70 @@ function smoothMountains(smoothness) {
                     var xTemp = x;
                     var yTemp = y;
                     for(var steps = smoothness; steps > 0; steps--){
-                        if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type === 0) {
+                        if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type !== 2) {
                             map[yTemp][xTemp][1].type=1;
+                            map[yTemp][xTemp][1].altitude+=5;
                             generateResources(xTemp,yTemp,1);
                         }
                         xTemp += randWalk();
                         yTemp += randWalk();
                     }
                 }
-            } catch(e){console.log('hmm... y:' + y + '  x:'+x+ e);}
+            } catch(e){console.log('hmm... y:' + y + '  x:'+x+ '  '+ e);}       
         }
     }
+    flatTerrain(smoothness*3);
 }
 
-function calcAltitude() {
+function flatTerrain(smoothness) {
     for (var y = 0; y < radarRad*2; y++) {
         for (var x = 0; x < radarRad*2; x++) {
             try{
-                
-            } catch(e){console.log('hmm... y:' + y + '  x:'+x+ e);}
+                if(map[y][x][0]===true && map[y][x][1].type===1) {
+                    var xTemp = x;
+                    var yTemp = y;
+                    for(var steps = smoothness; steps > 0; steps--){
+                        if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type !== 2 && map[yTemp][xTemp][1].type !== 1) {
+                            map[yTemp][xTemp][1].type=0;
+                            map[yTemp][xTemp][1].altitude+=2;
+                            generateResources(xTemp,yTemp,1);
+                        }
+                        xTemp += randWalk();
+                        yTemp += randWalk();
+                    }
+                }
+            } catch(e){console.log('hmm... y:' + y + '  x:'+x+ '  '+ e);}       
         }
     }
+    lakes();
 }
 
-/*will spread out from the tile at x,y until it encounters a tile of type, then returns distance*/
-function distance(x,y,type){
-    var xTemp, yTemp;
-    if (y%2 !==0) {
-        
-    } else {
-        
+function lakes() {
+    for (var y = 0; y < radarRad*2; y++) {
+        for (var x = 0; x < radarRad*2; x++) {
+            if (map[y][x][0]===true && map[y][x][1].altitude < 5) {
+                map[y][x][1].type=3;
+            }
+        }
     }
-    return 
+    console.log('done?');
+}
+
+/*returns the distance of x,y from a tile of type*/
+function distanceFrom(xIn,yIn,type) {
+    var minDist = radarRad*2;
+    for (var y = 0; y < radarRad*2; y++) {
+        for (var x = 0; x < radarRad*2; x++) {
+            try{
+            if(map[y][x][0]===true && map[y][x][1].type == type){
+                if (distance(xIn,yIn,x,y) < minDist){
+                    minDist = distance(xIn,yIn,x,y);
+                }
+            }
+            }catch(e){}
+        }
+    }
+    return minDist;
 }
 
 /*sets the resources appropriately for the terrain type at x,y*/
@@ -513,7 +549,7 @@ function jump() {
         y -= 1;
     }
     //then set the new values and draw
-    if (radius(x,y) < radLimit) {
+    if (distance(x,y, radarRad, radarRad) < radLimit) {
         retX = x;
         retY = y;
         drawLoc();
@@ -546,6 +582,7 @@ function clickTest() {
     document.body.style.cursor="default";
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
     console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
+    console.log('altitude: '+ map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].altitude);
 }
 
 function construct(id) {
