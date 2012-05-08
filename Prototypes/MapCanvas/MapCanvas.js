@@ -8,7 +8,7 @@ var mouseX, mouseY, mPanTrack;                                                  
 
 /*Define our Constructors*/
 function Terrain() {
-    this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut
+    this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water
     this.altitude; //a function of distance from mountains
     this.resources; //an array that holds the different metal and resource types
 }
@@ -221,6 +221,12 @@ function drawRadar() {
                         radarPixels.data[idx + 2] = 4;
                         radarPixels.data[idx + 3] = 255;
                         break;
+                    case 4:
+                        radarPixels.data[idx + 0] = 128;
+                        radarPixels.data[idx + 1] = 188;
+                        radarPixels.data[idx + 2] = 224;
+                        radarPixels.data[idx + 3] = 255;
+                        break;
                     default:
                         //do nothing
                 }
@@ -283,7 +289,7 @@ function createMap() {
 			if(distance(x,y,radarRad,radarRad)<=radarRad) {                                         //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
-                map[y][x][1].type = 3;
+                map[y][x][1].type = 4;
                 map[y][x][1].altitude=0;
                 map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
                 generateResources(x,y,0);
@@ -363,21 +369,9 @@ function flatTerrain(smoothness) {
             } catch(e){console.log('hmm... y:' + y + '  x:'+x+ '  '+ e);}       
         }
     }
-    lakes();
 }
 
-function lakes() {
-    for (var y = 0; y < radarRad*2; y++) {
-        for (var x = 0; x < radarRad*2; x++) {
-            if (map[y][x][0]===true && map[y][x][1].altitude < 5) {
-                map[y][x][1].type=3;
-            }
-        }
-    }
-    console.log('done?');
-}
-
-/*returns the distance of x,y from a tile of type*/
+/*returns the distance of x,y from a tile of type - avoid recursive use, it's quite heavy*/
 function distanceFrom(xIn,yIn,type) {
     var minDist = radarRad*2;
     for (var y = 0; y < radarRad*2; y++) {
@@ -574,7 +568,7 @@ function clickTest() {
         default:
             break;
     }
-    if (kind >= 0){
+    if (kind >= 0 && map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type !== 4){
         map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type = kind;
         drawZoomMap();
         drawRadar();
