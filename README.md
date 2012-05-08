@@ -9,3 +9,6 @@ With *Codename: Eureka*, we on the team are hoping to provide a richer, more in-
 The project has just started and this repo is where we will be building this game. Mainly prototypes for the moment until design has progressed more.
 If it sounds like something you'd like to take part in, please get in touch! 
 This is not just about code, we need creative writers, artists, musical types - any skill you have could be useful.
+
+Sources:
+Sand texture is heavily modified from a sand texture I found here: http://www.mayang.com/textures/
