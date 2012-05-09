@@ -299,7 +299,7 @@ function createMap() {
 		}
         
 	}
-    createMountains(60,600,70);
+    createMountains(30,300,90);
 }
 
 /*Generates the mountains, num=number of mountain spawn points, steps=length of the random walk, smoothness= how smootht he gradient should be*/
@@ -346,7 +346,7 @@ function smoothMountains(smoothness) {
             } catch(e){console.log('hmm... y:' + y + '  x:'+x+ '  '+ e);}       
         }
     }
-    flatTerrain(smoothness*3);
+    flatTerrain(smoothness*4);
 }
 
 function flatTerrain(smoothness) {
@@ -386,6 +386,45 @@ function distanceFrom(xIn,yIn,type) {
         }
     }
     return minDist;
+}
+
+/*
+can do stuff with adjacent hexes
+e.g.
+map[adjacent(x,y,0)[0]][adjacent(x,y,0)[1]][1].type = 0;
+*/
+function adjacent(x,y,index) {
+    if(y%2 === 0) {
+        index += 6;
+    }
+    switch(index) {
+        case 0:
+            return [y-1,x-1];
+        case 1:
+            return [y-1,x];
+        case 2:
+            return [y,x+1];
+        case 3:
+            return [y+1,x];
+        case 4:
+            return [y+1,x-1];
+        case 5:
+            return [y,x-1];
+        case 6:
+            return [y-1,x];
+        case 7:
+            return [y-1,x+1];
+        case 8:
+            return [y,x+1];
+        case 9:
+            return [y+1,x+1];
+        case 10:
+            return [y+1,x]; 
+        case 11:
+            return [y,x-1];
+        default:
+            console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
+    }
 }
 
 /*sets the resources appropriately for the terrain type at x,y*/
@@ -577,6 +616,7 @@ function clickTest() {
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
     console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
     console.log('altitude: '+ map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].altitude);
+    console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
 }
 
 function construct(id) {
