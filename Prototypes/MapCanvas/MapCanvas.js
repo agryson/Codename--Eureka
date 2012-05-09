@@ -349,6 +349,7 @@ function smoothMountains(smoothness) {
     flatTerrain(smoothness*2.5);
 }
 
+/*creates the remaining terrain*/
 function flatTerrain(smoothness) {
     for (var y = 0; y < radarRad*2; y++) {
         for (var x = 0; x < radarRad*2; x++) {
