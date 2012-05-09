@@ -338,6 +338,7 @@ function smoothMountains(smoothness) {
                             map[yTemp][xTemp][1].type=1;
                             map[yTemp][xTemp][1].altitude+=5;
                             generateResources(xTemp,yTemp,1);
+                            map[y][x][1].altitude+=2;
                         }
                         xTemp += randWalk();
                         yTemp += randWalk();
