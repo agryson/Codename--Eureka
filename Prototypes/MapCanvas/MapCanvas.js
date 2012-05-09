@@ -298,10 +298,10 @@ function createMap() {
 		}
         
 	}
-    createMountains(30,300,90);
+    createMountains(30,300,150);
 }
 
-/*Generates the mountains, num=number of mountain spawn points, steps=length of the random walk, smoothness= how smootht he gradient should be*/
+/*Generates the mountains, num=number of mountain spawn points, steps=length of the random walk, smoothness= how smooth the gradient should be*/
 function createMountains(num, steps, smoothness) {
     var stepHolder = steps;
     for (num; num >= 0; num--) {
@@ -342,10 +342,11 @@ function smoothMountains(smoothness) {
                         yTemp += randWalk();
                     }
                 }
-            } catch(e){console.log('hmm... y:' + y + '  x:'+x+ '  '+ e);}       
+            } catch(e){//do nothing
+            }       
         }
     }
-    flatTerrain(smoothness*4);
+    flatTerrain(smoothness*2.5);
 }
 
 function flatTerrain(smoothness) {
@@ -365,26 +366,10 @@ function flatTerrain(smoothness) {
                         yTemp += randWalk();
                     }
                 }
-            } catch(e){console.log('hmm... y:' + y + '  x:'+x+ '  '+ e);}       
+            } catch(e){//do nothing
+            }       
         }
     }
-}
-
-/*returns the distance of x,y from a tile of type - avoid recursive use, it's quite heavy*/
-function distanceFrom(xIn,yIn,type) {
-    var minDist = radarRad*2;
-    for (var y = 0; y < radarRad*2; y++) {
-        for (var x = 0; x < radarRad*2; x++) {
-            try{
-            if(map[y][x][0]===true && map[y][x][1].type == type){
-                if (distance(xIn,yIn,x,y) < minDist){
-                    minDist = distance(xIn,yIn,x,y);
-                }
-            }
-            }catch(e){}
-        }
-    }
-    return minDist;
 }
 
 /*
