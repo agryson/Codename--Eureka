@@ -286,13 +286,12 @@ function createMap() {
 		map[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
 		for(x=0; x<radarRad*2; x++) {
             map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-			if(distance(x,y,radarRad,radarRad)<=radarRad) {                                         //check the radius, mark true if it's mapped, mark false if it's not in the circle
+			if(distance(x,y,radarRad,radarRad)<=radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
                 map[y][x][1].type = 4;
                 map[y][x][1].altitude=0;
                 map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
-                generateResources(x,y,0);
 			}else{
 				map[y][x][0]=false;
 			}
@@ -313,7 +312,7 @@ function createMountains(num, steps, smoothness) {
             try{
                 if(map[y][x][0] === true) {
                     map[y][x][1].type=2;
-                    map[y][x][1].altitude+=10;
+                    map[y][x][1].altitude = randGen(5,20);
                     generateResources(x,y,2);
                     x += randWalk();
                     y += randWalk();
@@ -336,9 +335,8 @@ function smoothMountains(smoothness) {
                     for(var steps = smoothness; steps > 0; steps--){
                         if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type !== 2) {
                             map[yTemp][xTemp][1].type=1;
-                            map[yTemp][xTemp][1].altitude+=5;
+                            map[yTemp][xTemp][1].altitude=randGen(4,10);
                             generateResources(xTemp,yTemp,1);
-                            map[y][x][1].altitude+=2;
                         }
                         xTemp += randWalk();
                         yTemp += randWalk();
@@ -360,7 +358,7 @@ function flatTerrain(smoothness) {
                     for(var steps = smoothness; steps > 0; steps--){
                         if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type !== 2 && map[yTemp][xTemp][1].type !== 1) {
                             map[yTemp][xTemp][1].type=0;
-                            map[yTemp][xTemp][1].altitude+=2;
+                            map[yTemp][xTemp][1].altitude=randGen(5,1);
                             generateResources(xTemp,yTemp,1);
                         }
                         xTemp += randWalk();
