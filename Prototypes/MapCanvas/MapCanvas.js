@@ -138,9 +138,9 @@ function nextTurn(){
 			if(map[y][x][0]===true) {
                 map[y][x][1].nextTurn();
 			}
-		}
-        
+		}   
 	}
+    console.log('It is now turn: '+ turn);
 }
 
 /*the main game loop*/
