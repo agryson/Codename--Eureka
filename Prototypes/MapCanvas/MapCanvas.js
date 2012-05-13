@@ -61,7 +61,7 @@ function init() {
     retY = radarRad;
     animate=0;
     radLimit=radarRad-8;
-
+    /*set up our noise layers*/
     noise = new ClassicalNoise();
     noise2 = new ClassicalNoise();
     noise3 = new ClassicalNoise();
@@ -79,8 +79,6 @@ function init() {
     tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
     tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
 
-    window.document.onkeydown = keydown;                                               //keyboard listener
-
     /*
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
@@ -91,7 +89,7 @@ function init() {
     radarCanvas.addEventListener('mousemove', function(evt){
         getMousePos(radarCanvas, evt);
     }, false);
-    
+    document.onkeydown = keypressed;                                               //keyboard listener
     drawLoc();
     mainLoop();
 }
@@ -197,9 +195,9 @@ function init() {
     };
 
 function altitude(x,y){
-    var gridSize = 45;
+    var gridSize = 75;
     var n = (noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
-    var n2 = (noise2.noise(x / (gridSize*2), y / (gridSize*2), 0) + 1) * 127;
+    var n2 = (noise2.noise(x / (gridSize/2), y / (gridSize/2), 0) + 1) * 127;
     var n3 = (noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
     
     return Math.round((n+n2+n3)/3);
@@ -224,8 +222,7 @@ function mainLoop() {
 }
 
 /*detect when an arrow key is pressed and move accordingly*/
-function keydown(e) {
-    console.log('in keydown '+ e);
+function keypressed(e) {
     switch(e.keyCode) {
         case 38:
             move('up');
