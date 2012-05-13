@@ -637,7 +637,11 @@ function drawRadar() {
                         radarPixels.data[idx + 3] = 255;
                         break;
                     default:
-                        //do nothing
+                        //If we're here, we're probably dealing with a building or robot...
+                        radarPixels.data[idx + 0] = 0;
+                        radarPixels.data[idx + 1] = 200;
+                        radarPixels.data[idx + 2] = 0;
+                        radarPixels.data[idx + 3] = 255;
                 }
             }
         }
