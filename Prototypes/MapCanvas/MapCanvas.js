@@ -70,8 +70,8 @@ function init() {
     tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
     tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
 
-    document.onkeydown = keydown;                                               //keyboard listener
-    
+    document.onkeypress = keyPressed;                                               //keyboard listener
+
     /*
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
@@ -106,7 +106,8 @@ function mainLoop() {
 }
 
 /*detect when an arrow key is pressed and move accordingly*/
-function keydown(e) {
+function keyPressed(e) {
+    console.log('in keydown '+ e);
     switch(e.keyCode) {
         case 38:
             move('up');
@@ -124,7 +125,6 @@ function keydown(e) {
             console.log("Uhm... that key doesn't do anything... ");
           break;
     }
-    drawLoc();
 }
 
 /*Reads the mouse position*/
@@ -158,28 +158,30 @@ function move(dir) {
     downY = retY+2;
     leftX = retX-1;
     rightX = retX+1;
+    console.log('Inside move, before switch '+ dir);
     switch(dir) {
         case 'up':
-            if(distance(retX,upY, radarRad,radarRad)<radLimit) {
+            if(distance(retX,upY, radarRad,radarRad)<=radLimit) {
                 retY = upY;
             }
             break;         
         case 'down':
-            if(distance(retX,downY, radarRad,radarRad)<radLimit) {
+            if(distance(retX,downY, radarRad,radarRad)<=radLimit) {
                 retY = downY;
             }
             break;         
         case 'left':
-            if(distance(leftX,retY, radarRad,radarRad)<radLimit) {
+            if(distance(leftX,retY, radarRad,radarRad)<=radLimit) {
                 retX = leftX;
             }
             break;          
         case 'right':
-            if(distance(rightX,retY, radarRad,radarRad)<radLimit) {
+            if(distance(rightX,retY, radarRad,radarRad)<=radLimit) {
                 retX = rightX;
             }
             break;         
         default:
+            console.log('inside move');
             break;
     }
     drawZoomMap();
@@ -598,10 +600,13 @@ function clickTest() {
         drawRadar();
     }
     document.body.style.cursor="default";
+    var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
+    var rng = new CustomRandom(retX);
+    console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
-    console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
-    console.log('altitude: '+ map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].altitude);
-    console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
+    //console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
+    //console.log('altitude: '+ map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].altitude);
+    //console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
 }
 
 function construct(id) {
@@ -613,3 +618,39 @@ function construct(id) {
         document.body.style.cursor="url('images/bdozePointer.png'), default";
     }
 }
+
+/*sets the coordinates for a var*/
+function coordinate(x,y){
+    var out = new Array(2);
+    out = [x,y];
+    return out;
+}
+
+//TEST
+var CustomRandom = function(nseed) {
+
+    var seed,
+        constant = Math.pow(2, 13)+1,
+        prime = 37,
+        maximum = Math.pow(2, 50);
+ 
+    if (nseed) {
+        seed = nseed;
+    }
+ 
+    if (seed == null) {
+//if there is no seed, use timestamp
+        seed = (new Date()).getTime();
+    } 
+ 
+    return {
+        next : function() {
+            seed *= constant;
+            seed += prime;
+            seed %= maximum;
+            
+            return seed;
+        }
+    }
+}
+
