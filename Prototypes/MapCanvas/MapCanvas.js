@@ -7,7 +7,7 @@ var upY, downY, leftX, rightX;                                                  
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
 //TEST of PERLIN*******************************
-var noise;
+var noise,noise2,noise3;
 /*
 var seedMod = Math.random();
 var seedToUse;
@@ -178,9 +178,12 @@ function altitude(x,y){
     //var doubles = 20;
     //return octave0.getNoiseAt(x,y);// + octave1.getNoiseAt(x,y) + 4*octave2.getNoiseAt(x,y);
     
-    var gridSize = 150;
-
-    return (noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;//TEST
+    var gridSize = 180;
+    var n = (noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
+    var n2 = (noise2.noise(x / (gridSize/2), y / (gridSize/2), 0) + 1) * 127;
+    var n3 = (noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
+    
+    return (n+(n2*0.5)+(n3*0.25))/1.75//TEST
 }
 
 //********************************************
@@ -256,6 +259,8 @@ octave2 = new Perlin(Math.pow(seedToUse, 2), 24);
 */
 //rando = Math.random();
 noise = new ClassicalNoise();
+noise2 = new ClassicalNoise();
+noise3 = new ClassicalNoise();
 //endTEST***************
 
 
