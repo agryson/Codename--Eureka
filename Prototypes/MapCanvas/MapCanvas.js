@@ -117,7 +117,7 @@ function init() {
     radarCanvas.addEventListener('mousemove', function(evt){
         getMousePos(radarCanvas, evt);
     }, false);
-    document.onkeydown = keypressed;                                               //keyboard listener
+    document.onkeyup = keypressed;                                               //keyboard listener
     drawLoc();
     mainLoop();
 }
