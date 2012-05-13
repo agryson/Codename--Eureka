@@ -8,20 +8,48 @@ var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
                                                 //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 var noise,noise2,noise3;                                                        //vars for world generation
+var turn = 0;
 
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 function Terrain() {
-    this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water
-    this.altitude; //a function of distance from mountains
+    this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
+    this.altitude; //altitude
     this.resources; //an array that holds the different metal and resource types
+    this.turns = false;  //remembers how many turns are left to become a tile of the desired type
+    this.prepare = function(){
+        console.log(this.turns);
+        if (this.type < 3 && this.turns === false){
+            this.turns = this.type + 1;
+            this.type=5;
+        }
+    };
+    this.nextTurn = function(){
+       if (this.turns !== false && this.turns !== 0){
+           this.turns -=1;
+           console.log('turns left: '+this.turns);
+       } else if(this.turns === 0){
+           this.type = 3;
+       }
+    };
 }
 
 function Building() {
     this.type; //type of building
-    this.health; //health of building
-    this.air; //boolean, does building have air?
-    this.age;
+    this.health = 100; //health of building
+    this.air = false; //boolean, does building have air?
+    this.age = 0;
+    this.nextTurn = function(){
+      //placeholder  
+    };
+}
+
+function Robot(name, type) {
+    this.name = name; //the robot's name/number so we can keep track of which robot is doing what
+    this.type = type; //type of robot 0=dozer, 1 = miner ...
+    this.health = 100;
+    this.busy = false; //is the robot currently working or not
+    this.position = new Array(2); //position in x,y coordinates
 }
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
@@ -99,6 +127,20 @@ Thinkof num as the modifier, min as the base
 */
 function randGen(num, min){
     return Math.floor(Math.random()*num)+min;
+}
+
+function nextTurn(){
+    var x;
+    var y;
+    turn += 1;
+	for(y=0;y<radarRad*2;y++) {
+		for(x=0; x<radarRad*2; x++) {
+			if(map[y][x][0]===true) {
+                map[y][x][1].nextTurn();
+			}
+		}
+        
+	}
 }
 
 /*the main game loop*/
@@ -699,7 +741,7 @@ function clickTest() {
     var kind;
     switch (clickedOn) {
         case 'test1':
-            kind = 3;
+            kind = 5;
             clickedOn = null;
             break;
         case 'test2':
@@ -712,11 +754,13 @@ function clickTest() {
         default:
             break;
     }
-    if (kind >= 0 && map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type !== 4){
-        map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type = kind;
-        drawZoomMap();
-        drawRadar();
+    if (kind >= 0 && kind <= 4 && map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type !== 4){
+        //map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type = kind;
+    } else if(kind == 5){
+        map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].prepare();
     }
+    drawZoomMap();
+    drawRadar();
     document.body.style.cursor="default";
     //var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
     //var rng = new CustomRandom(retX);
