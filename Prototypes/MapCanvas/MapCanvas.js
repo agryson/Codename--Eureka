@@ -24,7 +24,7 @@ function Building() {
     this.age;
 }
 
-//OTHER**********************************************************************************************
+//GENERAL SETUP AND TOOLS**********************************************************************************************
 /*Set up any global stuff that won't ever change after page load*/
 function init() {
     /*get the topmost canvases that we'll need for mouse tracking*/
@@ -93,6 +93,242 @@ function init() {
     drawLoc();
     mainLoop();
 }
+
+/*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
+Thinkof num as the modifier, min as the base
+*/
+function randGen(num, min){
+    return Math.floor(Math.random()*num)+min;
+}
+
+/*the main game loop*/
+function mainLoop() {
+    if (animate==1){                                                            //number of frames = n+1
+       animate = 0;
+    } else {
+        animate +=1;
+    }
+    drawZoomMap();
+    setTimeout(mainLoop, 200);                                                  //set the framerate here
+}
+
+/*detect when an arrow key is pressed and move accordingly*/
+function keypressed(e) {
+    switch(e.keyCode) {
+        case 38:
+            move('up');
+            break;
+        case 40:
+            move('down');
+            break;         
+        case 37:
+            move('left');
+            break;         
+        case 39:
+            move('right');
+            break;  
+        default:
+            console.log("Uhm... that key doesn't do anything... ");
+          break;
+    }
+
+}
+
+/*Reads the mouse position*/
+function getMousePos(canvas, evt){
+    // get canvas position
+    var obj = canvas;
+    var top = 0;
+    var left = 0;
+    
+    while (obj && obj.tagName != 'BODY') {
+        top += obj.offsetTop;
+        left += obj.offsetLeft;
+        obj = obj.offsetParent;
+        
+    }
+    
+    // return relative mouse position
+    mouseX = evt.clientX - left + window.pageXOffset;
+    mouseY = evt.clientY - top + window.pageYOffset;
+    drawmPanLoc();
+    return {
+        x: mouseX,
+        y: mouseY
+    };
+    
+}
+
+/*shifts our reference reticule (if possible), then redraws the map*/
+function move(dir) {
+    var upY = retY-2;
+    var downY = retY+2;
+    var leftX = retX-1;
+    var rightX = retX+1;
+    console.log('Inside move, before switch '+ dir);
+    switch(dir) {
+        case 'up':
+            if(distance(retX,upY, radarRad,radarRad)<=radLimit) {
+                retY = upY;
+            }
+            break;         
+        case 'down':
+            if(distance(retX,downY, radarRad,radarRad)<=radLimit) {
+                retY = downY;
+            }
+            break;         
+        case 'left':
+            if(distance(leftX,retY, radarRad,radarRad)<=radLimit) {
+                retX = leftX;
+            }
+            break;          
+        case 'right':
+            if(distance(rightX,retY, radarRad,radarRad)<=radLimit) {
+                retX = rightX;
+            }
+            break;         
+        default:
+            console.log('inside move');
+            break;
+    }
+    drawZoomMap();
+    drawLoc();
+}
+
+/*
+can do stuff with adjacent hexes
+e.g.
+map[adjacent(x,y,0)[0]][adjacent(x,y,0)[1]][1].type = 0;
+*/
+function adjacent(x,y,index) {
+    if(y%2 === 0) {
+        index += 6;
+    }
+    switch(index) {
+        case 0:
+            return [y-1,x-1];
+        case 1:
+            return [y-1,x];
+        case 2:
+            return [y,x+1];
+        case 3:
+            return [y+1,x];
+        case 4:
+            return [y+1,x-1];
+        case 5:
+            return [y,x-1];
+        case 6:
+            return [y-1,x];
+        case 7:
+            return [y-1,x+1];
+        case 8:
+            return [y,x+1];
+        case 9:
+            return [y+1,x+1];
+        case 10:
+            return [y+1,x]; 
+        case 11:
+            return [y,x-1];
+        default:
+            console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
+    }
+}
+
+/*returns the distance of the given point from the centrepoint*/
+function distance(x1,y1,x2,y2) {
+    return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+}
+
+/*Random walk function for "clumpy" randomness*/
+function randWalk() {
+    var walk = Math.floor(Math.random()*3);
+        switch(walk) {
+        case 0:
+            return -1;
+        case 1:
+            return 0;
+        case 2:
+            return 1;
+        default:
+            break;
+    }
+}
+
+/*Get the tile x or y value for the tile the mouse is currently over*/
+function getTile(axis) {
+    var x, y, yDiff, xDiff, left, right;
+    
+    //set the general cases
+    y = Math.floor(mouseY/(70*0.75));
+    
+    if (y%2 !== 0) {
+        x = Math.floor((mouseX-30)/60);                                         //We need an offset for the shifted rows
+    } else {
+        x = Math.floor(mouseX/60);
+    }
+    
+    //corner case code
+    yDiff = (mouseY/(70*0.75))-y;
+    if (yDiff < 0.33) {                                                         //If we're in the top third of the reference rectangle
+        //tells which intermediate block we're in...
+        if (y%2 !== 0) {
+            xDiff = (((mouseX-30)/60)-x);
+            //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
+            //Are we on the left or right hand side fo the top third?
+            if(xDiff<0.5) {
+                left=0.5-xDiff;                                                 //Adjust to get the opposite length of the 60° internal angle
+                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {                  //I multiply by 10 so that I'm not dealing with numbers less than 1 
+                    y -=1;                                                      //change the reference appropriately
+                }
+            } else {                                                            //rinse repeat for all cases
+                right = xDiff-0.5;
+                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                    x += 1;
+                }
+            }
+            
+        } else {
+            xDiff = ((mouseX/60)-x);
+            if(xDiff<0.5) {
+                left=0.5-xDiff;
+                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                    x -= 1;
+                }
+            } else {
+                right = xDiff-0.5;
+                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                    y -=1;
+                }
+            }
+        }
+
+    }
+    if(axis === 'x') {                                                          //return the appropriate tile axis reference
+        return x;
+    } else {
+        return y;
+    }
+}
+
+/*When the radar is clicked, moves the map to that location*/
+function jump() {
+    var x = mouseX;
+    var y = mouseY;
+    //ensure we're dealing with a multiple of two (since we move up and down in twos)
+    if (y%2 !== 0) {
+        y -= 1;
+    }
+    //then set the new values and draw
+    if (distance(x,y, radarRad, radarRad) < radLimit) {
+        retX = x;
+        retY = y;
+        drawLoc();
+    }
+}
+
+//WORLD GENERATION****************************************************************
 //FOLLOWING INDENTED CODE WAS 'BORROWED' FROM STACK OVERFLOW
     // Ported from Stefan Gustavson's java implementation
     // http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
@@ -203,107 +439,112 @@ function altitude(x,y){
     return Math.round((n+n2+n3)/3);
 }
 
-/*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
-Thinkof num as the modifier, min as the base
-*/
-function randGen(num, min){
-    return Math.floor(Math.random()*num)+min;
-}
-
-/*the main game loop*/
-function mainLoop() {
-    if (animate==1){                                                            //number of frames = n+1
-       animate = 0;
-    } else {
-        animate +=1;
-    }
-    drawZoomMap();
-    setTimeout(mainLoop, 200);                                                  //set the framerate here
-}
-
-/*detect when an arrow key is pressed and move accordingly*/
-function keypressed(e) {
-    switch(e.keyCode) {
-        case 38:
-            move('up');
-            break;
-        case 40:
-            move('down');
-            break;         
-        case 37:
-            move('left');
-            break;         
-        case 39:
-            move('right');
-            break;  
-        default:
-            console.log("Uhm... that key doesn't do anything... ");
-          break;
-    }
-
-}
-
-/*Reads the mouse position*/
-function getMousePos(canvas, evt){
-    // get canvas position
-    var obj = canvas;
-    var top = 0;
-    var left = 0;
-    
-    while (obj && obj.tagName != 'BODY') {
-        top += obj.offsetTop;
-        left += obj.offsetLeft;
-        obj = obj.offsetParent;
+/*creates the map*/
+function createMap() {
+    var x;
+	var y;
+	for(y=0;y<radarRad*2;y++) {
+		map[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
+		for(x=0; x<radarRad*2; x++) {
+            map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
+			if(distance(x,y,radarRad,radarRad)<=radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
+				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
+				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
+                map[y][x][1].altitude=altitude(x,y);
+                map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
+                setType(x,y);
+                generateResources(x,y,map[y][x][1].type);
+			}else{
+				map[y][x][0]=false;
+			}
+		}
         
+	}
+    //genRivers(500, 3000);
+}
+/*
+//Rivers don't look convincing enough but I may want to come back to them at some point...
+function genRivers(num, steps) {
+    console.log('called rivers');
+    var x = Math.floor(Math.random()*radarRad*2);
+    var y = Math.floor(Math.random()*radarRad*2);
+    for (num; num >= 0; num--) {
+        river(x,y,steps);
+        x = Math.floor(Math.random()*radarRad*2);
+        y = Math.floor(Math.random()*radarRad*2);
     }
-    
-    // return relative mouse position
-    mouseX = evt.clientX - left + window.pageXOffset;
-    mouseY = evt.clientY - top + window.pageYOffset;
-    drawmPanLoc();
-    return {
-        x: mouseX,
-        y: mouseY
-    };
-    
+    drawRadar();
 }
 
-/*shifts our reference reticule (if possible), then redraws the map*/
-function move(dir) {
-    var upY = retY-2;
-    var downY = retY+2;
-    var leftX = retX-1;
-    var rightX = retX+1;
-    console.log('Inside move, before switch '+ dir);
-    switch(dir) {
-        case 'up':
-            if(distance(retX,upY, radarRad,radarRad)<=radLimit) {
-                retY = upY;
+function river(x,y,steps){
+    var tempX = x;
+    var tempY = y;
+    try{
+    if (map[y][x][0] === true && map[y][x][1] !== null && map[y][x][1].altitude > 160){
+        for (steps; steps >=0; steps--) {
+            map[y][x][1].type = 4;
+            for (var i = 0; i < 6; i++){
+                try{
+                if  (map[tempY][tempX][0] === true && map[adjacent(x,y,i)[0]][adjacent(x,y,i)[1]][1].altitude <= map[tempY][tempX][1].altitude){
+                    tempX = adjacent(x,y,i)[1];
+                    tempY = adjacent(x,y,i)[0];
+                }
+                }catch(e){}
             }
-            break;         
-        case 'down':
-            if(distance(retX,downY, radarRad,radarRad)<=radLimit) {
-                retY = downY;
+            if (x == tempX && y == tempY){
+                tempX = adjacent(x,y,randGen(6,0))[1];
+                tempY = adjacent(x,y,randGen(6,0))[0];
+                console.log('new riverpoint   x' + x + '   y:' + y);
             }
-            break;         
-        case 'left':
-            if(distance(leftX,retY, radarRad,radarRad)<=radLimit) {
-                retX = leftX;
-            }
-            break;          
-        case 'right':
-            if(distance(rightX,retY, radarRad,radarRad)<=radLimit) {
-                retX = rightX;
-            }
-            break;         
-        default:
-            console.log('inside move');
+            
+            x = tempX;
+            y = tempY;
+            
+        }
+    }
+    }catch(e){}
+}
+*/
+
+/*Sets the tile type as a function of altitude*/
+function setType(x,y) {
+    var altitude = map[y][x][1].altitude;
+    var high = 160;
+    var med = 130;
+    var low = 90;
+    
+    if (altitude >= high){
+        map[y][x][1].type = 2;
+    } else if(altitude < high && altitude >= med){
+        map[y][x][1].type = 1;
+    } else if(altitude < med && altitude >= low ){
+        map[y][x][1].type = 0;
+    } else {
+        map[y][x][1].type = 4;
+    }
+}
+
+/*sets the resources appropriately for the terrain type at x,y*/
+function generateResources(x,y,terrain) {
+    switch (terrain) {
+        case 0:
+            map[y][x][1].resources[0]=randGen(2,0);
+            map[y][x][1].resources[1]=randGen(2,0);
             break;
+        case 1:
+            map[y][x][1].resources[0]=randGen(5,10);
+            map[y][x][1].resources[1]=randGen(5,10);
+            break;
+        case 2:
+            map[y][x][1].resources[0]=randGen(5,20);
+            map[y][x][1].resources[1]=randGen(5,20);
+            break;
+        default:
+            //do nothing
     }
-    drawZoomMap();
-    drawLoc();
 }
 
+//MAPS**********************************************************************************
 /*a placeholder to fill in our radar*/
 function drawRadar() {
     var radarPixels = radar.createImageData(radarRad*2, radarRad*2);
@@ -404,155 +645,6 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
     }
 }
 
-/*creates the map*/
-function createMap() {
-	var x;
-	var y;
-	for(y=0;y<radarRad*2;y++) {
-		map[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
-		for(x=0; x<radarRad*2; x++) {
-            map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-			if(distance(x,y,radarRad,radarRad)<=radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
-				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
-				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
-                map[y][x][1].altitude=altitude(x,y);
-                map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
-                setType(x,y);
-                generateResources(x,y,map[y][x][1].type);
-			}else{
-				map[y][x][0]=false;
-			}
-		}
-        
-	}
-    //genRivers(500, 3000);
-}
-/*
-//Rivers don't look convincing enough but I may want to come back to them at some point...
-function genRivers(num, steps) {
-    console.log('called rivers');
-    var x = Math.floor(Math.random()*radarRad*2);
-    var y = Math.floor(Math.random()*radarRad*2);
-    for (num; num >= 0; num--) {
-        river(x,y,steps);
-        x = Math.floor(Math.random()*radarRad*2);
-        y = Math.floor(Math.random()*radarRad*2);
-    }
-    drawRadar();
-}
-
-function river(x,y,steps){
-    var tempX = x;
-    var tempY = y;
-    try{
-    if (map[y][x][0] === true && map[y][x][1] !== null && map[y][x][1].altitude > 160){
-        for (steps; steps >=0; steps--) {
-            map[y][x][1].type = 4;
-            for (var i = 0; i < 6; i++){
-                try{
-                if  (map[tempY][tempX][0] === true && map[adjacent(x,y,i)[0]][adjacent(x,y,i)[1]][1].altitude <= map[tempY][tempX][1].altitude){
-                    tempX = adjacent(x,y,i)[1];
-                    tempY = adjacent(x,y,i)[0];
-                }
-                }catch(e){}
-            }
-            if (x == tempX && y == tempY){
-                tempX = adjacent(x,y,randGen(6,0))[1];
-                tempY = adjacent(x,y,randGen(6,0))[0];
-                console.log('new riverpoint   x' + x + '   y:' + y);
-            }
-            
-            x = tempX;
-            y = tempY;
-            
-        }
-    }
-    }catch(e){}
-}
-*/
-
-/*Sets the tile type as a function of altitude*/
-function setType(x,y) {
-    var altitude = map[y][x][1].altitude;
-    var high = 160;
-    var med = 130;
-    var low = 90;
-    
-    if (altitude >= high){
-        map[y][x][1].type = 2;
-    } else if(altitude < high && altitude >= med){
-        map[y][x][1].type = 1;
-    } else if(altitude < med && altitude >= low ){
-        map[y][x][1].type = 0;
-    } else {
-        map[y][x][1].type = 4;
-    }
-}
-
-/*
-can do stuff with adjacent hexes
-e.g.
-map[adjacent(x,y,0)[0]][adjacent(x,y,0)[1]][1].type = 0;
-*/
-function adjacent(x,y,index) {
-    if(y%2 === 0) {
-        index += 6;
-    }
-    switch(index) {
-        case 0:
-            return [y-1,x-1];
-        case 1:
-            return [y-1,x];
-        case 2:
-            return [y,x+1];
-        case 3:
-            return [y+1,x];
-        case 4:
-            return [y+1,x-1];
-        case 5:
-            return [y,x-1];
-        case 6:
-            return [y-1,x];
-        case 7:
-            return [y-1,x+1];
-        case 8:
-            return [y,x+1];
-        case 9:
-            return [y+1,x+1];
-        case 10:
-            return [y+1,x]; 
-        case 11:
-            return [y,x-1];
-        default:
-            console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
-    }
-}
-
-/*sets the resources appropriately for the terrain type at x,y*/
-function generateResources(x,y,terrain) {
-    switch (terrain) {
-        case 0:
-            map[y][x][1].resources[0]=randGen(2,0);
-            map[y][x][1].resources[1]=randGen(2,0);
-            break;
-        case 1:
-            map[y][x][1].resources[0]=randGen(5,10);
-            map[y][x][1].resources[1]=randGen(5,10);
-            break;
-        case 2:
-            map[y][x][1].resources[0]=randGen(5,20);
-            map[y][x][1].resources[1]=randGen(5,20);
-            break;
-        default:
-            //do nothing
-    }
-}
-
-/*returns the distance of the given point from the centrepoint*/
-function distance(x1,y1,x2,y2) {
-    return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-}
-
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
 function drawZoomMap() {
     mPanel.clearRect(0,0,720,720);
@@ -575,21 +667,6 @@ function drawZoomMap() {
     //} else {
         //document.getElementById('test1').style.display='none';
     //}
-}
-
-/*Random walk function for "clumpy" randomness*/
-function randWalk() {
-    var walk = Math.floor(Math.random()*3);
-        switch(walk) {
-        case 0:
-            return -1;
-        case 1:
-            return 0;
-        case 2:
-            return 1;
-        default:
-            break;
-    }
 }
 
 /*draws the current location on the small radar map*/
@@ -616,80 +693,7 @@ function drawmPanLoc() {
     }
 }
 
-/*Get the tile x or y value for the tile the mouse is currently over*/
-function getTile(axis) {
-    var x, y, yDiff, xDiff, left, right;
-    
-    //set the general cases
-    y = Math.floor(mouseY/(70*0.75));
-    
-    if (y%2 !== 0) {
-        x = Math.floor((mouseX-30)/60);                                         //We need an offset for the shifted rows
-    } else {
-        x = Math.floor(mouseX/60);
-    }
-    
-    //corner case code
-    yDiff = (mouseY/(70*0.75))-y;
-    if (yDiff < 0.33) {                                                         //If we're in the top third of the reference rectangle
-        //tells which intermediate block we're in...
-        if (y%2 !== 0) {
-            xDiff = (((mouseX-30)/60)-x);
-            //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
-            //Are we on the left or right hand side fo the top third?
-            if(xDiff<0.5) {
-                left=0.5-xDiff;                                                 //Adjust to get the opposite length of the 60° internal angle
-                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {                  //I multiply by 10 so that I'm not dealing with numbers less than 1 
-                    y -=1;                                                      //change the reference appropriately
-                }
-            } else {                                                            //rinse repeat for all cases
-                right = xDiff-0.5;
-                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
-                    y -=1;
-                    x += 1;
-                }
-            }
-            
-        } else {
-            xDiff = ((mouseX/60)-x);
-            if(xDiff<0.5) {
-                left=0.5-xDiff;
-                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
-                    y -=1;
-                    x -= 1;
-                }
-            } else {
-                right = xDiff-0.5;
-                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
-                    y -=1;
-                }
-            }
-        }
-
-    }
-    if(axis === 'x') {                                                          //return the appropriate tile axis reference
-        return x;
-    } else {
-        return y;
-    }
-}
-
-/*When the radar is clicked, moves the map to that location*/
-function jump() {
-    var x = mouseX;
-    var y = mouseY;
-    //ensure we're dealing with a multiple of two (since we move up and down in twos)
-    if (y%2 !== 0) {
-        y -= 1;
-    }
-    //then set the new values and draw
-    if (distance(x,y, radarRad, radarRad) < radLimit) {
-        retX = x;
-        retY = y;
-        drawLoc();
-    }
-}
-
+//TESTING SECTION********************************************************************
 //testing how to write to main map array
 function clickTest() {
     var kind;
