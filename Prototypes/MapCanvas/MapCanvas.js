@@ -6,6 +6,113 @@ var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 
+//TEST of PERLIN*******************************
+var seedToUse;
+var octave0,octave1;
+
+
+function Perlin(seedIn,octaveIn) {
+    this.octave = octaveIn;
+    var seed = seedIn;
+    console.log('called Perlin');
+    //console.log('center noise = ' + getNoiseAt(150,150));
+    //var rng = new CustomRandom(retX);
+    
+    /*
+    returns the noise at a given position on the grid
+    */
+    this.getNoiseAt = function(x,y) {
+        console.log('tried getNoiseAt');
+        var xMin = x / this.octave;
+        var xMax = xMin + 1;
+        var yMin = y / this.octave;
+        var yMax = yMin + 1;
+        var a = coordinate(xMin,yMin);
+        var b = coordinate(xMax,yMin);
+        var c = coordinate(xMax,yMax);
+        var d = coordinate(xMin,yMax);
+        var ra = getRandAt(a);
+        var rb = getRandAt(b);
+        var rc = getRandAt(c);
+        var rd = getRandAt(d);
+        var out = cosInterpolate(
+                    cosInterpolate(ra,rb,(x-xMin*this.octave)/this.octave),
+                    cosInterpolate(rd,rc,(x-xMin*this.octave)/this.octave),
+                    ((y - yMin*this.octave)/this.octave));
+        return out;
+    }
+
+    function cosInterpolate(a,b,i){
+        var wiggle = (1 - Math.cos(i*Math.PI)*0.5);
+        return (a*(1 - wiggle) + b*wiggle);
+    }
+
+    function getRandAt(input) {
+        var hold = 10000*(Math.sin(input[0]) + Math.cos(input[1]) + Math.tan(seed));
+        var rng = new CustomRandom(hold);
+        return rng.next();
+    }
+}
+
+function coordinate(x,y){
+    /*
+This function assigns an array to a variable
+e.g.:
+var a = coordinate(25,36);
+a[0] == 25;
+a[1] == 36;
+*/
+    var out = new Array(2);
+    out = [x,y];
+    return out;
+}
+/*
+var CustomRandom = function(nseed) {
+    var seeder,
+        constant = Math.pow(2, 13)+1,
+        prime = 37,
+        maximum = Math.pow(2, 50);
+ 
+    if (nseed) {
+        seeder = nseed;
+    }
+ 
+    if (seeder === null) {
+//if there is no seed, use timestamp
+        seeder = (new Date()).getTime();
+    } 
+ 
+    return {
+        next : function() {
+            seeder *= constant;
+            seeder += prime;
+            seeder %= maximum;
+            
+            return seeder;
+        }
+    };
+};
+*/
+function altitude(x,y){
+    var doubles = 6;
+    return doubles*2*octave0.getNoiseAt(x,y) + doubles*octave1.getNoiseAt(x,y);
+
+}
+
+
+
+//********************************************
+
+
+
+
+
+
+
+
+
+
+
 /*Define our Constructors*/
 function Terrain() {
     this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water
@@ -56,7 +163,17 @@ function init() {
     retY = radarRad;
     animate=0;
     radLimit=radarRad-8;
-    
+
+
+//startTEST**************
+seedToUse = 5330;
+octave0 = new Perlin(seedToUse, 10);
+octave1 = new Perlin(10*Math.sqrt(seedToUse), 5);
+
+//endTEST***************
+
+
+
     /*create the game's map*/
     map = new Array(radarRad*2);
     createMap();
@@ -70,7 +187,7 @@ function init() {
     tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
     tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
 
-    document.onkeypress = keyPressed;                                               //keyboard listener
+    window.document.onkeydown = keydown;                                               //keyboard listener
 
     /*
     * Event listeners track the mouse movements. 
@@ -106,7 +223,7 @@ function mainLoop() {
 }
 
 /*detect when an arrow key is pressed and move accordingly*/
-function keyPressed(e) {
+function keydown(e) {
     console.log('in keydown '+ e);
     switch(e.keyCode) {
         case 38:
@@ -125,6 +242,7 @@ function keyPressed(e) {
             console.log("Uhm... that key doesn't do anything... ");
           break;
     }
+
 }
 
 /*Reads the mouse position*/
@@ -292,7 +410,7 @@ function createMap() {
 				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
 				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
                 map[y][x][1].type = 4;
-                map[y][x][1].altitude=0;
+                map[y][x][1].altitude=altitude(x,y);
                 map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
 			}else{
 				map[y][x][0]=false;
@@ -600,12 +718,12 @@ function clickTest() {
         drawRadar();
     }
     document.body.style.cursor="default";
-    var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
-    var rng = new CustomRandom(retX);
-    console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
+    //var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
+    //var rng = new CustomRandom(retX);
+    //console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
     //console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
-    //console.log('altitude: '+ map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].altitude);
+    console.log('altitude: '+ map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].altitude);
     //console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
 }
 
@@ -638,7 +756,7 @@ var CustomRandom = function(nseed) {
         seed = nseed;
     }
  
-    if (seed == null) {
+    if (seed === null) {
 //if there is no seed, use timestamp
         seed = (new Date()).getTime();
     } 
@@ -651,6 +769,6 @@ var CustomRandom = function(nseed) {
             
             return seed;
         }
-    }
-}
+    };
+};
 
