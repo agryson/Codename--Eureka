@@ -5,7 +5,7 @@
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
 var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
     clickedOn; //hold info for various bits and bobs
-var upY, downY, leftX, rightX;                                                  //movement vars
+                                                //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 var noise,noise2,noise3;                                                        //vars for world generation
 
@@ -197,12 +197,12 @@ function init() {
     };
 
 function altitude(x,y){
-    var gridSize = 35;
+    var gridSize = 45;
     var n = (noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
     var n2 = (noise2.noise(x / (gridSize*2), y / (gridSize*2), 0) + 1) * 127;
     var n3 = (noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
     
-    return (n+(n2)+(n3*0.25))/2.25;
+    return Math.round((n+n2+n3)/3);
 }
 
 /*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
@@ -273,10 +273,10 @@ function getMousePos(canvas, evt){
 
 /*shifts our reference reticule (if possible), then redraws the map*/
 function move(dir) {
-    upY = retY-2;
-    downY = retY+2;
-    leftX = retX-1;
-    rightX = retX+1;
+    var upY = retY-2;
+    var downY = retY+2;
+    var leftX = retX-1;
+    var rightX = retX+1;
     console.log('Inside move, before switch '+ dir);
     switch(dir) {
         case 'up':
@@ -421,16 +421,60 @@ function createMap() {
                 map[y][x][1].altitude=altitude(x,y);
                 map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
                 setType(x,y);
+                generateResources(x,y,map[y][x][1].type);
 			}else{
 				map[y][x][0]=false;
 			}
 		}
         
 	}
-    
+    //genRivers(500, 3000);
+}
+/*
+//Rivers don't look convincing enough but I may want to come back to them at some point...
+function genRivers(num, steps) {
+    console.log('called rivers');
+    var x = Math.floor(Math.random()*radarRad*2);
+    var y = Math.floor(Math.random()*radarRad*2);
+    for (num; num >= 0; num--) {
+        river(x,y,steps);
+        x = Math.floor(Math.random()*radarRad*2);
+        y = Math.floor(Math.random()*radarRad*2);
+    }
+    drawRadar();
 }
 
-/*Generates the mountains, num=number of mountain spawn points, steps=length of the random walk, smoothness= how smooth the gradient should be*/
+function river(x,y,steps){
+    var tempX = x;
+    var tempY = y;
+    try{
+    if (map[y][x][0] === true && map[y][x][1] !== null && map[y][x][1].altitude > 160){
+        for (steps; steps >=0; steps--) {
+            map[y][x][1].type = 4;
+            for (var i = 0; i < 6; i++){
+                try{
+                if  (map[tempY][tempX][0] === true && map[adjacent(x,y,i)[0]][adjacent(x,y,i)[1]][1].altitude <= map[tempY][tempX][1].altitude){
+                    tempX = adjacent(x,y,i)[1];
+                    tempY = adjacent(x,y,i)[0];
+                }
+                }catch(e){}
+            }
+            if (x == tempX && y == tempY){
+                tempX = adjacent(x,y,randGen(6,0))[1];
+                tempY = adjacent(x,y,randGen(6,0))[0];
+                console.log('new riverpoint   x' + x + '   y:' + y);
+            }
+            
+            x = tempX;
+            y = tempY;
+            
+        }
+    }
+    }catch(e){}
+}
+*/
+
+/*Sets the tile type as a function of altitude*/
 function setType(x,y) {
     var altitude = map[y][x][1].altitude;
     var high = 160;
@@ -677,7 +721,7 @@ function clickTest() {
     //var rng = new CustomRandom(retX);
     //console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
-    //console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
+    console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
     console.log('altitude: '+ map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].altitude);
     //console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
 }
@@ -692,38 +736,4 @@ function construct(id) {
     }
 }
 
-/*sets the coordinates for a var*/
-function coordinate(x,y){
-    var out = new Array(2);
-    out = [x,y];
-    return out;
-}
-
-//TEST
-var CustomRandom = function(nseed) {
-
-    var seed,
-        constant = Math.pow(2, 13)+1,
-        prime = 37,
-        maximum = Math.pow(2, 50);
- 
-    if (nseed) {
-        seed = nseed;
-    }
- 
-    if (seed === null) {
-//if there is no seed, use timestamp
-        seed = (new Date()).getTime();
-    } 
- 
-    return {
-        next : function() {
-            seed *= constant;
-            seed += prime;
-            seed %= maximum;
-            
-            return seed/Math.random();
-        }
-    };
-};
 
