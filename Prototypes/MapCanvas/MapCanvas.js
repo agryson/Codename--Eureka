@@ -1,203 +1,15 @@
 //TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
+
+//GLOBAL VARS**********************************************************************************************
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
 var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
     clickedOn; //hold info for various bits and bobs
 var upY, downY, leftX, rightX;                                                  //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
+var noise,noise2,noise3;                                                        //vars for world generation
 
-//TEST of PERLIN*******************************
-var noise,noise2,noise3;
-/*
-var seedMod = Math.random();
-var seedToUse;
-var octave0,octave1, octave2;
-
-
-function Perlin(seedIn,octaveIn) {
-    this.octave = octaveIn;
-    var seed = seedIn;
-    console.log('called Perlin noise');
-    //console.log('center noise = ' + getNoiseAt(150,150));
-    //var rng = new CustomRandom(retX);
-    
-    /*
-    returns the noise at a given position on the grid
-    /
-    this.getNoiseAt = function(x,y) {
-        //console.log('tried getNoiseAt');
-        var xMin = x / this.octave;
-        var xMax = xMin + 1;
-        var yMin = y / this.octave;
-        var yMax = yMin + 1;
-        var a = coordinate(xMin,yMin);
-        var b = coordinate(xMax,yMin);
-        var c = coordinate(xMax,yMax);
-        var d = coordinate(xMin,yMax);
-        var ra = getRandAt(a);
-        var rb = getRandAt(b);
-        var rc = getRandAt(c);
-        var rd = getRandAt(d);
-        var out = cosInterpolate(
-                    cosInterpolate(ra,rb,(x-xMin*this.octave)/this.octave),
-                    cosInterpolate(rd,rc,(x-xMin*this.octave)/this.octave),
-                    ((y - yMin*this.octave)/this.octave));
-        //console.log(getRandAt(a));
-        return out;
-    };
-
-    function cosInterpolate(a,b,i){
-        var wiggle = (1 - Math.cos(i*Math.PI)*0.5);
-        return (a*(1 - wiggle) + b*wiggle);
-    }
-
-    function getRandAt(input) {
-        var hold = 10000*(Math.sin(input[0]) + Math.cos(input[1]) + Math.tan(seed));
-        var rng = new CustomRandom(hold);
-        return rng.next();
-    }
-    
-    function coordinate(x,y){
-        var out = new Array(2);
-        out = [x,y];
-        return out;
-    }
-}
-*/
-// Ported from Stefan Gustavson's java implementation
-// http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-// Read Stefan's excellent paper for details on how this code works.
-//
-// Sean McCullough banksean@gmail.com
-
-/**
- * You can pass in a random number generator object if you like.
- * It is assumed to have a random() method.
- */
-// Ported from Stefan Gustavson's java implementation
-// http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-// Read Stefan's excellent paper for details on how this code works.
-//
-// Sean McCullough banksean@gmail.com
-
-/**
- * You can pass in a random number generator object if you like.
- * It is assumed to have a random() method.
- */
-var ClassicalNoise = function(r) { // Classic Perlin noise in 3D, for comparison 
-    if (r == undefined) r = Math;
-  this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0], 
-                                 [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1], 
-                                 [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]]; 
-  this.p = [];
-  for (var i=0; i<256; i++) {
-      this.p[i] = Math.floor(r.random()*256);
-  }
-  // To remove the need for index wrapping, double the permutation table length 
-  this.perm = []; 
-  for(var i=0; i<512; i++) {
-        this.perm[i]=this.p[i & 255];
-  }
-};
-
-ClassicalNoise.prototype.dot = function(g, x, y, z) { 
-    return g[0]*x + g[1]*y + g[2]*z; 
-};
-
-ClassicalNoise.prototype.mix = function(a, b, t) { 
-    return (1.0-t)*a + t*b; 
-};
-
-ClassicalNoise.prototype.fade = function(t) { 
-    return t*t*t*(t*(t*6.0-15.0)+10.0); 
-};
-
-  // Classic Perlin noise, 3D version 
-ClassicalNoise.prototype.noise = function(x, y, z) { 
-  // Find unit grid cell containing point 
-  var X = Math.floor(x); 
-  var Y = Math.floor(y); 
-  var Z = Math.floor(z); 
-  
-  // Get relative xyz coordinates of point within that cell 
-  x = x - X; 
-  y = y - Y; 
-  z = z - Z; 
-    
-  // Wrap the integer cells at 255 (smaller integer period can be introduced here) 
-  X = X & 255; 
-  Y = Y & 255; 
-  Z = Z & 255;
-  // Calculate a set of eight hashed gradient indices 
-  var gi000 = this.perm[X+this.perm[Y+this.perm[Z]]] % 12; 
-  var gi001 = this.perm[X+this.perm[Y+this.perm[Z+1]]] % 12; 
-  var gi010 = this.perm[X+this.perm[Y+1+this.perm[Z]]] % 12; 
-  var gi011 = this.perm[X+this.perm[Y+1+this.perm[Z+1]]] % 12; 
-  var gi100 = this.perm[X+1+this.perm[Y+this.perm[Z]]] % 12; 
-  var gi101 = this.perm[X+1+this.perm[Y+this.perm[Z+1]]] % 12; 
-  var gi110 = this.perm[X+1+this.perm[Y+1+this.perm[Z]]] % 12; 
-  var gi111 = this.perm[X+1+this.perm[Y+1+this.perm[Z+1]]] % 12; 
-  
-  // The gradients of each corner are now: 
-  // g000 = grad3[gi000]; 
-  // g001 = grad3[gi001]; 
-  // g010 = grad3[gi010]; 
-  // g011 = grad3[gi011]; 
-  // g100 = grad3[gi100]; 
-  // g101 = grad3[gi101]; 
-  // g110 = grad3[gi110]; 
-  // g111 = grad3[gi111]; 
-  // Calculate noise contributions from each of the eight corners 
-  var n000= this.dot(this.grad3[gi000], x, y, z); 
-  var n100= this.dot(this.grad3[gi100], x-1, y, z); 
-  var n010= this.dot(this.grad3[gi010], x, y-1, z); 
-  var n110= this.dot(this.grad3[gi110], x-1, y-1, z); 
-  var n001= this.dot(this.grad3[gi001], x, y, z-1); 
-  var n101= this.dot(this.grad3[gi101], x-1, y, z-1); 
-  var n011= this.dot(this.grad3[gi011], x, y-1, z-1); 
-  var n111= this.dot(this.grad3[gi111], x-1, y-1, z-1); 
-  // Compute the fade curve value for each of x, y, z 
-  var u = this.fade(x); 
-  var v = this.fade(y); 
-  var w = this.fade(z); 
-   // Interpolate along x the contributions from each of the corners 
-  var nx00 = this.mix(n000, n100, u); 
-  var nx01 = this.mix(n001, n101, u); 
-  var nx10 = this.mix(n010, n110, u); 
-  var nx11 = this.mix(n011, n111, u); 
-  // Interpolate the four results along y 
-  var nxy0 = this.mix(nx00, nx10, v); 
-  var nxy1 = this.mix(nx01, nx11, v); 
-  // Interpolate the two last results along z 
-  var nxyz = this.mix(nxy0, nxy1, w); 
-  
-  return nxyz; 
-};
-
-function altitude(x,y){
-    //var doubles = 20;
-    //return octave0.getNoiseAt(x,y);// + octave1.getNoiseAt(x,y) + 4*octave2.getNoiseAt(x,y);
-    
-    var gridSize = 180;
-    var n = (noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
-    var n2 = (noise2.noise(x / (gridSize/2), y / (gridSize/2), 0) + 1) * 127;
-    var n3 = (noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
-    
-    return (n+(n2*0.5)+(n3*0.25))/1.75//TEST
-}
-
-//********************************************
-
-
-
-
-
-
-
-
-
-
-
+//CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 function Terrain() {
     this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water
@@ -212,6 +24,7 @@ function Building() {
     this.age;
 }
 
+//OTHER**********************************************************************************************
 /*Set up any global stuff that won't ever change after page load*/
 function init() {
     /*get the topmost canvases that we'll need for mouse tracking*/
@@ -249,21 +62,9 @@ function init() {
     animate=0;
     radLimit=radarRad-8;
 
-
-//startTEST**************
-/*
-seedToUse = 46.3; //Math.random();
-octave0 = new Perlin(seedToUse, 6);
-octave1 = new Perlin((10*Math.sqrt(seedToUse)), 12);
-octave2 = new Perlin(Math.pow(seedToUse, 2), 24);
-*/
-//rando = Math.random();
-noise = new ClassicalNoise();
-noise2 = new ClassicalNoise();
-noise3 = new ClassicalNoise();
-//endTEST***************
-
-
+    noise = new ClassicalNoise();
+    noise2 = new ClassicalNoise();
+    noise3 = new ClassicalNoise();
 
     /*create the game's map*/
     map = new Array(radarRad*2);
@@ -293,6 +94,115 @@ noise3 = new ClassicalNoise();
     
     drawLoc();
     mainLoop();
+}
+//FOLLOWING INDENTED CODE WAS 'BORROWED' FROM STACK OVERFLOW
+    // Ported from Stefan Gustavson's java implementation
+    // http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
+    // Read Stefan's excellent paper for details on how this code works.
+    //
+    // Sean McCullough banksean@gmail.com
+    
+    /**
+     * You can pass in a random number generator object if you like.
+     * It is assumed to have a random() method.
+     */
+    var ClassicalNoise = function(r) { // Classic Perlin noise in 3D, for comparison 
+        if (r == undefined) r = Math;
+      this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0], 
+                                     [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1], 
+                                     [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]]; 
+      this.p = [];
+      for (var i=0; i<256; i++) {
+          this.p[i] = Math.floor(r.random()*256);
+      }
+      // To remove the need for index wrapping, double the permutation table length 
+      this.perm = []; 
+      for(var i=0; i<512; i++) {
+            this.perm[i]=this.p[i & 255];
+      }
+    };
+    
+    ClassicalNoise.prototype.dot = function(g, x, y, z) { 
+        return g[0]*x + g[1]*y + g[2]*z; 
+    };
+    
+    ClassicalNoise.prototype.mix = function(a, b, t) { 
+        return (1.0-t)*a + t*b; 
+    };
+    
+    ClassicalNoise.prototype.fade = function(t) { 
+        return t*t*t*(t*(t*6.0-15.0)+10.0); 
+    };
+    
+      // Classic Perlin noise, 3D version 
+    ClassicalNoise.prototype.noise = function(x, y, z) { 
+      // Find unit grid cell containing point 
+      var X = Math.floor(x); 
+      var Y = Math.floor(y); 
+      var Z = Math.floor(z); 
+      
+      // Get relative xyz coordinates of point within that cell 
+      x = x - X; 
+      y = y - Y; 
+      z = z - Z; 
+        
+      // Wrap the integer cells at 255 (smaller integer period can be introduced here) 
+      X = X & 255; 
+      Y = Y & 255; 
+      Z = Z & 255;
+      // Calculate a set of eight hashed gradient indices 
+      var gi000 = this.perm[X+this.perm[Y+this.perm[Z]]] % 12; 
+      var gi001 = this.perm[X+this.perm[Y+this.perm[Z+1]]] % 12; 
+      var gi010 = this.perm[X+this.perm[Y+1+this.perm[Z]]] % 12; 
+      var gi011 = this.perm[X+this.perm[Y+1+this.perm[Z+1]]] % 12; 
+      var gi100 = this.perm[X+1+this.perm[Y+this.perm[Z]]] % 12; 
+      var gi101 = this.perm[X+1+this.perm[Y+this.perm[Z+1]]] % 12; 
+      var gi110 = this.perm[X+1+this.perm[Y+1+this.perm[Z]]] % 12; 
+      var gi111 = this.perm[X+1+this.perm[Y+1+this.perm[Z+1]]] % 12; 
+      
+      // The gradients of each corner are now: 
+      // g000 = grad3[gi000]; 
+      // g001 = grad3[gi001]; 
+      // g010 = grad3[gi010]; 
+      // g011 = grad3[gi011]; 
+      // g100 = grad3[gi100]; 
+      // g101 = grad3[gi101]; 
+      // g110 = grad3[gi110]; 
+      // g111 = grad3[gi111]; 
+      // Calculate noise contributions from each of the eight corners 
+      var n000= this.dot(this.grad3[gi000], x, y, z); 
+      var n100= this.dot(this.grad3[gi100], x-1, y, z); 
+      var n010= this.dot(this.grad3[gi010], x, y-1, z); 
+      var n110= this.dot(this.grad3[gi110], x-1, y-1, z); 
+      var n001= this.dot(this.grad3[gi001], x, y, z-1); 
+      var n101= this.dot(this.grad3[gi101], x-1, y, z-1); 
+      var n011= this.dot(this.grad3[gi011], x, y-1, z-1); 
+      var n111= this.dot(this.grad3[gi111], x-1, y-1, z-1); 
+      // Compute the fade curve value for each of x, y, z 
+      var u = this.fade(x); 
+      var v = this.fade(y); 
+      var w = this.fade(z); 
+       // Interpolate along x the contributions from each of the corners 
+      var nx00 = this.mix(n000, n100, u); 
+      var nx01 = this.mix(n001, n101, u); 
+      var nx10 = this.mix(n010, n110, u); 
+      var nx11 = this.mix(n011, n111, u); 
+      // Interpolate the four results along y 
+      var nxy0 = this.mix(nx00, nx10, v); 
+      var nxy1 = this.mix(nx01, nx11, v); 
+      // Interpolate the two last results along z 
+      var nxyz = this.mix(nxy0, nxy1, w); 
+      
+      return nxyz; 
+    };
+
+function altitude(x,y){
+    var gridSize = 35;
+    var n = (noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
+    var n2 = (noise2.noise(x / (gridSize*2), y / (gridSize*2), 0) + 1) * 127;
+    var n3 = (noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
+    
+    return (n+(n2)+(n3*0.25))/2.25;
 }
 
 /*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
@@ -407,13 +317,13 @@ function drawRadar() {
                 
                 // Index of the pixel in the array
                 var idx = (x + y * radarPixels.width) * 4;
-                
+                /*
                 radarPixels.data[idx + 0] = map[y][x][1].altitude;
                 radarPixels.data[idx + 1] = map[y][x][1].altitude;
                 radarPixels.data[idx + 2] = map[y][x][1].altitude;
                 radarPixels.data[idx + 3] = 255;
-                
-                /*REMOVED FOR TEST*******
+                */
+
                 var kind = map[y][x][1].type;
                 switch(kind) {
                     case 0:
@@ -449,7 +359,6 @@ function drawRadar() {
                     default:
                         //do nothing
                 }
-                *********/
             }
         }
     }
@@ -511,84 +420,31 @@ function createMap() {
 				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
                 map[y][x][1].altitude=altitude(x,y);
                 map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
+                setType(x,y);
 			}else{
 				map[y][x][0]=false;
 			}
 		}
         
 	}
-    //createMountains(30,300,150);
+    
 }
 
 /*Generates the mountains, num=number of mountain spawn points, steps=length of the random walk, smoothness= how smooth the gradient should be*/
-function createMountains(num, steps, smoothness) {
-    var stepHolder = steps;
-    for (num; num >= 0; num--) {
-        var x = Math.floor(Math.random()*radarRad*2);
-        var y = Math.floor(Math.random()*radarRad*2);
-        steps = stepHolder;
-        for (steps; steps >= 0; steps--) {
-            try{
-                if(map[y][x][0] === true) {
-                    map[y][x][1].type=2;
-                    map[y][x][1].altitude = randGen(5,20);
-                    generateResources(x,y,2);
-                    x += randWalk();
-                    y += randWalk();
-                }
-            } catch(e) { //Do Nothing
-            }
-        }      
-    }
-    smoothMountains(smoothness);
-}
-
-/*takes the smoothness parameter and appropriately smooths out the mountains*/
-function smoothMountains(smoothness) {
-    for (var y = 0; y < radarRad*2; y++) {
-        for (var x = 0; x < radarRad*2; x++) {
-            try{
-                if(map[y][x][0]===true && map[y][x][1].type===2) {
-                    var xTemp = x;
-                    var yTemp = y;
-                    for(var steps = smoothness; steps > 0; steps--){
-                        if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type !== 2) {
-                            map[yTemp][xTemp][1].type=1;
-                            map[yTemp][xTemp][1].altitude=randGen(4,10);
-                            generateResources(xTemp,yTemp,1);
-                        }
-                        xTemp += randWalk();
-                        yTemp += randWalk();
-                    }
-                }
-            } catch(e){//do nothing
-            }       
-        }
-    }
-    flatTerrain(smoothness*2.5);
-}
-
-/*creates the remaining terrain*/
-function flatTerrain(smoothness) {
-    for (var y = 0; y < radarRad*2; y++) {
-        for (var x = 0; x < radarRad*2; x++) {
-            try{
-                if(map[y][x][0]===true && map[y][x][1].type===1) {
-                    var xTemp = x;
-                    var yTemp = y;
-                    for(var steps = smoothness; steps > 0; steps--){
-                        if(xTemp < radarRad*2 && xTemp > 0 && yTemp > 0 && yTemp < radarRad*2 && map[yTemp][xTemp][0] === true && map[yTemp][xTemp][1].type !== 2 && map[yTemp][xTemp][1].type !== 1) {
-                            map[yTemp][xTemp][1].type=0;
-                            map[yTemp][xTemp][1].altitude=randGen(5,1);
-                            generateResources(xTemp,yTemp,1);
-                        }
-                        xTemp += randWalk();
-                        yTemp += randWalk();
-                    }
-                }
-            } catch(e){//do nothing
-            }       
-        }
+function setType(x,y) {
+    var altitude = map[y][x][1].altitude;
+    var high = 160;
+    var med = 130;
+    var low = 90;
+    
+    if (altitude >= high){
+        map[y][x][1].type = 2;
+    } else if(altitude < high && altitude >= med){
+        map[y][x][1].type = 1;
+    } else if(altitude < med && altitude >= low ){
+        map[y][x][1].type = 0;
+    } else {
+        map[y][x][1].type = 4;
     }
 }
 
