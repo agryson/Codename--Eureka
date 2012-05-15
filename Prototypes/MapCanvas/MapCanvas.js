@@ -680,8 +680,8 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
                     sourceHeight, destinationX, destinationY, destinationWidth, 
                     destinationHeight);
             } else {
-                sourceX = animate*346;
-                sourceY = tileType*400;
+                sourceX = animate*sourceWidth;
+                sourceY = tileType*sourceHeight;
                 mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
                     destinationX, destinationY, destinationWidth, destinationHeight);
             }
