@@ -659,8 +659,8 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
         } else {
             var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, 
                 destinationY, destinationWidth, destinationHeight;              //Canvas vars
-            sourceWidth = 346;                                                  //original tile width
-            sourceHeight = 400;                                                 //original tile height
+            sourceWidth = 173;                                                  //original tile width
+            sourceHeight = 200;                                                 //original tile height
             destinationWidth = 60;                                              //tile width on zoomMap... If I want 13 tiles across... for s=35
             destinationHeight = 70;                                             //tile height on zoomMap                                                 
             destinationY = Math.floor(tilePosY*destinationWidth*0.86);          //shift it, the number here is a constant that depends ont eh hexagon deformation
