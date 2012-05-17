@@ -859,13 +859,6 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                 sourceY = tileType*sourceHeight;                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
                     destinationX, destinationY, destinationWidth, destinationHeight);
             }
-            if (darkness && darkness !== 0) {
-                sourceX = 0;
-                sourceY = darkness*sourceHeight;        
-                mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
-                    sourceHeight, destinationX, destinationY, destinationWidth, 
-                    destinationHeight);
-            }
         }    
     } catch(e){
         //Do Nothing, we expect this error... unfortunately
@@ -876,12 +869,11 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 function drawZoomMap() {
     mPanel.clearRect(0,0,720,720);
     var y,x,end;
-    //var yellow = false;//test for conditional display of menu items
     for(y=0;y<zoomMap.length;y++) {
         x=zoomMap[y][0];
         end=zoomMap[y][1];
         while (x<end) {
-            drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y);
+            drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y,false);
             x++;
         }
     }
