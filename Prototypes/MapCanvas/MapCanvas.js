@@ -92,6 +92,7 @@ function init() {
     /*set up our noise layers*/
     seeder = getSeed();
     rng = new MersenneTwister(seeder);
+    console.log(seeder);
     console.log(rng.random());
     noise = new ClassicalNoise(rng);
     noise2 = new ClassicalNoise(rng);
@@ -444,11 +445,15 @@ function jump() {
 
 function getSeed() {
     var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
+    seedIn = seedIn.split(' ').join('');
+    console.log(seedIn);
     var seedString = '';
     for (var i = 0; i < seedIn.length; i++){
         seedString += seedIn.charCodeAt(i);
     }
-    return parseInt(seedString, 10);
+    seedString = parseInt(seedString, 10)/Math.pow(10,seedIn.length);
+    console.log(seedString);
+    return seedString;
 }
 
 var MersenneTwister = function(seed) {
