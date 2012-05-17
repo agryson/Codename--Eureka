@@ -4,7 +4,7 @@
 //GLOBAL VARS**********************************************************************************************
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
 var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
-    clickedOn, seed, rng; //hold info for various bits and bobs
+    clickedOn, seeder, rng; //hold info for various bits and bobs
                                                 //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 var noise,noise2,noise3;                                                        //vars for world generation
@@ -90,8 +90,8 @@ function init() {
     animate=0;
     radLimit=radarRad-8;
     /*set up our noise layers*/
-    seed = 67;
-    rng = new MersenneTwister(seed);
+    seeder = getSeed();
+    rng = new MersenneTwister(seeder);
     console.log(rng.random());
     noise = new ClassicalNoise(rng);
     noise2 = new ClassicalNoise(rng);
@@ -442,8 +442,17 @@ function jump() {
    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
+function getSeed() {
+    var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
+    var seedString = '';
+    for (var i = 0; i < seedIn.length; i++){
+        seedString += seedIn.charCodeAt(i);
+    }
+    return parseInt(seedString, 10);
+}
+
 var MersenneTwister = function(seed) {
-  if (seed == undefined) {
+  if (seed === undefined) {
     seed = new Date().getTime();
   } 
   /* Period parameters */  
