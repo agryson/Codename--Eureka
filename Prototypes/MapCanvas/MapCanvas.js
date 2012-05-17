@@ -90,7 +90,7 @@ function init() {
     animate=0;
     radLimit=radarRad-8;
     /*set up our noise layers*/
-    seed = "what the fuck?";
+    seed = 67;
     rng = new MersenneTwister(seed);
     console.log(rng.random());
     noise = new ClassicalNoise(rng);
