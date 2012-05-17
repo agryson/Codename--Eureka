@@ -4,7 +4,7 @@
 //GLOBAL VARS**********************************************************************************************
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
 var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
-    clickedOn, seeder, rng; //hold info for various bits and bobs
+    clickedOn, seeder, rng, turnNum; //hold info for various bits and bobs
                                                 //movement vars
 var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
 var noise,noise2,noise3;                                                        //vars for world generation
@@ -89,6 +89,9 @@ function init() {
     retY = radarRad;
     animate=0;
     radLimit=radarRad-8;
+    turnNum = document.getElementById('turnNumber');
+    document.getElementById('execDropDown').style.height = '50px';
+    
     /*set up our noise layers*/
     seeder = getSeed();
     rng = new MersenneTwister(seeder);
@@ -144,7 +147,17 @@ function nextTurn(){
 			}
 		}   
 	}
-    console.log('It is now turn: '+ turn);
+    turnNum.innerHTML = "Week: " + turn;
+}
+
+function pulldown() {
+    var i = document.getElementById('execDropDown');
+    console.log(i.style.height);
+    if (parseInt(i.style.height, 10) == 50 || parseInt(i.style.height, 10) === null) {
+        i.style.height = '720px';
+    } else {
+        i.style.height = '50px';
+    }
 }
 
 /*the main game loop*/
@@ -859,6 +872,13 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                 sourceY = tileType*sourceHeight;                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
                     destinationX, destinationY, destinationWidth, destinationHeight);
             }
+            if (darkness) {
+                sourceX = 0;
+                sourceY = darkness*sourceHeight;        
+                mPanel.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
+                    sourceHeight, destinationX, destinationY, destinationWidth, 
+                    destinationHeight);
+            }
         }    
     } catch(e){
         //Do Nothing, we expect this error... unfortunately
@@ -874,6 +894,9 @@ function drawZoomMap() {
         end=zoomMap[y][1];
         while (x<end) {
             drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y,false);
+            if (y === 0 || y == zoomMap.length - 1 || x == zoomMap[y][0] || x == end - 1){//darkens the outer hexagons
+                drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y,false,2);
+            }
             x++;
         }
     }

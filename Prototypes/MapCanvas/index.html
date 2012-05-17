@@ -11,14 +11,18 @@
 	</head>
 
 	<body onload="init()">
+    
         <div id="leftMenu">
-            <div class="testItem" id="test1" onClick="construct(this.id)">
+            <div class="menuItem" id="test1" onClick="construct(this.id)">
                 Prepare for Construction
             </div>
-            <div class="testItem" id="test2" onClick="construct(this.id)">
+            <div class="menuItem" id="test2" onClick="construct(this.id)">
                 Green Tile
             </div>
         </div>
+        <div id="execDropDown" onclick="pulldown()"></div>
+        </div>
+        
         <canvas id="mainPanel" width="720" height="720">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
@@ -33,7 +37,14 @@
         <canvas id="mapOverlay" width="300" height="300" onclick="jump()">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
-        <button id ="turn" onclick="nextTurn()">Next Turn</button>
+        
+        <div id="globalActions">
+            <span id="turnNumber">Week: 0</span>
+            <button class="info" id="globalReport">Executive Report</button>
+            <button class="info" id="save">Save</button>
+            <button class="action" id="turn" onclick="nextTurn()">Send Orders</button>
+        </div>
+        
 	</body>
 
 </html>
