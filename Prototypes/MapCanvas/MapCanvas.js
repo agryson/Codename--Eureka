@@ -717,49 +717,6 @@ function createMap() {
 	}
     //genRivers(500, 3000);
 }
-/*
-//Rivers don't look convincing enough but I may want to come back to them at some point...
-function genRivers(num, steps) {
-    console.log('called rivers');
-    var x = Math.floor(Math.random()*radarRad*2);
-    var y = Math.floor(Math.random()*radarRad*2);
-    for (num; num >= 0; num--) {
-        river(x,y,steps);
-        x = Math.floor(Math.random()*radarRad*2);
-        y = Math.floor(Math.random()*radarRad*2);
-    }
-    drawRadar();
-}
-
-function river(x,y,steps){
-    var tempX = x;
-    var tempY = y;
-    try{
-    if (map[y][x][0] === true && map[y][x][1] !== null && map[y][x][1].altitude > 160){
-        for (steps; steps >=0; steps--) {
-            map[y][x][1].type = 4;
-            for (var i = 0; i < 6; i++){
-                try{
-                if  (map[tempY][tempX][0] === true && map[adjacent(x,y,i)[0]][adjacent(x,y,i)[1]][1].altitude <= map[tempY][tempX][1].altitude){
-                    tempX = adjacent(x,y,i)[1];
-                    tempY = adjacent(x,y,i)[0];
-                }
-                }catch(e){}
-            }
-            if (x == tempX && y == tempY){
-                tempX = adjacent(x,y,randGen(6,0))[1];
-                tempY = adjacent(x,y,randGen(6,0))[0];
-                console.log('new riverpoint   x' + x + '   y:' + y);
-            }
-            
-            x = tempX;
-            y = tempY;
-            
-        }
-    }
-    }catch(e){}
-}
-*/
 
 /*Sets the tile type as a function of altitude*/
 function setType(x,y) {
@@ -864,7 +821,7 @@ function drawRadar() {
 }
 
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
-function drawTile(tileType, tilePosX, tilePosY, noAnimate) {
+function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     try {
         if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
             //this if checks to make sure we requested a tile we can draw, 
@@ -886,7 +843,7 @@ function drawTile(tileType, tilePosX, tilePosY, noAnimate) {
                                     destinationWidth/2);                        //we need a little bit of displacement
                 }
                 
-            if (noAnimate === true){                                            //highlight is an optional parameter to see which canvas to draw to and how
+            if (highlight === true){                                            //highlight is an optional parameter to see which canvas to draw to and how
                 sourceX = 0;
                 sourceY = 0;        
                 mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
@@ -901,6 +858,13 @@ function drawTile(tileType, tilePosX, tilePosY, noAnimate) {
                 sourceX = animate*sourceWidth;
                 sourceY = tileType*sourceHeight;                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
                     destinationX, destinationY, destinationWidth, destinationHeight);
+            }
+            if (darkness && darkness !== 0) {
+                sourceX = 0;
+                sourceY = darkness*sourceHeight;        
+                mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
+                    sourceHeight, destinationX, destinationY, destinationWidth, 
+                    destinationHeight);
             }
         }    
     } catch(e){
@@ -919,17 +883,8 @@ function drawZoomMap() {
         while (x<end) {
             drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y);
             x++;
-            //if (map[(retY+y-5)][(retX+x-5)][1].type===1) {
-                //yellow=true;
-            //}
         }
     }
-    //tests for conditional display of menu items
-    //if (yellow===true) {
-        //document.getElementById('test1').style.display='block';
-    //} else {
-        //document.getElementById('test1').style.display='none';
-    //}
 }
 
 /*draws the current location on the small radar map*/
