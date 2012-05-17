@@ -864,7 +864,7 @@ function drawRadar() {
 }
 
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
-function drawTile(tileType, tilePosX, tilePosY, highlight) {
+function drawTile(tileType, tilePosX, tilePosY, noAnimate) {
     try {
         if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
             //this if checks to make sure we requested a tile we can draw, 
@@ -886,16 +886,20 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
                                     destinationWidth/2);                        //we need a little bit of displacement
                 }
                 
-            if (highlight === true){                                            //highlight is an optional parameter to see which canvas to draw to and how
+            if (noAnimate === true){                                            //highlight is an optional parameter to see which canvas to draw to and how
                 sourceX = 0;
                 sourceY = 0;        
                 mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
                     sourceHeight, destinationX, destinationY, destinationWidth, 
                     destinationHeight);
-            } else {
-                sourceX = animate*sourceWidth;
+            } else if (tileType < 4){
+                sourceX = 0;
                 sourceY = tileType*sourceHeight;
                 mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
+                    destinationX, destinationY, destinationWidth, destinationHeight);
+            } else {
+                sourceX = animate*sourceWidth;
+                sourceY = tileType*sourceHeight;                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
                     destinationX, destinationY, destinationWidth, destinationHeight);
             }
         }    
