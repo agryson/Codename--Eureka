@@ -13,16 +13,21 @@
 	<body onload="init()">
     
         <div id="leftMenu">
-            <div class="menuItem" id="test1" onClick="construct(this.id)">
-                <img class="itemImage" src="images/bdozePointer.png"></img>
-                <span class="itemText">Prepare for Construction</span>
+            <div id="BuildingContainer">
+                <div class="menuItem" id="test1" onClick="construct(this.id)">
+                    <img class="itemImage" src="images/bdozePointer.png"></img>
+                    <span class="itemText">Prepare for Construction</span>
+                </div>      
+                <div class="menuItem" id="test2" onClick="construct(this.id)">
+                    <img class="itemImage" src="images/bdozePointer.png"></img>
+                    <span class="itemText">Another item, with a load of text just to see what will happen if I add a description for example, or something really long, will the padding work properly etc.</span>
+                </div>
             </div>
             
-            <div class="menuItem" id="test2" onClick="construct(this.id)">
-                <img class="itemImage" src="images/bdozePointer.png"></img>
-                <span class="itemText">Another item, with a load of text just to see what will happen if I add a description for example, or something really long, will the padding work properly etc.</span>
-            </div>
+            <div id="leftMenuSlider"></div>
             
+            <div id="droneContainer">
+            </div>
         </div>
         
         <div id="execDropDown" onclick="pulldown()">
