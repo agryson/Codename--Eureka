@@ -151,13 +151,11 @@ function nextTurn(){
 
 function pulldown() {
     var i = document.getElementById('execDropDownContainer');
-    console.log(i.style.height);
     if (parseInt(i.style.height, 10) === 0 || i.style.height === '') {
-        i.style.height = '720px';
+        i.style.height = '650px';
     } else {
         i.style.height = '0px';
     }
-    console.log(i.style.height);
 }
 
 /*the main game loop*/

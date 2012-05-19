@@ -45,18 +45,20 @@ body, html {
 /*        ******      Exec Dropdown    ******      */
 #execDropDown {
     position: absolute;
-    top: 0;
+    top: -35px;
     left: 50%;
     margin-left: -375px;
     width: 750px;
-    padding-bottom: 50px;
-    background-color: #FFF;
+    padding-bottom: 70px;
+    border-radius: 0 0 10px 10px;
+    background-color: #138A0C;
     z-index: 2;
 }
 
 #execDropDownContainer {
-    background-color: #FF0000;
-    height: 0;
+    background-color: #FFFBE5;
+    margin: 0 5px 0 5px;
+    -webkit-transition: all 0.5s ease-in-out;
 }
 /*        ******      Global Actions    ******      */
 .info {
