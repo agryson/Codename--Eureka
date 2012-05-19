@@ -46,14 +46,18 @@ body, html {
 #execDropDown {
     position: absolute;
     top: 0;
+    left: 50%;
+    margin-left: -375px;
     width: 750px;
-    height: 50px;
-    min-height: 50px;
+    padding-bottom: 50px;
     background-color: #FFF;
     z-index: 2;
 }
 
-
+#execDropDownContainer {
+    background-color: #FF0000;
+    height: 0;
+}
 /*        ******      Global Actions    ******      */
 .info {
     min-width: 50px;

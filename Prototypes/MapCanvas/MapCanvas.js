@@ -90,7 +90,6 @@ function init() {
     animate=0;
     radLimit=radarRad-8;
     turnNum = document.getElementById('turnNumber');
-    document.getElementById('execDropDown').style.height = '50px';
     
     /*set up our noise layers*/
     seeder = getSeed();
@@ -151,13 +150,14 @@ function nextTurn(){
 }
 
 function pulldown() {
-    var i = document.getElementById('execDropDown');
+    var i = document.getElementById('execDropDownContainer');
     console.log(i.style.height);
-    if (parseInt(i.style.height, 10) == 50 || parseInt(i.style.height, 10) === null) {
+    if (parseInt(i.style.height, 10) === 0 || i.style.height === '') {
         i.style.height = '720px';
     } else {
-        i.style.height = '50px';
+        i.style.height = '0px';
     }
+    console.log(i.style.height);
 }
 
 /*the main game loop*/

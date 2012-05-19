@@ -16,24 +16,31 @@
             <div class="menuItem" id="test1" onClick="construct(this.id)">
                 Prepare for Construction
             </div>
+            
             <div class="menuItem" id="test2" onClick="construct(this.id)">
                 Green Tile
             </div>
+            
         </div>
-        <div id="execDropDown" onclick="pulldown()"></div>
+        
+        <div id="execDropDown" onclick="pulldown()">
+            <div id="execDropDownContainer"></div>       
         </div>
         
         <canvas id="mainPanel" width="720" height="720">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
+        
         <canvas id="mPanOverlay" width="720" height="720" 
             onMouseOver="mPanTrack = true" onMouseOut="mPanTrack = false; drawmPanLoc();" 
             onMouseUp="clickTest()">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
+        
         <canvas id="map" width="300" height="300">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
+        
         <canvas id="mapOverlay" width="300" height="300" onclick="jump()">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
