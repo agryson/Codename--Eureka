@@ -173,9 +173,14 @@ function resize(e) {
     var current = e.clientY;
     var total = window.innerHeight;
     var percentage = ((current/total)*100);
+    if (percentage < 10) {
+        percentage = 11;
+    } else if (percentage > 90){
+        percentage = 89;
+    }
     document.getElementById('buildingContainer').style.height = percentage + '%';
     document.getElementById('droneContainer').style.marginTop = percentage + '%';
-    document.getElementById('leftMenuSlider').style.marginTop = (percentage) + '%';
+    document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
 }
 
 function pulldown() {
