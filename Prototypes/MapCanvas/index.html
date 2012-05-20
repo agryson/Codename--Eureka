@@ -13,7 +13,7 @@
 	<body onload="init()">
     
         <div id="leftMenu">
-            <div id="BuildingContainer">
+            <div id="buildingContainer">
                 <div class="menuItem" id="test1" onClick="construct(this.id)">
                     <img class="itemImage" src="images/bdozePointer.png"></img>
                     <span class="itemText">Prepare for Construction</span>
@@ -24,7 +24,7 @@
                 </div>
             </div>
             
-            <div id="leftMenuSlider"></div>
+            <div id="leftMenuSlider" onmousedown="leftMenuResize(true)" onmouseup="leftMenuResize(false)"></div>
             
             <div id="droneContainer">
             </div>

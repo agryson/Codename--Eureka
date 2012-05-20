@@ -32,6 +32,36 @@ body, html {
     z-index: 1;
 }
 
+#buildingContainer {
+    position: absolute;
+    top: 0;
+    height: 50%;
+    width: 100%;
+    padding-bottom: 5px;
+    background: #00FF00;
+    z-index: 1;
+}
+
+#leftMenuSlider {
+    position: absolute;
+    height: 20px;
+    width: 100%;
+    margin-top: 50%;
+    background: #FF0000;
+    z-index: 2;
+    cursor: s-resize;
+}
+
+#droneContainer {
+    position: absolute;
+    bottom: 0;
+    height: 50%;
+    width: 100%;
+    margin-top: 10px;
+    background: #0000ff;
+    z-index: 1;
+}
+
 .menuItem {
     display: table;
     width: 100%;

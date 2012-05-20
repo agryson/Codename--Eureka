@@ -149,6 +149,28 @@ function nextTurn(){
     turnNum.innerHTML = "Week: " + turn;
 }
 
+function leftMenuResize(bool) {
+    if (bool === true){
+        document.getElementById('leftMenu').onmousemove = resize;
+    } else {
+        document.getElementById('leftMenu').onmousemove = null;
+    }
+}
+
+function resize(e) {
+    var current = e.clientY;
+    var total = window.innerHeight;
+    var percentage = ((current/total)*100);
+    console.log(percentage);
+    document.getElementById('buildingContainer').style.height = percentage + '%';
+    document.getElementById('droneContainer').style.height = (100 - percentage) + '%';
+    document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
+    //console.log(current);
+    //document.getElementById('buildingContainer').style.height = current + 'px';
+    //document.getElementById('droneContainer').style.height = bottom + 'px';
+    //document.getElementById('leftMenuSlider').style.marginTop = current + 'px';
+}
+
 function pulldown() {
     var i = document.getElementById('execDropDownContainer');
     if (parseInt(i.style.height, 10) === 0 || i.style.height === '') {
@@ -190,6 +212,7 @@ function keypressed(e) {
     }
 
 }
+
 
 /*Reads the mouse position*/
 function getMousePos(canvas, evt){
