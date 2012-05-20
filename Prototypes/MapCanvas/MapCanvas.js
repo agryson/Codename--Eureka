@@ -18,7 +18,6 @@ function Terrain() {
     this.resources; //an array that holds the different metal and resource types
     this.turns = false;  //remembers how many turns are left to become a tile of the desired type
     this.prepare = function(){
-        console.log(this.turns);
         if (this.type < 3 && this.turns === false){
             this.turns = this.type + 1;
             this.type=5;
@@ -27,7 +26,6 @@ function Terrain() {
     this.nextTurn = function(){
        if (this.turns !== false && this.turns !== 0){
            this.turns -=1;
-           console.log('turns left: '+this.turns);
        } else if(this.turns === 0){
            this.type = 3;
        }
@@ -175,10 +173,9 @@ function resize(e) {
     var current = e.clientY;
     var total = window.innerHeight;
     var percentage = ((current/total)*100);
-    console.log(percentage);
     document.getElementById('buildingContainer').style.height = percentage + '%';
-    document.getElementById('droneContainer').style.height = (100 - percentage) + '%';
-    document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
+    document.getElementById('droneContainer').style.marginTop = percentage + '%';
+    document.getElementById('leftMenuSlider').style.marginTop = (percentage) + '%';
 }
 
 function pulldown() {
@@ -241,12 +238,6 @@ function getMousePos(canvas, evt){
     // return relative mouse position
     mouseX = evt.clientX - left + window.pageXOffset;
     mouseY = evt.clientY - top + window.pageYOffset;
-    //drawmPanLoc();
-    //return {
-      //  x: mouseX,
-        //y: mouseY
-    //};
-    console.log(overMPan);
     if (overMPan === true){
         mPanLoc.clearRect(0,0,720,720);
         drawTile(1,getTile('x'),getTile('y'),true);
@@ -259,7 +250,6 @@ function move(dir) {
     var downY = retY+2;
     var leftX = retX-1;
     var rightX = retX+1;
-    console.log('Inside move, before switch '+ dir);
     switch(dir) {
         case 'up':
             if(distance(retX,upY, radarRad,radarRad)<=radLimit) {
@@ -282,7 +272,6 @@ function move(dir) {
             }
             break;         
         default:
-            console.log('inside move');
             break;
     }
     drawZoomMap();
@@ -494,13 +483,11 @@ function jump() {
 function getSeed() {
     var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
     seedIn = seedIn.split(' ').join('');
-    console.log(seedIn);
     var seedString = '';
     for (var i = 0; i < seedIn.length; i++){
         seedString += seedIn.charCodeAt(i);
     }
     seedString = parseInt(seedString, 10)/Math.pow(10,seedIn.length);
-    console.log(seedString);
     return seedString;
 }
 

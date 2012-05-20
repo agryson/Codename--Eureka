@@ -42,7 +42,7 @@ body, html {
     height: 50%;
     width: 100%;
     padding-bottom: 5px;
-    background: #00FF00;
+    background: #191919;
     overflow: auto;
     z-index: 1;
 }
@@ -52,18 +52,20 @@ body, html {
     height: 20px;
     width: 100%;
     margin-top: 50%;
-    background: #FF0000;
+    border-radius: 5px;
+    box-shadow: inset -1px -1px 0 2px #000;
+    background: #363636;
     z-index: 2;
     cursor: s-resize;
 }
 
 #droneContainer {
     position: absolute;
-    bottom: 0;
-    height: 50%;
+    top: 0;
     width: 100%;
-    margin-top: 10px;
-    background: #0000ff;
+    margin-top: 50%;
+    padding-top: 20px;
+    background: #191919;
     z-index: 1;
 }
 
