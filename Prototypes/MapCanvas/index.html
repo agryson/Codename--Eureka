@@ -39,7 +39,7 @@
         </canvas>
         
         <canvas id="mPanOverlay" width="720" height="720" 
-            onMouseOver="mPanTrack = true" onMouseOut="mPanTrack = false; drawmPanLoc();" 
+            onmouseover="overCanvas(true)" onmouseout="overCanvas(false)" 
             onMouseUp="clickTest()">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
@@ -48,7 +48,7 @@
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
         
-        <canvas id="mapOverlay" width="300" height="300" onclick="jump()">
+        <canvas id="mapOverlay" width="300" height="300" onclick="jump()" onMouseOver="overCanvas(true)" onMouseOut="overCanvas(false)">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
         

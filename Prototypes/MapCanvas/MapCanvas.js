@@ -6,7 +6,7 @@ var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  
 var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
     clickedOn, seeder, rng, turnNum; //hold info for various bits and bobs
                                                 //movement vars
-var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
+var mouseX, mouseY, drawmPanLoc;                                                  //mouse trackers for main panel
 var noise,noise2,noise3;                                                        //vars for world generation
 var turn = 0;
 
@@ -113,19 +113,32 @@ function init() {
     tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
     tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
 
+    document.onkeyup = keypressed;                                               //keyboard listener
+    drawLoc();
+    mainLoop();
+}
+
+function overCanvas(bool){
     /*
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
     */
-    mPanCanvas.addEventListener('mousemove', function(evt){
-        getMousePos(mPanCanvas, evt);
-    }, false);
-    radarCanvas.addEventListener('mousemove', function(evt){
-        getMousePos(radarCanvas, evt);
-    }, false);
-    document.onkeyup = keypressed;                                               //keyboard listener
-    drawLoc();
-    mainLoop();
+    if (bool === true){
+        mPanCanvas.addEventListener('mousemove', function(evt){
+            getMousePos(mPanCanvas, evt);
+        }, false);
+        radarCanvas.addEventListener('mousemove', function(evt){
+            getMousePos(radarCanvas, evt);
+        }, false);
+    } else {
+        /*
+        * Event listeners track the mouse movements. 
+        * N.B.: You need to track on the topmost layer!!!
+        */
+        mPanCanvas.onmousemove = null;
+        radarCanvas.onmousemove = null;
+        mPanLoc.clearRect(0,0,720,720);
+    }
 }
 
 /*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
@@ -165,10 +178,6 @@ function resize(e) {
     document.getElementById('buildingContainer').style.height = percentage + '%';
     document.getElementById('droneContainer').style.height = (100 - percentage) + '%';
     document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
-    //console.log(current);
-    //document.getElementById('buildingContainer').style.height = current + 'px';
-    //document.getElementById('droneContainer').style.height = bottom + 'px';
-    //document.getElementById('leftMenuSlider').style.marginTop = current + 'px';
 }
 
 function pulldown() {
@@ -228,10 +237,13 @@ function getMousePos(canvas, evt){
         
     }
     
+    mPanLoc.clearRect(0,0,720,720);
+        drawTile(1,getTile('x'),getTile('y'),true);
+    
     // return relative mouse position
     mouseX = evt.clientX - left + window.pageXOffset;
     mouseY = evt.clientY - top + window.pageYOffset;
-    drawmPanLoc();
+    //drawmPanLoc();
     return {
         x: mouseX,
         y: mouseY
@@ -938,14 +950,9 @@ function drawLoc() {
     radarLoc.closePath();
 }
 
-/*Highlights the appropriate hexagon when the mouse is over it*/
-function drawmPanLoc() {
-    mPanLoc.clearRect(0,0,720,720);
 
-    if (mPanTrack === true) {
-        drawTile(1,getTile('x'),getTile('y'),true);                             //send our reference, with the optional "true" to tell drawTile that we want a hgihlight
-    }
-}
+    
+    
 
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
