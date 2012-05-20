@@ -6,7 +6,7 @@ var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  
 var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
     clickedOn, seeder, rng, turnNum; //hold info for various bits and bobs
                                                 //movement vars
-var mouseX, mouseY, drawmPanLoc;                                                  //mouse trackers for main panel
+var mouseX, mouseY, overMPan;                                                  //mouse trackers for main panel
 var noise,noise2,noise3;                                                        //vars for world generation
 var turn = 0;
 
@@ -94,8 +94,6 @@ function init() {
     /*set up our noise layers*/
     seeder = getSeed();
     rng = new MersenneTwister(seeder);
-    console.log(seeder);
-    console.log(rng.random());
     noise = new ClassicalNoise(rng);
     noise2 = new ClassicalNoise(rng);
     noise3 = new ClassicalNoise(rng);
@@ -118,15 +116,18 @@ function init() {
     mainLoop();
 }
 
-function overCanvas(bool){
+function overCanvas(bool, which){
     /*
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
     */
-    if (bool === true){
+    if (bool === true && which == 'mPan'){
+        //radarCanvas.onmousemove = null;
         mPanCanvas.addEventListener('mousemove', function(evt){
             getMousePos(mPanCanvas, evt);
         }, false);
+    } else if (bool === true && which == 'radar') {
+        //mPanCanvas.onmousemove = null;
         radarCanvas.addEventListener('mousemove', function(evt){
             getMousePos(radarCanvas, evt);
         }, false);
@@ -237,18 +238,19 @@ function getMousePos(canvas, evt){
         
     }
     
-    mPanLoc.clearRect(0,0,720,720);
-        drawTile(1,getTile('x'),getTile('y'),true);
-    
     // return relative mouse position
     mouseX = evt.clientX - left + window.pageXOffset;
     mouseY = evt.clientY - top + window.pageYOffset;
     //drawmPanLoc();
-    return {
-        x: mouseX,
-        y: mouseY
-    };
-    
+    //return {
+      //  x: mouseX,
+        //y: mouseY
+    //};
+    console.log(overMPan);
+    if (overMPan === true){
+        mPanLoc.clearRect(0,0,720,720);
+        drawTile(1,getTile('x'),getTile('y'),true);
+    }
 }
 
 /*shifts our reference reticule (if possible), then redraws the map*/
