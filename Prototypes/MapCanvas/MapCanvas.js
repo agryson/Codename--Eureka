@@ -475,6 +475,7 @@ function jump() {
 function getSeed(newGame) {
     //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
     var input = document.getElementById('seed').value;
+    var popup = document.getElementById("popupContainer");
     if (newGame !== true) {
         input = input.split(' ').join('');
         var seedString = '';
@@ -498,6 +499,9 @@ function getSeed(newGame) {
     drawLoc();
     drawZoomMap();
     mainLoop();
+    popup.style.opacity='0';
+    popup.addEventListener( 'webkitTransitionEnd', 
+    function() {popup.style.zIndex='-1';}, false );
 }
 
 var MersenneTwister = function(seed) {

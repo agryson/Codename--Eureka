@@ -28,17 +28,23 @@ body, html {
 /*        ******      Loading Screen    ******      */
 
 .popupContainer {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100%;
     width: 100%;
     background-color: #191919;
     z-index: 100;
+    opacity: 1;
+    -webkit-transition: opacity 1s ease;
 }
 
 .popup {
     position: relative;
     height: 50%;
     width: 50%;
+    margin-left: 25%;
+    margin-top: 15%;
     background-color: #363636;
     z-index: 101;
 }
