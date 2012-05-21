@@ -90,18 +90,7 @@ function init() {
     turnNum = document.getElementById('turnNumber');
     
     /*set up our noise layers*/
-    seeder = getSeed();
-    rng = new MersenneTwister(seeder);
-    noise = new ClassicalNoise(rng);
-    noise2 = new ClassicalNoise(rng);
-    noise3 = new ClassicalNoise(rng);
-
-    /*create the game's map*/
-    map = new Array(radarRad*2);
-    createMap();
-    
-    /*draw the radar background once on load*/
-    drawRadar();
+    //seeder = getSeed();
 
     tile = new Image();                                                         //create the spritesheet object
     tile.src = 'images/tiles.png';                                              //tell script where spritesheet is
@@ -110,8 +99,6 @@ function init() {
     tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
 
     document.onkeyup = keypressed;                                               //keyboard listener
-    drawLoc();
-    mainLoop();
 }
 
 function overCanvas(bool, which){
@@ -485,15 +472,32 @@ function jump() {
    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
-function getSeed() {
-    var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
-    seedIn = seedIn.split(' ').join('');
-    var seedString = '';
-    for (var i = 0; i < seedIn.length; i++){
-        seedString += seedIn.charCodeAt(i);
+function getSeed(newGame) {
+    //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
+    var input = document.getElementById('seed').value;
+    if (newGame !== true) {
+        input = input.split(' ').join('');
+        var seedString = '';
+        for (var i = 0; i < input.length; i++){
+            seedString += input.charCodeAt(i);
+        }
+        seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
+        seeder = seedString;
     }
-    seedString = parseInt(seedString, 10)/Math.pow(10,seedIn.length);
-    return seedString;
+    rng = new MersenneTwister(seeder);
+    noise = new ClassicalNoise(rng);
+    noise2 = new ClassicalNoise(rng);
+    noise3 = new ClassicalNoise(rng);
+
+    /*create the game's map*/
+    map = new Array(radarRad*2);
+    createMap();
+    
+    /*draw the radar background once on load*/
+    drawRadar();
+    drawLoc();
+    drawZoomMap();
+    mainLoop();
 }
 
 var MersenneTwister = function(seed) {
