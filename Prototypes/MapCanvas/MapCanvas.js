@@ -137,15 +137,20 @@ function randGen(num, min){
 function nextTurn(){
     var x;
     var y;
-    turn += 1;
-	for(y=0;y<radarRad*2;y++) {
-		for(x=0; x<radarRad*2; x++) {
-			if(map[y][x][0]===true) {
-                map[y][x][1].nextTurn();
-			}
-		}   
-	}
-    turnNum.innerHTML = "Week: " + turn;
+    var hold;
+    if (hold !== true){
+        turn += 1;
+        for(y=0;y<radarRad*2;y++) {
+            for(x=0; x<radarRad*2; x++) {
+                if(map[y][x][0]===true) {
+                    map[y][x][1].nextTurn();
+                }
+            }   
+        }
+        turnNum.innerHTML = "Week: " + turn;
+    }
+    hold = true;
+    setTimeout(hold = false,1000);
 }
 
 function leftMenuResize(bool) {
@@ -476,7 +481,7 @@ function getSeed(newGame) {
     //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
     var input = document.getElementById('seed').value;
     var popup = document.getElementById("popupContainer");
-    if (newGame !== true) {
+    if (newGame === false && input !=='') {
         input = input.split(' ').join('');
         var seedString = '';
         for (var i = 0; i < input.length; i++){
@@ -484,24 +489,47 @@ function getSeed(newGame) {
         }
         seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
         seeder = seedString;
-    }
-    rng = new MersenneTwister(seeder);
-    noise = new ClassicalNoise(rng);
-    noise2 = new ClassicalNoise(rng);
-    noise3 = new ClassicalNoise(rng);
-
-    /*create the game's map*/
-    map = new Array(radarRad*2);
-    createMap();
+        rng = new MersenneTwister(seeder);
+        noise = new ClassicalNoise(rng);
+        noise2 = new ClassicalNoise(rng);
+        noise3 = new ClassicalNoise(rng);
     
-    /*draw the radar background once on load*/
-    drawRadar();
-    drawLoc();
-    drawZoomMap();
-    mainLoop();
-    popup.style.opacity='0';
-    popup.addEventListener( 'webkitTransitionEnd', 
-    function() {popup.style.zIndex='-1';}, false );
+        /*create the game's map*/
+        map = new Array(radarRad*2);
+        createMap();
+        
+        /*draw the radar background once on load*/
+        drawRadar();
+        drawLoc();
+        drawZoomMap();
+        mainLoop();
+        popup.style.opacity='0';
+        popup.addEventListener( 'webkitTransitionEnd', 
+        function() {popup.style.zIndex='-1';}, false );
+    } else if (newGame === true){
+        rng = new MersenneTwister(seeder);
+        noise = new ClassicalNoise(rng);
+        noise2 = new ClassicalNoise(rng);
+        noise3 = new ClassicalNoise(rng);
+    
+        /*create the game's map*/
+        map = new Array(radarRad*2);
+        createMap();
+        
+        /*draw the radar background once on load*/
+        drawRadar();
+        drawLoc();
+        drawZoomMap();
+        mainLoop();
+        popup.style.opacity='0';
+        popup.addEventListener( 'webkitTransitionEnd', 
+        function() {
+            popup.style.display='none';
+            document.getElementById("popup").style.display='none';
+        }, false );
+    } else if (newGame === false && input ==='') {
+        alert('Please enter your dashboard password or start a new session...');
+    }
 }
 
 var MersenneTwister = function(seed) {
