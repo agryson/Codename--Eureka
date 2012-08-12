@@ -994,7 +994,7 @@ function clickTest() {
             clickedOn = null;
             break;
         case 'test2':
-            kind = 1;
+            kind = 5;
             clickedOn = null;
             break;
         case null:
