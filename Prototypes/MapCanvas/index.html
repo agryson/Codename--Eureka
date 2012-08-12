@@ -7,33 +7,68 @@
 		<meta charset="UTF-8">
 		<title>Prototype MapV1</title>
 
-		<script language="JavaScript" src="MapCanvas.js"></script>		
+		<script language="JavaScript" src="MapCanvas.js"></script>
 	</head>
 
 	<body onload="init()">
+    
         <div id="leftMenu">
-            <div class="testItem" id="test1" onClick="construct(this.id)">
-                Prepare for Construction
+            <div id="buildingContainer">
+                <div class="menuItem" id="test1" onClick="construct(this.id)">
+                    <img class="itemImage" src="images/bdozePointer.png"></img>
+                    <span class="itemText">Prepare for Construction</span>
+                </div>      
             </div>
-            <div class="testItem" id="test2" onClick="construct(this.id)">
-                Green Tile
+            
+            <div id="leftMenuSlider" onmousedown="leftMenuResize(true)" onmouseup="leftMenuResize(false)"></div>
+            
+            <div id="droneContainer">
+                <div class="menuItem" id="test2" onClick="construct(this.id)">
+                    <img class="itemImage" src="images/bdozePointer.png"></img>
+                    <span class="itemText">Another item, with a load of text just to see what will happen if I add a description for example, or something really long, will the padding work properly etc.</span>
+                </div>
             </div>
         </div>
+        
+        <div id="execDropDown" onclick="pulldown()">
+            <div id="execDropDownContainer"></div>       
+        </div>
+        
         <canvas id="mainPanel" width="720" height="720">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
+        
         <canvas id="mPanOverlay" width="720" height="720" 
-            onMouseOver="mPanTrack = true" onMouseOut="mPanTrack = false; drawmPanLoc();" 
+            onmouseover="overCanvas(true, 'mPan'); overMPan = true" onmouseout="overCanvas(false); overMPan = false" 
             onMouseUp="clickTest()">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
+        
         <canvas id="map" width="300" height="300">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
-        <canvas id="mapOverlay" width="300" height="300" onclick="jump()">
+        
+        <canvas id="mapOverlay" width="300" height="300" onclick="jump()" onmouseover="overCanvas(true, 'radar')" onmouseout="overCanvas(false)">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
-        <button id ="turn" onclick="nextTurn()">Next Turn</button>
+        
+        <div id="globalActions">
+            <span id="turnNumber">Week: 0</span>
+            <button class="info" id="globalReport" onclick="pulldown()">Executive Report</button>
+            <button class="info" id="save">Save</button>
+            <button class="action" id="turn" onclick="nextTurn()">Send Orders</button>
+        </div>
+        
+        <div class="popupContainer" id="popupContainer">
+            <div class="popup" id="popup">
+            <input type="text" id="seed" placeholder="Dashboard Password" /><br/>
+            <div id="buttonContainer">
+                <button class="button" onclick="getSeed(false)">Login</button>
+                <button class="button" onclick="getSeed(true)">New Session</button>
+            </div>
+            </div>
+        </div>
+        
 	</body>
 
 </html>

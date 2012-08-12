@@ -4,9 +4,9 @@
 //GLOBAL VARS**********************************************************************************************
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
 var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
-    clickedOn; //hold info for various bits and bobs
+    clickedOn, seeder, rng, turnNum; //hold info for various bits and bobs
                                                 //movement vars
-var mouseX, mouseY, mPanTrack;                                                  //mouse trackers for main panel
+var mouseX, mouseY, overMPan;                                                  //mouse trackers for main panel
 var noise,noise2,noise3;                                                        //vars for world generation
 var turn = 0;
 
@@ -18,7 +18,6 @@ function Terrain() {
     this.resources; //an array that holds the different metal and resource types
     this.turns = false;  //remembers how many turns are left to become a tile of the desired type
     this.prepare = function(){
-        console.log(this.turns);
         if (this.type < 3 && this.turns === false){
             this.turns = this.type + 1;
             this.type=5;
@@ -27,7 +26,6 @@ function Terrain() {
     this.nextTurn = function(){
        if (this.turns !== false && this.turns !== 0){
            this.turns -=1;
-           console.log('turns left: '+this.turns);
        } else if(this.turns === 0){
            this.type = 3;
        }
@@ -89,17 +87,10 @@ function init() {
     retY = radarRad;
     animate=0;
     radLimit=radarRad-8;
-    /*set up our noise layers*/
-    noise = new ClassicalNoise();
-    noise2 = new ClassicalNoise();
-    noise3 = new ClassicalNoise();
-
-    /*create the game's map*/
-    map = new Array(radarRad*2);
-    createMap();
+    turnNum = document.getElementById('turnNumber');
     
-    /*draw the radar background once on load*/
-    drawRadar();
+    /*set up our noise layers*/
+    //seeder = getSeed();
 
     tile = new Image();                                                         //create the spritesheet object
     tile.src = 'images/tiles.png';                                              //tell script where spritesheet is
@@ -107,19 +98,33 @@ function init() {
     tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
     tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
 
+    document.onkeyup = keypressed;                                               //keyboard listener
+}
+
+function overCanvas(bool, which){
     /*
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
     */
-    mPanCanvas.addEventListener('mousemove', function(evt){
-        getMousePos(mPanCanvas, evt);
-    }, false);
-    radarCanvas.addEventListener('mousemove', function(evt){
-        getMousePos(radarCanvas, evt);
-    }, false);
-    document.onkeyup = keypressed;                                               //keyboard listener
-    drawLoc();
-    mainLoop();
+    if (bool === true && which == 'mPan'){
+        //radarCanvas.onmousemove = null;
+        mPanCanvas.addEventListener('mousemove', function(evt){
+            getMousePos(mPanCanvas, evt);
+        }, false);
+    } else if (bool === true && which == 'radar') {
+        //mPanCanvas.onmousemove = null;
+        radarCanvas.addEventListener('mousemove', function(evt){
+            getMousePos(radarCanvas, evt);
+        }, false);
+    } else {
+        /*
+        * Event listeners track the mouse movements. 
+        * N.B.: You need to track on the topmost layer!!!
+        */
+        mPanCanvas.onmousemove = null;
+        radarCanvas.onmousemove = null;
+        mPanLoc.clearRect(0,0,720,720);
+    }
 }
 
 /*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
@@ -132,15 +137,51 @@ function randGen(num, min){
 function nextTurn(){
     var x;
     var y;
-    turn += 1;
-	for(y=0;y<radarRad*2;y++) {
-		for(x=0; x<radarRad*2; x++) {
-			if(map[y][x][0]===true) {
-                map[y][x][1].nextTurn();
-			}
-		}   
-	}
-    console.log('It is now turn: '+ turn);
+    var hold;
+    if (hold !== true){
+        turn += 1;
+        for(y=0;y<radarRad*2;y++) {
+            for(x=0; x<radarRad*2; x++) {
+                if(map[y][x][0]===true) {
+                    map[y][x][1].nextTurn();
+                }
+            }   
+        }
+        turnNum.innerHTML = "Week: " + turn;
+    }
+    hold = true;
+    setTimeout(hold = false,1000);
+}
+
+function leftMenuResize(bool) {
+    if (bool === true){
+        document.getElementById('leftMenu').onmousemove = resize;
+    } else {
+        document.getElementById('leftMenu').onmousemove = null;
+    }
+}
+
+function resize(e) {
+    var current = e.clientY;
+    var total = window.innerHeight;
+    var percentage = ((current/total)*100);
+    if (percentage < 10) {
+        percentage = 11;
+    } else if (percentage > 90){
+        percentage = 89;
+    }
+    document.getElementById('buildingContainer').style.height = percentage + '%';
+    document.getElementById('droneContainer').style.marginTop = percentage + '%';
+    document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
+}
+
+function pulldown() {
+    var i = document.getElementById('execDropDownContainer');
+    if (parseInt(i.style.height, 10) === 0 || i.style.height === '') {
+        i.style.height = '650px';
+    } else {
+        i.style.height = '0px';
+    }
 }
 
 /*the main game loop*/
@@ -176,6 +217,7 @@ function keypressed(e) {
 
 }
 
+
 /*Reads the mouse position*/
 function getMousePos(canvas, evt){
     // get canvas position
@@ -193,12 +235,10 @@ function getMousePos(canvas, evt){
     // return relative mouse position
     mouseX = evt.clientX - left + window.pageXOffset;
     mouseY = evt.clientY - top + window.pageYOffset;
-    drawmPanLoc();
-    return {
-        x: mouseX,
-        y: mouseY
-    };
-    
+    if (overMPan === true){
+        mPanLoc.clearRect(0,0,720,720);
+        drawTile(1,getTile('x'),getTile('y'),true);
+    }
 }
 
 /*shifts our reference reticule (if possible), then redraws the map*/
@@ -207,7 +247,6 @@ function move(dir) {
     var downY = retY+2;
     var leftX = retX-1;
     var rightX = retX+1;
-    console.log('Inside move, before switch '+ dir);
     switch(dir) {
         case 'up':
             if(distance(retX,upY, radarRad,radarRad)<=radLimit) {
@@ -230,7 +269,6 @@ function move(dir) {
             }
             break;         
         default:
-            console.log('inside move');
             break;
     }
     drawZoomMap();
@@ -371,6 +409,257 @@ function jump() {
 }
 
 //WORLD GENERATION****************************************************************
+
+
+/*
+  I've wrapped Makoto Matsumoto and Takuji Nishimura's code in a namespace
+  so it's better encapsulated. Now you can have multiple random number generators
+  and they won't stomp all over eachother's state.
+  
+  If you want to use this as a substitute for Math.random(), use the random()
+  method like so:
+  
+  var m = new MersenneTwister();
+  var randomNumber = m.random();
+  
+  You can also call the other genrand_{foo}() methods on the instance.
+
+  If you want to use a specific seed in order to get a repeatable random
+  sequence, pass an integer into the constructor:
+
+  var m = new MersenneTwister(123);
+
+  and that will always produce the same random sequence.
+
+  Sean McCullough (banksean@gmail.com)
+*/
+
+/* 
+   A C-program for MT19937, with initialization improved 2002/1/26.
+   Coded by Takuji Nishimura and Makoto Matsumoto.
+ 
+   Before using, initialize the state by using init_genrand(seed)  
+   or init_by_array(init_key, key_length).
+ 
+   Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
+   All rights reserved.                          
+ 
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+ 
+     1. Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+ 
+     2. Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+ 
+     3. The names of its contributors may not be used to endorse or promote 
+        products derived from this software without specific prior written 
+        permission.
+ 
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ 
+   Any feedback is very welcome.
+   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
+   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
+*/
+
+function getSeed(newGame) {
+    //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
+    var input = document.getElementById('seed').value;
+    var popup = document.getElementById("popupContainer");
+    if (newGame === false && input !=='') {
+        input = input.split(' ').join('');
+        var seedString = '';
+        for (var i = 0; i < input.length; i++){
+            seedString += input.charCodeAt(i);
+        }
+        seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
+        seeder = seedString;
+        rng = new MersenneTwister(seeder);
+        noise = new ClassicalNoise(rng);
+        noise2 = new ClassicalNoise(rng);
+        noise3 = new ClassicalNoise(rng);
+    
+        /*create the game's map*/
+        map = new Array(radarRad*2);
+        createMap();
+        
+        /*draw the radar background once on load*/
+        drawRadar();
+        drawLoc();
+        drawZoomMap();
+        mainLoop();
+        popup.style.opacity='0';
+        popup.addEventListener( 'webkitTransitionEnd', 
+        function() {popup.style.zIndex='-1';}, false );
+    } else if (newGame === true){
+        rng = new MersenneTwister(seeder);
+        noise = new ClassicalNoise(rng);
+        noise2 = new ClassicalNoise(rng);
+        noise3 = new ClassicalNoise(rng);
+    
+        /*create the game's map*/
+        map = new Array(radarRad*2);
+        createMap();
+        
+        /*draw the radar background once on load*/
+        drawRadar();
+        drawLoc();
+        drawZoomMap();
+        mainLoop();
+        popup.style.opacity='0';
+        popup.addEventListener( 'webkitTransitionEnd', 
+        function() {
+            popup.style.display='none';
+            document.getElementById("popup").style.display='none';
+        }, false );
+    } else if (newGame === false && input ==='') {
+        alert('Please enter your dashboard password or start a new session...');
+    }
+}
+
+var MersenneTwister = function(seed) {
+  if (seed === undefined) {
+    seed = new Date().getTime();
+  } 
+  /* Period parameters */  
+  this.N = 624;
+  this.M = 397;
+  this.MATRIX_A = 0x9908b0df;   /* constant vector a */
+  this.UPPER_MASK = 0x80000000; /* most significant w-r bits */
+  this.LOWER_MASK = 0x7fffffff; /* least significant r bits */
+ 
+  this.mt = new Array(this.N); /* the array for the state vector */
+  this.mti=this.N+1; /* mti==N+1 means mt[N] is not initialized */
+
+  this.init_genrand(seed);
+};
+ 
+/* initializes mt[N] with a seed */
+MersenneTwister.prototype.init_genrand = function(s) {
+  this.mt[0] = s >>> 0;
+  for (this.mti=1; this.mti<this.N; this.mti++) {
+      var s = this.mt[this.mti-1] ^ (this.mt[this.mti-1] >>> 30);
+   this.mt[this.mti] = (((((s & 0xffff0000) >>> 16) * 1812433253) << 16) + (s & 0x0000ffff) * 1812433253) + this.mti;
+      /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
+      /* In the previous versions, MSBs of the seed affect   */
+      /* only MSBs of the array mt[].                        */
+      /* 2002/01/09 modified by Makoto Matsumoto             */
+      this.mt[this.mti] >>>= 0;
+      /* for >32 bit machines */
+  }
+};
+ 
+/* initialize by an array with array-length */
+/* init_key is the array for initializing keys */
+/* key_length is its length */
+/* slight change for C++, 2004/2/26 */
+MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
+  var i, j, k;
+  this.init_genrand(19650218);
+  i=1; j=0;
+  k = (this.N>key_length ? this.N : key_length);
+  for (; k; k--) {
+    var s = this.mt[i-1] ^ (this.mt[i-1] >>> 30);
+    this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1664525) << 16) + ((s & 0x0000ffff) * 1664525))) + init_key[j] + j; /* non linear */
+    this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
+    i++; j++;
+    if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
+    if (j>=key_length) j=0;
+  }
+  for (k=this.N-1; k; k--) {
+    var s = this.mt[i-1] ^ (this.mt[i-1] >>> 30);
+    this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1566083941) << 16) + (s & 0x0000ffff) * 1566083941)) - i; /* non linear */
+    this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
+    i++;
+    if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
+  }
+
+  this.mt[0] = 0x80000000; /* MSB is 1; assuring non-zero initial array */ 
+};
+ 
+/* generates a random number on [0,0xffffffff]-interval */
+MersenneTwister.prototype.genrand_int32 = function() {
+  var y;
+  var mag01 = new Array(0x0, this.MATRIX_A);
+  /* mag01[x] = x * MATRIX_A  for x=0,1 */
+
+  if (this.mti >= this.N) { /* generate N words at one time */
+    var kk;
+
+    if (this.mti == this.N+1)   /* if init_genrand() has not been called, */
+      this.init_genrand(5489); /* a default initial seed is used */
+
+    for (kk=0;kk<this.N-this.M;kk++) {
+      y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
+      this.mt[kk] = this.mt[kk+this.M] ^ (y >>> 1) ^ mag01[y & 0x1];
+    }
+    for (;kk<this.N-1;kk++) {
+      y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
+      this.mt[kk] = this.mt[kk+(this.M-this.N)] ^ (y >>> 1) ^ mag01[y & 0x1];
+    }
+    y = (this.mt[this.N-1]&this.UPPER_MASK)|(this.mt[0]&this.LOWER_MASK);
+    this.mt[this.N-1] = this.mt[this.M-1] ^ (y >>> 1) ^ mag01[y & 0x1];
+
+    this.mti = 0;
+  }
+
+  y = this.mt[this.mti++];
+
+  /* Tempering */
+  y ^= (y >>> 11);
+  y ^= (y << 7) & 0x9d2c5680;
+  y ^= (y << 15) & 0xefc60000;
+  y ^= (y >>> 18);
+
+  return y >>> 0;
+};
+ 
+/* generates a random number on [0,0x7fffffff]-interval */
+MersenneTwister.prototype.genrand_int31 = function() {
+  return (this.genrand_int32()>>>1);
+};
+ 
+/* generates a random number on [0,1]-real-interval */
+MersenneTwister.prototype.genrand_real1 = function() {
+  return this.genrand_int32()*(1.0/4294967295.0); 
+  /* divided by 2^32-1 */ 
+};
+
+/* generates a random number on [0,1)-real-interval */
+MersenneTwister.prototype.random = function() {
+  return this.genrand_int32()*(1.0/4294967296.0); 
+  /* divided by 2^32 */
+};
+ 
+/* generates a random number on (0,1)-real-interval */
+MersenneTwister.prototype.genrand_real3 = function() {
+  return (this.genrand_int32() + 0.5)*(1.0/4294967296.0); 
+  /* divided by 2^32 */
+};
+ 
+/* generates a random number on [0,1) with 53-bit resolution*/
+MersenneTwister.prototype.genrand_res53 = function() { 
+  var a=this.genrand_int32()>>>5, b=this.genrand_int32()>>>6; 
+  return(a*67108864.0+b)*(1.0/9007199254740992.0); 
+}; 
+
+/* These real versions are due to Isaku Wada, 2002/01/09 added */
+
 //FOLLOWING INDENTED CODE WAS 'BORROWED' FROM STACK OVERFLOW
     // Ported from Stefan Gustavson's java implementation
     // http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
@@ -504,49 +793,6 @@ function createMap() {
 	}
     //genRivers(500, 3000);
 }
-/*
-//Rivers don't look convincing enough but I may want to come back to them at some point...
-function genRivers(num, steps) {
-    console.log('called rivers');
-    var x = Math.floor(Math.random()*radarRad*2);
-    var y = Math.floor(Math.random()*radarRad*2);
-    for (num; num >= 0; num--) {
-        river(x,y,steps);
-        x = Math.floor(Math.random()*radarRad*2);
-        y = Math.floor(Math.random()*radarRad*2);
-    }
-    drawRadar();
-}
-
-function river(x,y,steps){
-    var tempX = x;
-    var tempY = y;
-    try{
-    if (map[y][x][0] === true && map[y][x][1] !== null && map[y][x][1].altitude > 160){
-        for (steps; steps >=0; steps--) {
-            map[y][x][1].type = 4;
-            for (var i = 0; i < 6; i++){
-                try{
-                if  (map[tempY][tempX][0] === true && map[adjacent(x,y,i)[0]][adjacent(x,y,i)[1]][1].altitude <= map[tempY][tempX][1].altitude){
-                    tempX = adjacent(x,y,i)[1];
-                    tempY = adjacent(x,y,i)[0];
-                }
-                }catch(e){}
-            }
-            if (x == tempX && y == tempY){
-                tempX = adjacent(x,y,randGen(6,0))[1];
-                tempY = adjacent(x,y,randGen(6,0))[0];
-                console.log('new riverpoint   x' + x + '   y:' + y);
-            }
-            
-            x = tempX;
-            y = tempY;
-            
-        }
-    }
-    }catch(e){}
-}
-*/
 
 /*Sets the tile type as a function of altitude*/
 function setType(x,y) {
@@ -651,7 +897,7 @@ function drawRadar() {
 }
 
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
-function drawTile(tileType, tilePosX, tilePosY, highlight) {
+function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     try {
         if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
             //this if checks to make sure we requested a tile we can draw, 
@@ -659,8 +905,8 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
         } else {
             var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, 
                 destinationY, destinationWidth, destinationHeight;              //Canvas vars
-            sourceWidth = 346;                                                  //original tile width
-            sourceHeight = 400;                                                 //original tile height
+            sourceWidth = 173;                                                  //original tile width
+            sourceHeight = 200;                                                 //original tile height
             destinationWidth = 60;                                              //tile width on zoomMap... If I want 13 tiles across... for s=35
             destinationHeight = 70;                                             //tile height on zoomMap                                                 
             destinationY = Math.floor(tilePosY*destinationWidth*0.86);          //shift it, the number here is a constant that depends ont eh hexagon deformation
@@ -679,11 +925,22 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
                 mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
                     sourceHeight, destinationX, destinationY, destinationWidth, 
                     destinationHeight);
-            } else {
-                sourceX = animate*346;
-                sourceY = tileType*400;
+            } else if (tileType < 4){
+                sourceX = 0;
+                sourceY = tileType*sourceHeight;
                 mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
                     destinationX, destinationY, destinationWidth, destinationHeight);
+            } else {
+                sourceX = animate*sourceWidth;
+                sourceY = tileType*sourceHeight;                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
+                    destinationX, destinationY, destinationWidth, destinationHeight);
+            }
+            if (darkness) {
+                sourceX = 0;
+                sourceY = darkness*sourceHeight;        
+                mPanel.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
+                    sourceHeight, destinationX, destinationY, destinationWidth, 
+                    destinationHeight);
             }
         }    
     } catch(e){
@@ -695,24 +952,17 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
 function drawZoomMap() {
     mPanel.clearRect(0,0,720,720);
     var y,x,end;
-    //var yellow = false;//test for conditional display of menu items
     for(y=0;y<zoomMap.length;y++) {
         x=zoomMap[y][0];
         end=zoomMap[y][1];
         while (x<end) {
-            drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y);
+            drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y,false);
+            if (y === 0 || y == zoomMap.length - 1 || x == zoomMap[y][0] || x == end - 1){//darkens the outer hexagons
+                drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y,false,2);
+            }
             x++;
-            //if (map[(retY+y-5)][(retX+x-5)][1].type===1) {
-                //yellow=true;
-            //}
         }
     }
-    //tests for conditional display of menu items
-    //if (yellow===true) {
-        //document.getElementById('test1').style.display='block';
-    //} else {
-        //document.getElementById('test1').style.display='none';
-    //}
 }
 
 /*draws the current location on the small radar map*/
@@ -730,14 +980,9 @@ function drawLoc() {
     radarLoc.closePath();
 }
 
-/*Highlights the appropriate hexagon when the mouse is over it*/
-function drawmPanLoc() {
-    mPanLoc.clearRect(0,0,720,720);
 
-    if (mPanTrack === true) {
-        drawTile(1,getTile('x'),getTile('y'),true);                             //send our reference, with the optional "true" to tell drawTile that we want a hgihlight
-    }
-}
+    
+    
 
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
@@ -749,7 +994,7 @@ function clickTest() {
             clickedOn = null;
             break;
         case 'test2':
-            kind = 1;
+            kind = 5;
             clickedOn = null;
             break;
         case null:
@@ -784,5 +1029,3 @@ function construct(id) {
         document.body.style.cursor="url('images/bdozePointer.png'), default";
     }
 }
-
-
