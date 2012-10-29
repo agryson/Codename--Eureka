@@ -3,12 +3,13 @@
 
 //GLOBAL VARS**********************************************************************************************
 var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-var map, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
+var map, map1, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
     clickedOn, seeder, rng, turnNum; //hold info for various bits and bobs
                                                 //movement vars
 var mouseX, mouseY, overMPan;                                                  //mouse trackers for main panel
 var noise,noise2,noise3;                                                        //vars for world generation
 var turn = 0;
+var level = 0;
 
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
@@ -209,7 +210,9 @@ function keypressed(e) {
             break;         
         case 39:
             move('right');
-            break;  
+            break;
+        case 76:
+            move('level'); //changes level  
         default:
             console.log("Uhm... that key doesn't do anything... ");
           break;
@@ -267,7 +270,9 @@ function move(dir) {
             if(distance(rightX,retY, radarRad,radarRad)<=radLimit) {
                 retX = rightX;
             }
-            break;         
+            break;
+        case 'level':
+            level == 0 ? level = 1 : level = 0;//TODO insert change level code         
         default:
             break;
     }
@@ -494,8 +499,9 @@ function getSeed(newGame) {
         noise2 = new ClassicalNoise(rng);
         noise3 = new ClassicalNoise(rng);
     
-        /*create the game's map*/
+        /*create the game's maps*/
         map = new Array(radarRad*2);
+        map1 = new Array(radarRad*2);
         createMap();
         
         /*draw the radar background once on load*/
@@ -514,6 +520,7 @@ function getSeed(newGame) {
     
         /*create the game's map*/
         map = new Array(radarRad*2);
+        map1 = new Array(radarRad*2);
         createMap();
         
         /*draw the radar background once on load*/
@@ -791,6 +798,25 @@ function createMap() {
 		}
         
 	}
+
+    for(y=0;y<radarRad*2;y++) {
+        map1[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
+        for(x=0; x<radarRad*2; x++) {
+            map1[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
+            if(distance(x,y,radarRad,radarRad)<=radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
+                map1[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
+                map1[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
+                //map1[y][x][1].altitude=altitude(x,y);
+                //map1[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
+                map1[y][x][1].type = map1[y][x][1].type;
+                //setType(x,y);
+                //generateResources(x,y,map1[y][x][1].type);
+            }else{
+                map1[y][x][0]=false;
+            }
+        }
+        
+    }
     //genRivers(500, 3000);
 }
 
@@ -951,14 +977,17 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
 function drawZoomMap() {
     mPanel.clearRect(0,0,720,720);
-    var y,x,end;
+    var y,x,end,subsurface;
+    level == 0 ? subsurface = map : subsurface = map1;
+    console.log('tada');
+
     for(y=0;y<zoomMap.length;y++) {
         x=zoomMap[y][0];
         end=zoomMap[y][1];
         while (x<end) {
-            drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y,false);
+            drawTile(subsurface[(retY+y-5)][(retX+x-5)][1].type,x,y,false);
             if (y === 0 || y == zoomMap.length - 1 || x == zoomMap[y][0] || x == end - 1){//darkens the outer hexagons
-                drawTile(map[(retY+y-5)][(retX+x-5)][1].type,x,y,false,2);
+                drawTile(subsurface[(retY+y-5)][(retX+x-5)][1].type,x,y,false,2);
             }
             x++;
         }
