@@ -99,7 +99,7 @@ function init() {
     tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
     tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
 
-    document.onkeyup = keypressed;                                               //keyboard listener
+    document.onkeydown = keypressed;                                               //keyboard listener
 }
 
 function overCanvas(bool, which){
