@@ -353,36 +353,71 @@ MersenneTwister.prototype.genrand_res53 = function() {
       return nxyz; 
     };
 
-function altitude(x,y){
-    var gridSize = 75;
-    var n = (Game.noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
-    var n2 = (Game.noise2.noise(x / (gridSize/2), y / (gridSize/2), 0) + 1) * 127;
-    var n3 = (Game.noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
-    
-    return Math.round((n+n2+n3)/3);
+function altitude(x,y,level){
+  if(level === 0){
+      var gridSize = 75;
+      var n = (Game.noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
+      var n2 = (Game.noise2.noise(x / (gridSize/2), y / (gridSize/2), 0) + 1) * 127;
+      var n3 = (Game.noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
+      //console.log('attempted altitude?');
+      return Math.round((n+n2+n3)/3);
+    } else {
+      return null;
+    }
 }
 
 /*creates the map*/
 function createMap() {
-  var x;
-	var y;
-	for(y=0;y<Game.radarRad*2;y++) {
-		Game.map[y]=new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
-		for(x=0; x<Game.radarRad*2; x++) {
-            Game.map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-			if(distance(x,y,Game.radarRad,Game.radarRad)<=Game.radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
-				Game.map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
-				Game.map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
-        Game.map[y][x][1].altitude=altitude(x,y);
-        Game.map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
-        setType(x,y,0);
-        generateResources(x,y,Game.map[y][x][1].type);
-			}else{
-				Game.map[y][x][0]=false;
-			}
-		}
-        
-	}
+  //TODO: clean up this creat map thing to generate 4 maps
+  var x, y, level, i;
+  var map = [];
+
+    for(i = 0; i < 4 ; i++){
+      switch(i){
+        case 0:
+          map[] = Game.map[];
+          level = 0;
+          break;
+        case 1:
+          map[] = Game.map1[];
+          level = 1;
+          break;
+        case 2:
+          map = Game.map2;
+          level = 2;
+          break;
+        case 3:
+          map = Game.map3;
+          level = 3;
+          break;
+        case 4:
+          map = Game.map4;
+          level = 4;
+          break;
+        default:
+          console.log('There was a problem with the level... ' + level);
+      }
+        console.log(String(map));
+  
+      for(y=0;y<Game.radarRad*2;y++) {
+        map[y] = new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
+        for(x=0; x<Game.radarRad*2; x++) {
+            map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
+          if(distance(x,y,Game.radarRad,Game.radarRad)<=Game.radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
+            map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
+            map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
+            map[y][x][1].altitude=altitude(x,y,level);
+            map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
+            setType(x,y,level);
+            generateResources(x,y,map[y][x][1].type);
+          }else{
+            map[y][x][0]=false;
+          }
+        }
+      //console.log(i + 'again');
+      }
+    }
+  /*
 
   for(y=0;y<Game.radarRad*2;y++) {
       Game.map1[y]=new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
@@ -393,7 +428,6 @@ function createMap() {
               Game.map1[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
               //map1[y][x][1].altitude=altitude(x,y);
               Game.map1[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
-              //map1[y][x][1].type = map1[y][x][1].type;
               setType(x,y,1);
               generateResources(x,y,Game.map1[y][x][1].type);
           }else{
@@ -401,7 +435,7 @@ function createMap() {
           }
       }
       
-  }
+  }*/
     //genRivers(500, 3000);
 }
 
@@ -411,28 +445,36 @@ function setType(x,y,level) {
   var high = 160;
   var med = 130;
   var low = 90;
-  
-  if (level == 0){
-    if (altitude >= high){
-        Game.map[y][x][1].type = 2;
-    } else if(altitude < high && altitude >= med){
-        Game.map[y][x][1].type = 1;
-    } else if(altitude < med && altitude >= low){
-       Game. map[y][x][1].type = 0;
-    } else {
-        Game.map[y][x][1].type = 4;
-    }
+  var map;
+
+  switch(level){
+    case 0:
+      map = Game.map[y][x][1];
+      break;
+    case 1:
+      map = Game.map1[y][x][1];
+      break;
+    case 2:
+      map = Game.map2[y][x][1];
+      break;
+    case 3:
+      map = Game.map3[y][x][1];
+      break;
+    case 4:
+      map = Game.map4[y][x][1];
+      break;
+    default:
+      console.log('There was a problem with the level... ' + level);
+  }
+
+  if (altitude >= (high - level*10)){
+      map.type = 2 + level*6;
+  } else if(altitude < (high - level*10) && altitude >= (med - level*10)){
+      map.type = 1 + level*6;
+  } else if(altitude < (med - level*10) && altitude >= (low - level*10)){
+      map.type = 0 + level*6;
   } else {
-    //slightly different for the subterranean level...
-    if (altitude >= (high - 10)){
-        Game.map1[y][x][1].type = 8;
-    } else if(altitude < (high-10) && altitude >= (med-20)){
-        Game.map1[y][x][1].type = 7;
-    } else if(altitude < (med-20) && altitude >= (low-10)){
-        Game.map1[y][x][1].type = 6;
-    } else {
-        Game.map1[y][x][1].type = 4;
-    }
+      map.type = 4;
   }
 }
 
