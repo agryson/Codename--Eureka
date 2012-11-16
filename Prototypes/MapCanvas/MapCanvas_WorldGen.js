@@ -78,15 +78,15 @@ function getSeed(newGame) {
             seedString += input.charCodeAt(i);
         }
         seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
-        seeder = seedString;
-        rng = new MersenneTwister(seeder);
-        noise = new ClassicalNoise(rng);
-        noise2 = new ClassicalNoise(rng);
-        noise3 = new ClassicalNoise(rng);
+        Game.seeder = seedString;
+        Game.rng = new MersenneTwister(Game.seeder);
+        Game.noise = new ClassicalNoise(Game.rng);
+        Game.noise2 = new ClassicalNoise(Game.rng);
+        Game.noise3 = new ClassicalNoise(Game.rng);
     
         /*create the game's maps*/
-        map = new Array(radarRad*2);
-        map1 = new Array(radarRad*2);
+        Game.map = new Array(Game.radarRad*2);
+        Game.map1 = new Array(Game.radarRad*2);
         createMap();
         
         /*draw the radar background once on load*/
@@ -97,15 +97,15 @@ function getSeed(newGame) {
         popup.style.opacity='0';
         popup.addEventListener( 'webkitTransitionEnd', 
         function() {popup.style.zIndex='-1';}, false );
-    } else if (newGame === true){
-        rng = new MersenneTwister(seeder);
-        noise = new ClassicalNoise(rng);
-        noise2 = new ClassicalNoise(rng);
-        noise3 = new ClassicalNoise(rng);
+    } else if (newGame){
+        Game.rng = new MersenneTwister(Game.seeder);
+        Game.noise = new ClassicalNoise(Game.rng);
+        Game.noise2 = new ClassicalNoise(Game.rng);
+        Game.noise3 = new ClassicalNoise(Game.rng);
     
         /*create the game's map*/
-        map = new Array(radarRad*2);
-        map1 = new Array(radarRad*2);
+        Game.map = new Array(Game.radarRad*2);
+        Game.map1 = new Array(Game.radarRad*2);
         createMap();
         
         /*draw the radar background once on load*/
@@ -355,9 +355,9 @@ MersenneTwister.prototype.genrand_res53 = function() {
 
 function altitude(x,y){
     var gridSize = 75;
-    var n = (noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
-    var n2 = (noise2.noise(x / (gridSize/2), y / (gridSize/2), 0) + 1) * 127;
-    var n3 = (noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
+    var n = (Game.noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
+    var n2 = (Game.noise2.noise(x / (gridSize/2), y / (gridSize/2), 0) + 1) * 127;
+    var n3 = (Game.noise3.noise(x / (gridSize/4), y / (gridSize/4), 0) + 1) * 127;
     
     return Math.round((n+n2+n3)/3);
 }
@@ -366,38 +366,38 @@ function altitude(x,y){
 function createMap() {
   var x;
 	var y;
-	for(y=0;y<radarRad*2;y++) {
-		map[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
-		for(x=0; x<radarRad*2; x++) {
-            map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-			if(distance(x,y,radarRad,radarRad)<=radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
-				map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
-				map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
-        map[y][x][1].altitude=altitude(x,y);
-        map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
+	for(y=0;y<Game.radarRad*2;y++) {
+		Game.map[y]=new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
+		for(x=0; x<Game.radarRad*2; x++) {
+            Game.map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
+			if(distance(x,y,Game.radarRad,Game.radarRad)<=Game.radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
+				Game.map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
+				Game.map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
+        Game.map[y][x][1].altitude=altitude(x,y);
+        Game.map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
         setType(x,y,0);
-        generateResources(x,y,map[y][x][1].type);
+        generateResources(x,y,Game.map[y][x][1].type);
 			}else{
-				map[y][x][0]=false;
+				Game.map[y][x][0]=false;
 			}
 		}
         
 	}
 
-  for(y=0;y<radarRad*2;y++) {
-      map1[y]=new Array(radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
-      for(x=0; x<radarRad*2; x++) {
-          map1[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-          if(distance(x,y,radarRad,radarRad)<=radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
-              map1[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
-              map1[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
+  for(y=0;y<Game.radarRad*2;y++) {
+      Game.map1[y]=new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
+      for(x=0; x<Game.radarRad*2; x++) {
+          Game.map1[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
+          if(distance(x,y,Game.radarRad,Game.radarRad)<=Game.radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
+              Game.map1[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
+              Game.map1[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
               //map1[y][x][1].altitude=altitude(x,y);
-              map1[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
+              Game.map1[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
               //map1[y][x][1].type = map1[y][x][1].type;
               setType(x,y,1);
-              generateResources(x,y,map1[y][x][1].type);
+              generateResources(x,y,Game.map1[y][x][1].type);
           }else{
-              map1[y][x][0]=false;
+              Game.map1[y][x][0]=false;
           }
       }
       
@@ -407,31 +407,31 @@ function createMap() {
 
 /*Sets the tile type as a function of altitude*/
 function setType(x,y,level) {
-  var altitude = map[y][x][1].altitude;
+  var altitude = Game.map[y][x][1].altitude;
   var high = 160;
   var med = 130;
   var low = 90;
   
   if (level == 0){
     if (altitude >= high){
-        map[y][x][1].type = 2;
+        Game.map[y][x][1].type = 2;
     } else if(altitude < high && altitude >= med){
-        map[y][x][1].type = 1;
+        Game.map[y][x][1].type = 1;
     } else if(altitude < med && altitude >= low){
-        map[y][x][1].type = 0;
+       Game. map[y][x][1].type = 0;
     } else {
-        map[y][x][1].type = 4;
+        Game.map[y][x][1].type = 4;
     }
   } else {
     //slightly different for the subterranean level...
     if (altitude >= (high - 10)){
-        map1[y][x][1].type = 8;
+        Game.map1[y][x][1].type = 8;
     } else if(altitude < (high-10) && altitude >= (med-20)){
-        map1[y][x][1].type = 7;
+        Game.map1[y][x][1].type = 7;
     } else if(altitude < (med-20) && altitude >= (low-10)){
-        map1[y][x][1].type = 6;
+        Game.map1[y][x][1].type = 6;
     } else {
-        map1[y][x][1].type = 4;
+        Game.map1[y][x][1].type = 4;
     }
   }
 }
@@ -440,16 +440,16 @@ function setType(x,y,level) {
 function generateResources(x,y,terrain) {
     switch (terrain) {
         case 0:
-            map[y][x][1].resources[0]=randGen(2,0);
-            map[y][x][1].resources[1]=randGen(2,0);
+            Game.map[y][x][1].resources[0]=randGen(2,0);
+            Game.map[y][x][1].resources[1]=randGen(2,0);
             break;
         case 1:
-            map[y][x][1].resources[0]=randGen(5,10);
-            map[y][x][1].resources[1]=randGen(5,10);
+            Game.map[y][x][1].resources[0]=randGen(5,10);
+            Game.map[y][x][1].resources[1]=randGen(5,10);
             break;
         case 2:
-            map[y][x][1].resources[0]=randGen(5,20);
-            map[y][x][1].resources[1]=randGen(5,20);
+            Game.map[y][x][1].resources[0]=randGen(5,20);
+            Game.map[y][x][1].resources[1]=randGen(5,20);
             break;
         default:
             //do nothing

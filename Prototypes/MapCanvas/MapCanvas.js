@@ -1,15 +1,15 @@
 //TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
-
+var Game;
 //GLOBAL VARS**********************************************************************************************
-var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-var map, map1, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
-    clickedOn, seeder, rng, turnNum; //hold info for various bits and bobs
+//var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
+//var map, map1, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
+    //clickedOn, seeder, rng, turnNum; //hold info for various bits and bobs
                                                 //movement vars
-var mouseX, mouseY, overMPan;                                                  //mouse trackers for main panel
-var noise,noise2,noise3;                                                        //vars for world generation
-var turn = 0;
-var level = 0;
+//var mouseX, mouseY, overMPan;                                                  //mouse trackers for main panel
+//var noise,noise2,noise3;                                                        //vars for world generation
+//var turn = 0;
+//var level = 0;
 
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
@@ -53,18 +53,77 @@ function Robot(name, type) {
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 /*Set up any global stuff that won't ever change after page load*/
+function Param(){
+    //Radar related vars...
+    this.radarRad = 150;                                                             //this is the radius of the map that we want, changing it here should change it everywhere except the html
+    this.radLimit=this.radarRad-8;
+
+    //The zoomed in map related thigs...
+    this.zoomMap = [
+    [3,9],
+    [2,9],
+    [1,11],
+    [0,11],
+    [1,11],
+    [0,11],
+    [0,12],
+    [0,11],
+    [1,11],
+    [0,11],
+    [1,11],
+    [2,9],
+    [3,9]
+    ];
+    this.retX = this.radarRad;
+    this.retY = this.radarRad;
+    this.animate=0;
+    this.tile = new Image();
+    this.tile.src = 'images/tiles.png'; 
+    this.tileHighlight = new Image();
+    this.tileHighlight.src = 'images/tools.png';
+    this.clickedOn;
+    this.level = 0;
+    this.mouseX;
+    this.mouseY;
+    this.overMPan;
+    
+    //General game stuff
+    this.turnNum = document.getElementById('turnNumber');
+    this.turn = 0;
+    this.map = [];
+    this.map1 = [];    
+    
+    //Map generation vars
+    this.seeder;
+    this.rng;
+    this.noise;
+    this.noise2;
+    this.noise3;
+
+    //General canvas vars...
+    this.mPanCanvas = document.getElementById('mPanOverlay'); 
+    this.mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
+    this.mPanel = document.getElementById('mainPanel').getContext('2d');
+    this.radarCanvas = document.getElementById('mapOverlay');
+    this.radar = document.getElementById('map').getContext('2d');
+    this.radarLoc = document.getElementById('mapOverlay').getContext('2d');
+    this.overMPan;
+
+}
+
 function init() {
     /*get the topmost canvases that we'll need for mouse tracking*/
-    mPanCanvas = document.getElementById('mPanOverlay');
-    radarCanvas = document.getElementById('mapOverlay');
+    //mPanCanvas = document.getElementById('mPanOverlay');
+    //radarCanvas = document.getElementById('mapOverlay');
     
     /*get all the canvas contexts*/
-    mPanel = document.getElementById('mainPanel').getContext('2d');
-    mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
-    radar = document.getElementById('map').getContext('2d');
-    radarLoc = document.getElementById('mapOverlay').getContext('2d');
+    //mPanel = document.getElementById('mainPanel').getContext('2d');
+    //mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
+    //radar = document.getElementById('map').getContext('2d');
+    //radarLoc = document.getElementById('mapOverlay').getContext('2d');
 
     /*create the zoomed map grid references for use later*/ 
+    /*
     zoomMap =new Array(13);
     zoomMap = [
     [3,9],
@@ -81,23 +140,24 @@ function init() {
     [2,9],
     [3,9]
     ];
-    
+    */
     /*set any initial values we will need*/
-    radarRad = 150;                                                             //this is the radius of the map that we want, changing it here should change it everywhere except the html
-    retX = radarRad;
-    retY = radarRad;
-    animate=0;
-    radLimit=radarRad-8;
-    turnNum = document.getElementById('turnNumber');
+    Game = new Param();
+    //radarRad = 150;                                                             //this is the radius of the map that we want, changing it here should change it everywhere except the html
+    //retX = radarRad;
+    //retY = radarRad;
+    //animate=0;
+    //radLimit=radarRad-8;
+    //turnNum = document.getElementById('turnNumber');
     
     /*set up our noise layers*/
     //seeder = getSeed();
 
-    tile = new Image();                                                         //create the spritesheet object
-    tile.src = 'images/tiles.png';                                              //tell script where spritesheet is
+    //tile = new Image();                                                         //create the spritesheet object
+    //tile.src = 'images/tiles.png';                                              //tell script where spritesheet is
 
-    tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
-    tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
+    //tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
+    //tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
 
     document.onkeydown = keypressed;                                               //keyboard listener
 }
@@ -109,22 +169,23 @@ function overCanvas(bool, which){
     */
     if (bool === true && which == 'mPan'){
         //radarCanvas.onmousemove = null;
-        mPanCanvas.addEventListener('mousemove', function(evt){
-            getMousePos(mPanCanvas, evt);
+        //console.log('yea!');
+        Game.mPanCanvas.addEventListener('mousemove', function(evt){
+            getMousePos(Game.mPanCanvas, evt);
         }, false);
     } else if (bool === true && which == 'radar') {
         //mPanCanvas.onmousemove = null;
-        radarCanvas.addEventListener('mousemove', function(evt){
-            getMousePos(radarCanvas, evt);
+        Game.radarCanvas.addEventListener('mousemove', function(evt){
+            getMousePos(Game.radarCanvas, evt);
         }, false);
     } else {
         /*
         * Event listeners track the mouse movements. 
         * N.B.: You need to track on the topmost layer!!!
         */
-        mPanCanvas.onmousemove = null;
-        radarCanvas.onmousemove = null;
-        mPanLoc.clearRect(0,0,720,720);
+        Game.mPanCanvas.onmousemove = null;
+        Game.radarCanvas.onmousemove = null;
+        Game.mPanLoc.clearRect(0,0,720,720);
     }
 }
 
@@ -139,16 +200,16 @@ function nextTurn(){
     var x;
     var y;
     var hold;
-    if (hold !== true){
-        turn += 1;
-        for(y=0;y<radarRad*2;y++) {
-            for(x=0; x<radarRad*2; x++) {
-                if(map[y][x][0]===true) {
-                    map[y][x][1].nextTurn();
+    if (!hold){
+        Game.turn += 1;
+        for(y=0;y<Game.radarRad*2;y++) {
+            for(x=0; x<Game.radarRad*2; x++) {
+                if(Game.map[y][x][0]===true) {
+                    Game.map[y][x][1].nextTurn();
                 }
             }   
         }
-        turnNum.innerHTML = "Week: " + turn;
+        Game.turnNum.innerHTML = "Week: " + Game.turn;
     }
     hold = true;
     setTimeout(hold = false,1000);
@@ -187,10 +248,10 @@ function pulldown() {
 
 /*the main game loop*/
 function mainLoop() {
-    if (animate==1){                                                            //number of frames = n+1
-       animate = 0;
+    if (Game.animate==1){                                                            //number of frames = n+1
+       Game.animate = 0;
     } else {
-        animate +=1;
+        Game.animate +=1;
     }
     drawZoomMap();
     setTimeout(mainLoop, 200);                                                  //set the framerate here
@@ -217,9 +278,7 @@ function keypressed(e) {
             console.log("Uhm... that key doesn't do anything... ");
           break;
     }
-
 }
-
 
 /*Reads the mouse position*/
 function getMousePos(canvas, evt){
@@ -236,43 +295,43 @@ function getMousePos(canvas, evt){
     }
     
     // return relative mouse position
-    mouseX = evt.clientX - left + window.pageXOffset;
-    mouseY = evt.clientY - top + window.pageYOffset;
-    if (overMPan === true){
-        mPanLoc.clearRect(0,0,720,720);
+    Game.mouseX = evt.clientX - left + window.pageXOffset;
+    Game.mouseY = evt.clientY - top + window.pageYOffset;
+    if (Game.overMPan){
+        Game.mPanLoc.clearRect(0,0,720,720);
         drawTile(1,getTile('x'),getTile('y'),true);
     }
 }
 
 /*shifts our reference reticule (if possible), then redraws the map*/
 function move(dir) {
-    var upY = retY-2;
-    var downY = retY+2;
-    var leftX = retX-1;
-    var rightX = retX+1;
+    var upY = Game.retY-2;
+    var downY = Game.retY+2;
+    var leftX = Game.retX-1;
+    var rightX = Game.retX+1;
     switch(dir) {
         case 'up':
-            if(distance(retX,upY, radarRad,radarRad)<=radLimit) {
-                retY = upY;
+            if(distance(Game.retX,upY, Game.radarRad,Game.radarRad)<=Game.radLimit) {
+                Game.retY = upY;
             }
             break;         
         case 'down':
-            if(distance(retX,downY, radarRad,radarRad)<=radLimit) {
-                retY = downY;
+            if(distance(Game.retX,downY, Game.radarRad,Game.radarRad)<=Game.radLimit) {
+                Game.retY = downY;
             }
             break;         
         case 'left':
-            if(distance(leftX,retY, radarRad,radarRad)<=radLimit) {
-                retX = leftX;
+            if(distance(leftX,Game.retY, Game.radarRad,Game.radarRad)<=Game.radLimit) {
+                Game.retX = leftX;
             }
             break;          
         case 'right':
-            if(distance(rightX,retY, radarRad,radarRad)<=radLimit) {
-                retX = rightX;
+            if(distance(rightX,Game.retY, Game.radarRad,Game.radarRad)<=Game.radLimit) {
+                Game.retX = rightX;
             }
             break;
         case 'level':
-            level == 0 ? level = 1 : level = 0;//TODO insert change level code         
+            Game.level == 0 ? Game.level = 1 : Game.level = 0;        
         default:
             break;
     }
@@ -344,20 +403,20 @@ function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
     
     //set the general cases
-    y = Math.floor(mouseY/(70*0.75));
+    y = Math.floor(Game.mouseY/(70*0.75));
     
     if (y%2 !== 0) {
-        x = Math.floor((mouseX-30)/60);                                         //We need an offset for the shifted rows
+        x = Math.floor((Game.mouseX-30)/60);                                         //We need an offset for the shifted rows
     } else {
-        x = Math.floor(mouseX/60);
+        x = Math.floor(Game.mouseX/60);
     }
     
     //corner case code
-    yDiff = (mouseY/(70*0.75))-y;
+    yDiff = (Game.mouseY/(70*0.75))-y;
     if (yDiff < 0.33) {                                                         //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
         if (y%2 !== 0) {
-            xDiff = (((mouseX-30)/60)-x);
+            xDiff = (((Game.mouseX-30)/60)-x);
             //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
             //Are we on the left or right hand side fo the top third?
             if(xDiff<0.5) {
@@ -374,7 +433,7 @@ function getTile(axis) {
             }
             
         } else {
-            xDiff = ((mouseX/60)-x);
+            xDiff = ((Game.mouseX/60)-x);
             if(xDiff<0.5) {
                 left=0.5-xDiff;
                 if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
@@ -399,16 +458,16 @@ function getTile(axis) {
 
 /*When the radar is clicked, moves the map to that location*/
 function jump() {
-    var x = mouseX;
-    var y = mouseY;
+    var x = Game.mouseX;
+    var y = Game.mouseY;
     //ensure we're dealing with a multiple of two (since we move up and down in twos)
     if (y%2 !== 0) {
         y -= 1;
     }
     //then set the new values and draw
-    if (distance(x,y, radarRad, radarRad) < radLimit) {
-        retX = x;
-        retY = y;
+    if (distance(x,y, Game.radarRad, Game.radarRad) < Game.radLimit) {
+        Game.retX = x;
+        Game.retY = y;
         drawLoc();
     }
 }
@@ -416,11 +475,11 @@ function jump() {
 //MAPS**********************************************************************************
 /*a placeholder to fill in our radar*/
 function drawRadar() {
-    var radarPixels = radar.createImageData(radarRad*2, radarRad*2);
+    var radarPixels = Game.radar.createImageData(Game.radarRad*2, Game.radarRad*2);
 
     for (var x = 0; x < radarPixels.width; x++)  {
         for (var y = 0; y < radarPixels.height; y++)  {
-            if (map[y][x][0] === true) {
+            if (Game.map[y][x][0] === true) {
                 
                 // Index of the pixel in the array
                 var idx = (x + y * radarPixels.width) * 4;
@@ -431,7 +490,7 @@ function drawRadar() {
                 radarPixels.data[idx + 3] = 255;
                 */
 
-                var kind = map[y][x][1].type;
+                var kind = Game.map[y][x][1].type;
                 switch(kind) {
                     case 0:
                         radarPixels.data[idx + 0] = 212;
@@ -474,13 +533,13 @@ function drawRadar() {
         }
     }
     
-    radar.putImageData(radarPixels, 0, 0);
+    Game.radar.putImageData(radarPixels, 0, 0);
 }
 
 /*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     try {
-        if (tilePosX < zoomMap[tilePosY][0] || tilePosX >= zoomMap[tilePosY][1]) {
+        if (tilePosX < Game.zoomMap[tilePosY][0] || tilePosX >= Game.zoomMap[tilePosY][1]) {
             //this if checks to make sure we requested a tile we can draw, 
             //mainly to prevent highlighting outside of the map
         } else {
@@ -500,49 +559,50 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                                     destinationWidth/2);                        //we need a little bit of displacement
                 }
                 
-            if (highlight === true){                                            //highlight is an optional parameter to see which canvas to draw to and how
+            if (highlight){                                            //highlight is an optional parameter to see which canvas to draw to and how
                 sourceX = 0;
                 sourceY = 0;        
-                mPanLoc.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
+                Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, 
                     sourceHeight, destinationX, destinationY, destinationWidth, 
                     destinationHeight);
             } else if (tileType < 4 || tileType > 5){
                 sourceX = 0;
                 sourceY = tileType*sourceHeight;
-                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
+                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight,
                     destinationX, destinationY, destinationWidth, destinationHeight);
             } else {
-                sourceX = animate*sourceWidth;
+                sourceX = Game.animate*sourceWidth;
                 sourceY = tileType*sourceHeight;                
-                mPanel.drawImage(tile, sourceX, sourceY, sourceWidth, sourceHeight,
+                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight,
                     destinationX, destinationY, destinationWidth, destinationHeight);
             }
             if (darkness) {
                 sourceX = 0;
                 sourceY = darkness*sourceHeight;        
-                mPanel.drawImage(tileHighlight, sourceX, sourceY, sourceWidth, 
+                Game.mPanel.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, 
                     sourceHeight, destinationX, destinationY, destinationWidth, 
                     destinationHeight);
             }
         }    
     } catch(e){
         //Do Nothing, we expect this error... unfortunately
+        console.log('e: ' + e);
     }
 }
 
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
 function drawZoomMap() {
-    mPanel.clearRect(0,0,720,720);
+    Game.mPanel.clearRect(0,0,720,720);
     var y,x,end,sourceTile;
-    level == 0 ? sourceTile = map : sourceTile = map1;
+    Game.level === 0 ? sourceTile = Game.map : sourceTile = Game.map1;
 
-    for(y=0;y<zoomMap.length;y++) {
-        x=zoomMap[y][0];
-        end=zoomMap[y][1];
+    for(y=0;y<Game.zoomMap.length;y++) {
+        x=Game.zoomMap[y][0];
+        end=Game.zoomMap[y][1];
         while (x<end) {
-            drawTile(sourceTile[(retY+y-5)][(retX+x-5)][1].type,x,y,false);
-            if (y === 0 || y == zoomMap.length - 1 || x == zoomMap[y][0] || x == end - 1){//darkens the outer hexagons
-                drawTile(sourceTile[(retY+y-5)][(retX+x-5)][1].type,x,y,false,2);
+            drawTile(sourceTile[(Game.retY+y-5)][(Game.retX+x-5)][1].type,x,y,false);
+            if (y === 0 || y == Game.zoomMap.length - 1 || x == Game.zoomMap[y][0] || x == end - 1){//darkens the outer hexagons
+                drawTile(sourceTile[(Game.retY+y-5)][(Game.retX+x-5)][1].type,x,y,false,2);
             }
             x++;
         }
@@ -551,17 +611,17 @@ function drawZoomMap() {
 
 /*draws the current location on the small radar map*/
 function drawLoc() {   
-    radarLoc.clearRect(0,0,radarRad*2,radarRad*2);
-    radarLoc.beginPath();
-    radarLoc.arc(retX,retY,7,0,Math.PI*2,true);
-    radarLoc.fillStyle= 'rgba(255,251,229,0.7)';
-    radarLoc.fill();
-    radarLoc.closePath();
-    radarLoc.beginPath();
-    radarLoc.arc(retX,retY,8,0,Math.PI*2,true);
-    radarLoc.strokeStyle = '#BD222A';
-    radarLoc.stroke();
-    radarLoc.closePath();
+    Game.radarLoc.clearRect(0,0,Game.radarRad*2,Game.radarRad*2);
+    Game.radarLoc.beginPath();
+    Game.radarLoc.arc(Game.retX,Game.retY,7,0,Math.PI*2,true);
+    Game.radarLoc.fillStyle= 'rgba(255,251,229,0.7)';
+    Game.radarLoc.fill();
+    Game.radarLoc.closePath();
+    Game.radarLoc.beginPath();
+    Game.radarLoc.arc(Game.retX,Game.retY,8,0,Math.PI*2,true);
+    Game.radarLoc.strokeStyle = '#BD222A';
+    Game.radarLoc.stroke();
+    Game.radarLoc.closePath();
 }
 
 
@@ -572,14 +632,14 @@ function drawLoc() {
 //testing how to write to main map array
 function clickTest() {
     var kind;
-    switch (clickedOn) {
+    switch (Game.clickedOn) {
         case 'test1':
             kind = 5;
-            clickedOn = null;
+            Game.clickedOn = null;
             break;
         case 'test2':
             kind = 5;
-            clickedOn = null;
+            Game.clickedOn = null;
             break;
         case null:
             kind = null;
@@ -587,10 +647,10 @@ function clickTest() {
         default:
             break;
     }
-    if (kind >= 0 && kind <= 4 && map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type !== 4){
+    if (kind >= 0 && kind <= 4 && Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].type !== 4){
         //map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type = kind;
     } else if(kind == 5){
-        map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].prepare();
+        Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
     }
     drawZoomMap();
     drawRadar();
@@ -598,18 +658,18 @@ function clickTest() {
     //var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
     //var rng = new CustomRandom(retX);
     //console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
-    console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (retY+getTile('y')-5) + '][' + (retX+getTile('x')-5) + ']');
-    console.log('iron='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[0] + ' zinc='+map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].resources[1]);
-    console.log('altitude: '+ map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].altitude);
+    console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (Game.retY+getTile('y')-5) + '][' + (Game.retX+getTile('x')-5) + ']');
+    console.log('iron='+Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].resources[0] + ' zinc='+Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].resources[1]);
+    console.log('altitude: '+ Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
     //console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
 }
 
 function construct(id) {
-    if (clickedOn === id) {
-        clickedOn = null;
+    if (Game.clickedOn === id) {
+        Game.clickedOn = null;
         document.body.style.cursor="default";
     } else {
-        clickedOn = id;
+        Game.clickedOn = id;
         document.body.style.cursor="url('images/bdozePointer.png'), default";
     }
 }
