@@ -368,18 +368,18 @@ function altitude(x,y,level){
 
 /*creates the map*/
 function createMap() {
-  //TODO: clean up this creat map thing to generate 4 maps
+
   var x, y, level, i;
   var map = [];
 
     for(i = 0; i < 4 ; i++){
       switch(i){
         case 0:
-          map[] = Game.map[];
+          map = Game.map;
           level = 0;
           break;
         case 1:
-          map[] = Game.map1[];
+          map = Game.map1;
           level = 1;
           break;
         case 2:
@@ -397,7 +397,6 @@ function createMap() {
         default:
           console.log('There was a problem with the level... ' + level);
       }
-        console.log(String(map));
   
       for(y=0;y<Game.radarRad*2;y++) {
         map[y] = new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
@@ -414,7 +413,6 @@ function createMap() {
             map[y][x][0]=false;
           }
         }
-      //console.log(i + 'again');
       }
     }
   /*

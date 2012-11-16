@@ -80,7 +80,10 @@ function Param(){
     this.turnNum = document.getElementById('turnNumber');
     this.turn = 0;
     this.map = [];
-    this.map1 = [];    
+    this.map1 = [];
+    this.map2 = [];
+    this.map3 = [];
+    this.map4 = [];    
     
     //Map generation vars
     this.seeder = '';
@@ -217,6 +220,7 @@ function keypressed(e) {
             break;
         case 76:
             move('level'); //changes level  
+            break;
         default:
             console.log("Uhm... that key doesn't do anything... ");
           break;
@@ -274,7 +278,7 @@ function move(dir) {
             }
             break;
         case 'level':
-            Game.level == 0 ? Game.level = 1 : Game.level = 0;        
+            Game.level == 4 ? Game.level = 0 : Game.level += 1;        
         default:
             break;
     }
@@ -530,7 +534,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 function drawZoomMap() {
     Game.mPanel.clearRect(0,0,720,720);
     var y,x,end,sourceTile;
-    Game.level === 0 ? sourceTile = Game.map : sourceTile = Game.map1;
+    Game.level === 0 ? sourceTile = Game.map : sourceTile = Game.map1; //TODO: change this to reflect the real sourcetiles...
 
     for(y=0;y<Game.zoomMap.length;y++) {
         x=Game.zoomMap[y][0];
