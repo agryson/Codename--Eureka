@@ -362,7 +362,7 @@ function altitude(x,y,level){
       //console.log('attempted altitude?');
       return Math.round((n+n2+n3)/3);
     } else {
-      return null;
+      return Game.map[y][x][1].altitude;
     }
 }
 
@@ -464,12 +464,12 @@ function setType(x,y,level) {
     default:
       console.log('There was a problem with the level... ' + level);
   }
-
-  if (altitude >= (high - level*10)){
+  //TODO: fix this part to show proper terrain...
+  if (altitude >= (high - level*5)){
       map.type = 2 + level*6;
-  } else if(altitude < (high - level*10) && altitude >= (med - level*10)){
+  } else if(altitude >= med - level*10){
       map.type = 1 + level*6;
-  } else if(altitude < (med - level*10) && altitude >= (low - level*10)){
+  } else if(altitude >= low - level*10){
       map.type = 0 + level*6;
   } else {
       map.type = 4;
