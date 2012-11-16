@@ -1,16 +1,6 @@
 //TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
-var Game;
-//GLOBAL VARS**********************************************************************************************
-//var mPanCanvas, mPanLoc, radarCanvas, mPanel, radar, radarLoc;                  //General canvas page vars
-//var map, map1, zoomMap, tile, tileHighlight, retX, retY, animate, radLimit, radarRad,
-    //clickedOn, seeder, rng, turnNum; //hold info for various bits and bobs
-                                                //movement vars
-//var mouseX, mouseY, overMPan;                                                  //mouse trackers for main panel
-//var noise,noise2,noise3;                                                        //vars for world generation
-//var turn = 0;
-//var level = 0;
-
+var Game;                                                                       //Global so I can get at it from other scripts...
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 function Terrain() {
