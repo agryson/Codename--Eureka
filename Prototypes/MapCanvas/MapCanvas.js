@@ -534,7 +534,25 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 function drawZoomMap() {
     Game.mPanel.clearRect(0,0,720,720);
     var y,x,end,sourceTile;
-    Game.level === 0 ? sourceTile = Game.map : sourceTile = Game.map1; //TODO: change this to reflect the real sourcetiles...
+    //Game.level === 0 ? sourceTile = Game.map : sourceTile = Game.map2; //TODO: change this to reflect the real sourcetiles...
+    switch(Game.level){
+        case 0:
+            sourceTile = Game.map;
+            break;
+        case 1:
+            sourceTile = Game.map1;
+            break;
+        case 2:
+            sourceTile = Game.map2;
+            break;
+        case 3:
+            sourceTile = Game.map3;
+            break;
+        case 4:
+            sourceTile = Game.map4;
+            break;
+
+    }
 
     for(y=0;y<Game.zoomMap.length;y++) {
         x=Game.zoomMap[y][0];

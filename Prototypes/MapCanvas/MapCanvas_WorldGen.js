@@ -372,7 +372,7 @@ function createMap() {
   var x, y, level, i;
   var map = [];
 
-    for(i = 0; i < 4 ; i++){
+    for(i = 0; i < 5 ; i++){
       switch(i){
         case 0:
           map = Game.map;
