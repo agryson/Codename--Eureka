@@ -474,6 +474,7 @@ function setType(x,y,level) {
   } else {
       map.type = 4;
   }
+  
 }
 
 /*sets the resources appropriately for the terrain type at x,y*/
