@@ -71,11 +71,10 @@ function Param(){
     this.tile.src = 'images/tiles.png'; 
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
-    this.clickedOn;
+    this.clickedOn = false;
     this.level = 0;
     this.mouseX;
     this.mouseY;
-    this.overMPan;
     
     //General game stuff
     this.turnNum = document.getElementById('turnNumber');
@@ -84,7 +83,7 @@ function Param(){
     this.map1 = [];    
     
     //Map generation vars
-    this.seeder;
+    this.seeder = '';
     this.rng;
     this.noise;
     this.noise2;
@@ -111,13 +110,13 @@ function overCanvas(bool, which){
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
     */
-    if (bool === true && which == 'mPan'){
+    if (bool && which == 'mPan'){
         //radarCanvas.onmousemove = null;
         //console.log('yea!');
         Game.mPanCanvas.addEventListener('mousemove', function(evt){
             getMousePos(Game.mPanCanvas, evt);
         }, false);
-    } else if (bool === true && which == 'radar') {
+    } else if (bool && which == 'radar') {
         //mPanCanvas.onmousemove = null;
         Game.radarCanvas.addEventListener('mousemove', function(evt){
             getMousePos(Game.radarCanvas, evt);
@@ -134,7 +133,7 @@ function overCanvas(bool, which){
 }
 
 /*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
-Thinkof num as the modifier, min as the base
+Think of num as the modifier, min as the base
 */
 function randGen(num, min){
     return Math.floor(Math.random()*num)+min;
@@ -160,7 +159,7 @@ function nextTurn(){
 }
 
 function leftMenuResize(bool) {
-    if (bool === true){
+    if (bool){
         document.getElementById('leftMenu').onmousemove = resize;
     } else {
         document.getElementById('leftMenu').onmousemove = null;
@@ -360,33 +359,33 @@ function getTile(axis) {
     if (yDiff < 0.33) {                                                         //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
         if (y%2 !== 0) {
-            xDiff = (((Game.mouseX-30)/60)-x);
+            xDiff = ((Game.mouseX-30)/60-x);
             //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
             //Are we on the left or right hand side of the top third?
-            if(xDiff<0.5) {
-                left=0.5-xDiff;                                                 //Adjust to get the opposite length of the 60° internal angle
-                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {                  //I multiply by 10 so that I'm not dealing with numbers less than 1 
-                    y -=1;                                                      //change the reference appropriately
+            if(xDiff < 0.5) {
+                left = 0.5 - xDiff;                                                 //Adjust to get the opposite length of the 60° internal angle
+                if(left*10 > yDiff*10*Math.tan(Math.PI/3)) {                  //I multiply by 10 so that I'm not dealing with numbers less than 1 
+                    y -= 1;                                                      //change the reference appropriately
                 }
             } else {                                                            //rinse repeat for all cases
                 right = xDiff-0.5;
-                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                if(right*10 > yDiff*10*Math.tan(Math.PI/3)) {
                     y -=1;
                     x += 1;
                 }
             }
             
         } else {
-            xDiff = ((Game.mouseX/60)-x);
-            if(xDiff<0.5) {
-                left=0.5-xDiff;
-                if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+            xDiff = (Game.mouseX/60-x);
+            if(xDiff < 0.5) {
+                left = 0.5 - xDiff;
+                if(left*10 > yDiff*10*Math.tan(Math.PI/3)) {
                     y -=1;
                     x -= 1;
                 }
             } else {
                 right = xDiff-0.5;
-                if((right*10)>(yDiff*10)*Math.tan(Math.PI/3)) {
+                if(right*10 > yDiff*10*Math.tan(Math.PI/3)) {
                     y -=1;
                 }
             }
@@ -409,7 +408,7 @@ function jump() {
         y -= 1;
     }
     //then set the new values and draw
-    if (distance(x,y, Game.radarRad, Game.radarRad) < Game.radLimit) {
+    if (distance(x, y, Game.radarRad, Game.radarRad) < Game.radLimit) {
         Game.retX = x;
         Game.retY = y;
         drawLoc();
@@ -423,19 +422,12 @@ function drawRadar() {
 
     for (var x = 0; x < radarPixels.width; x++)  {
         for (var y = 0; y < radarPixels.height; y++)  {
-            if (Game.map[y][x][0] === true) {
+            if (Game.map[y][x][0]) {
                 
                 // Index of the pixel in the array
                 var idx = (x + y * radarPixels.width) * 4;
-                /*
-                radarPixels.data[idx + 0] = map[y][x][1].altitude;
-                radarPixels.data[idx + 1] = map[y][x][1].altitude;
-                radarPixels.data[idx + 2] = map[y][x][1].altitude;
-                radarPixels.data[idx + 3] = 255;
-                */
 
-                var kind = Game.map[y][x][1].type;
-                switch(kind) {
+                switch(Game.map[y][x][1].type) {
                     case 0:
                         radarPixels.data[idx + 0] = 212;
                         radarPixels.data[idx + 1] = 197;
@@ -495,13 +487,13 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
             destinationHeight = 70;                                             //tile height on zoomMap                                                 
             destinationY = Math.floor(tilePosY*destinationWidth*0.86);          //shift it, the number here is a constant that depends ont eh hexagon deformation
                 
-                if (tilePosY%2 === 0) {                                         //if the row is even...
-                    destinationX = Math.floor(tilePosX*destinationWidth);       //we set its X normally
-                } else {                                                        //if it’s odd though
-        
-                    destinationX = Math.floor(tilePosX*destinationWidth + 
-                                    destinationWidth/2);                        //we need a little bit of displacement
-                }
+            if (tilePosY%2 === 0) {                                         //if the row is even...
+                destinationX = Math.floor(tilePosX*destinationWidth);       //we set its X normally
+            } else {                                                        //if it’s odd though
+    
+                destinationX = Math.floor(tilePosX*destinationWidth + 
+                                destinationWidth/2);                        //we need a little bit of displacement
+            }
                 
             if (highlight){                                            //highlight is an optional parameter to see which canvas to draw to and how
                 sourceX = 0;
@@ -530,7 +522,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
         }    
     } catch(e){
         //Do Nothing, we expect this error... unfortunately
-        console.log('e: ' + e);
+        //Basically, when I go off the local map to the south it throws an error...
     }
 }
 
