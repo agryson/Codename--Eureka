@@ -112,53 +112,7 @@ function Param(){
 }
 
 function init() {
-    /*get the topmost canvases that we'll need for mouse tracking*/
-    //mPanCanvas = document.getElementById('mPanOverlay');
-    //radarCanvas = document.getElementById('mapOverlay');
-    
-    /*get all the canvas contexts*/
-    //mPanel = document.getElementById('mainPanel').getContext('2d');
-    //mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
-    //radar = document.getElementById('map').getContext('2d');
-    //radarLoc = document.getElementById('mapOverlay').getContext('2d');
-
-    /*create the zoomed map grid references for use later*/ 
-    /*
-    zoomMap =new Array(13);
-    zoomMap = [
-    [3,9],
-    [2,9],
-    [1,11],
-    [0,11],
-    [1,11],
-    [0,11],
-    [0,12],
-    [0,11],
-    [1,11],
-    [0,11],
-    [1,11],
-    [2,9],
-    [3,9]
-    ];
-    */
-    /*set any initial values we will need*/
-    Game = new Param();
-    //radarRad = 150;                                                             //this is the radius of the map that we want, changing it here should change it everywhere except the html
-    //retX = radarRad;
-    //retY = radarRad;
-    //animate=0;
-    //radLimit=radarRad-8;
-    //turnNum = document.getElementById('turnNumber');
-    
-    /*set up our noise layers*/
-    //seeder = getSeed();
-
-    //tile = new Image();                                                         //create the spritesheet object
-    //tile.src = 'images/tiles.png';                                              //tell script where spritesheet is
-
-    //tileHighlight = new Image();                                                //create the spritesheet object for the tools png (highlights/buttons etc.)
-    //tileHighlight.src = 'images/tools.png';                                     //tell script where spritesheet is
-
+    Game = new Param();                                                             //TODO: Should add save and load game code here...
     document.onkeydown = keypressed;                                               //keyboard listener
 }
 
@@ -403,7 +357,7 @@ function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
     
     //set the general cases
-    y = Math.floor(Game.mouseY/(70*0.75));
+    y = Math.floor(Game.mouseY/(70*0.74));
     
     if (y%2 !== 0) {
         x = Math.floor((Game.mouseX-30)/60);                                         //We need an offset for the shifted rows
@@ -412,13 +366,13 @@ function getTile(axis) {
     }
     
     //corner case code
-    yDiff = (Game.mouseY/(70*0.75))-y;
+    yDiff = (Game.mouseY/(70*0.74))-y;
     if (yDiff < 0.33) {                                                         //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
         if (y%2 !== 0) {
             xDiff = (((Game.mouseX-30)/60)-x);
             //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
-            //Are we on the left or right hand side fo the top third?
+            //Are we on the left or right hand side of the top third?
             if(xDiff<0.5) {
                 left=0.5-xDiff;                                                 //Adjust to get the opposite length of the 60° internal angle
                 if((left*10)>(yDiff*10)*Math.tan(Math.PI/3)) {                  //I multiply by 10 so that I'm not dealing with numbers less than 1 
