@@ -110,6 +110,7 @@ function Param(){
 
 function init() {
     Game = new Param();                                                             //TODO: Should add save and load game code here...
+    Game.level = 0;                                                                 //Dunno why but level sometimes came up as less than 0?!?
     document.onkeydown = keypressed;                                               //keyboard listener
 }
 
@@ -147,6 +148,11 @@ function randGen(num, min){
     return Math.floor(Math.random()*num)+min;
 }
 
+function changeLevel(newLevel){
+    Game.level = parseInt(newLevel);
+    drawRadar();
+}
+
 function nextTurn(){
     var x;
     var y;
@@ -180,7 +186,7 @@ function leftMenuResize(bool) {
 function resize(e) {
     var current = e.clientY;
     var total = window.innerHeight;
-    var percentage = ((current/total)*100);
+    var percentage = ((current/total - 0.01)*100);
     if (percentage < 10) {
         percentage = 11;
     } else if (percentage > 90){
@@ -663,7 +669,7 @@ function clickTest() {
     }
     drawZoomMap();
     drawRadar();
-    document.body.style.cursor="default";
+    document.body.style.cursor="url('images/pointer.png'), default";
     //var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
     //var rng = new CustomRandom(retX);
     //console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
@@ -676,9 +682,9 @@ function clickTest() {
 function construct(id) {
     if (Game.clickedOn === id) {
         Game.clickedOn = null;
-        document.body.style.cursor="default";
+        document.body.style.cursor="url('images/pointer.png'), default";
     } else {
         Game.clickedOn = id;
-        document.body.style.cursor="url('images/bdozePointer.png'), default";
+        document.body.style.cursor="url('images/dozer.png'), default";
     }
 }

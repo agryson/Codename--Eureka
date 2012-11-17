@@ -16,7 +16,7 @@
         <div id="leftMenu">
             <div id="buildingContainer">
                 <div class="menuItem" id="test1" onClick="construct(this.id)">
-                    <img class="itemImage" src="images/bdozePointer.png"></img>
+                    <img class="itemImage" src="images/dozer.png"></img>
                     <span class="itemText">Prepare for Construction</span>
                 </div>      
             </div>
@@ -25,7 +25,7 @@
             
             <div id="droneContainer">
                 <div class="menuItem" id="test2" onClick="construct(this.id)">
-                    <img class="itemImage" src="images/bdozePointer.png"></img>
+                    <img class="itemImage" src="images/dozer.png"></img>
                     <span class="itemText">Another item, with a load of text just to see what will happen if I add a description for example, or something really long, will the padding work properly etc.</span>
                 </div>
             </div>
@@ -52,6 +52,7 @@
         <canvas id="mapOverlay" width="300" height="300" onclick="jump()" onmouseover="overCanvas(true, 'radar')" onmouseout="overCanvas(false)">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
+        <input id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
         
         <div id="globalActions">
             <span id="turnNumber">Week: 0</span>

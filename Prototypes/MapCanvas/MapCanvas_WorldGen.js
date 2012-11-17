@@ -85,10 +85,8 @@ function getSeed(newGame) {
         Game.noise3 = new ClassicalNoise(Game.rng);
     
         /*create the game's maps*/
-        Game.map = new Array(Game.radarRad*2);
-        Game.map1 = new Array(Game.radarRad*2);
         createMap();
-        
+        Game.level = 0;
         /*draw the radar background once on load*/
         drawRadar();
         drawLoc();
@@ -104,10 +102,9 @@ function getSeed(newGame) {
         Game.noise3 = new ClassicalNoise(Game.rng);
     
         /*create the game's map*/
-        Game.map = new Array(Game.radarRad*2);
-        Game.map1 = new Array(Game.radarRad*2);
         createMap();
-        
+        Game.level = 0;
+
         /*draw the radar background once on load*/
         drawRadar();
         drawLoc();
