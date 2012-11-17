@@ -426,11 +426,7 @@ function setType(x,y,level) {
   var altitude = map.altitude;
 
   var increment = level*6;
-  //if(level > 0){
-  //  increment = level*6 - (level - 1);
-  //}
 
-  //TODO: fix this part to show proper terrain...
   if (altitude >= high){
       map.type = 2 + increment;
   } else if(altitude >= med){
