@@ -520,8 +520,8 @@ function drawRadar() {
     
     Game.radar.putImageData(radarPixels, 0, 0);
     Game.radar.fillStyle="#ffffff";
-    Game.radar.font="18px Droid Sans";
-    Game.radar.fillText('Level: ' + Game.level, 230, 300);
+    Game.radar.font="14px Droid Sans";
+    Game.radar.fillText('Depth: ' + Game.level*50 + 'm', 215, 298);
 }
 
 /*accepts the kind of tile to draw, the x column number and the y column number, then draws it*/
