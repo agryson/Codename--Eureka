@@ -124,6 +124,8 @@ function getSeed(newGame) {
 var MersenneTwister = function(seed) {
   if (seed === undefined) {
     seed = new Date().getTime();
+    console.log('This is the seed for your world: ' + String(seed));
+
   } 
   /* Period parameters */  
   this.N = 624;
