@@ -86,7 +86,7 @@ function Param(){
     this.map4 = [];    
     
     //Map generation vars
-    this.seeder = '';
+    this.seeder;
     this.rng;
     this.noise;
     this.noise2;
@@ -419,6 +419,23 @@ function jump() {
     }
 }
 
+function returnLevel(level){
+    switch(level){
+    case 0:
+      return Game.map;
+    case 1:
+      return Game.map1;
+    case 2:
+      return Game.map2;
+    case 3:
+      return Game.map3;
+    case 4:
+      return Game.map4;
+    default:
+      console.log('There was a problem with the level... ' + level);
+    }
+}
+
 //MAPS**********************************************************************************
 /*a placeholder to fill in our radar*/
 function drawRadar() {
@@ -505,7 +522,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                 Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, 
                     sourceHeight, destinationX, destinationY, destinationWidth, 
                     destinationHeight);
-            } else if (tileType < 4 || tileType > 5){
+            } else if (tileType !== 4 || tileType !== 5 || tileType !== 10 || tileType !== 11 || tileType !== 16 || tileType !== 17 || tileType !== 22 || tileType !== 23 || tileType !== 28 || tileType !== 29){
                 sourceX = 0;
                 sourceY = tileType*sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight,
@@ -589,6 +606,9 @@ function drawLoc() {
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
 function clickTest() {
+    for(var i = 0; i<5; i++){
+        console.log('level: ' + i + ' is of type: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].type + ' & altitude: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
+    }
     var kind;
     switch (Game.clickedOn) {
         case 'test1':

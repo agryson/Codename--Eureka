@@ -362,7 +362,7 @@ function altitude(x,y,level){
       //console.log('attempted altitude?');
       return Math.round((n+n2+n3)/3);
     } else {
-      return Game.map[y][x][1].altitude;
+      return Game.map[y][x][1].altitude + level*5;
     }
 }
 
@@ -408,69 +408,35 @@ function createMap() {
             map[y][x][1].altitude=altitude(x,y,level);
             map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
             setType(x,y,level);
-            generateResources(x,y,map[y][x][1].type);
+            generateResources(x,y,map[y][x][1].type,level);
           }else{
             map[y][x][0]=false;
           }
         }
       }
     }
-  /*
-
-  for(y=0;y<Game.radarRad*2;y++) {
-      Game.map1[y]=new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
-      for(x=0; x<Game.radarRad*2; x++) {
-          Game.map1[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-          if(distance(x,y,Game.radarRad,Game.radarRad)<=Game.radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
-              Game.map1[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
-              Game.map1[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
-              //map1[y][x][1].altitude=altitude(x,y);
-              Game.map1[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
-              setType(x,y,1);
-              generateResources(x,y,Game.map1[y][x][1].type);
-          }else{
-              Game.map1[y][x][0]=false;
-          }
-      }
-      
-  }*/
-    //genRivers(500, 3000);
 }
 
 /*Sets the tile type as a function of altitude*/
 function setType(x,y,level) {
-  var altitude = Game.map[y][x][1].altitude;
   var high = 160;
   var med = 130;
   var low = 90;
-  var map;
+  var map = returnLevel(level)[y][x][1];
+  var altitude = map.altitude;
 
-  switch(level){
-    case 0:
-      map = Game.map[y][x][1];
-      break;
-    case 1:
-      map = Game.map1[y][x][1];
-      break;
-    case 2:
-      map = Game.map2[y][x][1];
-      break;
-    case 3:
-      map = Game.map3[y][x][1];
-      break;
-    case 4:
-      map = Game.map4[y][x][1];
-      break;
-    default:
-      console.log('There was a problem with the level... ' + level);
-  }
+  var increment = level*6;
+  //if(level > 0){
+  //  increment = level*6 - (level - 1);
+  //}
+
   //TODO: fix this part to show proper terrain...
-  if (altitude >= (high - level*5)){
-      map.type = 2 + level*6;
-  } else if(altitude >= med - level*10){
-      map.type = 1 + level*6;
-  } else if(altitude >= low - level*10){
-      map.type = 0 + level*6;
+  if (altitude >= high){
+      map.type = 2 + increment;
+  } else if(altitude >= med){
+      map.type = 1 + increment;
+  } else if(altitude >= low){
+      map.type = 0 + increment;
   } else {
       map.type = 4;
   }
@@ -478,19 +444,22 @@ function setType(x,y,level) {
 }
 
 /*sets the resources appropriately for the terrain type at x,y*/
-function generateResources(x,y,terrain) {
+function generateResources(x,y,terrain,level) {
+  var map;
+  level ?  map = returnLevel(level)[y][x][1] : map = Game.map[y][x][1];
+
     switch (terrain) {
         case 0:
-            Game.map[y][x][1].resources[0]=randGen(2,0);
-            Game.map[y][x][1].resources[1]=randGen(2,0);
+            map.resources[0]=randGen(2,0);
+            map.resources[1]=randGen(2,0);
             break;
         case 1:
-            Game.map[y][x][1].resources[0]=randGen(5,10);
-            Game.map[y][x][1].resources[1]=randGen(5,10);
+            map.resources[0]=randGen(5,10);
+            map.resources[1]=randGen(5,10);
             break;
         case 2:
-            Game.map[y][x][1].resources[0]=randGen(5,20);
-            Game.map[y][x][1].resources[1]=randGen(5,20);
+            map.resources[0]=randGen(5,20);
+            map.resources[1]=randGen(5,20);
             break;
         default:
             //do nothing
