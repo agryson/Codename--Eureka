@@ -7,18 +7,23 @@ function Terrain() {
     this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
     this.altitude; //altitude
     this.resources; //an array that holds the different metal and resource kinds
-    this.turns = false;  //remembers how many turns are left to become a tile of the desired kind
+    this.turns;  //remembers how many turns are left to become a tile of the desired kind
+    var preparing = false;
     this.prepare = function(){
-        if (this.kind < 3 && this.turns === false){
-            this.turns = this.kind + 1;
+        if (!preparing){
+            this.turns = 2;
             this.kind=5;
+            preparing = true;
         }
     };
     this.nextTurn = function(){
-       if (this.turns !== false && this.turns !== 0){
+       if (this.turns > 0){
            this.turns -=1;
+           //console.log(this.turns);
        } else if(this.turns === 0){
            this.kind = 3;
+           this.turns = false;
+           preparing = true;
        }
     };
 }
@@ -150,13 +155,16 @@ function nextTurn(){
         Game.turn += 1;
         for(y=0;y<Game.radarRad*2;y++) {
             for(x=0; x<Game.radarRad*2; x++) {
-                if(Game.map[y][x][0]===true) {
-                    Game.map[y][x][1].nextTurn();
+                for(var l=0; l<5; l++){
+                    if(returnLevel(l)[y][x][0]===true) {
+                        returnLevel(l)[y][x][1].nextTurn();
+                    }
                 }
             }   
         }
         Game.turnNum.innerHTML = "Week: " + Game.turn;
     }
+    //The following hold code just prevent accidentally skipping two turns with accidental clicks...
     hold = true;
     setTimeout(hold = false,1000);
 }
@@ -483,27 +491,27 @@ function drawRadar() {
                         radarPixels.data[idx + 3] = 255;
                         break;
                     case 2:
-                        radarPixels.data[idx + 0] = 231;
-                        radarPixels.data[idx + 1] = 226;
-                        radarPixels.data[idx + 2] = 223;
+                        radarPixels.data[idx + 0] = 211;
+                        radarPixels.data[idx + 1] = 206;
+                        radarPixels.data[idx + 2] = 203;
                         radarPixels.data[idx + 3] = 255;
                         break;
                     case 3:
-                        radarPixels.data[idx + 0] = 16;
-                        radarPixels.data[idx + 1] = 82;
-                        radarPixels.data[idx + 2] = 4;
+                        radarPixels.data[idx + 0] = 0;
+                        radarPixels.data[idx + 1] = 62;
+                        radarPixels.data[idx + 2] = 0;
                         radarPixels.data[idx + 3] = 255;
                         break;
                     case 4:
-                        radarPixels.data[idx + 0] = 128;
-                        radarPixels.data[idx + 1] = 188;
-                        radarPixels.data[idx + 2] = 224;
+                        radarPixels.data[idx + 0] = 108;
+                        radarPixels.data[idx + 1] = 168;
+                        radarPixels.data[idx + 2] = 204;
                         radarPixels.data[idx + 3] = 255;
                         break;
                     default:
                         //If we're here, we're probably dealing with a building or robot...
                         radarPixels.data[idx + 0] = 0;
-                        radarPixels.data[idx + 1] = 200;
+                        radarPixels.data[idx + 1] = 180;
                         radarPixels.data[idx + 2] = 0;
                         radarPixels.data[idx + 3] = 255;
                 }
@@ -558,7 +566,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                 Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, 
                     sourceHeight, destinationX, destinationY, destinationWidth, 
                     destinationHeight);
-            } else if (tileType !== 4 || tileType !== 5 || tileType !== 10 || tileType !== 11 || tileType !== 16 || tileType !== 17 || tileType !== 22 || tileType !== 23 || tileType !== 28 || tileType !== 29){
+            } else if (tileType !== 4 && tileType !== 5 && tileType !== 10 && tileType !== 11 && tileType !== 16 && tileType !== 17 && tileType !== 22 && tileType !== 23 && tileType !== 28 && tileType !== 29){
                 sourceX = 0;
                 sourceY = tileType*sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight,
@@ -661,10 +669,10 @@ function clickTest() {
         default:
             break;
     }
-    if (kind >= 0 && kind <= 4 && Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind !== 4){
+    if (kind >= 0 && kind <= 4 && returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind !== 4){
         //map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].kind = kind;
     } else if(kind == 5){
-        Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
+        returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
     }
     drawZoomMap();
     drawRadar();
