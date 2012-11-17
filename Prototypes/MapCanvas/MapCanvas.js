@@ -138,9 +138,9 @@ function nextTurn(){
 			if(map[y][x][0]===true) {
                 map[y][x][1].nextTurn();
 			}
-		}
-        
+		}   
 	}
+    console.log('It is now turn: '+ turn);
 }
 
 /*the main game loop*/
@@ -744,7 +744,7 @@ function drawmPanLoc() {
 function clickTest() {
     var kind;
     switch (clickedOn) {
-        case 'test1':
+        case 'dozer':
             kind = 5;
             clickedOn = null;
             break;

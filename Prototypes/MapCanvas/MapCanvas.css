@@ -29,6 +29,15 @@ body, html {
     z-index: 1;
 }
 
+#turn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 50px;
+    width: 100px;
+    border-radius: 10px;
+}
+
 .testItem {
     width: 100%;
     height: 50px;
@@ -40,7 +49,8 @@ body, html {
     box-shadow: inset 0 0 5px 5px #FFF;
     cursor:pointer; 
 }
-
+/*
 #test1 {
     display:;
 }
+*/
