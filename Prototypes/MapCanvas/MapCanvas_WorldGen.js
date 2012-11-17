@@ -408,7 +408,7 @@ function createMap() {
             map[y][x][1].altitude=altitude(x,y,level);
             map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
             setType(x,y,level);
-            generateResources(x,y,map[y][x][1].type,level);
+            generateResources(x,y,map[y][x][1].kind,level);
           }else{
             map[y][x][0]=false;
           }
@@ -428,13 +428,13 @@ function setType(x,y,level) {
   var increment = level*6;
 
   if (altitude >= high){
-      map.type = 2 + increment;
+      map.kind = 2 + increment;
   } else if(altitude >= med){
-      map.type = 1 + increment;
+      map.kind = 1 + increment;
   } else if(altitude >= low){
-      map.type = 0 + increment;
+      map.kind = 0 + increment;
   } else {
-      map.type = 4;
+      map.kind = 4;
   }
   
 }

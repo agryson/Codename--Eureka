@@ -4,27 +4,27 @@ var Game;                                                                       
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 function Terrain() {
-    this.type; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
+    this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
     this.altitude; //altitude
-    this.resources; //an array that holds the different metal and resource types
-    this.turns = false;  //remembers how many turns are left to become a tile of the desired type
+    this.resources; //an array that holds the different metal and resource kinds
+    this.turns = false;  //remembers how many turns are left to become a tile of the desired kind
     this.prepare = function(){
-        if (this.type < 3 && this.turns === false){
-            this.turns = this.type + 1;
-            this.type=5;
+        if (this.kind < 3 && this.turns === false){
+            this.turns = this.kind + 1;
+            this.kind=5;
         }
     };
     this.nextTurn = function(){
        if (this.turns !== false && this.turns !== 0){
            this.turns -=1;
        } else if(this.turns === 0){
-           this.type = 3;
+           this.kind = 3;
        }
     };
 }
 
 function Building() {
-    this.type; //type of building
+    this.kind; //kind of building
     this.health = 100; //health of building
     this.air = false; //boolean, does building have air?
     this.age = 0;
@@ -33,9 +33,9 @@ function Building() {
     };
 }
 
-function Robot(name, type) {
+function Robot(name, kind) {
     this.name = name; //the robot's name/number so we can keep track of which robot is doing what
-    this.type = type; //type of robot 0=dozer, 1 = miner ...
+    this.kind = kind; //kind of robot 0=dozer, 1 = miner ...
     this.health = 100;
     this.busy = false; //is the robot currently working or not
     this.position = new Array(2); //position in x,y coordinates
@@ -220,6 +220,27 @@ function keypressed(e) {
             break;
         case 76:
             move('level'); //changes level  
+            drawRadar();
+            break;
+        case 48:
+            Game.level = 0;
+            drawRadar();
+            break;
+        case 49:
+            Game.level = 1;
+            drawRadar();
+            break;
+        case 50:
+            Game.level = 2;
+            drawRadar();
+            break;
+        case 51:
+            Game.level = 3;
+            drawRadar();
+            break;
+        case 52:
+            Game.level = 4;
+            drawRadar();
             break;
         default:
             console.log("Uhm... that key doesn't do anything... ");
@@ -289,7 +310,7 @@ function move(dir) {
 /*
 can do stuff with adjacent hexes
 e.g.
-map[adjacent(x,y,0)[0]][adjacent(x,y,0)[1]][1].type = 0;
+map[adjacent(x,y,0)[0]][adjacent(x,y,0)[1]][1].kind = 0;
 */
 function adjacent(x,y,index) {
     if(y%2 === 0) {
@@ -447,8 +468,8 @@ function drawRadar() {
                 
                 // Index of the pixel in the array
                 var idx = (x + y * radarPixels.width) * 4;
-
-                switch(Game.map[y][x][1].type) {
+                var kind = returnLevel(Game.level)[y][x][1].kind;
+                switch(kind%6) {
                     case 0:
                         radarPixels.data[idx + 0] = 212;
                         radarPixels.data[idx + 1] = 197;
@@ -486,14 +507,29 @@ function drawRadar() {
                         radarPixels.data[idx + 2] = 0;
                         radarPixels.data[idx + 3] = 255;
                 }
+                //This should darken pixels the deeper we go underground...
+                for(var i=0; i<3; i++){
+                    if(Game.level > 0){
+                        if(radarPixels.data[idx + i] - 100 >= 0){
+                            radarPixels.data[idx + i] -= 100;
+                        } else {
+                            radarPixels.data[idx + i] = 0;
+                        }
+                    }
+                }
             }
         }
     }
     
     Game.radar.putImageData(radarPixels, 0, 0);
+    Game.radar.fillStyle="#ffffff";
+    Game.radar.font="18px Droid Sans";
+    Game.radar.fillText('Level: ' + Game.level, 230, 300);
+    //Game.radar.textBaseline='bottom';
+    //Game.radar.textAlign='right';
 }
 
-/*accepts the type of tile to draw, the x column number and the y column number, then draws it*/
+/*accepts the kind of tile to draw, the x column number and the y column number, then draws it*/
 function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     try {
         if (tilePosX < Game.zoomMap[tilePosY][0] || tilePosX >= Game.zoomMap[tilePosY][1]) {
@@ -551,7 +587,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 function drawZoomMap() {
     Game.mPanel.clearRect(0,0,720,720);
     var y,x,end,sourceTile;
-    //Game.level === 0 ? sourceTile = Game.map : sourceTile = Game.map2; //TODO: change this to reflect the real sourcetiles...
+
     switch(Game.level){
         case 0:
             sourceTile = Game.map;
@@ -575,9 +611,9 @@ function drawZoomMap() {
         x=Game.zoomMap[y][0];
         end=Game.zoomMap[y][1];
         while (x<end) {
-            drawTile(sourceTile[(Game.retY+y-5)][(Game.retX+x-5)][1].type,x,y,false);
+            drawTile(sourceTile[(Game.retY+y-5)][(Game.retX+x-5)][1].kind,x,y,false);
             if (y === 0 || y == Game.zoomMap.length - 1 || x == Game.zoomMap[y][0] || x == end - 1){//darkens the outer hexagons
-                drawTile(sourceTile[(Game.retY+y-5)][(Game.retX+x-5)][1].type,x,y,false,2);
+                drawTile(sourceTile[(Game.retY+y-5)][(Game.retX+x-5)][1].kind,x,y,false,2);
             }
             x++;
         }
@@ -607,7 +643,7 @@ function drawLoc() {
 //testing how to write to main map array
 function clickTest() {
     for(var i = 0; i<5; i++){
-        console.log('level: ' + i + ' is of type: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].type + ' & altitude: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
+        console.log('level: ' + i + ' is of kind: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind + ' & altitude: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
     }
     var kind;
     switch (Game.clickedOn) {
@@ -625,8 +661,8 @@ function clickTest() {
         default:
             break;
     }
-    if (kind >= 0 && kind <= 4 && Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].type !== 4){
-        //map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].type = kind;
+    if (kind >= 0 && kind <= 4 && Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind !== 4){
+        //map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].kind = kind;
     } else if(kind == 5){
         Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
     }
