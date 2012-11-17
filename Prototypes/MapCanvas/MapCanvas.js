@@ -685,6 +685,14 @@ function construct(id) {
         document.body.style.cursor="url('images/pointer.png'), default";
     } else {
         Game.clickedOn = id;
-        document.body.style.cursor="url('images/dozer.png'), default";
+        switch(id){
+            case 'test1':
+                document.body.style.cursor="url('images/dozer.png'), default";
+                break;
+            case 'test2':
+                document.body.style.cursor="url('images/recycle.png'), default";
+                break;
+
+        }
     }
 }
