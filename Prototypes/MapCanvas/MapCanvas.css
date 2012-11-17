@@ -3,7 +3,12 @@ body, html {
     background: #191919;
     height: 100%;
     margin: 0;
+    cursor:url(images/pointer.png),auto;
+    -webkit-user-select: none;
+}
 
+button {
+    cursor:url(images/pointer.png),auto;
 }
 
 #mainPanel, #mPanOverlay {
@@ -20,6 +25,28 @@ body, html {
     right: 0;
     z-index: 1;
 }
+#slider {
+    position: absolute;
+    -webkit-appearance: none !important;
+    background: #464646;
+    height: 5px;
+    width: 200px;
+    top: 310px;
+    right: 50px;
+    border-radius: 2px;
+    z-index: 1;
+    cursor:url(images/horiResize.png),auto;
+}
+
+#slider::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background:#AFAFAF;
+    border-radius: 10px;
+    height:15px;
+    width:15px;
+    box-shadow: inset -1px -1px 0 2px #8C8C8C;
+}
+    
 
 ::selection {
     background-color: transparent;
@@ -59,6 +86,7 @@ body, html {
     border-radius: 10px;
     margin-left: auto;
     margin-right: auto;
+    cursor:url(images/text.png),auto;
 }
 
 .button {
@@ -110,7 +138,7 @@ body, html {
     box-shadow: inset -1px -1px 0 2px #000;
     background: #363636;
     z-index: 2;
-    cursor: s-resize;
+    cursor:url(images/vertResize.png),auto; 
 }
 
 #droneContainer {
@@ -131,7 +159,7 @@ body, html {
     background: #000;
     color: #FFF;    
     box-shadow: inset 0 0 3px 1px #138A0c;
-    cursor: pointer; 
+    cursor:url(images/build.png),auto; 
 }
 
 .itemText{

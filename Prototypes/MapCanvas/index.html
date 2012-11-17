@@ -8,6 +8,7 @@
 		<title>Prototype MapV1</title>
 
 		<script language="JavaScript" src="MapCanvas.js"></script>
+        <script language="JavaScript" src="MapCanvas_WorldGen.js"></script>
 	</head>
 
 	<body onload="init()">
@@ -15,7 +16,7 @@
         <div id="leftMenu">
             <div id="buildingContainer">
                 <div class="menuItem" id="test1" onClick="construct(this.id)">
-                    <img class="itemImage" src="images/bdozePointer.png"></img>
+                    <img class="itemImage" src="images/dozer.png"></img>
                     <span class="itemText">Prepare for Construction</span>
                 </div>      
             </div>
@@ -24,7 +25,7 @@
             
             <div id="droneContainer">
                 <div class="menuItem" id="test2" onClick="construct(this.id)">
-                    <img class="itemImage" src="images/bdozePointer.png"></img>
+                    <img class="itemImage" src="images/dozer.png"></img>
                     <span class="itemText">Another item, with a load of text just to see what will happen if I add a description for example, or something really long, will the padding work properly etc.</span>
                 </div>
             </div>
@@ -39,7 +40,7 @@
         </canvas>
         
         <canvas id="mPanOverlay" width="720" height="720" 
-            onmouseover="overCanvas(true, 'mPan'); overMPan = true" onmouseout="overCanvas(false); overMPan = false" 
+            onmouseover="overCanvas(true, 'mPan'); Game.overMPan = true" onmouseout="overCanvas(false); Game.overMPan = false" 
             onMouseUp="clickTest()">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
@@ -51,6 +52,7 @@
         <canvas id="mapOverlay" width="300" height="300" onclick="jump()" onmouseover="overCanvas(true, 'radar')" onmouseout="overCanvas(false)">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
         </canvas>
+        <input id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
         
         <div id="globalActions">
             <span id="turnNumber">Week: 0</span>
@@ -61,11 +63,11 @@
         
         <div class="popupContainer" id="popupContainer">
             <div class="popup" id="popup">
-            <input type="text" id="seed" placeholder="Dashboard Password" /><br/>
-            <div id="buttonContainer">
-                <button class="button" onclick="getSeed(false)">Login</button>
-                <button class="button" onclick="getSeed(true)">New Session</button>
-            </div>
+                <input type="text" id="seed" placeholder="Dashboard Password" /><br/>
+                <div id="buttonContainer">
+                    <button class="button" onclick="getSeed(false)">Login</button>
+                    <button class="button" onclick="getSeed(true)">New Session</button>
+                </div>
             </div>
         </div>
         
