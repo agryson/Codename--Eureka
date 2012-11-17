@@ -71,53 +71,54 @@ function getSeed(newGame) {
     //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
     var input = document.getElementById('seed').value;
     var popup = document.getElementById("popupContainer");
-    if (newGame === false && input !=='') {
-        input = input.split(' ').join('');
-        var seedString = '';
-        for (var i = 0; i < input.length; i++){
-            seedString += input.charCodeAt(i);
-        }
-        seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
-        Game.seeder = seedString;
-        Game.rng = new MersenneTwister(Game.seeder);
-        Game.noise = new ClassicalNoise(Game.rng);
-        Game.noise2 = new ClassicalNoise(Game.rng);
-        Game.noise3 = new ClassicalNoise(Game.rng);
-    
-        /*create the game's maps*/
-        createMap();
-        Game.level = 0;
-        /*draw the radar background once on load*/
-        drawRadar();
-        drawLoc();
-        drawZoomMap();
-        mainLoop();
-        popup.style.opacity='0';
-        popup.addEventListener( 'webkitTransitionEnd', 
-        function() {popup.style.zIndex='-1';}, false );
-    } else if (newGame){
-        Game.rng = new MersenneTwister(Game.seeder);
-        Game.noise = new ClassicalNoise(Game.rng);
-        Game.noise2 = new ClassicalNoise(Game.rng);
-        Game.noise3 = new ClassicalNoise(Game.rng);
-    
-        /*create the game's map*/
-        createMap();
-        Game.level = 0;
 
-        /*draw the radar background once on load*/
-        drawRadar();
-        drawLoc();
-        drawZoomMap();
-        mainLoop();
-        popup.style.opacity='0';
-        popup.addEventListener( 'webkitTransitionEnd', 
-        function() {
-            popup.style.display='none';
-            document.getElementById("popup").style.display='none';
-        }, false );
+    if (!newGame && input !=='') {
+      input = input.split(' ').join('');
+      var seedString = '';
+      for (var i = 0; i < input.length; i++){
+          seedString += input.charCodeAt(i);
+      }
+      seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
+      Game.seeder = seedString;
+      Game.rng = new MersenneTwister(Game.seeder);
+      Game.noise = new ClassicalNoise(Game.rng);
+      Game.noise2 = new ClassicalNoise(Game.rng);
+      Game.noise3 = new ClassicalNoise(Game.rng);
+  
+      /*create the game's maps*/
+      createMap();
+      Game.level = 0;
+      /*draw the radar background once on load*/
+      drawRadar();
+      drawLoc();
+      drawZoomMap();
+      mainLoop();
+      popup.style.opacity='0';
+      popup.addEventListener( 'webkitTransitionEnd', 
+      function() {popup.style.zIndex='-1';}, false );
+    } else if (newGame){
+      Game.rng = new MersenneTwister(Game.seeder);
+      Game.noise = new ClassicalNoise(Game.rng);
+      Game.noise2 = new ClassicalNoise(Game.rng);
+      Game.noise3 = new ClassicalNoise(Game.rng);
+  
+      /*create the game's map*/
+      createMap();
+      Game.level = 0;
+
+      /*draw the radar background once on load*/
+      drawRadar();
+      drawLoc();
+      drawZoomMap();
+      mainLoop();
+      popup.style.opacity='0';
+      popup.addEventListener( 'webkitTransitionEnd', 
+      function() {
+          popup.style.display='none';
+          document.getElementById("popup").style.display='none';
+      }, false );
     } else if (newGame === false && input ==='') {
-        alert('Please enter your dashboard password or start a new session...');
+      alert('Please enter your dashboard password or start a new session...');
     }
 }
 
@@ -370,7 +371,7 @@ function createMap() {
 
   var x, y, level, i;
   var map = [];
-
+  document.getElementById('thumb').style.width = 100 + '%';
     for(i = 0; i < 5 ; i++){
       switch(i){
         case 0:
@@ -396,7 +397,7 @@ function createMap() {
         default:
           console.log('There was a problem with the level... ' + level);
       }
-  
+
       for(y=0;y<Game.radarRad*2;y++) {
         map[y] = new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
         for(x=0; x<Game.radarRad*2; x++) {
