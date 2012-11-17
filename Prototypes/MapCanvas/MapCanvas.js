@@ -202,11 +202,8 @@ function pulldown() {
 
 /*the main game loop*/
 function mainLoop() {
-    if (Game.animate==1){                                                            //number of frames = n+1
-       Game.animate = 0;
-    } else {
-        Game.animate +=1;
-    }
+    var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
+    Game.animate == N ? Game.animate = 0 : Game.animate += 1;
     drawZoomMap();
     setTimeout(mainLoop, 200);                                                  //set the framerate here
 }
@@ -381,12 +378,8 @@ function getTile(axis) {
     //set the general cases
     y = Math.floor(Game.mouseY/(70*0.74));
     
-    if (y%2 !== 0) {
-        x = Math.floor((Game.mouseX-30)/60);                                         //We need an offset for the shifted rows
-    } else {
-        x = Math.floor(Game.mouseX/60);
-    }
-    
+    y%2 !== 0 ? x = Math.floor((Game.mouseX-30)/60) : x = Math.floor(Game.mouseX/60);
+
     //corner case code
     yDiff = (Game.mouseY/(70*0.74))-y;
     if (yDiff < 0.33) {                                                         //If we're in the top third of the reference rectangle
@@ -518,11 +511,7 @@ function drawRadar() {
                 //This should darken pixels the deeper we go underground...
                 for(var i=0; i<3; i++){
                     if(Game.level > 0){
-                        if(radarPixels.data[idx + i] - 100 >= 0){
-                            radarPixels.data[idx + i] -= 100;
-                        } else {
-                            radarPixels.data[idx + i] = 0;
-                        }
+                        radarPixels.data[idx + i] - 100 >= 0 ? radarPixels.data[idx + i] -= 100 : radarPixels.data[idx + i] = 0;
                     }
                 }
             }
@@ -533,8 +522,6 @@ function drawRadar() {
     Game.radar.fillStyle="#ffffff";
     Game.radar.font="18px Droid Sans";
     Game.radar.fillText('Level: ' + Game.level, 230, 300);
-    //Game.radar.textBaseline='bottom';
-    //Game.radar.textAlign='right';
 }
 
 /*accepts the kind of tile to draw, the x column number and the y column number, then draws it*/
