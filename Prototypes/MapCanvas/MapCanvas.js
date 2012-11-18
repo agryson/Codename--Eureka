@@ -120,6 +120,7 @@ function overCanvas(bool, which){
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
     */
+<<<<<<< HEAD
     if (bool && which == 'mPan'){
         //radarCanvas.onmousemove = null;
         //console.log('yea!');
@@ -692,3 +693,4 @@ function construct(id) {
         }
     }
 }
+>>>>>>> prototype
