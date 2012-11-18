@@ -460,4 +460,3 @@ function generateResources(x,y,terrain,level) {
             //do nothing
     }
 }
->>>>>>> prototype
