@@ -237,22 +237,27 @@ function keypressed(e) {
         case 48:
             Game.level = 0;
             drawRadar();
+            document.getElementById('slider').value = Game.level;        
             break;
         case 49:
             Game.level = 1;
             drawRadar();
+            document.getElementById('slider').value = Game.level;
             break;
         case 50:
             Game.level = 2;
             drawRadar();
+            document.getElementById('slider').value = Game.level;
             break;
         case 51:
             Game.level = 3;
             drawRadar();
+            document.getElementById('slider').value = Game.level;
             break;
         case 52:
             Game.level = 4;
             drawRadar();
+            document.getElementById('slider').value = Game.level;
             break;
         default:
             console.log("Uhm... that key doesn't do anything... ");
@@ -311,7 +316,8 @@ function move(dir) {
             }
             break;
         case 'level':
-            Game.level == 4 ? Game.level = 0 : Game.level += 1;        
+            Game.level == 4 ? Game.level = 0 : Game.level += 1;
+            document.getElementById('slider').value = Game.level;        
         default:
             break;
     }
