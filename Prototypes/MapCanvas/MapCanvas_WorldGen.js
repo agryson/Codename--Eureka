@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //WORLD GENERATION****************************************************************
 
 
@@ -406,8 +405,8 @@ function createMap() {
             map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
             map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
             map[y][x][1].altitude=altitude(x,y,level);
-            map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
             setType(x,y,level);
+            map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
             generateResources(x,y,map[y][x][1].kind,level);
           }else{
             map[y][x][0]=false;
@@ -424,8 +423,8 @@ function setType(x,y,level) {
   var low = 90;
   var map = returnLevel(level)[y][x][1];
   var altitude = map.altitude;
-
-  var increment = level*5;
+  var increment;
+  level > 0 ? increment = 5 : increment = 0;
 
   if (altitude >= high){
       map.kind = 2 + increment;
@@ -436,7 +435,7 @@ function setType(x,y,level) {
   } else {
       map.kind = 4;
   }
-  
+  level === 0 && map.kind !== 4 ? map.diggable = true : map.diggable = false;
 }
 
 /*sets the resources appropriately for the terrain type at x,y*/

@@ -11,9 +11,9 @@ function Terrain() {
     this.diggable;
     var prepared = false;
     this.prepare = function(){
-        if (!prepared && this.diggable !== false){
+        if (!prepared && this.diggable){
             this.turns = 2;
-            this.kind=5;
+            this.kind=8;
             prepared = true;
             this.diggable = false; //tells us that work is in progress
         }else {
@@ -23,15 +23,24 @@ function Terrain() {
     this.digDown = function(){
         if(this.diggable){
             this.turns = 2;
-            if(this.kind%6 === 1){
-                this.turns = Math.floor(this.turns*1.5);
-            }else if (this.kind%6 === 2){
-                this.turns = Math.floor(this.turns*2.4);
-            }
-            this.kind=5;
+            this.kind=9;
             this.diggable = false; 
         }
-    }
+    };
+    this.mine = function(){
+        if(this.diggable){
+            this.turns = this.eta(5);
+            this.kind=10;
+            this.diggable = false; 
+        }
+        //TODO: get the resoures from this and adjacent tiles...
+    };
+    this.recycle = function(){
+        this.turns = this.eta(3);
+        this.kind=11;
+        this.diggable = false; 
+        //TODO: get the resoures from the recycled building if I can...
+    };
     this.nextTurn = function(){
        if (this.turns > 0){
            this.turns -=1;
@@ -39,6 +48,16 @@ function Terrain() {
            this.kind = 3;
            this.turns = false;
        }
+    };
+    this.eta = function(base){
+        //calculates the turns necessary to do something on this terrain
+        if(this.kind === 1 || this.kind === 6){
+            this.turns = Math.floor(base*1.5);
+        }else if (this.kind === 2 || this.kind === 7){
+            this.turns = Math.floor(base*2.4);
+        } else {
+            this.turns = base;
+        }
     };
 }
 
@@ -497,20 +516,23 @@ function drawRadar() {
                 // Index of the pixel in the array
                 var idx = (x + y * radarPixels.width) * 4;
                 var kind = returnLevel(Game.level)[y][x][1].kind;
-                switch(kind%6) {
+                switch(kind) {
                     case 0:
+                    case 5:
                         radarPixels.data[idx + 0] = 212;
                         radarPixels.data[idx + 1] = 197;
                         radarPixels.data[idx + 2] = 174;
                         radarPixels.data[idx + 3] = 255;
                         break;
                     case 1:
+                    case 6:
                         radarPixels.data[idx + 0] = 201;
                         radarPixels.data[idx + 1] = 179;
                         radarPixels.data[idx + 2] = 165;
                         radarPixels.data[idx + 3] = 255;
                         break;
                     case 2:
+                    case 7:
                         radarPixels.data[idx + 0] = 211;
                         radarPixels.data[idx + 1] = 206;
                         radarPixels.data[idx + 2] = 203;
@@ -579,7 +601,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                 Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, 
                     sourceHeight, destinationX, destinationY, destinationWidth, 
                     destinationHeight);
-            } else if (tileType !== 4 && tileType !== 5 && tileType !== 10 && tileType !== 11 && tileType !== 16 && tileType !== 17 && tileType !== 22 && tileType !== 23 && tileType !== 28 && tileType !== 29){
+            } else if (tileType !== 4 && tileType < 8){
                 sourceX = 0;
                 sourceY = tileType*sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight,
@@ -664,12 +686,12 @@ function clickTest() {
     var lowerTile = returnLevel(Game.level + 1)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1];
     switch (Game.clickedOn) {
         case 'dozer':
-            if(Game.level === 0){
+            if(tile.diggable){
                 tile.prepare();
-                Game.clickedOn = null;
             } else {
-                kind = -1;
+                alert("You can't dronedoze here...");
             }
+            Game.clickedOn = null;
             break;
         case 'digger':
         //This let's me dig down to create airshafts
@@ -678,6 +700,7 @@ function clickTest() {
                 if(Game.level < 4 && lowerTile.kind !== 4){
                     lowerTile.diggable = true;
                     lowerTile.digDown();
+                    lowerTile.diggable = true;
                 }
             } else {
                 alert("You can't dig here...");
@@ -685,9 +708,19 @@ function clickTest() {
             Game.clickedOn = null;
             break;
         case 'miner':
-            tile.prepare();
-            lowerTile.prepare();
+            if(tile.diggable){
+                tile.mine();
+                if(Game.level < 4 && lowerTile.kind !== 4){
+                    lowerTile.diggable = true;
+                    lowerTile.mine();
+                }
+            } else {
+                alert("You can't mine here...");
+            }
             break;
+        case 'recycle':
+            tile.recycle();
+            //TODO: add recycle code
         default:
             break;
     }
