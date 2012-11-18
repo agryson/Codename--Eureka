@@ -8,22 +8,36 @@ function Terrain() {
     this.altitude; //altitude
     this.resources; //an array that holds the different metal and resource kinds
     this.turns;  //remembers how many turns are left to become a tile of the desired kind
-    var preparing = false;
+    this.diggable;
+    var prepared = false;
     this.prepare = function(){
-        if (!preparing){
+        if (!prepared && this.diggable !== false){
             this.turns = 2;
             this.kind=5;
-            preparing = true;
+            prepared = true;
+            this.diggable = false; //tells us that work is in progress
+        }else {
+            alert("You can't prepare this terrain...")
         }
     };
+    this.digDown = function(){
+        if(this.diggable){
+            this.turns = 2;
+            if(this.kind%6 === 1){
+                this.turns = Math.floor(this.turns*1.5);
+            }else if (this.kind%6 === 2){
+                this.turns = Math.floor(this.turns*2.4);
+            }
+            this.kind=5;
+            this.diggable = false; 
+        }
+    }
     this.nextTurn = function(){
        if (this.turns > 0){
            this.turns -=1;
-           //console.log(this.turns);
        } else if(this.turns === 0){
            this.kind = 3;
            this.turns = false;
-           preparing = true;
        }
     };
 }
@@ -646,21 +660,33 @@ function drawLoc() {
 //testing how to write to main map array
 function clickTest() {
     //var kind;
+    var tile = returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1];
+    var lowerTile = returnLevel(Game.level + 1)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1];
     switch (Game.clickedOn) {
         case 'dozer':
             if(Game.level === 0){
-                returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
+                tile.prepare();
                 Game.clickedOn = null;
             } else {
                 kind = -1;
             }
             break;
-        case 'test2':
-            kind = 5;
+        case 'digger':
+        //This let's me dig down to create airshafts
+            if(tile.diggable){
+                tile.digDown();
+                if(Game.level < 4 && lowerTile.kind !== 4){
+                    lowerTile.diggable = true;
+                    lowerTile.digDown();
+                }
+            } else {
+                alert("You can't dig here...");
+            }
             Game.clickedOn = null;
             break;
-        case 'none':
-            kind = null;
+        case 'miner':
+            tile.prepare();
+            lowerTile.prepare();
             break;
         default:
             break;
@@ -702,7 +728,10 @@ function construct(id) {
                 document.body.style.cursor="url('images/miner.png'), default";
                 break;
 
-            case 'test2':
+            case 'digger':
+                document.body.style.cursor="url('images/digger.png'), default";
+                break;
+            case 'recycle':
                 document.body.style.cursor="url('images/recycle.png'), default";
                 break;
 

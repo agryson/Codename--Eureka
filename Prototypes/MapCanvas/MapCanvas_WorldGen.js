@@ -406,8 +406,13 @@ function createMap() {
             map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
             map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
             map[y][x][1].altitude=altitude(x,y,level);
-            map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
             setType(x,y,level);
+            if(map[y][x][1].kind !== 4 && level === 0){
+              map[y][x][1].diggable = true;
+            } else {
+              map[y][x][1].diggable = false;
+            }
+            map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
             generateResources(x,y,map[y][x][1].kind,level);
           }else{
             map[y][x][0]=false;
