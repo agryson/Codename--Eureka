@@ -424,7 +424,7 @@ function setType(x,y,level) {
   var map = returnLevel(level)[y][x][1];
   var altitude = map.altitude;
 
-  var increment = level*6;
+  var increment = level*5;
 
   if (altitude >= high){
       map.kind = 2 + increment;
