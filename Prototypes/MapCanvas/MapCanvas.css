@@ -25,6 +25,7 @@ button {
     right: 0;
     z-index: 1;
 }
+
 #slider {
     position: absolute;
     -webkit-appearance: none !important;
@@ -127,7 +128,9 @@ button {
     -webkit-transition: width, 0.5s;
 }
 
+
 /*        ******      Map Context    ******      */
+
 #leftMenu {
     position: relative;
     width: 20%;
