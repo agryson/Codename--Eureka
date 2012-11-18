@@ -639,52 +639,63 @@ function drawLoc() {
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
 function clickTest() {
-    for(var i = 0; i<5; i++){
-        console.log('level: ' + i + ' is of kind: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind + ' & altitude: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
-    }
-    var kind;
+    //var kind;
     switch (Game.clickedOn) {
-        case 'test1':
-            kind = 5;
-            Game.clickedOn = null;
+        case 'dozer':
+            if(Game.level === 0){
+                returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
+                Game.clickedOn = null;
+            } else {
+                kind = -1;
+            }
             break;
         case 'test2':
             kind = 5;
             Game.clickedOn = null;
             break;
-        case null:
+        case 'none':
             kind = null;
             break;
         default:
             break;
     }
+    drawZoomMap();
+    drawRadar();
+    document.body.style.cursor="url('images/pointer.png'), default";
+    /*
     if (kind >= 0 && kind <= 4 && returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind !== 4){
         //map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].kind = kind;
     } else if(kind == 5){
         returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
     }
-    drawZoomMap();
-    drawRadar();
-    document.body.style.cursor="url('images/pointer.png'), default";
+    */
+    
     //var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
     //var rng = new CustomRandom(retX);
     //console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
+    /*
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (Game.retY+getTile('y')-5) + '][' + (Game.retX+getTile('x')-5) + ']');
     console.log('iron='+Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].resources[0] + ' zinc='+Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].resources[1]);
     console.log('altitude: '+ Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
+    */
     //console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
 }
 
 function construct(id) {
+    //When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
     if (Game.clickedOn === id) {
-        Game.clickedOn = null;
+        Game.clickedOn = 'none';
         document.body.style.cursor="url('images/pointer.png'), default";
     } else {
         Game.clickedOn = id;
         switch(id){
-            case 'test1':
+            case 'dozer':
                 document.body.style.cursor="url('images/dozer.png'), default";
                 break;
+            case 'miner':
+                document.body.style.cursor="url('images/dozer.png'), default";
+                break;
+
             case 'test2':
                 document.body.style.cursor="url('images/recycle.png'), default";
                 break;
