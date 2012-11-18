@@ -21,12 +21,28 @@
                 </div>      
             </div>
             
+            <!-- This slider seperates the buildings from the actions, the nouns from the verbs... -->
+
             <div id="leftMenuSlider" onmousedown="leftMenuResize(true)" onmouseup="leftMenuResize(false)"></div>
+
+            <!-- These comments are just so that I can see it easily... -->
             
             <div id="droneContainer">
-                <div class="menuItem" id="test2" onClick="construct(this.id)">
+                <div class="menuItem" id="dozer" onClick="construct(this.id)">
                     <img class="itemImage" src="images/dozer.png"></img>
-                    <span class="itemText">Another item, with a load of text just to see what will happen if I add a description for example, or something really long, will the padding work properly etc.</span>
+                    <span class="itemText">Dronedoze terrain</span>
+                </div>
+                <div class="menuItem" id="digger" onClick="construct(this.id)">
+                    <img class="itemImage" src="images/digger.png"></img>
+                    <span class="itemText">Dig Down</span>
+                </div>
+                <div class="menuItem" id="miner" onClick="construct(this.id)">
+                    <img class="itemImage" src="images/miner.png"></img>
+                    <span class="itemText">Mine Resources</span>
+                </div>
+                <div class="menuItem" id="recycle" onClick="construct(this.id)">
+                    <img class="itemImage" src="images/recycle.png"></img>
+                    <span class="itemText">Recycle Construction</span>
                 </div>
             </div>
         </div>
@@ -68,9 +84,12 @@
                     <button class="button" onclick="getSeed(false)">Login</button>
                     <button class="button" onclick="getSeed(true)">New Session</button>
                 </div>
+                <div id="loader">
+                    <div id="thumb">
+                    </div>
+                </div>
             </div>
         </div>
-        
 	</body>
 
 </html>

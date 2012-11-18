@@ -25,6 +25,7 @@ button {
     right: 0;
     z-index: 1;
 }
+
 #slider {
     position: absolute;
     -webkit-appearance: none !important;
@@ -105,8 +106,31 @@ button {
     margin-right: auto;
 }
 
+#loader {
+    position: relative;
+    top: 120px;
+    background: #1F1F1F;
+    display: block;
+    border-radius: 10px;
+    height: 10px;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#thumb {
+    float:left;
+    height: 100%;
+    width: 0%;
+    background: #4F8F4F;
+    border-radius: 10px;
+    box-shadow: inset -1px -1px 2px 1px #2F4F2F, inset 1px 1px 2px 1px #CFCFCF;
+    -webkit-transition: width, 0.5s;
+}
+
 
 /*        ******      Map Context    ******      */
+
 #leftMenu {
     position: relative;
     width: 20%;
@@ -265,5 +289,3 @@ button {
     color: #D9F7FF;
     font-family:"Droid Sans", Times, serif;
 }
-
-

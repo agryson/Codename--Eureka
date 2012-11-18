@@ -8,22 +8,36 @@ function Terrain() {
     this.altitude; //altitude
     this.resources; //an array that holds the different metal and resource kinds
     this.turns;  //remembers how many turns are left to become a tile of the desired kind
-    var preparing = false;
+    this.diggable;
+    var prepared = false;
     this.prepare = function(){
-        if (!preparing){
+        if (!prepared && this.diggable !== false){
             this.turns = 2;
             this.kind=5;
-            preparing = true;
+            prepared = true;
+            this.diggable = false; //tells us that work is in progress
+        }else {
+            alert("You can't prepare this terrain...")
         }
     };
+    this.digDown = function(){
+        if(this.diggable){
+            this.turns = 2;
+            if(this.kind%6 === 1){
+                this.turns = Math.floor(this.turns*1.5);
+            }else if (this.kind%6 === 2){
+                this.turns = Math.floor(this.turns*2.4);
+            }
+            this.kind=5;
+            this.diggable = false; 
+        }
+    }
     this.nextTurn = function(){
        if (this.turns > 0){
            this.turns -=1;
-           //console.log(this.turns);
        } else if(this.turns === 0){
            this.kind = 3;
            this.turns = false;
-           preparing = true;
        }
     };
 }
@@ -69,6 +83,7 @@ function Param(){
     [2,9],
     [3,9]
     ];
+
     this.retX = this.radarRad;
     this.retY = this.radarRad;
     this.animate=0;
@@ -236,22 +251,27 @@ function keypressed(e) {
         case 48:
             Game.level = 0;
             drawRadar();
+            document.getElementById('slider').value = Game.level;        
             break;
         case 49:
             Game.level = 1;
             drawRadar();
+            document.getElementById('slider').value = Game.level;
             break;
         case 50:
             Game.level = 2;
             drawRadar();
+            document.getElementById('slider').value = Game.level;
             break;
         case 51:
             Game.level = 3;
             drawRadar();
+            document.getElementById('slider').value = Game.level;
             break;
         case 52:
             Game.level = 4;
             drawRadar();
+            document.getElementById('slider').value = Game.level;
             break;
         default:
             console.log("Uhm... that key doesn't do anything... ");
@@ -310,7 +330,8 @@ function move(dir) {
             }
             break;
         case 'level':
-            Game.level == 4 ? Game.level = 0 : Game.level += 1;        
+            Game.level == 4 ? Game.level = 0 : Game.level += 1;
+            document.getElementById('slider').value = Game.level;        
         default:
             break;
     }
@@ -523,7 +544,6 @@ function drawRadar() {
             }
         }
     }
-    
     Game.radar.putImageData(radarPixels, 0, 0);
     Game.radar.fillStyle="#ffffff";
     Game.radar.font="14px Droid Sans";
@@ -636,60 +656,82 @@ function drawLoc() {
     Game.radarLoc.closePath();
 }
 
-
-    
-    
-
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
 function clickTest() {
-    for(var i = 0; i<5; i++){
-        console.log('level: ' + i + ' is of kind: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind + ' & altitude: ' + returnLevel(i)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
-    }
-    var kind;
+    //var kind;
+    var tile = returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1];
+    var lowerTile = returnLevel(Game.level + 1)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1];
     switch (Game.clickedOn) {
-        case 'test1':
-            kind = 5;
+        case 'dozer':
+            if(Game.level === 0){
+                tile.prepare();
+                Game.clickedOn = null;
+            } else {
+                kind = -1;
+            }
+            break;
+        case 'digger':
+        //This let's me dig down to create airshafts
+            if(tile.diggable){
+                tile.digDown();
+                if(Game.level < 4 && lowerTile.kind !== 4){
+                    lowerTile.diggable = true;
+                    lowerTile.digDown();
+                }
+            } else {
+                alert("You can't dig here...");
+            }
             Game.clickedOn = null;
             break;
-        case 'test2':
-            kind = 5;
-            Game.clickedOn = null;
-            break;
-        case null:
-            kind = null;
+        case 'miner':
+            tile.prepare();
+            lowerTile.prepare();
             break;
         default:
             break;
     }
+    drawZoomMap();
+    drawRadar();
+    document.body.style.cursor="url('images/pointer.png'), default";
+    /*
     if (kind >= 0 && kind <= 4 && returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind !== 4){
         //map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].kind = kind;
     } else if(kind == 5){
         returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
     }
-    drawZoomMap();
-    drawRadar();
-    document.body.style.cursor="url('images/pointer.png'), default";
+    */
+    
     //var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
     //var rng = new CustomRandom(retX);
     //console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
+    /*
     console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (Game.retY+getTile('y')-5) + '][' + (Game.retX+getTile('x')-5) + ']');
     console.log('iron='+Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].resources[0] + ' zinc='+Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].resources[1]);
     console.log('altitude: '+ Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
+    */
     //console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
 }
 
 function construct(id) {
+    //When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
     if (Game.clickedOn === id) {
-        Game.clickedOn = null;
+        Game.clickedOn = 'none';
         document.body.style.cursor="url('images/pointer.png'), default";
     } else {
         Game.clickedOn = id;
         switch(id){
-            case 'test1':
+            case 'dozer':
                 document.body.style.cursor="url('images/dozer.png'), default";
                 break;
-            case 'test2':
+            case 'miner':
+                document.body.style.cursor="url('images/miner.png'), default";
+                break;
+
+            case 'digger':
+                document.body.style.cursor="url('images/digger.png'), default";
+                break;
+            case 'recycle':
                 document.body.style.cursor="url('images/recycle.png'), default";
                 break;
 
