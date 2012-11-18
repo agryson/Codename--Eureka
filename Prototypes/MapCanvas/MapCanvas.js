@@ -69,6 +69,7 @@ function Param(){
     [2,9],
     [3,9]
     ];
+
     this.retX = this.radarRad;
     this.retY = this.radarRad;
     this.animate=0;
@@ -119,6 +120,7 @@ function overCanvas(bool, which){
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
     */
+<<<<<<< HEAD
     if (bool && which == 'mPan'){
         //radarCanvas.onmousemove = null;
         //console.log('yea!');
@@ -523,7 +525,6 @@ function drawRadar() {
             }
         }
     }
-    
     Game.radar.putImageData(radarPixels, 0, 0);
     Game.radar.fillStyle="#ffffff";
     Game.radar.font="14px Droid Sans";
@@ -636,10 +637,6 @@ function drawLoc() {
     Game.radarLoc.closePath();
 }
 
-
-    
-    
-
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
 function clickTest() {
@@ -696,3 +693,4 @@ function construct(id) {
         }
     }
 }
+>>>>>>> prototype
