@@ -699,7 +699,7 @@ function construct(id) {
                 document.body.style.cursor="url('images/dozer.png'), default";
                 break;
             case 'miner':
-                document.body.style.cursor="url('images/dozer.png'), default";
+                document.body.style.cursor="url('images/miner.png'), default";
                 break;
 
             case 'test2':
