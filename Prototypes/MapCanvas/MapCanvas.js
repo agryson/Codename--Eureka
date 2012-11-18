@@ -69,6 +69,7 @@ function Param(){
     [2,9],
     [3,9]
     ];
+
     this.retX = this.radarRad;
     this.retY = this.radarRad;
     this.animate=0;
@@ -119,6 +120,7 @@ function overCanvas(bool, which){
     * Event listeners track the mouse movements. 
     * N.B.: You need to track on the topmost layer!!!
     */
+<<<<<<< HEAD
     if (bool && which == 'mPan'){
         //radarCanvas.onmousemove = null;
         //console.log('yea!');
@@ -143,6 +145,21 @@ function overCanvas(bool, which){
 
 /*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
 Think of num as the modifier, min as the base
+=======
+    mPanCanvas.addEventListener('mousemove', function(evt){
+        getMousePos(mPanCanvas, evt);
+    }, false);
+    radarCanvas.addEventListener('mousemove', function(evt){
+        getMousePos(radarCanvas, evt);
+    }, false);
+    document.onkeyup = keypressed;                                               //keyboard listener
+    drawLoc();
+    mainLoop();
+}
+
+/*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
+Thinkof num as the modifier, min as the base
+>>>>>>> addToMap
 */
 function randGen(num, min){
     return Math.floor(Math.random()*num)+min;
@@ -523,7 +540,6 @@ function drawRadar() {
             }
         }
     }
-    
     Game.radar.putImageData(radarPixels, 0, 0);
     Game.radar.fillStyle="#ffffff";
     Game.radar.font="14px Droid Sans";
@@ -635,10 +651,6 @@ function drawLoc() {
     Game.radarLoc.stroke();
     Game.radarLoc.closePath();
 }
-
-
-    
-    
 
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
