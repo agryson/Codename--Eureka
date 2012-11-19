@@ -125,7 +125,7 @@ button {
     background: #4F8F4F;
     border-radius: 10px;
     box-shadow: inset -1px -1px 2px 1px #2F4F2F, inset 1px 1px 2px 1px #CFCFCF;
-    -webkit-transition: width, 0.5s;
+    -webkit-transition: width, 0.7s;
 }
 
 

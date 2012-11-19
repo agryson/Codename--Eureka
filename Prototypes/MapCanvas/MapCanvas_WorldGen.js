@@ -86,15 +86,18 @@ function getSeed(newGame) {
     
         /*create the game's maps*/
         createMap();
+        //timer();
         Game.level = 0;
         /*draw the radar background once on load*/
         drawRadar();
         drawLoc();
         drawZoomMap();
         mainLoop();
+        /*
         popup.style.opacity='0';
         popup.addEventListener( 'webkitTransitionEnd', 
         function() {popup.style.zIndex='-1';}, false );
+*/
     } else if (newGame){
         Game.rng = new MersenneTwister(Game.seeder);
         Game.noise = new ClassicalNoise(Game.rng);
@@ -103,6 +106,7 @@ function getSeed(newGame) {
     
         /*create the game's map*/
         createMap();
+        //timer();
         Game.level = 0;
 
         /*draw the radar background once on load*/
@@ -110,12 +114,14 @@ function getSeed(newGame) {
         drawLoc();
         drawZoomMap();
         mainLoop();
+        /*
         popup.style.opacity='0';
         popup.addEventListener( 'webkitTransitionEnd', 
         function() {
             popup.style.display='none';
             document.getElementById("popup").style.display='none';
         }, false );
+*/
     } else if (newGame === false && input ==='') {
         alert('Please enter your dashboard password or start a new session...');
     }
@@ -365,14 +371,21 @@ function altitude(x,y,level){
     }
 }
 
+var incrementer = 1;
+function increment(){
+    if(incrementer<5){
+    document.getElementById('thumb').style.width = incrementer*25 + '%';
+    incrementer+=1;
+  }
+}
+
 /*creates the map*/
+var temp = 0;
 function createMap() {
-
-  var x, y, level, i;
+  var popup = document.getElementById("popupContainer");
+  var level;
   var map = [];
-
-    for(i = 0; i < 5 ; i++){
-      switch(i){
+  switch(temp){
         case 0:
           map = Game.map;
           level = 0;
@@ -394,12 +407,12 @@ function createMap() {
           level = 4;
           break;
         default:
-          console.log('There was a problem with the level... ' + level);
+          console.log('There was a problem with creating level... ' + level + temp);
       }
   
-      for(y=0;y<Game.radarRad*2;y++) {
+      for(var y=0;y<Game.radarRad*2;y++) {
         map[y] = new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
-        for(x=0; x<Game.radarRad*2; x++) {
+        for(var x=0; x<Game.radarRad*2; x++) {
             map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
           if(distance(x,y,Game.radarRad,Game.radarRad)<=Game.radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
             map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
@@ -413,7 +426,15 @@ function createMap() {
           }
         }
       }
-    }
+      temp+=1;
+      if(temp<5){
+        increment();
+        setTimeout(createMap, 250);
+      }else{
+        popup.style.opacity='0';
+        popup.addEventListener( 'webkitTransitionEnd', 
+        function() {popup.style.zIndex='-1';}, false );
+      }
 }
 
 /*Sets the tile type as a function of altitude*/
