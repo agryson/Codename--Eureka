@@ -157,7 +157,7 @@ button {
     position: absolute;
     height: 20px;
     width: 100%;
-    margin-top: 50%;
+    margin-top: 48%;
     border-radius: 5px;
     box-shadow: inset -1px -1px 0 2px #000;
     background: #363636;
@@ -167,9 +167,9 @@ button {
 
 #droneContainer {
     position: absolute;
-    top: 0;
+    bottom: 0;
     width: 100%;
-    margin-top: 50%;
+    height: 50%;
     padding-top: 20px;
     background: #191919;
     z-index: 1;
