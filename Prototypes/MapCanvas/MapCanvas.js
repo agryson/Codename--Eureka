@@ -226,8 +226,8 @@ function resize(e) {
     } else if (percentage > 90){
         percentage = 89;
     }
-    document.getElementById('buildingContainer').style.height = percentage + '%';
-    document.getElementById('droneContainer').style.marginTop = percentage + '%';
+    document.getElementById('buildingContainer').style.height = percentage+2 + '%';
+    document.getElementById('droneContainer').style.marginTop = 98-percentage + '%';
     document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
 }
 
