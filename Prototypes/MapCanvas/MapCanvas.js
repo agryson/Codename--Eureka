@@ -145,8 +145,6 @@ function Param(){
 function init() {
     Game = new Param();                                                             //TODO: Should add save and load game code here...
     Game.level = 0;
-    document.getElementById('slider').value = 0;                                   //Dunno why but level sometimes came up as more than 0?!?
-    document.onkeydown = keypressed;                                               //keyboard listener
 }
 
 function overCanvas(bool, which){

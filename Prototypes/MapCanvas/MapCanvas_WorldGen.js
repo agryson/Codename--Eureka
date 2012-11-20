@@ -68,63 +68,34 @@
 */
 
 function getSeed(newGame) {
-    //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
-    var input = document.getElementById('seed').value;
-    var popup = document.getElementById("popupContainer");
-    if (newGame === false && input !=='') {
-        input = input.split(' ').join('');
-        var seedString = '';
-        for (var i = 0; i < input.length; i++){
-            seedString += input.charCodeAt(i);
-        }
-        seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
-        Game.seeder = seedString;
-        Game.rng = new MersenneTwister(Game.seeder);
-        Game.noise = new ClassicalNoise(Game.rng);
-        Game.noise2 = new ClassicalNoise(Game.rng);
-        Game.noise3 = new ClassicalNoise(Game.rng);
-    
-        /*create the game's maps*/
-        createMap();
-        //timer();
-        Game.level = 0;
-        /*draw the radar background once on load*/
-        drawRadar();
-        drawLoc();
-        drawZoomMap();
-        mainLoop();
-        /*
-        popup.style.opacity='0';
-        popup.addEventListener( 'webkitTransitionEnd', 
-        function() {popup.style.zIndex='-1';}, false );
-*/
-    } else if (newGame){
-        Game.rng = new MersenneTwister(Game.seeder);
-        Game.noise = new ClassicalNoise(Game.rng);
-        Game.noise2 = new ClassicalNoise(Game.rng);
-        Game.noise3 = new ClassicalNoise(Game.rng);
-    
-        /*create the game's map*/
-        createMap();
-        //timer();
-        Game.level = 0;
-
-        /*draw the radar background once on load*/
-        drawRadar();
-        drawLoc();
-        drawZoomMap();
-        mainLoop();
-        /*
-        popup.style.opacity='0';
-        popup.addEventListener( 'webkitTransitionEnd', 
-        function() {
-            popup.style.display='none';
-            document.getElementById("popup").style.display='none';
-        }, false );
-*/
-    } else if (newGame === false && input ==='') {
-        alert('Please enter your dashboard password or start a new session...');
+  //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
+  var input = document.getElementById('seed').value;
+  var popup = document.getElementById("popupContainer");
+  var seedcheck = true;
+  var seedString = '';
+  if (!newGame && input !=='') {//If I've entered a seed
+    console.log('called');
+    input = input.split(' ').join('');
+    for (var i = 0; i < input.length; i++){
+        seedString += input.charCodeAt(i);
     }
+    console.log(seedString);
+    seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
+    Game.seeder = seedString;
+  } else if (newGame === false && input ==='') {
+    alert('Please enter your dashboard password or start a new session...');
+    seeecheck = false;
+  }
+
+  if(seedcheck){
+    document.onkeydown = keypressed;                                               //keyboard listener
+    increment();
+    Game.rng = new MersenneTwister(Game.seeder);
+    Game.noise = new ClassicalNoise(Game.rng);
+    Game.noise2 = new ClassicalNoise(Game.rng);
+    Game.noise3 = new ClassicalNoise(Game.rng);
+    setTimeout(createMap,50);
+  }
 }
 
 var MersenneTwister = function(seed) {
@@ -373,68 +344,76 @@ function altitude(x,y,level){
 
 var incrementer = 1;
 function increment(){
-    if(incrementer<5){
-    document.getElementById('thumb').style.width = incrementer*25 + '%';
+    if(incrementer<6){
+    document.getElementById('thumb').style.width = incrementer*20 + '%';
     incrementer+=1;
   }
 }
 
 /*creates the map*/
-var temp = 0;
 function createMap() {
   var popup = document.getElementById("popupContainer");
-  var level;
   var map = [];
-  switch(temp){
-        case 0:
-          map = Game.map;
-          level = 0;
-          break;
-        case 1:
-          map = Game.map1;
-          level = 1;
-          break;
-        case 2:
-          map = Game.map2;
-          level = 2;
-          break;
-        case 3:
-          map = Game.map3;
-          level = 3;
-          break;
-        case 4:
-          map = Game.map4;
-          level = 4;
-          break;
-        default:
-          console.log('There was a problem with creating level... ' + level + temp);
-      }
-  
-      for(var y=0;y<Game.radarRad*2;y++) {
-        map[y] = new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
-        for(var x=0; x<Game.radarRad*2; x++) {
-            map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-          if(distance(x,y,Game.radarRad,Game.radarRad)<=Game.radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
-            map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
-            map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
-            map[y][x][1].altitude=altitude(x,y,level);
-            setType(x,y,level);
-            map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
-            generateResources(x,y,map[y][x][1].kind,level);
-          }else{
-            map[y][x][0]=false;
-          }
-        }
-      }
-      temp+=1;
-      if(temp<5){
-        increment();
-        setTimeout(createMap, 250);
+
+  switch(Game.level){
+    case 0:
+      map = Game.map;
+      Game.level = 0;
+      break;
+    case 1:
+      map = Game.map1;
+      Game.level = 1;
+      break;
+    case 2:
+      map = Game.map2;
+      Game.level = 2;
+      break;
+    case 3:
+      map = Game.map3;
+      Game.level = 3;
+      break;
+    case 4:
+      map = Game.map4;
+      Game.level = 4;
+      break;
+    default:
+      console.log('There was a problem with creating level... ' + Game.level);
+  }
+  console.log('current level: ' + Game.level);
+
+
+  for(var y=0;y<Game.radarRad*2;y++) {
+    map[y] = new Array(Game.radarRad*2);                                           //create an array to hold the x cell, we now have a 200x200 2d array
+    for(var x=0; x<Game.radarRad*2; x++) {
+        map[y][x]=new Array(2);                                             //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
+      if(distance(x,y,Game.radarRad,Game.radarRad)<=Game.radarRad) {                      //check the radius, mark true if it's mapped, mark false if it's not in the circle
+        map[y][x][0]=true;                                              //invert axes because referencing the array is not like referencing a graph
+        map[y][x][1]= new Terrain();                                    //if we're in the circle, assign a tile value
+        map[y][x][1].altitude=altitude(x,y,Game.level);
+        setType(x,y,Game.level);
+        map[y][x][1].resources= new Array(2);                           //insert the number of resources we'll be looking for
+        generateResources(x,y,map[y][x][1].kind,Game.level);
       }else{
-        popup.style.opacity='0';
-        popup.addEventListener( 'webkitTransitionEnd', 
-        function() {popup.style.zIndex='-1';}, false );
+        map[y][x][0]=false;
       }
+    }
+  }
+  Game.level +=1;
+  if(Game.level<5){
+    increment();
+    setTimeout(createMap, 450);
+  }else{
+    Game.level = 0;
+    /*draw the radar background & map once on load*/
+    drawRadar();
+    drawLoc();
+    drawZoomMap();
+    //start mainloop
+    mainLoop();
+    popup.style.opacity='0';
+    popup.addEventListener( 'webkitTransitionEnd', 
+    function() {popup.style.zIndex='-1';}, false );
+  }
 }
 
 /*Sets the tile type as a function of altitude*/
