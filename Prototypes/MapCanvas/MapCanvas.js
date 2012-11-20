@@ -9,54 +9,62 @@ function Terrain() {
     this.resources; //an array that holds the different metal and resource kinds
     this.turns;  //remembers how many turns are left to become a tile of the desired kind
     this.diggable;
+    var wip = false; //Work in Progress?
     var prepared = false;
+    var willBe = 3;
     this.prepare = function(){
-        if (!prepared && this.diggable){
-            this.turns = 2;
+        if (!prepared && !wip && this.diggable){
+            this.turns = eta(2,this.kind);
             this.kind=8;
-            prepared = true;
-            this.diggable = false; //tells us that work is in progress
+            wip = true; //tells us that work is in progress
+            willBe = 3;
         }else {
             alert("You can't prepare this terrain...")
         }
     };
     this.digDown = function(){
-        if(this.diggable){
-            this.turns = 2;
+        if(!wip && this.diggable){
+            this.turns = eta(2, this.kind);
             this.kind=9;
-            this.diggable = false; 
+            wip = true;
+            willBe = 3; 
         }
     };
     this.mine = function(){
         if(this.diggable){
-            this.turns = this.eta(5);
+            this.turns = eta(5, this.kind);
             this.kind=10;
-            this.diggable = false; 
+            wip = true;
+            willBe = 3;
         }
         //TODO: get the resoures from this and adjacent tiles...
     };
     this.recycle = function(){
-        this.turns = this.eta(3);
+        this.turns = eta(3, this.kind);
         this.kind=11;
-        this.diggable = false; 
+        wip = true;
+        willBe = 3;
         //TODO: get the resoures from the recycled building if I can...
     };
     this.nextTurn = function(){
        if (this.turns > 0){
            this.turns -=1;
        } else if(this.turns === 0){
-           this.kind = 3;
+            wip = false;
+           this.kind = willBe;
            this.turns = false;
        }
     };
-    this.eta = function(base){
+
+    function eta(baseTurns, kind){
         //calculates the turns necessary to do something on this terrain
-        if(this.kind === 1 || this.kind === 6){
-            this.turns = Math.floor(base*1.5);
-        }else if (this.kind === 2 || this.kind === 7){
-            this.turns = Math.floor(base*2.4);
+        console.log(kind);
+        if(kind === 1 || kind === 6){
+            return Math.floor(baseTurns*1.5);
+        }else if (kind === 2 || kind === 7){
+            return Math.floor(baseTurns*2.4);
         } else {
-            this.turns = base;
+            return baseTurns;
         }
     };
 }
