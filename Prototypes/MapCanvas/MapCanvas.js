@@ -153,8 +153,6 @@ function overCanvas(bool, which){
     * N.B.: You need to track on the topmost layer!!!
     */
     if (bool && which == 'mPan'){
-        //radarCanvas.onmousemove = null;
-        //console.log('yea!');
         Game.mPanCanvas.addEventListener('mousemove', function(evt){
             getMousePos(Game.mPanCanvas, evt);
         }, false);
@@ -722,23 +720,6 @@ function clickTest() {
     drawZoomMap();
     drawRadar();
     document.body.style.cursor="url('images/pointer.png'), default";
-    /*
-    if (kind >= 0 && kind <= 4 && returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].kind !== 4){
-        //map[(retY+getTile('y')-5)][(retX+getTile('x')-5)][1].kind = kind;
-    } else if(kind == 5){
-        returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].prepare();
-    }
-    */
-    
-    //var a = coordinate((retX+getTile('x')-5),(retY+getTile('y')-5));
-    //var rng = new CustomRandom(retX);
-    //console.log('x: ' + a[0] + ' y: ' + a[1] + 'random seeded y x: ' + rng.next());
-    /*
-    console.log('x: ' + getTile('x') + '  y: ' + getTile('y') + ' equivalent to map[' + (Game.retY+getTile('y')-5) + '][' + (Game.retX+getTile('x')-5) + ']');
-    console.log('iron='+Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].resources[0] + ' zinc='+Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].resources[1]);
-    console.log('altitude: '+ Game.map[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1].altitude);
-    */
-    //console.log('top left altitude: '+map[adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[0]][adjacent((retX+getTile('x')-5),(retY+getTile('y')-5),0)[1]][1].altitude);
 }
 
 function construct(id) {
