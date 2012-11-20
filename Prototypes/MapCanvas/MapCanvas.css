@@ -220,20 +220,34 @@ button {
 /*        ******      Exec Dropdown    ******      */
 #execDropDown {
     position: absolute;
-    top: -35px;
+    top: 0;
     left: 50%;
     margin-left: -375px;
     width: 750px;
-    padding-bottom: 70px;
     border-radius: 0 0 10px 10px;
-    background-color: #138A0C;
+    background: #138A0C;
     z-index: 2;
 }
 
 #execDropDownContainer {
     background-color: #FFFBE5;
     margin: 0 5px 0 5px;
-    -webkit-transition: all 0.5s ease-in-out;
+    overflow: hidden;
+    -webkit-transition: all 0.2s ease-in-out;
+}
+
+#notifications {
+    background: #FFF;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+    height: 1em;
+    width: 700px;
+    margin-left: 25px;
+    font-style: bold;
+    z-index: 2;
+    overflow: hidden;
+    -webkit-transition: width 0.5s ease-in-out;
+
 }
 /*        ******      Global Actions    ******      */
 .info {

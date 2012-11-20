@@ -19,7 +19,7 @@ function Terrain() {
             wip = true; //tells us that work is in progress
             willBe = 3;
         }else {
-            alert("You can't prepare this terrain...")
+            notify("You can't prepare this terrain...");
         }
     };
     this.digDown = function(){
@@ -153,6 +153,19 @@ function Param(){
 function init() {
     Game = new Param();                                                             //TODO: Should add save and load game code here...
     Game.level = 0;
+}
+
+function notify(notif){
+    var notification =  document.getElementById('notifications');
+    notification.style.width = 0;
+    setTimeout(
+        function(){
+            console.log('printing');
+            notification.innerHTML= '';
+            notification.innerHTML= notif;
+            notification.style.width = 700 + 'px';
+        }, 
+        700);
 }
 
 function overCanvas(bool, which){
@@ -687,11 +700,7 @@ function clickTest() {
     var lowerTile = returnLevel(Game.level + 1)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1];
     switch (Game.clickedOn) {
         case 'dozer':
-            if(tile.diggable){
-                tile.prepare();
-            } else {
-                alert("You can't dronedoze here...");
-            }
+            tile.prepare();
             Game.clickedOn = null;
             break;
         case 'digger':
