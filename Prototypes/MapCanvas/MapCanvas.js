@@ -314,6 +314,10 @@ function keypressed(e) {
             drawRadar();
             document.getElementById('slider').value = Game.level;
             break;
+        case 27:
+            Game.clickedOn = null;
+            document.body.style.cursor="url('images/pointer.png'), default";
+            break;
         default:
             console.log("Uhm... that key doesn't do anything... ");
           break;
@@ -705,7 +709,6 @@ function clickTest() {
     switch (Game.clickedOn) {
         case 'dozer':
             tile.prepare();
-            Game.clickedOn = null;
             break;
         case 'digger':
         //This let's me dig down to create airshafts
@@ -714,7 +717,6 @@ function clickTest() {
                 lowerTile.diggable = true;
                 lowerTile.digDown();
             }
-            Game.clickedOn = null;
             break;
         case 'miner':
             tile.mine();
@@ -731,7 +733,6 @@ function clickTest() {
     }
     drawZoomMap();
     drawRadar();
-    document.body.style.cursor="url('images/pointer.png'), default";
 }
 
 function construct(id) {
