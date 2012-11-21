@@ -71,7 +71,6 @@ function getSeed(newGame) {
   //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
   var input = document.getElementById('seed').value;
   var popup = document.getElementById("popupContainer");
-  var seedcheck = true;
   var seedString = '';
   if (!newGame && input !=='') {//If I've entered a seed
     console.log('called');
@@ -82,12 +81,14 @@ function getSeed(newGame) {
     console.log(seedString);
     seedString = parseInt(seedString, 10)/Math.pow(10,input.length);
     Game.seeder = seedString;
-  } else if (newGame === false && input ==='') {
+  } else if (!newGame && input ==='') {
     alert('Please enter your dashboard password or start a new session...');
-    seeecheck = false;
+    seedcheck = false;
+  } else if(newGame){
+    Game.seeder = new Date().getTime();
   }
 
-  if(seedcheck){
+  if(Game.seeder !== ''){
     increment();
     document.onkeydown = keypressed;                                               //keyboard listener
     setTimeout(function(){
@@ -95,17 +96,12 @@ function getSeed(newGame) {
       Game.noise = new ClassicalNoise(Game.rng);
       Game.noise2 = new ClassicalNoise(Game.rng);
       Game.noise3 = new ClassicalNoise(Game.rng);
-    },90);
+    },10);
     setTimeout(createMap,100);
   }
 }
 
 var MersenneTwister = function(seed) {
-  if (seed === undefined) {
-    seed = new Date().getTime();
-    console.log('This is the seed for your world: ' + String(seed));
-
-  } 
   /* Period parameters */  
   this.N = 624;
   this.M = 397;
@@ -138,6 +134,7 @@ MersenneTwister.prototype.init_genrand = function(s) {
 /* init_key is the array for initializing keys */
 /* key_length is its length */
 /* slight change for C++, 2004/2/26 */
+
 MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
   var i, j, k;
   this.init_genrand(19650218);

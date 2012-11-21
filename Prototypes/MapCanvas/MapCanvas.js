@@ -141,7 +141,7 @@ function Param(){
     this.map4 = [];    
     
     //Map generation vars
-    this.seeder;
+    this.seeder = '';
     this.rng;
     this.noise;
     this.noise2;
