@@ -66,7 +66,6 @@ function Terrain() {
 
     function eta(baseTurns, kind){
         //calculates the turns necessary to do something on this terrain
-        console.log(kind);
         if(kind === 1 || kind === 6){
             return Math.floor(baseTurns*1.5);
         }else if (kind === 2 || kind === 7){
@@ -703,9 +702,11 @@ function drawLoc() {
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
 function clickTest() {
+    var y = Game.retY+getTile('y')-5;
+    var x = Game.retX+getTile('x')-5;
     //var kind;
-    var tile = returnLevel(Game.level)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1];
-    var lowerTile = returnLevel(Game.level + 1)[(Game.retY+getTile('y')-5)][(Game.retX+getTile('x')-5)][1];
+    var tile = returnLevel(Game.level)[y][x][1];
+    var lowerTile = returnLevel(Game.level + 1)[y][x][1];
     switch (Game.clickedOn) {
         case 'dozer':
             tile.prepare();
@@ -715,6 +716,11 @@ function clickTest() {
             tile.digDown();
             if(Game.level < 4 && lowerTile.kind !== 4){
                 lowerTile.diggable = true;
+                for(var i = 0; i<6;i++){
+                    returnLevel(Game.level+1)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1].diggable = true;
+                    returnLevel(Game.level+1)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1].kind -= 5;
+                    console.log('y: ' + adjacent(x,y, i)[0] + ' x: ' + adjacent(x,y, i)[1]);
+                }
                 lowerTile.digDown();
             }
             break;
