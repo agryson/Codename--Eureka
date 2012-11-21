@@ -11,6 +11,11 @@ button {
     cursor:url(images/pointer.png),auto;
 }
 
+.itemText, #notifications, .info, .action, #turnNumber {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
 #mainPanel, #mPanOverlay {
     position: fixed;
     top: 50%;
@@ -188,7 +193,6 @@ button {
 }
 
 .itemText{
-    font-family:"Droid Sans", Times, serif;
     display: table-cell;
     width: 100%;
     vertical-align: middle;
@@ -237,16 +241,18 @@ button {
 }
 
 #notifications {
-    background: #FFF;
+    background: none;
+    padding: 0.1em;
     margin-top: 0.8em;
-    margin-bottom: 0.8em;
-    height: 1em;
-    width: 700px;
+    margin-bottom: 0.6em;
+    border-radius: 0 5px 5px 0;
+    height: 1.2em;
+    width: 0px;
     margin-left: 25px;
-    font-style: bold;
     z-index: 2;
     overflow: hidden;
-    -webkit-transition: width 0.5s ease-in-out;
+    text-shadow: 1px 1px 1px #00EE00;
+    -webkit-transition: width 0.4s ease-in-out;
 
 }
 /*        ******      Global Actions    ******      */
@@ -256,7 +262,6 @@ button {
     border-radius: 10px;
     background: #1661f7;
     border-color: #191919;
-    font-family:"Droid Sans", Times, serif;
 }
 
 .action {
@@ -265,7 +270,6 @@ button {
     border-radius: 10px;
     background: #138A0C;
     border-color: #191919;
-    font-family:"Droid Sans", Times, serif;
 }
 
 #globalActions {
@@ -302,5 +306,4 @@ button {
     top: 14px;
     left: 14px;
     color: #D9F7FF;
-    font-family:"Droid Sans", Times, serif;
 }

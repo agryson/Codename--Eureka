@@ -28,22 +28,30 @@ function Terrain() {
             this.kind=9;
             wip = true;
             willBe = 3; 
+        } else {
+            notify("You can't dig here...");
         }
     };
     this.mine = function(){
-        if(this.diggable){
+        if(!wip && this.diggable){
             this.turns = eta(5, this.kind);
             this.kind=10;
             wip = true;
             willBe = 3;
+        } else {
+            notify("You can't mine here...");
         }
         //TODO: get the resoures from this and adjacent tiles...
     };
     this.recycle = function(){
-        this.turns = eta(3, this.kind);
-        this.kind=11;
-        wip = true;
-        willBe = 3;
+        if(!wip && this.kind !== 4){
+            this.turns = eta(3, this.kind);
+            this.kind=11;
+            wip = true;
+            willBe = 3;
+        } else {
+            notify("You can't recycle this...");
+        }
         //TODO: get the resoures from the recycled building if I can...
     };
     this.nextTurn = function(){
@@ -157,15 +165,14 @@ function init() {
 
 function notify(notif){
     var notification =  document.getElementById('notifications');
-    notification.style.width = 0;
+    notification.innerHTML= '';
+    notification.innerHTML= notif;
+    notification.style.width = 700 + 'px';
     setTimeout(
         function(){
-            console.log('printing');
-            notification.innerHTML= '';
-            notification.innerHTML= notif;
-            notification.style.width = 700 + 'px';
+            notification.style.width = 0;
         }, 
-        700);
+        2800);
 }
 
 function overCanvas(bool, which){
@@ -582,7 +589,7 @@ function drawRadar() {
     }
     Game.radar.putImageData(radarPixels, 0, 0);
     Game.radar.fillStyle="#ffffff";
-    Game.radar.font="14px Droid Sans";
+    Game.radar.font="14px Arial";
     Game.radar.fillText('Depth: ' + Game.level*50 + 'm', 215, 298);
 }
 
@@ -705,27 +712,18 @@ function clickTest() {
             break;
         case 'digger':
         //This let's me dig down to create airshafts
-            if(tile.diggable){
-                tile.digDown();
-                if(Game.level < 4 && lowerTile.kind !== 4){
-                    lowerTile.diggable = true;
-                    lowerTile.digDown();
-                    lowerTile.diggable = true;
-                }
-            } else {
-                alert("You can't dig here...");
+            tile.digDown();
+            if(Game.level < 4 && lowerTile.kind !== 4){
+                lowerTile.diggable = true;
+                lowerTile.digDown();
             }
             Game.clickedOn = null;
             break;
         case 'miner':
-            if(tile.diggable){
-                tile.mine();
-                if(Game.level < 4 && lowerTile.kind !== 4){
-                    lowerTile.diggable = true;
-                    lowerTile.mine();
-                }
-            } else {
-                alert("You can't mine here...");
+            tile.mine();
+            if(Game.level < 4 && lowerTile.kind !== 4){
+                lowerTile.diggable = true;
+                lowerTile.mine();
             }
             break;
         case 'recycle':

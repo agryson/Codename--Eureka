@@ -88,13 +88,15 @@ function getSeed(newGame) {
   }
 
   if(seedcheck){
-    document.onkeydown = keypressed;                                               //keyboard listener
     increment();
-    Game.rng = new MersenneTwister(Game.seeder);
-    Game.noise = new ClassicalNoise(Game.rng);
-    Game.noise2 = new ClassicalNoise(Game.rng);
-    Game.noise3 = new ClassicalNoise(Game.rng);
-    setTimeout(createMap,50);
+    document.onkeydown = keypressed;                                               //keyboard listener
+    setTimeout(function(){
+      Game.rng = new MersenneTwister(Game.seeder);
+      Game.noise = new ClassicalNoise(Game.rng);
+      Game.noise2 = new ClassicalNoise(Game.rng);
+      Game.noise3 = new ClassicalNoise(Game.rng);
+    },90);
+    setTimeout(createMap,100);
   }
 }
 
