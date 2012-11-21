@@ -215,23 +215,20 @@ function changeLevel(newLevel){
 function nextTurn(){
     var x;
     var y;
-    var hold;
-    if (!hold){
-        Game.turn += 1;
-        for(y=0;y<Game.radarRad*2;y++) {
-            for(x=0; x<Game.radarRad*2; x++) {
-                for(var l=0; l<5; l++){
-                    if(returnLevel(l)[y][x][0]===true) {
-                        returnLevel(l)[y][x][1].nextTurn();
-                    }
+    Game.turn += 1;
+    for(y=0;y<Game.radarRad*2;y++) {
+        for(x=0; x<Game.radarRad*2; x++) {
+            for(var l=0; l<5; l++){
+                if(returnLevel(l)[y][x][0]===true) {
+                    returnLevel(l)[y][x][1].nextTurn();
                 }
-            }   
-        }
-        Game.turnNum.innerHTML = "Week: " + Game.turn;
+            }
+        }   
     }
-    //The following hold code just prevent accidentally skipping two turns with accidental clicks...
-    hold = true;
-    setTimeout(hold = false,1000);
+    Game.turnNum.innerHTML = "Week: " + Game.turn;
+    //The following hold code just prevents accidentally skipping two turns with accidental clicks...
+    document.getElementById('turn').disabled = true;
+    setTimeout(function(){document.getElementById('turn').disabled = false},1000);
 }
 
 function leftMenuResize(bool) {
@@ -252,7 +249,7 @@ function resize(e) {
         percentage = 89;
     }
     document.getElementById('buildingContainer').style.height = percentage+2 + '%';
-    document.getElementById('droneContainer').style.height = 98-percentage + '%';
+    document.getElementById('droneContainer').style.height = 97.5-percentage + '%';
     document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
 }
 
