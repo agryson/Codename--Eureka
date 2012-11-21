@@ -580,7 +580,7 @@ function drawRadar() {
                 }
                 //This should darken pixels the deeper we go underground...
                 for(var i=0; i<3; i++){
-                    if(Game.level > 0){
+                    if(Game.level > 0 && kind < 8){
                         radarPixels.data[idx + i] - 100 >= 0 ? radarPixels.data[idx + i] -= 100 : radarPixels.data[idx + i] = 0;
                     }
                 }
