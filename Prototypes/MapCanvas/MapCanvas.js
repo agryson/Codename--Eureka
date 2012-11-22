@@ -417,6 +417,18 @@ function adjacent(x,y,index) {
             console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
     }
 }
+//tests if any of the adjacent tiles are wet...
+function wetTest(yxArray, level){
+    var yxArray  = yxArray.slice(0);
+    console.log(yxArray);
+    for(var i=0;i<6;i++){
+        var tileToTest = returnLevel(level)[adjacent(yxArray[1],yxArray[0], i)[0]][adjacent(yxArray[1],yxArray[0], i)[1]][1];
+        if(tileToTest.kind === 4){
+            return true;
+        }
+    }
+    return false;
+}
 
 /*returns the distance of the given point from the centrepoint*/
 function distance(x1,y1,x2,y2) {
@@ -701,7 +713,7 @@ function drawLoc() {
 
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
-function clickTest() {
+function clicked() {
     var y = Game.retY+getTile('y')-5;
     var x = Game.retX+getTile('x')-5;
     //var kind;
@@ -713,15 +725,19 @@ function clickTest() {
             break;
         case 'digger':
         //This let's me dig down to create airshafts
-            tile.digDown();
-            if(Game.level < 4 && lowerTile.kind !== 4){
+            if(Game.level < 4 && lowerTile.kind !== 4 && !wetTest([y,x], Game.level + 1)){
+                tile.digDown();
                 lowerTile.diggable = true;
                 for(var i = 0; i<6;i++){
-                    returnLevel(Game.level+1)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1].diggable = true;
-                    returnLevel(Game.level+1)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1].kind -= 5;
-                    console.log('y: ' + adjacent(x,y, i)[0] + ' x: ' + adjacent(x,y, i)[1]);
+                    var adj = returnLevel(Game.level+1)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
+                    if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), Game.level + 1)){
+                        adj.diggable = true;
+                        adj.kind -= 5;
+                    }
                 }
                 lowerTile.digDown();
+            } else {
+                notify("FLOOD WARNING!");
             }
             break;
         case 'miner':
