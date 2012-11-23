@@ -26,31 +26,31 @@ button {
 
 #map, #mapOverlay {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 10px;
+    right: 10px;
     z-index: 1;
 }
 
 #slider {
     position: absolute;
     -webkit-appearance: none !important;
-    background: #464646;
+    -webkit-transform: rotate(90deg);
+    background: -webkit-linear-gradient(top left, #FAFFC9 0%, #5E4C31 100%);
     height: 5px;
-    width: 200px;
-    top: 310px;
-    right: 50px;
-    border-radius: 2px;
+    width: 300px;
+    top: 170px;
+    right: 160px;
     z-index: 1;
-    cursor:url(images/horiResize.png),auto;
+    cursor:url(images/vertResize.png),auto;
 }
 
 #slider::-webkit-slider-thumb {
     -webkit-appearance: none !important;
     background:#AFAFAF;
-    border-radius: 10px;
+    border-radius: 5px;
     height:15px;
-    width:15px;
-    box-shadow: inset -1px -1px 0 2px #8C8C8C;
+    width:50px;
+    box-shadow: inset -1px 1px 0 2px #8C8C8C;
 }
     
 
