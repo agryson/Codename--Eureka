@@ -11,7 +11,7 @@ button {
     cursor:url(images/pointer.png),auto;
 }
 
-.itemText, #notifications, .info, .action, #turnNumber, .start-button, #mainTitle {
+.itemText, #notifications, .info, .action, #turnNumber, .start-button, #mainTitle, #loadMessage {
     font-family: Arial, sans-serif;
     font-weight: bold;
 }
@@ -39,7 +39,7 @@ button {
     height: 5px;
     width: 300px;
     top: 170px;
-    right: 160px;
+    right: 170px;
     z-index: 1;
     cursor:url(images/vertResize.png),auto;
 }
@@ -67,6 +67,17 @@ button {
     width: 100%;
     text-align: center;
     margin-top: 10%;
+}
+
+#loadMessage {
+    position: relative;
+    top: 2.5em;
+    width: 220px;
+    height: 2em;
+    color: #9F9F9F;
+    text-shadow: 1px 1px 2px #6F6F6F, -1px -1px 1px #000;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .popupContainer {

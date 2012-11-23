@@ -348,7 +348,26 @@ function increment(){
     document.getElementById('thumb').style.width = incrementer*20 + '%';
     incrementer+=1;
   }
-  //Add funny messages to loading screen based on the value of increment
+  var mess = document.getElementById('loadMessage');
+  switch(incrementer){
+    case 1:
+      mess.innerHTML = 'Engage!';
+      break;
+    case 2:
+      mess.innerHTML = 'Going to Warp 11';
+      break;
+    case 3:
+      mess.innerHTML = 'Entering Orbit';
+      break;
+    case 4:
+      mess.innerHTML = 'Dropping probes';
+      break;
+    case 5:
+      mess.innerHTML = 'Calling Houston';
+      break;
+    default:
+      //Do nothing
+  }
 }
 
 /*creates the map*/
