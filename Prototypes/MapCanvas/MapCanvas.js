@@ -764,22 +764,6 @@ function clicked() {
         case 'digger':
         //This let's me dig down to create airshafts
             tile.digDown(x,y,lowerTile);
-        /*
-            if(Game.level < 4 && lowerTile.kind !== 4 && !wetTest([y,x], Game.level + 1)){
-                tile.digDown();
-                lowerTile.diggable = true;
-                for(var i = 0; i<6;i++){
-                    var adj = returnLevel(Game.level+1)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
-                    if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), Game.level + 1) && !adj.diggable){
-                        adj.diggable = true;
-                        adj.kind -= 5;
-                    }
-                }
-                lowerTile.digDown();
-            } else {
-                notify("FLOOD WARNING!");
-            }
-            */
             break;
         case 'digCavern':
             tile.digCavern(x,y,tile,Game.level,false,tile.kind-5);
@@ -791,7 +775,7 @@ function clicked() {
                 lowerTile.mine();
             }
             break;
-        case 'recycle':
+        case 'recycler':
             tile.recycle();
             //TODO: add recycle code
         default:
