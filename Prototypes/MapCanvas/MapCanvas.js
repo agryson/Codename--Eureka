@@ -285,7 +285,7 @@ function nextTurn(){
     Game.turnNum.innerHTML = "Week: " + Game.turn;
     //The following hold code just prevents accidentally skipping two turns with accidental clicks...
     document.getElementById('turn').disabled = true;
-    setTimeout(function(){document.getElementById('turn').disabled = false},1000);
+    setTimeout(function(){document.getElementById('turn').disabled = false},300);
 }
 
 function leftMenuResize(bool) {

@@ -89,7 +89,7 @@ function getSeed(newGame) {
   }
 
   if(Game.seeder !== ''){
-    document.getElementById('loader').style.height = 10 + 'px';
+    document.getElementById('loader').style.height = 3 + 'px';
     increment();
     document.onkeydown = keypressed;                                               //keyboard listener
     setTimeout(function(){
