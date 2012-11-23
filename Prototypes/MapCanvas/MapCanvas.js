@@ -13,6 +13,7 @@ function Terrain() {
     var prepared = false;
     this.willBe = 3;
     this.willBeDiggable = false;
+
     this.prepare = function(){
         if (!prepared && !wip && this.diggable){
             this.turns = eta(2,this.kind);
@@ -23,31 +24,36 @@ function Terrain() {
             notify("You can't prepare this terrain...");
         }
     };
-    this.digDown = function(){
-        if(!wip && this.diggable){
+
+    this.digDown = function(x,y,lowerTile){
+
+        if(Game.level < 4 && !wetTest([y,x], Game.level+1) && lowerTile.kind !== 4){
+            this.willBe=3;
             this.turns = eta(2, this.kind);
             this.kind=9;
-            this.wip = true;
-            this.willBe = 3; 
+            this.digCavern(x,y,lowerTile,Game.level + 1,true,3);
         } else {
-            notify("You can't dig here...");
+            notify("FLOOD WARNING!!!");
         }
     };
-    this.digCavern = function(x,y,tile){
-        var nearWall = false;
+
+    /*digCavern takes the x & y coordinates of the clicked upon tile, the level (0-4) you want the cavern built on (to allow for digging down)
+    a boolean 'nearWallKnown' (true if digging down, false otherwise) and a willBe tile type so that we can place a building (airshaft) if necessary*/
+    this.digCavern = function(x,y,tile,level,nearWallKnown,willBe){
+        var nearWall = nearWallKnown;
         for(var i = 0; i<6;i++){
-                var adj = returnLevel(Game.level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
+                var adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
                 if(adj.diggable){
                     nearWall = true;
                 }
             }
-        if(Game.level > 0 && !wetTest([y,x], Game.level) && nearWall){
-            this.willBe=this.kind-5;
-            this.turns = eta(2, this.kind);
-            this.kind=9;
+        if(level > 0 && !wetTest([y,x], level) && nearWall){
+            tile.willBe=willBe;
+            tile.turns = eta(2, this.kind);
+            tile.kind=9;
             for(var i = 0; i<6;i++){
-                var adj = returnLevel(Game.level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
-                if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), Game.level) && !adj.diggable && !adj.wip && adj.kind>4){
+                var adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
+                if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), level) && !adj.diggable && !adj.wip && adj.kind>4){
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
                     adj.kind = 9;
@@ -59,6 +65,7 @@ function Terrain() {
             notify("You can't dig a cavern here...");
         }
     };
+
     this.mine = function(){
         if(!wip && this.diggable){
             this.turns = eta(5, this.kind);
@@ -70,6 +77,7 @@ function Terrain() {
         }
         //TODO: get the resoures from this and adjacent tiles...
     };
+
     this.recycle = function(){
         if(!wip && this.kind !== 4){
             this.turns = eta(3, this.kind);
@@ -103,7 +111,7 @@ function Terrain() {
         }
     };
 }
-
+/*
 function Building() {
     this.kind; //kind of building
     this.health = 100; //health of building
@@ -121,7 +129,7 @@ function Robot(name, kind) {
     this.busy = false; //is the robot currently working or not
     this.position = new Array(2); //position in x,y coordinates
 }
-
+*/
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 /*Set up any global stuff that won't ever change after page load*/
 function Param(){
@@ -755,6 +763,8 @@ function clicked() {
             break;
         case 'digger':
         //This let's me dig down to create airshafts
+            tile.digDown(x,y,lowerTile);
+        /*
             if(Game.level < 4 && lowerTile.kind !== 4 && !wetTest([y,x], Game.level + 1)){
                 tile.digDown();
                 lowerTile.diggable = true;
@@ -769,9 +779,10 @@ function clicked() {
             } else {
                 notify("FLOOD WARNING!");
             }
+            */
             break;
         case 'digCavern':
-            tile.digCavern(x,y,tile);
+            tile.digCavern(x,y,tile,Game.level,false,tile.kind-5);
             break;
         case 'miner':
             tile.mine();
