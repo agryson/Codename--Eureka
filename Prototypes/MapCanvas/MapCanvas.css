@@ -66,7 +66,7 @@ button {
     left: 0;
     height: 100%;
     width: 100%;
-    background: #191919;
+    background: #193619;
     background-image: url('images/texture.png');
     box-shadow: inset 0 0 300px -20px #000;
     z-index: 100;
@@ -81,9 +81,9 @@ button {
     margin-left: 25%;
     margin-top: 15%;
     border-radius: 10px;
-    background-color: #363636;
+    background-color: #262626;
     background-image: url('images/texture.png');
-    box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #FFF;
+    box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F;
     z-index: 101;
 }
     
@@ -97,21 +97,26 @@ button {
     background: #191919;
     color: #8F8F8F;
     border: none;
-    box-shadow: 1px 1px 2px 0 #FFF;
+    box-shadow: 1px 1px 2px 0 #6F6F6F;
     margin-left: auto;
     margin-right: auto;
     padding-left: 5px;
     cursor:url(images/text.png),auto;
 }
 
+#seed:focus {
+    box-shadow: 1px 1px 2px 0 #FFF, 0 0 10px -1px #FFF;
+    outline: none;
+
+}
+
 .start-button {
     width: 100px;
-    background: #1F1F1F;
+    background-color: rgba(100,100,100,0.5);
     color: #CFCFCF;
     border-radius: 5px;
-    border-color: #286828;
+    border: none;
     height: 3em;
-    background-image: url('images/texture.png');
     margin-left: auto;
     margin-right: auto;
 }
@@ -132,7 +137,7 @@ button {
     background: #1F1F1F;
     display: block;
     border-radius: 10px;
-    box-shadow: 1px 1px 2px 0 #FFF; 
+    box-shadow: 1px 1px 2px 0 #6F6F6F; 
     height: 10px;
     width: 200px;
     margin-left: auto;
@@ -144,9 +149,9 @@ button {
     height: 100%;
     width: 0%;
     max-width: 100%;
-    background: #4FAF4F;
+    background: #0F6F0F;
     border-radius: 10px;
-    box-shadow: inset -1px -1px 2px 1px #2C4C2C, inset 1px 1px 2px 1px #CFCFCF, 0 0 10px -2px #FFF;
+    box-shadow: inset -1px -1px 2px 1px #2C4C2C, inset 1px 1px 2px 1px #CFCFCF;
     -webkit-transition: width, 1s;
 }
 

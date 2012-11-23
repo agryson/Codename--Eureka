@@ -347,6 +347,7 @@ function increment(){
     document.getElementById('thumb').style.width = incrementer*20 + '%';
     incrementer+=1;
   }
+  //Add funny messages to loading screen based on the value of increment
 }
 
 /*creates the map*/

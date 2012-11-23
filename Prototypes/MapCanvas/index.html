@@ -5,13 +5,25 @@
         <link href="MapCanvas.css" rel="stylesheet" type="text/css" media="all">
 		<meta charset="UTF-8">
 		<title>Prototype MapV1</title>
-
-		<script language="JavaScript" src="MapCanvas.js"></script>
-        <script language="JavaScript" src="MapCanvas_WorldGen.js"></script>
 	</head>
 
 	<body onload="init()">
-    
+        <div class="popupContainer" id="popupContainer">
+            <div class="popup" id="popup">
+                <input type="text" id="seed" placeholder="Dashboard Password" /><br/>
+                <div id="buttonContainer">
+                    <button class="start-button" onclick="getSeed(false)">Login</button>
+                    <button class="start-button" onclick="getSeed(true)">New Session</button>
+                    <div id="loader">
+                        <div id="thumb">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!--loading screen moved up to improve performance-->
+
         <div id="leftMenu">
             <div id="buildingContainer">
                 <div class="menuItem" id="test1" onClick="construct(this.id)">
@@ -76,25 +88,10 @@
             <button class="info" id="save">Save</button>
             <button class="action" id="turn" onclick="nextTurn()">Send Orders</button>
         </div>
-        
 
-
-<!--Below here is the startup screen-->
-
-
-        <div class="popupContainer" id="popupContainer">
-            <div class="popup" id="popup">
-                <input type="text" id="seed" placeholder="Dashboard Password" /><br/>
-                <div id="buttonContainer">
-                    <button class="start-button" onclick="getSeed(false)">Login</button>
-                    <button class="start-button" onclick="getSeed(true)">New Session</button>
-                    <div id="loader">
-                        <div id="thumb">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--scripts moved down to improve initial page load-->
+        <script language="JavaScript" src="MapCanvas.js"></script>
+        <script language="JavaScript" src="MapCanvas_WorldGen.js"></script>
 	</body>
 
 </html>

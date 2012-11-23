@@ -594,6 +594,8 @@ function drawRadar() {
                 for(var i=0; i<3; i++){
                     if(Game.level > 0 && kind < 8){
                         radarPixels.data[idx + i] - 100 >= 0 ? radarPixels.data[idx + i] -= 100 : radarPixels.data[idx + i] = 0;
+                    }else{
+                        //need to fix buildign code here
                     }
                 }
             }
