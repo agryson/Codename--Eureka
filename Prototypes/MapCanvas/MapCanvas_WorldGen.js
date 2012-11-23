@@ -89,6 +89,7 @@ function getSeed(newGame) {
   }
 
   if(Game.seeder !== ''){
+    document.getElementById('loader').style.height = 10 + 'px';
     increment();
     document.onkeydown = keypressed;                                               //keyboard listener
     setTimeout(function(){
@@ -96,7 +97,7 @@ function getSeed(newGame) {
       Game.noise = new ClassicalNoise(Game.rng);
       Game.noise2 = new ClassicalNoise(Game.rng);
       Game.noise3 = new ClassicalNoise(Game.rng);
-    },10);
+    },50);
     setTimeout(createMap,100);
   }
 }
