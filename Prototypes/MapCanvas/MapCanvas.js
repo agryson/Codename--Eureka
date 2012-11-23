@@ -15,7 +15,7 @@ function Terrain() {
     this.willBeDiggable = false;
 
     this.prepare = function(){
-        if (!prepared && !wip && this.diggable){
+        if (!prepared && !this.wip && this.diggable){
             this.turns = eta(2,this.kind);
             this.kind=8;
             this.wip = true; //tells us that work is in progress
@@ -41,18 +41,19 @@ function Terrain() {
     a boolean 'nearWallKnown' (true if digging down, false otherwise) and a willBe tile type so that we can place a building (airshaft) if necessary*/
     this.digCavern = function(x,y,tile,level,nearWallKnown,willBe){
         var nearWall = nearWallKnown;
+        var adj;
         for(var i = 0; i<6;i++){
-                var adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
+                adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
                 if(adj.diggable){
                     nearWall = true;
                 }
             }
         if(level > 0 && !wetTest([y,x], level) && nearWall){
-            tile.willBe=willBe;
+            willBe >= 0 ? tile.willBe=willBe : tile.willBe = willBe+5;
             tile.turns = eta(2, this.kind);
             tile.kind=9;
             for(var i = 0; i<6;i++){
-                var adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
+                adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
                 if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), level) && !adj.diggable && !adj.wip && adj.kind>4){
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
@@ -66,12 +67,23 @@ function Terrain() {
         }
     };
 
-    this.mine = function(){
-        if(!wip && this.diggable){
+    this.mine = function(x,y,lowerTile){
+        var wet = true;
+        for(var i = 0; i<6;i++){
+                if(wetTest(adjacent(x,y, i), Game.level)){
+                    wet = true;
+                }
+            }
+        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable){
             this.turns = eta(5, this.kind);
             this.kind=10;
             this.wip = true;
             this.willBe = 3;
+            lowerTile.turns = eta(5, lowerTile.kind);
+            lowerTile.wip = true;
+            lowerTile.willBe = 3;
+            lowerTile.willBeDiggable = true;
+            lowerTile.kind = 10;
         } else {
             notify("You can't mine here...");
         }
@@ -174,6 +186,8 @@ function Param(){
     this.map2 = [];
     this.map3 = [];
     this.map4 = [];    
+    this.buildings = ['agri','arp','command','connector','clichy','research', 'store', 'warehouse', 'hab', 'workshop', 'commarray', 'genfab', 'oreproc'];
+    this.robots = {'dozer' : 5, 'digger' : 3, 'cavernDigger' : 2, 'recycler' : 1, 'miner' : 1, };//number of drones
     
     //Map generation vars
     this.seeder = '';
@@ -195,7 +209,14 @@ function Param(){
 
 function init() {
     Game = new Param();                                                             //TODO: Should add save and load game code here...
-    Game.level = 0;
+    checkBuildings();
+}
+
+function checkBuildings(){
+    for(var i = 0; i<Game.buildings.length; i++){
+        console.log(Game.buildings[i]);
+        document.getElementById(Game.buildings[i]).style.display = 'table';
+    }
 }
 
 function notify(notif){
@@ -765,15 +786,11 @@ function clicked() {
         //This let's me dig down to create airshafts
             tile.digDown(x,y,lowerTile);
             break;
-        case 'digCavern':
+        case 'cavernDigger':
             tile.digCavern(x,y,tile,Game.level,false,tile.kind-5);
             break;
         case 'miner':
-            tile.mine();
-            if(Game.level < 4 && lowerTile.kind !== 4){
-                lowerTile.diggable = true;
-                lowerTile.mine();
-            }
+            tile.mine(x,y,lowerTile);
             break;
         case 'recycler':
             tile.recycle();
@@ -802,7 +819,7 @@ function construct(id) {
             case 'digger':
                 document.body.style.cursor="url('images/digger.png'), default";
                 break;
-            case 'digCavern':
+            case 'cavernDigger':
                 document.body.style.cursor="url('images/digger.png'), default";
                 break;
             case 'recycle':

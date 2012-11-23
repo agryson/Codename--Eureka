@@ -351,7 +351,7 @@ function increment(){
   var mess = document.getElementById('loadMessage');
   switch(incrementer){
     case 1:
-      mess.innerHTML = 'Engage!';
+      mess.innerHTML = 'Engage!   ';
       break;
     case 2:
       mess.innerHTML = 'Going to Warp 11';

@@ -243,6 +243,10 @@ button {
     cursor:url(images/build.png),auto; 
 }
 
+.building{
+    display: none;
+}
+
 .itemText{
     display: table-cell;
     width: 100%;
