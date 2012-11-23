@@ -100,7 +100,8 @@ button {
     box-shadow: 1px 1px 2px 0 #6F6F6F;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 5px;
+    padding-left: 1em;
+    padding-right: 1em;
     cursor:url(images/text.png),auto;
 }
 
@@ -110,8 +111,13 @@ button {
 
 }
 
+#seed::-webkit-input-placeholder{
+    color: #393939;
+    text-align: center;
+}
+
 .start-button {
-    width: 100px;
+    width: 110px;
     background-color: rgba(100,100,100,0.5);
     color: #CFCFCF;
     border-radius: 5px;
@@ -139,7 +145,7 @@ button {
     border-radius: 10px;
     box-shadow: 1px 1px 2px 0 #6F6F6F; 
     height: 10px;
-    width: 200px;
+    width: 220px;
     margin-left: auto;
     margin-right: auto;
 }
