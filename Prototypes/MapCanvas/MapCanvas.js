@@ -11,13 +11,14 @@ function Terrain() {
     this.diggable;
     var wip = false; //Work in Progress?
     var prepared = false;
-    var willBe = 3;
+    this.willBe = 3;
+    this.willBeDiggable = false;
     this.prepare = function(){
         if (!prepared && !wip && this.diggable){
             this.turns = eta(2,this.kind);
             this.kind=8;
-            wip = true; //tells us that work is in progress
-            willBe = 3;
+            this.wip = true; //tells us that work is in progress
+            this.willBe = 3;
         }else {
             notify("You can't prepare this terrain...");
         }
@@ -26,18 +27,44 @@ function Terrain() {
         if(!wip && this.diggable){
             this.turns = eta(2, this.kind);
             this.kind=9;
-            wip = true;
-            willBe = 3; 
+            this.wip = true;
+            this.willBe = 3; 
         } else {
             notify("You can't dig here...");
+        }
+    };
+    this.digCavern = function(x,y,tile){
+        var nearWall = false;
+        for(var i = 0; i<6;i++){
+                var adj = returnLevel(Game.level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
+                if(adj.diggable){
+                    nearWall = true;
+                }
+            }
+        if(Game.level > 0 && !wetTest([y,x], Game.level) && nearWall){
+            this.willBe=this.kind-5;
+            this.turns = eta(2, this.kind);
+            this.kind=9;
+            for(var i = 0; i<6;i++){
+                var adj = returnLevel(Game.level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
+                if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), Game.level) && !adj.diggable && !adj.wip && adj.kind>4){
+                    adj.turns = eta(2, adj.kind);
+                    adj.willBe = adj.kind - 5;
+                    adj.kind = 9;
+                    adj.wip = true;
+                    adj.willBeDiggable = true;
+                }
+            }
+        } else {
+            notify("You can't dig a cavern here...");
         }
     };
     this.mine = function(){
         if(!wip && this.diggable){
             this.turns = eta(5, this.kind);
             this.kind=10;
-            wip = true;
-            willBe = 3;
+            this.wip = true;
+            this.willBe = 3;
         } else {
             notify("You can't mine here...");
         }
@@ -47,8 +74,8 @@ function Terrain() {
         if(!wip && this.kind !== 4){
             this.turns = eta(3, this.kind);
             this.kind=11;
-            wip = true;
-            willBe = 3;
+            this.wip = true;
+            this.willBe = 3;
         } else {
             notify("You can't recycle this...");
         }
@@ -58,9 +85,10 @@ function Terrain() {
        if (this.turns > 0){
            this.turns -=1;
        } else if(this.turns === 0){
-            wip = false;
-           this.kind = willBe;
+            this.wip = false;
+           this.kind = this.willBe;
            this.turns = false;
+           this.diggable = this.willBeDiggable;
        }
     };
 
@@ -224,6 +252,7 @@ function nextTurn(){
             }
         }   
     }
+    drawRadar();
     Game.turnNum.innerHTML = "Week: " + Game.turn;
     //The following hold code just prevents accidentally skipping two turns with accidental clicks...
     document.getElementById('turn').disabled = true;
@@ -420,7 +449,6 @@ function adjacent(x,y,index) {
 //tests if any of the adjacent tiles are wet...
 function wetTest(yxArray, level){
     var yxArray  = yxArray.slice(0);
-    console.log(yxArray);
     for(var i=0;i<6;i++){
         var tileToTest = returnLevel(level)[adjacent(yxArray[1],yxArray[0], i)[0]][adjacent(yxArray[1],yxArray[0], i)[1]][1];
         if(tileToTest.kind === 4){
@@ -573,7 +601,7 @@ function drawRadar() {
                         break;
                     case 3:
                         radarPixels.data[idx + 0] = 0;
-                        radarPixels.data[idx + 1] = 62;
+                        radarPixels.data[idx + 1] = 132;
                         radarPixels.data[idx + 2] = 0;
                         radarPixels.data[idx + 3] = 255;
                         break;
@@ -595,7 +623,7 @@ function drawRadar() {
                     if(Game.level > 0 && kind < 8){
                         radarPixels.data[idx + i] - 100 >= 0 ? radarPixels.data[idx + i] -= 100 : radarPixels.data[idx + i] = 0;
                     }else{
-                        //need to fix buildign code here
+                        //radarPixels.data[idx + i] += 0;//leave as is...
                     }
                 }
             }
@@ -732,7 +760,7 @@ function clicked() {
                 lowerTile.diggable = true;
                 for(var i = 0; i<6;i++){
                     var adj = returnLevel(Game.level+1)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
-                    if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), Game.level + 1)){
+                    if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), Game.level + 1) && !adj.diggable){
                         adj.diggable = true;
                         adj.kind -= 5;
                     }
@@ -741,6 +769,9 @@ function clicked() {
             } else {
                 notify("FLOOD WARNING!");
             }
+            break;
+        case 'digCavern':
+            tile.digCavern(x,y,tile);
             break;
         case 'miner':
             tile.mine();
@@ -773,8 +804,10 @@ function construct(id) {
             case 'miner':
                 document.body.style.cursor="url('images/miner.png'), default";
                 break;
-
             case 'digger':
+                document.body.style.cursor="url('images/digger.png'), default";
+                break;
+            case 'digCavern':
                 document.body.style.cursor="url('images/digger.png'), default";
                 break;
             case 'recycle':

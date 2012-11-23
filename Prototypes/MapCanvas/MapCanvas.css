@@ -38,7 +38,7 @@ button {
     background: -webkit-linear-gradient(top left, #FAFFC9 0%, #5E4C31 100%);
     height: 5px;
     width: 300px;
-    top: 170px;
+    top: 160px;
     right: 170px;
     z-index: 1;
     cursor:url(images/vertResize.png),auto;
