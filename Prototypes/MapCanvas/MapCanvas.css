@@ -82,8 +82,8 @@ button {
     margin-top: 15%;
     border-radius: 10px;
     background-color: #262626;
-    background-image: url('images/texture.png');
-    box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F;
+    background-image: url('images/pinhole.png');
+    box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     z-index: 101;
 }
     
@@ -97,7 +97,7 @@ button {
     background: #191919;
     color: #8F8F8F;
     border: none;
-    box-shadow: 1px 1px 2px 0 #6F6F6F;
+    box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     margin-left: auto;
     margin-right: auto;
     padding-left: 1em;
@@ -112,14 +112,14 @@ button {
 }
 
 #seed::-webkit-input-placeholder{
-    color: #393939;
+    color: #494949;
     text-align: center;
 }
 
 .start-button {
     width: 110px;
-    background-color: rgba(100,100,100,0.5);
-    color: #CFCFCF;
+    background-color: rgba(100,100,100,0.6);
+    color: #8F8F8F;
     border-radius: 5px;
     border: none;
     height: 3em;
@@ -143,7 +143,7 @@ button {
     background: #1F1F1F;
     display: block;
     border-radius: 10px;
-    box-shadow: 1px 1px 2px 0 #6F6F6F; 
+    box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010; 
     height: 10px;
     width: 220px;
     margin-left: auto;
