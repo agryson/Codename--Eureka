@@ -23,10 +23,11 @@ function Terrain() {
        if (this.turns > 0){
            this.turns -=1;
        } else if(this.turns === 0){
+            this.turns = false;
             this.wip = false;
-           this.kind = this.willBe;
-           this.turns = false;
-           this.diggable = this.willBeDiggable;
+            this.kind=3; //terrain is prepared before putting anythign else on it...
+            this.willBe !== 1000 ? this.kind = this.willBe : this.build(7,50,2);//obviously building an airshaft here...
+            this.diggable = this.willBeDiggable;
        }
        if(this.exists){
             this.age += 1;
@@ -47,10 +48,10 @@ function Terrain() {
     this.digDown = function(x,y,lowerTile){
 
         if(Game.level < 4 && !wetTest([y,x], Game.level+1) && lowerTile.kind !== 4){
-            this.willBe=3;
+            this.willBe=1000; //TODO: fix to be a real airlift...
             this.turns = eta(2, this.kind);
             this.kind=9;
-            this.digCavern(x,y,lowerTile,Game.level + 1,true,3);
+            this.digCavern(x,y,lowerTile,Game.level + 1,true,1000);
         } else {
             notify("FLOOD WARNING!!!");
         }
@@ -135,7 +136,7 @@ function Terrain() {
     this.build = function(building, health, turns) {
         if (this.kind === 3){
             this.kind = 8; //TODO: replace with a construction animation
-            this.willBe = building;
+            this.willBe = building; //TODO: if underground add 1 and have a different tile for underground ones...
             this.health = health; //health of building
             this.turns = turns;
             this.exists = true;
