@@ -14,6 +14,8 @@ function Terrain() {
     var prepared = false;
     this.willBe = 3;
     this.willBeDiggable = false;
+    //robots
+    this.robotInUse;
     //buildings
     this.health = 0;
     this.air = false;
@@ -24,6 +26,10 @@ function Terrain() {
        if (this.turns > 0){
            this.turns -=1;
        } else if(this.turns === 0){
+            if(this.robotInUse >= 0){
+                Game.robots[this.robotInUse][0]-=1;
+                this.robotInUse = -1;
+            }
             this.turns = false;
             this.wip = false;
             this.kind=3; //terrain is prepared before putting anythign else on it...
@@ -45,11 +51,13 @@ function Terrain() {
     };
 
     this.prepare = function(){
-        if (!prepared && !this.wip && this.diggable){
+        if (!prepared && !this.wip && this.diggable && Game.robots[0][0] < Game.robots[0][1]){
             this.turns = eta(2,this.kind);
             this.kind=8;
             this.wip = true; //tells us that work is in progress
             this.willBe = 3;
+            this.robotInUse = 0;
+            Game.robots[0][0] +=1;
         }else {
             notify("You can't prepare this terrain...");
         }
@@ -57,10 +65,12 @@ function Terrain() {
 
     this.digDown = function(x,y,lowerTile){
 
-        if(Game.level < 4 && !wetTest([y,x], Game.level+1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable){
+        if(Game.level < 4 && !wetTest([y,x], Game.level+1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable && Game.robots[1][0] < Game.robots[1][1]-1){
             this.willBe=1000; //TODO: fix to be a real airlift...
             this.turns = eta(2, this.kind);
             this.kind=9;
+            Game.robots[1][0]+=1;
+            this.robotInUse = 1;
             this.digCavern(x,y,lowerTile,Game.level + 1,true,1000);
         } else {
             notify("Can't dig here...");
@@ -72,20 +82,24 @@ function Terrain() {
     this.digCavern = function(x,y,tile,level,nearWallKnown,willBe){
         var nearWall = nearWallKnown;
         var adj;
+        var free;
+
         for(var i = 0; i<6;i++){
                 adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
                 if(adj.diggable){
                     nearWall = true;
                 }
             }
-        if(level > 0 && !wetTest([y,x], level) && nearWall && !tile.wip){
+        if(level > 0 && !wetTest([y,x], level) && nearWall && !tile.wip && Game.robots[1][0] < Game.robots[1][1] && !this.exists){
+            Game.robots[1][0]+=1;
+            tile.robotInUse = 1;
             willBe >= 0 ? tile.willBe=willBe : tile.willBe = willBe+5; //this is for if we try to do it on prepared terrain
             tile.wip = true;
             tile.turns = eta(2, this.kind);
             tile.kind=9;
             for(var i = 0; i<6;i++){
                 adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
-                if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), level) && !adj.diggable && !adj.wip && adj.kind>4){
+                if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), level) && !adj.diggable && !adj.wip && adj.kind>4 && !adj.exists){
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
                     adj.kind = 9;
@@ -105,7 +119,9 @@ function Terrain() {
                     wet = true;
                 }
             }
-        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable){
+        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable && Game.robots[3][0] < Game.robots[3][1]){
+            Game.robots[3][0] += 1;
+            this.robotInUse = 3;
             this.turns = eta(5, this.kind);
             this.kind=10;
             this.wip = true;
@@ -122,11 +138,13 @@ function Terrain() {
     };
 
     this.recycle = function(){
-        if(!wip && this.kind !== 4){
+        if(!wip && this.kind !== 4 && Game.robots[2][0] < Game.robots[2][1]){
             this.turns = eta(3, this.kind);
             this.kind=11;
             this.wip = true;
             this.willBe = 3;
+            Game.robots[2][0] +=1;
+            this.robotInUse = 2;
         } else {
             notify("You can't recycle this...");
         }
@@ -225,7 +243,7 @@ function Param(){
     this.map3 = [];
     this.map4 = [];    
     this.buildings = ['agri','arp','command','connector','clichy','research', 'store', 'warehouse', 'hab', 'workshop', 'commarray', 'genfab', 'oreproc'];
-    this.robots = {'dozer' : 5, 'digger' : 3, 'cavernDigger' : 2, 'recycler' : 1, 'miner' : 1, };//number of drones
+    this.robots = [[0,5], [0,3], [0,1],[0,1]];//number of drones: dozer/digger/recycler/miner [current/max]
     
     //Map generation vars
     this.seeder = '';
