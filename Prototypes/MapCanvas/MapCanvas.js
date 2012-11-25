@@ -13,6 +13,25 @@ function Terrain() {
     var prepared = false;
     this.willBe = 3;
     this.willBeDiggable = false;
+    //buildings
+    this.health = 0;
+    this.air = false;
+    this.age = 0;
+    this.exists = false; //does the building exist?
+
+    this.nextTurn = function(){
+       if (this.turns > 0){
+           this.turns -=1;
+       } else if(this.turns === 0){
+            this.wip = false;
+           this.kind = this.willBe;
+           this.turns = false;
+           this.diggable = this.willBeDiggable;
+       }
+       if(this.exists){
+            this.age += 1;
+       }
+    };
 
     this.prepare = function(){
         if (!prepared && !this.wip && this.diggable){
@@ -68,7 +87,7 @@ function Terrain() {
     };
 
     this.mine = function(x,y,lowerTile){
-        var wet = true;
+        var wet = false;
         for(var i = 0; i<6;i++){
                 if(wetTest(adjacent(x,y, i), Game.level)){
                     wet = true;
@@ -101,16 +120,6 @@ function Terrain() {
         }
         //TODO: get the resoures from the recycled building if I can...
     };
-    this.nextTurn = function(){
-       if (this.turns > 0){
-           this.turns -=1;
-       } else if(this.turns === 0){
-            this.wip = false;
-           this.kind = this.willBe;
-           this.turns = false;
-           this.diggable = this.willBeDiggable;
-       }
-    };
 
     function eta(baseTurns, kind){
         //calculates the turns necessary to do something on this terrain
@@ -122,6 +131,18 @@ function Terrain() {
             return baseTurns;
         }
     };
+
+    this.build = function(building, health, turns) {
+        if (this.kind === 3){
+            this.kind = 8; //TODO: replace with a construction animation
+            this.willBe = building;
+            this.health = health; //health of building
+            this.turns = turns;
+            this.exists = true;
+            this.age = 0;
+        }
+    };
+
 }
 /*
 function Building() {
@@ -795,6 +816,10 @@ function clicked() {
         case 'recycler':
             tile.recycle();
             //TODO: add recycle code
+            break;
+        case 'connector':
+            tile.build(7,20,1); //TODO: change this to a real connector...
+            break;
         default:
             break;
     }
@@ -825,7 +850,9 @@ function construct(id) {
             case 'recycle':
                 document.body.style.cursor="url('images/recycle.png'), default";
                 break;
-
+            case 'connector':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
         }
     }
 }
