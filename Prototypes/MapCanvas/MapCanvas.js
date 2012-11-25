@@ -58,6 +58,7 @@ function Terrain() {
             this.willBe = 3;
             this.robotInUse = 0;
             Game.robots[0][0] +=1;
+            document.getElementById('dozerCount').style.height = ((Game.robots[0][1]-Game.robots[0][0])/Game.robots[0][1])*100 + '%';
         }else {
             notify("You can't prepare this terrain...");
         }
@@ -72,6 +73,7 @@ function Terrain() {
             Game.robots[1][0]+=1;
             this.robotInUse = 1;
             this.digCavern(x,y,lowerTile,Game.level + 1,true,1000);
+            document.getElementById('diggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
         } else {
             notify("Can't dig here...");
         }
@@ -93,6 +95,7 @@ function Terrain() {
         if(level > 0 && !wetTest([y,x], level) && nearWall && !tile.wip && Game.robots[1][0] < Game.robots[1][1] && !this.exists){
             Game.robots[1][0]+=1;
             tile.robotInUse = 1;
+            document.getElementById('cavernDiggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
             willBe >= 0 ? tile.willBe=willBe : tile.willBe = willBe+5; //this is for if we try to do it on prepared terrain
             tile.wip = true;
             tile.turns = eta(2, this.kind);
@@ -122,6 +125,7 @@ function Terrain() {
         if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable && Game.robots[2][0] < Game.robots[2][1]){
             Game.robots[2][0] += 1;
             this.robotInUse = 2;
+            document.getElementById('minerCount').style.height = ((Game.robots[2][1]-Game.robots[2][0])/Game.robots[2][1])*100 + '%';
             this.turns = eta(5, this.kind);
             this.kind=10;
             this.wip = true;
@@ -145,6 +149,7 @@ function Terrain() {
             this.willBe = 3;
             Game.robots[3][0] +=1;
             this.robotInUse = 3;
+            document.getElementById('recyclerCount').style.height = ((Game.robots[3][1]-Game.robots[3][0])/Game.robots[3][1])*100 + '%';
         } else {
             notify("You can't recycle this...");
         }
@@ -341,6 +346,7 @@ function nextTurn(){
     Game.turnNum.innerHTML = "Week: " + Game.turn;
     document.getElementById('dozerCount').style.height = ((Game.robots[0][1]-Game.robots[0][0])/Game.robots[0][1])*100 + '%';
     document.getElementById('diggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
+    document.getElementById('cavernDiggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
     document.getElementById('minerCount').style.height = ((Game.robots[2][1]-Game.robots[2][0])/Game.robots[2][1])*100 + '%';
     document.getElementById('recyclerCount').style.height = ((Game.robots[3][1]-Game.robots[3][0])/Game.robots[3][1])*100 + '%';
     //The following hold code just prevents accidentally skipping two turns with accidental clicks...
