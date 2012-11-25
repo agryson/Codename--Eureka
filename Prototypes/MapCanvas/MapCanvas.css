@@ -241,6 +241,7 @@ button:active{
 }
 
 .menuItem {
+    position: relative;
     display: table;
     width: 100%;
     padding: 10px;
@@ -248,6 +249,17 @@ button:active{
     color: #FFF;    
     box-shadow: inset 0 0 3px 1px #138A0c;
     cursor:url(images/build.png),auto; 
+}
+
+.botThumb{
+    position: absolute;
+    display: table-cell;
+    margin: 5px;
+    bottom: 0;
+    right: 10px;
+    width: 5px;
+    height: 100%;
+    background: green;
 }
 
 .building{
@@ -262,7 +274,7 @@ button:active{
 }
 
 .itemImage {
-    position: table;
+    display: table-cell;
     vertical-align: middle;
     margin: 10px;
 }

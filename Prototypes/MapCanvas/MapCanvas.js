@@ -119,9 +119,9 @@ function Terrain() {
                     wet = true;
                 }
             }
-        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable && Game.robots[3][0] < Game.robots[3][1]){
-            Game.robots[3][0] += 1;
-            this.robotInUse = 3;
+        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable && Game.robots[2][0] < Game.robots[2][1]){
+            Game.robots[2][0] += 1;
+            this.robotInUse = 2;
             this.turns = eta(5, this.kind);
             this.kind=10;
             this.wip = true;
@@ -138,13 +138,13 @@ function Terrain() {
     };
 
     this.recycle = function(){
-        if(!wip && this.kind !== 4 && Game.robots[2][0] < Game.robots[2][1]){
+        if(!wip && this.kind !== 4 && Game.robots[3][0] < Game.robots[3][1]){
             this.turns = eta(3, this.kind);
             this.kind=11;
             this.wip = true;
             this.willBe = 3;
-            Game.robots[2][0] +=1;
-            this.robotInUse = 2;
+            Game.robots[3][0] +=1;
+            this.robotInUse = 3;
         } else {
             notify("You can't recycle this...");
         }
@@ -243,7 +243,7 @@ function Param(){
     this.map3 = [];
     this.map4 = [];    
     this.buildings = ['agri','arp','command','connector','clichy','research', 'store', 'warehouse', 'hab', 'workshop', 'commarray', 'genfab', 'oreproc'];
-    this.robots = [[0,5], [0,3], [0,1],[0,1]];//number of drones: dozer/digger/recycler/miner [current/max]
+    this.robots = [[0,5], [0,3], [0,1],[0,1]];//number of drones: dozer/digger/miner/recycler [current/max]
     
     //Map generation vars
     this.seeder = '';
@@ -339,6 +339,10 @@ function nextTurn(){
     }
     drawRadar();
     Game.turnNum.innerHTML = "Week: " + Game.turn;
+    document.getElementById('dozerCount').style.height = ((Game.robots[0][1]-Game.robots[0][0])/Game.robots[0][1])*100 + '%';
+    document.getElementById('diggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
+    document.getElementById('minerCount').style.height = ((Game.robots[2][1]-Game.robots[2][0])/Game.robots[2][1])*100 + '%';
+    document.getElementById('recyclerCount').style.height = ((Game.robots[3][1]-Game.robots[3][0])/Game.robots[3][1])*100 + '%';
     //The following hold code just prevents accidentally skipping two turns with accidental clicks...
     document.getElementById('turn').disabled = true;
     setTimeout(function(){document.getElementById('turn').disabled = false},300);
