@@ -6,6 +6,7 @@ var Game;                                                                       
 function Terrain() {
     this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
     this.altitude; //altitude
+    this.UG;
     this.resources; //an array that holds the different metal and resource kinds
     this.turns;  //remembers how many turns are left to become a tile of the desired kind
     this.diggable;
@@ -26,7 +27,16 @@ function Terrain() {
             this.turns = false;
             this.wip = false;
             this.kind=3; //terrain is prepared before putting anythign else on it...
-            this.willBe !== 1000 ? this.kind = this.willBe : this.build(7,50,2);//obviously building an airshaft here...
+            switch(this.willBe){
+                case 1000:
+                    this.build(6,50,2);//obviously building an airshaft here...
+                    break;
+                case 1100:
+                    this.build(6,80,2);//obviously building a mine...
+                    break;
+                default:
+                    this.kind = this.willBe;
+            }
             this.diggable = this.willBeDiggable;
        }
        if(this.exists){
@@ -47,13 +57,13 @@ function Terrain() {
 
     this.digDown = function(x,y,lowerTile){
 
-        if(Game.level < 4 && !wetTest([y,x], Game.level+1) && lowerTile.kind !== 4){
+        if(Game.level < 4 && !wetTest([y,x], Game.level+1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable){
             this.willBe=1000; //TODO: fix to be a real airlift...
             this.turns = eta(2, this.kind);
             this.kind=9;
             this.digCavern(x,y,lowerTile,Game.level + 1,true,1000);
         } else {
-            notify("FLOOD WARNING!!!");
+            notify("Can't dig here...");
         }
     };
 
@@ -68,8 +78,9 @@ function Terrain() {
                     nearWall = true;
                 }
             }
-        if(level > 0 && !wetTest([y,x], level) && nearWall){
-            willBe >= 0 ? tile.willBe=willBe : tile.willBe = willBe+5;
+        if(level > 0 && !wetTest([y,x], level) && nearWall && !tile.wip){
+            willBe >= 0 ? tile.willBe=willBe : tile.willBe = willBe+5; //this is for if we try to do it on prepared terrain
+            tile.wip = true;
             tile.turns = eta(2, this.kind);
             tile.kind=9;
             for(var i = 0; i<6;i++){
@@ -98,10 +109,10 @@ function Terrain() {
             this.turns = eta(5, this.kind);
             this.kind=10;
             this.wip = true;
-            this.willBe = 3;
+            this.willBe = 1100;
             lowerTile.turns = eta(5, lowerTile.kind);
             lowerTile.wip = true;
-            lowerTile.willBe = 3;
+            lowerTile.willBe = 1100;
             lowerTile.willBeDiggable = true;
             lowerTile.kind = 10;
         } else {
@@ -136,7 +147,12 @@ function Terrain() {
     this.build = function(building, health, turns) {
         if (this.kind === 3){
             this.kind = 8; //TODO: replace with a construction animation
-            this.willBe = building; //TODO: if underground add 1 and have a different tile for underground ones...
+            if(this.UG){
+                this.willBe = building + 1; //TODO: if underground add 1 and have a different tile for underground ones...
+            }else{
+                this.willBe = building;
+            }
+            this.wip = true;
             this.health = health; //health of building
             this.turns = turns;
             this.exists = true;
@@ -818,11 +834,213 @@ function clicked() {
             tile.recycle();
             //TODO: add recycle code
             break;
+        case 'agri':
+            if(Game.level === 0){
+                tile.build(7,70,2); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'agri2':
+            if(Game.level === 0){
+                tile.build(7,90,3); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'airport':
+            if(Game.level === 0){
+                tile.build(7,60,3); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'arp':
+            tile.build(7,80,2);
+            break;
+        case 'barracks':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,60,3); //TODO: change this to a real connector...
+            }
+            break;
+        case 'civprot':
+            tile.build(7,70,2);
+            break;
+        case 'civprot2':
+            tile.build(7,90,2);
+            break;
+        case 'command':
+            tile.build(7,100,2);
+            break;
+        case 'commarray':
+            if(Game.level === 0){
+                tile.build(7,60,1); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'commarray2':
+            if(Game.level === 0){
+                tile.build(7,80,2); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
         case 'connector':
             tile.build(7,20,1); //TODO: change this to a real connector...
             break;
-        default:
+        case 'dronefab':
+            if(Game.level === 0){
+                tile.build(7,80,4); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
             break;
+        case 'chernobyl':
+            if(Game.level === 0){
+                tile.build(7,70,4); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'tokamak':
+            if(Game.level === 0){
+                tile.build(7,90,5); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'genfab':
+            if(Game.level === 0){
+                tile.build(7,70,3); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'geotherm':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,70,4); //TODO: change this to a real connector...
+            }
+            break;
+        case 'hab':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,70,2); //TODO: change this to a real connector...
+            }
+            break;
+        case 'hab2':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,80,3); //TODO: change this to a real connector...
+            }
+            break;
+        case 'hab3':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,90,4); //TODO: change this to a real connector...
+            }
+            break;
+        case 'er':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,80,3); //TODO: change this to a real connector...
+            }
+            break;
+        case 'nursery':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,70,2); //TODO: change this to a real connector...
+            }
+            break;
+        case 'oreproc':
+            if(Game.level === 0){
+                tile.build(7,80,2); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'rec':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,60,3); //TODO: change this to a real connector...
+            }
+            break;
+        case 'recycler':
+            if(Game.level === 0){
+                tile.build(7,70,2); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'clichy':
+            tile.build(7,30,2);
+            break;
+        case 'research':
+            tile.build(7,80,3);
+            break;
+        case 'research2':
+            tile.build(7,60,4);
+            break;
+        case 'solar':
+            if(Game.level === 0){
+                tile.build(7,30,2); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'space':
+            if(Game.level === 0){
+                tile.build(7,80,5); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'stasis':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,100,4); //TODO: change this to a real connector...
+            }
+            break;
+        case 'store':
+            tile.build(7,40,1);
+            break;
+        case 'uni':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,70,2); //TODO: change this to a real connector...
+            }
+            break;
+        case 'warehouse':
+            tile.build(7,40,1);
+            break;
+        case 'windfarm':
+            if(Game.level === 0){
+                tile.build(7,40,2); //TODO: change this to a real connector...
+            } else {
+                notify('This is a surface construction...');
+            }
+            break;
+        case 'workshop':
+            if(Game.level === 0){
+                notify('This is a sub-surface construction...');
+            } else {
+                tile.build(7,70,3); //TODO: change this to a real connector...
+            }
+            break;
+        default:
+            console.log("I don't recognise that building code...")
     }
     drawZoomMap();
     drawRadar();
@@ -851,9 +1069,114 @@ function construct(id) {
             case 'recycle':
                 document.body.style.cursor="url('images/recycle.png'), default";
                 break;
+            //TODO: Change the pointers below to appropriate icons for the relevant building...
+            case 'agri':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'agri2':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'airport':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'arp':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'barracks':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'civprot':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'civprot2':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'command':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'commarray':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'commarray2':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
             case 'connector':
                 document.body.style.cursor="url('images/build.png'), default";
                 break;
+            case 'dronefab':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'chernobyl':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'tokamak':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'genfab':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'geotherm':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'hab':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'hab2':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'hab3':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'er':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'nursery':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'oreproc':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'rec':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'recycler':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'clichy':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'research':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'research2':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'solar':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'space':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'stasis':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'store':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'uni':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'warehouse':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'windfarm':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            case 'workshop':
+                document.body.style.cursor="url('images/build.png'), default";
+                break;
+            default:
+                console.log("There was a problem finding out which building or drone you wanted...")
         }
     }
 }

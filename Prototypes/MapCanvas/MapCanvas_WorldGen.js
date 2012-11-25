@@ -460,6 +460,7 @@ function setType(x,y,level) {
       map.kind = 4;
   }
   level === 0 && map.kind !== 4 ? map.diggable = true : map.diggable = false;
+  level === 0 ? map.UG = false : map.UG = true;
 }
 
 /*sets the resources appropriately for the terrain type at x,y*/
