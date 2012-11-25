@@ -72,6 +72,9 @@ function getSeed(newGame) {
   var input = document.getElementById('seed').value;
   var popup = document.getElementById("popupContainer");
   var seedString = '';
+  document.getElementById('login').disabled = true;
+  document.getElementById('newSession').disabled = true;
+  console.log('called getSeed');
   if (!newGame && input !=='') {//If I've entered a seed
     console.log('called');
     input = input.split(' ').join('');
@@ -83,7 +86,8 @@ function getSeed(newGame) {
     Game.seeder = seedString;
   } else if (!newGame && input ==='') {
     alert('Please enter your dashboard password or start a new session...');
-    seedcheck = false;
+    document.getElementById('login').disabled = false;
+    document.getElementById('newSession').disabled = false;
   } else if(newGame){
     Game.seeder = new Date().getTime();
   }

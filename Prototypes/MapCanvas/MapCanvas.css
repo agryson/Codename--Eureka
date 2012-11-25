@@ -9,6 +9,19 @@ body, html {
 
 button {
     cursor:url(images/pointer.png),auto;
+    background-color: rgba(100,100,100,0.6);
+    color: #8F8F8F;
+    border-radius: 5px;
+    border: none;
+    height: 3em;
+    box-shadow: 1px 1px 3px 1px #000;
+}
+
+button:hover{
+    box-shadow: 0 0 3px 0 white;
+}
+button:active{
+    box-shadow: inset 1px 1px 3px 1px #090909, 1px 1px 1px 0 white;
 }
 
 .itemText, #notifications, .info, .action, #turnNumber, .start-button, #mainTitle, #loadMessage {
@@ -140,12 +153,6 @@ button {
 
 .start-button {
     width: 110px;
-    background-color: rgba(100,100,100,0.6);
-    color: #8F8F8F;
-    border-radius: 5px;
-    border: none;
-    height: 3em;
-    box-shadow: 1px 1px 3px 1px #000;
     margin-left: auto;
     margin-right: auto;
 }
@@ -171,7 +178,6 @@ button {
     width: 220px;
     margin-left: auto;
     margin-right: auto;
-    -webkit-transition: height, 1s ease;
 }
 
 #thumb {
@@ -179,9 +185,10 @@ button {
     height: 100%;
     width: 0%;
     max-width: 100%;
-    background: #0F6F0F;
+    background: #2ACC18;
     border-radius: 3px;
-    box-shadow: inset -1px -1px 2px 1px #2C4C2C, inset 1px 1px 2px 1px #CFCFCF;
+    background: -webkit-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
+    box-shadow: 0 0 5px 0 white;
     -webkit-transition: width, 1s;
 }
 
@@ -312,19 +319,24 @@ button {
 }
 /*        ******      Global Actions    ******      */
 .info {
-    min-width: 50px;
-    padding: 4px;
-    border-radius: 10px;
-    background: #1661f7;
-    border-color: #191919;
+    background: rgba(24,135,204,0.5);
+    height: 2.5em;
+    color: black;
+    text-shadow: 1px 1px 1px #999999;
+}
+.info:hover{
+    background: rgba(24,135,204,1);
+
 }
 
 .action {
-    min-width: 50px;
-    padding: 4px;
-    border-radius: 10px;
-    background: #138A0C;
-    border-color: #191919;
+    background: rgba(24,204,60,0.5);
+    height: 2.5em;
+    color: black;
+    text-shadow: 1px 1px 1px #999999;
+}
+.action:hover{
+    background: rgba(24,204,60,1);
 }
 
 #globalActions {
@@ -333,7 +345,8 @@ button {
     bottom: 0;
     min-height: 100px;
     min-width: 350px;
-    background: #191919;
+    background: #494949;
+    background-image: url(images/pinhole.png);
     box-shadow: 0 0 2px 0 #FFF;
     border-radius: 10px 0 0 0;
 }
