@@ -420,7 +420,7 @@ function pulldown() {
 
 /*the main game loop*/
 function mainLoop() {
-    var N = 0; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
+    var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     Game.animate == N ? Game.animate = 0 : Game.animate += 1;
     drawZoomMap();
     setTimeout(mainLoop, 200);                                                  //set the framerate here
