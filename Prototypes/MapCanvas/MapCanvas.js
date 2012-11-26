@@ -351,38 +351,36 @@ function nextTurn(){
 }
 
 function reCount(which){
-    console.log(((Game.robots[0][1]-Game.robots[0][0])/Game.robots[0][1])*100+'%');
-    console.log('Available: ' + parseInt(Game.robots[0][1]-Game.robots[0][0]));
     switch(which){
         case 'dozer':
             document.getElementById('dozerCount').style.height = ((Game.robots[0][1]-Game.robots[0][0])/Game.robots[0][1])*100 + '%';
-            document.getElementById('dozerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[0][1]-Game.robots[0][0]);
+            document.getElementById('dozerCountNum').innerHTML = 'Available: ' + (Game.robots[0][1]-Game.robots[0][0]);
             break;
         case 'digger':
             document.getElementById('diggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
             document.getElementById('cavernDiggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
-            document.getElementById('diggerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[1][1]-Game.robots[1][0]);
-            document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[1][1]-Game.robots[1][0]);
+            document.getElementById('diggerCountNum').innerHTML = 'Available: ' + (Game.robots[1][1]-Game.robots[1][0]);
+            document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + (Game.robots[1][1]-Game.robots[1][0]);
             break;
         case 'miner':
             document.getElementById('minerCount').style.height = ((Game.robots[2][1]-Game.robots[2][0])/Game.robots[2][1])*100 + '%';
-            document.getElementById('minerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[2][1]-Game.robots[2][0]);
+            document.getElementById('minerCountNum').innerHTML = 'Available: ' + (Game.robots[2][1]-Game.robots[2][0]);
             break;
         case 'recycler':
             document.getElementById('recyclerCount').style.height = ((Game.robots[3][1]-Game.robots[3][0])/Game.robots[3][1])*100 + '%';
-            document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[3][1]-Game.robots[3][0]);
+            document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + (Game.robots[3][1]-Game.robots[3][0]);
             break;
         case 'all':
             document.getElementById('dozerCount').style.height = ((Game.robots[0][1]-Game.robots[0][0])/Game.robots[0][1])*100 + '%';
-            document.getElementById('dozerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[0][1]-Game.robots[0][0]);
+            document.getElementById('dozerCountNum').innerHTML = 'Available: ' + (Game.robots[0][1]-Game.robots[0][0]);
             document.getElementById('diggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
             document.getElementById('cavernDiggerCount').style.height = ((Game.robots[1][1]-Game.robots[1][0])/Game.robots[1][1])*100 + '%';
-            document.getElementById('diggerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[1][1]-Game.robots[1][0]);
-            document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[1][1]-Game.robots[1][0]);
+            document.getElementById('diggerCountNum').innerHTML = 'Available: ' + (Game.robots[1][1]-Game.robots[1][0]);
+            document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + (Game.robots[1][1]-Game.robots[1][0]);
             document.getElementById('minerCount').style.height = ((Game.robots[2][1]-Game.robots[2][0])/Game.robots[2][1])*100 + '%';
-            document.getElementById('minerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[2][1]-Game.robots[2][0]);
+            document.getElementById('minerCountNum').innerHTML = 'Available: ' + (Game.robots[2][1]-Game.robots[2][0]);
             document.getElementById('recyclerCount').style.height = ((Game.robots[3][1]-Game.robots[3][0])/Game.robots[3][1])*100 + '%';
-            document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + parseInt(Game.robots[3][1]-Game.robots[3][0]);
+            document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + (Game.robots[3][1]-Game.robots[3][0]);
             break;
         default:
             console.log("Wait, I've lost count of the drones...");
