@@ -255,7 +255,7 @@ button:active{
     position: absolute;
     display: table-cell;
     height: 85%;
-    bottom: 0;
+    bottom: 5px;
     right: 10px;
     width: 5px;
     background: #292929;

@@ -420,7 +420,7 @@ function pulldown() {
 
 /*the main game loop*/
 function mainLoop() {
-    var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
+    var N = 0; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     Game.animate == N ? Game.animate = 0 : Game.animate += 1;
     drawZoomMap();
     setTimeout(mainLoop, 200);                                                  //set the framerate here
@@ -697,8 +697,8 @@ function returnLevel(level){
 /*a placeholder to fill in our radar*/
 function drawRadar() {
     var radarPixels = Game.radar.createImageData(Game.radarRad*2, Game.radarRad*2);
-    var surfaceColor = [[212,197,174,255],[201,179,165,255],[211,206,203,255],[0,132,0,255],[108,168,204,255]]; //rgb of terrain 0,1,2,3,4
-    var ugColor = [[112,97,74,255],[101,79,65,255],[111,106,103,255],[0,32,0,255],[8,68,104,155]]; //rgb of terrain 0,1,2,3,4
+    var surfaceColor = [[212,197,174,255],[201,179,165,255],[211,206,203,255],[0,132,0,255],[108,168,204,255]]; //rgba of terrain 0,1,2,3,4
+    var ugColor = [[112,97,74,255],[101,79,65,255],[111,106,103,255],[0,32,0,255],[8,68,104,155]]; //rgba of terrain 0,1,2,3,4
     var other = [0,180,0,255];
 
     for (var x = 0; x < radarPixels.width; x++)  {
@@ -898,7 +898,7 @@ function clicked() {
             tile.build(7,90,2);
             break;
         case 'command':
-            tile.build(7,100,2);
+            tile.build(14,100,2);
             break;
         case 'commarray':
             if(Game.level === 0){
@@ -915,7 +915,7 @@ function clicked() {
             }
             break;
         case 'connector':
-            tile.build(7,20,1); //TODO: change this to a real connector...
+            tile.build(12,20,1);
             break;
         case 'dronefab':
             if(Game.level === 0){
