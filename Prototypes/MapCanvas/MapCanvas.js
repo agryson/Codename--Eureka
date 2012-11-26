@@ -697,6 +697,9 @@ function returnLevel(level){
 /*a placeholder to fill in our radar*/
 function drawRadar() {
     var radarPixels = Game.radar.createImageData(Game.radarRad*2, Game.radarRad*2);
+    var surfaceColor = [[212,197,174,255],[201,179,165,255],[211,206,203,255],[0,132,0,255],[108,168,204,255]]; //rgb of terrain 0,1,2,3,4
+    var ugColor = [[112,97,74,255],[101,79,65,255],[111,106,103,255],[0,32,0,255],[8,68,104,155]]; //rgb of terrain 0,1,2,3,4
+    var other = [0,180,0,255];
 
     for (var x = 0; x < radarPixels.width; x++)  {
         for (var y = 0; y < radarPixels.height; y++)  {
@@ -705,53 +708,15 @@ function drawRadar() {
                 // Index of the pixel in the array
                 var idx = (x + y * radarPixels.width) * 4;
                 var kind = returnLevel(Game.level)[y][x][1].kind;
-                switch(kind) {
-                    case 0:
-                    case 5:
-                        radarPixels.data[idx + 0] = 212;
-                        radarPixels.data[idx + 1] = 197;
-                        radarPixels.data[idx + 2] = 174;
-                        radarPixels.data[idx + 3] = 255;
-                        break;
-                    case 1:
-                    case 6:
-                        radarPixels.data[idx + 0] = 201;
-                        radarPixels.data[idx + 1] = 179;
-                        radarPixels.data[idx + 2] = 165;
-                        radarPixels.data[idx + 3] = 255;
-                        break;
-                    case 2:
-                    case 7:
-                        radarPixels.data[idx + 0] = 211;
-                        radarPixels.data[idx + 1] = 206;
-                        radarPixels.data[idx + 2] = 203;
-                        radarPixels.data[idx + 3] = 255;
-                        break;
-                    case 3:
-                        radarPixels.data[idx + 0] = 0;
-                        radarPixels.data[idx + 1] = 132;
-                        radarPixels.data[idx + 2] = 0;
-                        radarPixels.data[idx + 3] = 255;
-                        break;
-                    case 4:
-                        radarPixels.data[idx + 0] = 108;
-                        radarPixels.data[idx + 1] = 168;
-                        radarPixels.data[idx + 2] = 204;
-                        radarPixels.data[idx + 3] = 255;
-                        break;
-                    default:
-                        //If we're here, we're probably dealing with a building or robot...
-                        radarPixels.data[idx + 0] = 0;
-                        radarPixels.data[idx + 1] = 180;
-                        radarPixels.data[idx + 2] = 0;
-                        radarPixels.data[idx + 3] = 255;
-                }
-                //This should darken pixels the deeper we go underground...
-                for(var i=0; i<3; i++){
-                    if(Game.level > 0 && kind < 8){
-                        radarPixels.data[idx + i] - 100 >= 0 ? radarPixels.data[idx + i] -= 100 : radarPixels.data[idx + i] = 0;
-                    }else{
-                        //radarPixels.data[idx + i] += 0;//leave as is...
+                for(var i=0; i<4;i++){
+                    if(kind<4 && kind>=0){
+                        radarPixels.data[idx + i] = surfaceColor[kind][i];
+                    }else if(kind>4 && kind<8){
+                        radarPixels.data[idx + i] = ugColor[kind-5][i];
+                    } else if (kind === 4) {
+                        Game.level !== 0 ? radarPixels.data[idx + i] = ugColor[4][i] : radarPixels.data[idx + i] = surfaceColor[4][i];
+                    } else {
+                        radarPixels.data[idx + i] = other[i];
                     }
                 }
             }
