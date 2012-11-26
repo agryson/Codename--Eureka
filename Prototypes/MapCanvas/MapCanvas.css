@@ -375,6 +375,7 @@ button:active{
     background-image: url(images/pinhole.png);
     box-shadow: 0 0 2px 0 #FFF;
     border-radius: 10px 0 0 0;
+    cursor:url(images/pointer.png),auto;
 }
 
 #save {
