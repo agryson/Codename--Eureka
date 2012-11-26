@@ -234,7 +234,7 @@ function Param(){
     this.tile.src = 'images/tiles.png'; 
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
-    this.clickedOn = false;
+    this.clickedOn = 'none';
     this.level = 0;
     this.mouseX;
     this.mouseY;
@@ -1110,9 +1110,12 @@ function clicked() {
 function construct(id) {
     //When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
     if (Game.clickedOn === id) {
+        document.getElementById(Game.clickedOn).style.background = '#000';
         Game.clickedOn = 'none';
         document.body.style.cursor="url('images/pointer.png'), default";
     } else {
+        if(Game.clickedOn !== 'none'){document.getElementById(Game.clickedOn).style.background = '#000';}
+        document.getElementById(id).style.background = '#393939';
         Game.clickedOn = id;
         switch(id){
             case 'dozer':
