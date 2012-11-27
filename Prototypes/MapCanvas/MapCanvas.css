@@ -119,7 +119,6 @@ button:active {
     min-width: 1024px;
     background: #193619;
     background-image: url('images/texture.png');
-
     -webkit-box-shadow: inset 0 0 300px -20px #000;
     box-shadow: inset 0 0 300px -20px #000;
     z-index: 100;
