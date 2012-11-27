@@ -84,7 +84,7 @@ function Terrain() {
         var nearWall = nearWallKnown;
         var adj;
         var free;
-
+//testing git plugin
         for(var i = 0; i<6;i++){
                 adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
                 if(adj.diggable){
@@ -95,11 +95,11 @@ function Terrain() {
             Game.robots[1][0]+=1;
             tile.robotInUse = 1;
             reCount('digger');
-            willBe >= 0 ? tile.willBe=willBe : tile.willBe = willBe+5; //this is for if we try to do it on prepared terrain
+            willBe >= 0 ? tile.willBe = willBe : tile.willBe = willBe + 5; //this is for if we try to do it on prepared terrain
             tile.wip = true;
             tile.turns = eta(2, this.kind);
             tile.kind=9;
-            for(var i = 0; i<6;i++){
+            for(var i = 0; i < 6; i++) {
                 adj = returnLevel(level)[adjacent(x,y, i)[0]][adjacent(x,y, i)[1]][1];
                 if(adj.kind !== 4 && !wetTest(adjacent(x,y, i), level) && !adj.diggable && !adj.wip && adj.kind>4 && !adj.exists){
                     adj.turns = eta(2, adj.kind);
