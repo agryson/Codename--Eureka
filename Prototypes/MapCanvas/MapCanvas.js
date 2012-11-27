@@ -1,4 +1,3 @@
-//TODO: clean up variable names
 "use strict";                                                                   //this will break everything if there's any errors... that's a good thing
 var Game;                                                                       //Global so I can get at it from other scripts...
 //CONSTRUCTORS**********************************************************************************************
@@ -184,25 +183,7 @@ function Terrain() {
     };
 
 }
-/*
-function Building() {
-    this.kind; //kind of building
-    this.health = 100; //health of building
-    this.air = false; //boolean, does building have air?
-    this.age = 0;
-    this.nextTurn = function(){
-      //placeholder  
-    };
-}
 
-function Robot(name, kind) {
-    this.name = name; //the robot's name/number so we can keep track of which robot is doing what
-    this.kind = kind; //kind of robot 0=dozer, 1 = miner ...
-    this.health = 100;
-    this.busy = false; //is the robot currently working or not
-    this.position = new Array(2); //position in x,y coordinates
-}
-*/
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 /*Set up any global stuff that won't ever change after page load*/
 function Param(){
@@ -231,7 +212,7 @@ function Param(){
     this.retY = this.radarRad;
     this.animate=0;
     this.tile = new Image();
-    this.tile.src = 'images/tiles.png'; 
+    this.tile.src = 'images/tiles.png';
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
     this.clickedOn = 'none';
