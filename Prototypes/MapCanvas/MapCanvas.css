@@ -1,35 +1,43 @@
 /*        ******      General Page Style    ******      */
-body, html {
+body,html {
     background: #191919;
     height: 100%;
     margin: 0;
-    cursor:url(images/pointer.png),auto;
+    cursor: url(images/pointer.png),auto;
     -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 button {
-    cursor:url(images/pointer.png),auto;
+    cursor: url(images/pointer.png),auto;
     background-color: rgba(100,100,100,0.6);
     color: #8F8F8F;
     border-radius: 5px;
     border: none;
     height: 3em;
+
+    -webkit-box-shadow: 1px 1px 3px 1px #000;
     box-shadow: 1px 1px 3px 1px #000;
 }
 
-button:hover{
+button:hover {
+    -webkit-box-shadow: 0 0 3px 0 white;
     box-shadow: 0 0 3px 0 white;
 }
-button:active{
+
+button:active {
+    -webkit-box-shadow: inset 1px 1px 3px 1px #090909, 1px 1px 1px 0 white;
     box-shadow: inset 1px 1px 3px 1px #090909, 1px 1px 1px 0 white;
 }
 
-.itemText, #notifications, .info, .action, #turnNumber, .start-button, #mainTitle, #loadMessage, .botCountNum {
+.itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitle,#loadMessage,.botCountNum {
     font-family: Arial, sans-serif;
     font-weight: bold;
 }
 
-#mainPanel, #mPanOverlay {
+#mainPanel,#mPanOverlay {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -37,7 +45,7 @@ button:active{
     margin-left: -350px;
 }
 
-#map, #mapOverlay {
+#map,#mapOverlay {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -62,26 +70,26 @@ button:active{
     top: 160px;
     right: 170px;
     z-index: 1;
-    cursor:url(images/vertResize.png),auto;
+    cursor: url(images/vertResize.png),auto;
 }
 
 #slider::-webkit-slider-thumb {
     -webkit-appearance: none !important;
-    background:#AFAFAF;
+    background: #AFAFAF;
     border-radius: 5px;
-    height:15px;
-    width:50px;
+    height: 15px;
+    width: 50px;
+
+    -webkit-box-shadow: inset -1px 1px 0 2px #8C8C8C;
     box-shadow: inset -1px 1px 0 2px #8C8C8C;
 }
-    
 
 ::selection {
     background-color: transparent;
 }
 
 /*        ******      Loading Screen    ******      */
-
-#mainTitle{
+#mainTitle {
     font-size: 50px;
     color: #1F1F1F;
     text-shadow: 1px 1px 2px #6F6F6F, -1px -1px 1px #000;
@@ -111,10 +119,18 @@ button:active{
     min-width: 1024px;
     background: #193619;
     background-image: url('images/texture.png');
+
+    -webkit-box-shadow: inset 0 0 300px -20px #000;
     box-shadow: inset 0 0 300px -20px #000;
     z-index: 100;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: alpha(opacity=100);
     opacity: 1;
     -webkit-transition: opacity 1s ease;
+    -moz-transition: opacity 1s ease;
+    -o-transition: opacity 1s ease;
+    -ms-transition: opacity 1s ease;
+    transition: opacity 1s ease;
 }
 
 .popup {
@@ -126,11 +142,13 @@ button:active{
     border-radius: 10px;
     background-color: #262626;
     background-image: url('images/pinhole.png');
+
+    -webkit-box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     z-index: 101;
 }
-    
-#seed{
+
+#seed {
     position: relative;
     top: 25%;
     display: block;
@@ -140,21 +158,23 @@ button:active{
     background: #191919;
     color: #8F8F8F;
     border: none;
+
+    -webkit-box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     margin-left: auto;
     margin-right: auto;
     padding-left: 1em;
     padding-right: 1em;
-    cursor:url(images/text.png),auto;
+    cursor: url(images/text.png),auto;
 }
 
 #seed:focus {
+    -webkit-box-shadow: 1px 1px 2px 0 #FFF, 0 0 10px -1px #FFF;
     box-shadow: 1px 1px 2px 0 #FFF, 0 0 10px -1px #FFF;
     outline: none;
-
 }
 
-#seed::-webkit-input-placeholder{
+#seed::-webkit-input-placeholder {
     color: #494949;
     text-align: center;
 }
@@ -165,7 +185,7 @@ button:active{
     margin-right: auto;
 }
 
-#buttonContainer{
+#buttonContainer {
     position: relative;
     top: 25%;
     text-align: center;
@@ -181,7 +201,9 @@ button:active{
     background: #1F1F1F;
     display: block;
     border-radius: 10px;
-    box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010; 
+
+    -webkit-box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
+    box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     height: 0;
     width: 220px;
     margin-left: auto;
@@ -189,20 +211,30 @@ button:active{
 }
 
 #thumb {
-    float:left;
+    float: left;
     height: 100%;
     width: 0%;
     max-width: 100%;
     background: #2ACC18;
     border-radius: 3px;
+
     background: -webkit-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
+    background: -moz-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
+    background: -o-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
+    background: -ms-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
+    background: linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
+
+    -webkit-box-shadow: 0 0 5px 0 white;
     box-shadow: 0 0 5px 0 white;
+
     -webkit-transition: width, 1s;
+    -moz-transition: width, 1s;
+    -o-transition: width, 1s;
+    -ms-transition: width, 1s;
+    transition: width, 1s;
 }
 
-
 /*        ******      Map Context    ******      */
-
 #leftMenu {
     position: relative;
     width: 20%;
@@ -210,6 +242,8 @@ button:active{
     height: 100%;
     overflow: hidden;
     background: #191919;
+
+    -webkit-box-shadow: 0 0 2px 0 #FFF;
     box-shadow: 0 0 2px 0 #FFF;
     z-index: 1;
 }
@@ -221,6 +255,8 @@ button:active{
     width: 100%;
     padding-bottom: 5px;
     background: #191919;
+
+    -ms-overflow-y: scroll;
     overflow-y: scroll;
     z-index: 1;
 }
@@ -231,10 +267,12 @@ button:active{
     width: 100%;
     margin-top: 47.5%;
     border-radius: 5px;
+
+    -webkit-box-shadow: inset -1px -1px 0 2px #000;
     box-shadow: inset -1px -1px 0 2px #000;
     background: #363636;
     z-index: 2;
-    cursor:url(images/vertResize.png),auto; 
+    cursor: url(images/vertResize.png),auto;
 }
 
 #droneContainer {
@@ -245,6 +283,8 @@ button:active{
     padding-top: 20px;
     background: #191919;
     z-index: 1;
+
+    -ms-overflow-y: scroll;
     overflow-y: scroll;
 }
 
@@ -254,12 +294,14 @@ button:active{
     width: 100%;
     padding: 15px;
     background: #000;
-    color: #FFF;    
+    color: #FFF;
+
+    -webkit-box-shadow: inset 0 0 3px 1px #138A0c;
     box-shadow: inset 0 0 3px 1px #138A0c;
-    cursor:url(images/build.png),auto; 
+    cursor: url(images/build.png),auto;
 }
 
-.botCount{
+.botCount {
     position: absolute;
     display: table-cell;
     height: 85%;
@@ -269,7 +311,7 @@ button:active{
     background: #292929;
 }
 
-.botThumb{
+.botThumb {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -277,18 +319,18 @@ button:active{
     background: green;
 }
 
-.botCountNum{
+.botCountNum {
     position: absolute;
     right: 20px;
     bottom: 5px;
     font-size: 12px;
 }
 
-.building{
+.building {
     display: none;
 }
 
-.itemText{
+.itemText {
     display: table-cell;
     width: 100%;
     vertical-align: middle;
@@ -312,10 +354,10 @@ button:active{
 ::-webkit-scrollbar-thumb {
     width: 10px;
     border-radius: 5px;
+
+    -webkit-box-shadow: 0 0 0 5px #363636 inset;
     box-shadow: 0 0 0 5px #363636 inset;
 }
-
-
 
 /*        ******      Exec Dropdown    ******      */
 #execDropDown {
@@ -333,7 +375,12 @@ button:active{
     background-color: #FFFBE5;
     margin: 0 5px 0 5px;
     overflow: hidden;
+
     -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
 #notifications {
@@ -348,9 +395,14 @@ button:active{
     z-index: 2;
     overflow: hidden;
     text-shadow: 1px 1px 1px #00EE00;
-    -webkit-transition: width 0.4s ease-in-out;
 
+    -webkit-transition: width 0.4s ease-in-out;
+    -moz-transition: width 0.4s ease-in-out;
+    -o-transition: width 0.4s ease-in-out;
+    -ms-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
 }
+
 /*        ******      Global Actions    ******      */
 .info {
     background: rgba(24,135,204,0.5);
@@ -358,9 +410,9 @@ button:active{
     color: black;
     text-shadow: 1px 1px 1px #999999;
 }
-.info:hover{
-    background: rgba(24,135,204,1);
 
+.info:hover {
+    background: rgba(24,135,204,1);
 }
 
 .action {
@@ -369,7 +421,8 @@ button:active{
     color: black;
     text-shadow: 1px 1px 1px #999999;
 }
-.action:hover{
+
+.action:hover {
     background: rgba(24,204,60,1);
 }
 
@@ -381,9 +434,11 @@ button:active{
     min-width: 350px;
     background: #494949;
     background-image: url(images/pinhole.png);
+
+    -webkit-box-shadow: 0 0 2px 0 #FFF;
     box-shadow: 0 0 2px 0 #FFF;
     border-radius: 10px 0 0 0;
-    cursor:url(images/pointer.png),auto;
+    cursor: url(images/pointer.png),auto;
 }
 
 #save {

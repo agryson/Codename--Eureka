@@ -1,3 +1,4 @@
+/*jslint node: true */
 "use strict"; //this will break everything if there's any errors... that's a good thing
 var Game; //Global so I can get at it from other scripts...
 //CONSTRUCTORS**********************************************************************************************
@@ -99,9 +100,9 @@ function Terrain() {
             tile.wip = true;
             tile.turns = eta(2, this.kind);
             tile.kind = 9;
-            for(var i = 0; i < 6; i++) {
-                adj = returnLevel(level)[adjacent(x, y, i)[0]][adjacent(x, y, i)[1]][1];
-                if(adj.kind !== 4 && !wetTest(adjacent(x, y, i), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
+            for(var j = 0; j < 6; j++) {
+                adj = returnLevel(level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
+                if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
                     adj.kind = 9;
@@ -164,7 +165,7 @@ function Terrain() {
         } else {
             return baseTurns;
         }
-    };
+    }
 
     this.build = function(building, health, turns) {
         if(this.kind === 3) {
@@ -311,7 +312,7 @@ function randGen(num, min) {
 }
 
 function changeLevel(newLevel) {
-    Game.level = parseInt(newLevel);
+    Game.level = parseInt(newLevel, 10);
     drawRadar();
 }
 
@@ -334,7 +335,7 @@ function nextTurn() {
     //The following hold code just prevents accidentally skipping two turns with accidental clicks...
     document.getElementById('turn').disabled = true;
     setTimeout(function() {
-        document.getElementById('turn').disabled = false
+        document.getElementById('turn').disabled = false;
     }, 300);
 }
 
@@ -432,7 +433,7 @@ function keypressed(e) {
         move('right');
         break;
     case 76:
-        move('level'); //changes level  
+        move('level'); //changes level
         drawRadar();
         break;
     case 48:
@@ -525,6 +526,7 @@ function move(dir) {
     case 'level':
         Game.level == 4 ? Game.level = 0 : Game.level += 1;
         document.getElementById('slider').value = Game.level;
+        break;
     default:
         break;
     }
@@ -569,8 +571,8 @@ function adjacent(x, y, index) {
 //tests if any of the adjacent tiles are wet...
 
 
-function wetTest(yxArray, level) {
-    var yxArray = yxArray.slice(0);
+function wetTest(yxArrayIn, level) {
+    var yxArray = yxArrayIn.slice(0);
     for(var i = 0; i < 6; i++) {
         var tileToTest = returnLevel(level)[adjacent(yxArray[1], yxArray[0], i)[0]][adjacent(yxArray[1], yxArray[0], i)[1]][1];
         if(tileToTest.kind === 4) {
@@ -622,7 +624,7 @@ function getTile(axis) {
             //Are we on the left or right hand side of the top third?
             if(xDiff < 0.5) {
                 left = 0.5 - xDiff; //Adjust to get the opposite length of the 60° internal angle
-                if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) { //I multiply by 10 so that I'm not dealing with numbers less than 1 
+                if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) { //I multiply by 10 so that I'm not dealing with numbers less than 1
                     y -= 1; //change the reference appropriately
                 }
             } else { //rinse repeat for all cases
@@ -744,14 +746,14 @@ function drawRadar() {
 function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     try {
         if(tilePosX < Game.zoomMap[tilePosY][0] || tilePosX >= Game.zoomMap[tilePosY][1]) {
-            //this if checks to make sure we requested a tile we can draw, 
+            //this if checks to make sure we requested a tile we can draw,
             //mainly to prevent highlighting outside of the map
         } else {
             var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
             sourceWidth = 173; //original tile width
             sourceHeight = 200; //original tile height
             destinationWidth = 60; //tile width on zoomMap... If I want 13 tiles across... for s=35
-            destinationHeight = 70; //tile height on zoomMap                                                 
+            destinationHeight = 70; //tile height on zoomMap
             destinationY = Math.floor(tilePosY * destinationWidth * 0.86); //shift it, the number here is a constant that depends ont eh hexagon deformation
             if(tilePosY % 2 === 0) { //if the row is even...
                 destinationX = Math.floor(tilePosX * destinationWidth); //we set its X normally
@@ -1072,7 +1074,7 @@ function clicked() {
         }
         break;
     default:
-        console.log("I don't recognise that building code...")
+        console.log("I don't recognise that building code...");
     }
     drawZoomMap();
     drawRadar();
@@ -1213,7 +1215,7 @@ function construct(id) {
             document.body.style.cursor = "url('images/build.png'), default";
             break;
         default:
-            console.log("There was a problem finding out which building or drone you wanted...")
+            console.log("There was a problem finding out which building or drone you wanted...");
         }
     }
 }
