@@ -22,6 +22,7 @@ function Terrain() {
     this.air = false;
     this.age = 0;
     this.exists = false; //does the building exist?
+
     this.nextTurn = function() {
         if(this.turns > 0) {
             this.turns -= 1;
@@ -184,7 +185,6 @@ function Terrain() {
     };
 
 }
-
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 /*Set up any global stuff that won't ever change after page load*/
 
@@ -307,6 +307,7 @@ function overCanvas(bool, which) {
 /*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
 Think of num as the modifier, min as the base
 */
+
 function randGen(num, min) {
     return Math.floor(Math.random() * num) + min;
 }
@@ -408,7 +409,6 @@ function pulldown() {
 }
 
 /*the main game loop*/
-
 function mainLoop() {
     var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     Game.animate == N ? Game.animate = 0 : Game.animate += 1;
@@ -472,13 +472,11 @@ function keypressed(e) {
 }
 
 /*Reads the mouse position*/
-
 function getMousePos(canvas, evt) {
     // get canvas position
     var obj = canvas;
     var top = 0;
     var left = 0;
-
     while(obj && obj.tagName != 'BODY') {
         top += obj.offsetTop;
         left += obj.offsetLeft;
@@ -496,7 +494,6 @@ function getMousePos(canvas, evt) {
 }
 
 /*shifts our reference reticule (if possible), then redraws the map*/
-
 function move(dir) {
     var upY = Game.retY - 2;
     var downY = Game.retY + 2;
@@ -583,7 +580,6 @@ function wetTest(yxArrayIn, level) {
 }
 
 /*returns the distance of the given point from the centrepoint*/
-
 function distance(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
@@ -605,7 +601,6 @@ function randWalk() {
 }
 
 /*Get the tile x or y value for the tile the mouse is currently over*/
-
 function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
 
@@ -660,7 +655,6 @@ function getTile(axis) {
 }
 
 /*When the radar is clicked, moves the map to that location*/
-
 function jump() {
     var x = Game.mouseX;
     var y = Game.mouseY;
@@ -695,7 +689,6 @@ function returnLevel(level) {
 
 //MAPS**********************************************************************************
 /*a placeholder to fill in our radar*/
-
 function drawRadar() {
     var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
     var surfaceColor = [
@@ -787,7 +780,6 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 }
 
 /*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
-
 function drawZoomMap() {
     Game.mPanel.clearRect(0, 0, 720, 720);
     var y, x, end, sourceTile;
@@ -825,7 +817,6 @@ function drawZoomMap() {
 }
 
 /*draws the current location on the small radar map*/
-
 function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
@@ -842,8 +833,6 @@ function drawLoc() {
 
 //TESTING SECTION********************************************************************
 //testing how to write to main map array
-
-
 function clicked() {
     var y = Game.retY + getTile('y') - 5;
     var x = Game.retX + getTile('x') - 5;
