@@ -4,6 +4,9 @@ var Game; //Global so I can get at it from other scripts...
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 
+/**
+ * The main object for a tile, tracking its kind, and state
+ */
 function Terrain() {
     this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
     this.altitude; //altitude
@@ -23,6 +26,10 @@ function Terrain() {
     this.age = 0;
     this.exists = false; //does the building exist?
 
+    /**
+     * Calculates teh next turn for the tile
+     * @return {nothing}
+     */
     this.nextTurn = function() {
         if(this.turns > 0) {
             this.turns -= 1;
@@ -51,6 +58,10 @@ function Terrain() {
         }
     };
 
+    /**
+     * The 'dozing' function does everything necessary when we're dozing that terrain
+     * @return {nothing}
+     */
     this.prepare = function() {
         if(!prepared && !this.wip && this.diggable && Game.robots[0][0] < Game.robots[0][1]) {
             this.turns = eta(2, this.kind);
@@ -65,6 +76,13 @@ function Terrain() {
         }
     };
 
+    /**
+     * The 'dozing' function does everything necessary when we're dozing that terrain
+     * @param  {int} x         X coordinate of tile to dig
+     * @param  {int} y         Y coordiante of teh tile to dig
+     * @param  {Object} lowerTile The tile that is below this one
+     * @return {nothing}
+     */
     this.digDown = function(x, y, lowerTile) {
 
         if(Game.level < 4 && !wetTest([y, x], Game.level + 1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable && Game.robots[1][0] < Game.robots[1][1] - 1) {
@@ -82,6 +100,16 @@ function Terrain() {
 
     /*digCavern takes the x & y coordinates of the clicked upon tile, the level (0-4) you want the cavern built on (to allow for digging down)
     a boolean 'nearWallKnown' (true if digging down, false otherwise) and a willBe tile type so that we can place a building (airshaft) if necessary*/
+    /**
+     * Digs a cavern at the given coordiantes
+     * @param  {int} x             X coordinate
+     * @param  {int} y             Y coordiante
+     * @param  {Object} tile          The tile to dig cavern at
+     * @param  {int} level         What level we are on
+     * @param  {boolean} nearWallKnown Do we know if we're near a wall/water or not?
+     * @param  {int} willBe        The eventual type of this tile
+     * @return {nothing}
+     */
     this.digCavern = function(x, y, tile, level, nearWallKnown, willBe) {
         var nearWall = nearWallKnown;
         var adj;
@@ -116,6 +144,13 @@ function Terrain() {
         }
     };
 
+    /**
+     * The 'mining' function does everything necessary when we're mining that terrain
+     * @param  {int} x         X coordinate
+     * @param  {int} y         Y coordiante
+     * @param  {Object} lowerTile The tile below this one
+     * @return {nothing}
+     */
     this.mine = function(x, y, lowerTile) {
         var wet = false;
         for(var i = 0; i < 6; i++) {
@@ -142,6 +177,10 @@ function Terrain() {
         //TODO: get the resoures from this and adjacent tiles...
     };
 
+    /**
+     * The 'recycling' function does everything necessary when we're recycling that terrain
+     * @return {nothing}
+     */
     this.recycle = function() {
         if(!wip && this.kind !== 4 && Game.robots[3][0] < Game.robots[3][1]) {
             this.turns = eta(3, this.kind);
@@ -157,6 +196,12 @@ function Terrain() {
         //TODO: get the resoures from the recycled building if I can...
     };
 
+    /**
+     * Gives teh number of turns necessary to build on a given terrain type
+     * @param  {int} baseTurns The base number of turns taken to do something on that terrain
+     * @param  {int} kind      The kind fo tile we're dealing with
+     * @return {int}
+     */
     function eta(baseTurns, kind) {
         //calculates the turns necessary to do something on this terrain
         if(kind === 1 || kind === 6) {
@@ -168,6 +213,13 @@ function Terrain() {
         }
     }
 
+    /**
+     * The 'building' function does everything necessary when we're building on that terrain
+     * @param  {int} building The building type we want to build
+     * @param  {int} health   the health of that building
+     * @param  {int} turns    The turns it takes to build that building
+     * @return {nothing}
+     */
     this.build = function(building, health, turns) {
         if(this.kind === 3) {
             this.kind = 8; //TODO: replace with a construction animation
@@ -186,8 +238,10 @@ function Terrain() {
 
 }
 //GENERAL SETUP AND TOOLS**********************************************************************************************
-/*Set up any global stuff that won't ever change after page load*/
 
+/**
+ * The main game object
+ */
 function Param() {
     //Radar related vars...
     this.radarRad = 150; //this is the radius of the map that we want, changing it here should change it everywhere except the html
@@ -255,18 +309,32 @@ function Param() {
 
 }
 
+/**
+ * Initialize the game
+ * @return {nothing}
+ */
 function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
 }
 
+/**
+ * Checks which buildings are available to the player and
+ * populates the sidebar with those buildings
+ * @return {nothing}
+ */
 function checkBuildings() {
     for(var i = 0; i < Game.buildings.length; i++) {
         document.getElementById(Game.buildings[i]).style.display = 'table';
     }
 }
 
+/**
+ * Provides notifications to the user
+ * @param  {string} notif The notification to send
+ * @return {nothing}
+ */
 function notify(notif) {
     var notification = document.getElementById('notifications');
     notification.innerHTML = '';
@@ -279,6 +347,12 @@ function notify(notif) {
     }, 2800);
 }
 
+/**
+ * Tracks mouse movements relative to the appopriate canvas
+ * @param  {boolean} bool  Are we on a canvas?
+ * @param  {string} which Canvas are we on?
+ * @return {[type]}
+ */
 function overCanvas(bool, which) {
     /*
      * Event listeners track the mouse movements.
@@ -304,19 +378,29 @@ function overCanvas(bool, which) {
     }
 }
 
-/*returns a random number from 0 to num-1, but the minimum (and maximum) can be offset with min
-Think of num as the modifier, min as the base
-*/
-
+/**
+ * Generates a random number, from a base value
+ * @param  {int} num is the modifier
+ * @param  {int} min is the base value
+ * @return {int}
+ */
 function randGen(num, min) {
     return Math.floor(Math.random() * num) + min;
 }
 
+/**
+ * [changeLevel description]
+ * @param  {int} newLevel the level we whould change to
+ */
 function changeLevel(newLevel) {
     Game.level = parseInt(newLevel, 10);
     drawRadar();
 }
 
+/**
+ * Loops through the tiles, ordering them to calculate their next turn
+ * @return {[type]}
+ */
 function nextTurn() {
     var x;
     var y;
@@ -340,6 +424,11 @@ function nextTurn() {
     }, 300);
 }
 
+/**
+ * Recounts the number of bots available and updates teh counter bars appropriately
+ * @param  {string} which is the type of robot we're dealing with
+ * @return {nothing}
+ */
 function reCount(which) {
     switch(which) {
     case 'dozer':
@@ -377,6 +466,11 @@ function reCount(which) {
     }
 }
 
+/**
+ * resizes the left menus on mouse drag
+ * @param  {boolean} bool check to see if we should be resizing
+ * @return {nothing}
+ */
 function leftMenuResize(bool) {
     if(bool) {
         document.getElementById('leftMenu').onmousemove = resize;
@@ -385,6 +479,11 @@ function leftMenuResize(bool) {
     }
 }
 
+/**
+ * manages the actual values for the resize (see leftMenuResize)
+ * @param  {Object} e 
+ * @return {nothing}
+ */
 function resize(e) {
     var current = e.clientY;
     var total = window.innerHeight;
@@ -399,6 +498,10 @@ function resize(e) {
     document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
 }
 
+/**
+ * Manages the animation for the menu pulldown
+ * @return {nothing}
+ */
 function pulldown() {
     var i = document.getElementById('execDropDownContainer');
     if(parseInt(i.style.height, 10) === 0 || i.style.height === '') {
@@ -409,6 +512,10 @@ function pulldown() {
 }
 
 /*the main game loop*/
+/**
+ * The main game loop
+ * @return {nothing}
+ */
 function mainLoop() {
     var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     Game.animate == N ? Game.animate = 0 : Game.animate += 1;
@@ -417,7 +524,11 @@ function mainLoop() {
 }
 
 /*detect when an arrow key is pressed and move accordingly*/
-
+/**
+ * reacts to keyboard input appropriately
+ * @param  {Object} e 
+ * @return {nothing}
+ */
 function keypressed(e) {
     switch(e.keyCode) {
     case 38:
@@ -471,7 +582,12 @@ function keypressed(e) {
     }
 }
 
-/*Reads the mouse position*/
+/**
+ * Gets the mouse position on the main canvas
+ * @param  {Object} canvas 
+ * @param  {Event} evt
+ * @return {nothing}
+ */
 function getMousePos(canvas, evt) {
     // get canvas position
     var obj = canvas;
@@ -493,7 +609,12 @@ function getMousePos(canvas, evt) {
     }
 }
 
-/*shifts our reference reticule (if possible), then redraws the map*/
+/**
+ * Depending on teh key pressed, changes teh reference reticule
+ *and then redraws the maps and radar
+ * @param  {string} dir is the direction to move
+ * @return {nothing}
+ */
 function move(dir) {
     var upY = Game.retY - 2;
     var downY = Game.retY + 2;
@@ -536,6 +657,14 @@ can do stuff with adjacent hexes
 e.g.
 map[adjacent(x,y,0)[0]][adjacent(x,y,0)[1]][1].kind = 0;
 */
+/**
+ * Returns the adjacent tile reference in y and x (inverted for historical reasons)
+ * @param  {int} x
+ * @param  {int} y
+ * @param  {int} index Which tile are we checking? 0 for top left then count up
+ * clockwise
+ * @return {array}
+ */
 function adjacent(x, y, index) {
     if(y % 2 === 0) {
         index += 6;
@@ -565,9 +694,13 @@ function adjacent(x, y, index) {
         console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
     }
 }
-//tests if any of the adjacent tiles are wet...
 
-
+/**
+ * Checks if any adjacent tiles are wet
+ * @param  {array} yxArrayIn is an array fo teh y & x coordiantes of the tile to test
+ * @param  {int} level provides the level to test on
+ * @return {boolean}
+ */
 function wetTest(yxArrayIn, level) {
     var yxArray = yxArrayIn.slice(0);
     for(var i = 0; i < 6; i++) {
@@ -579,13 +712,21 @@ function wetTest(yxArrayIn, level) {
     return false;
 }
 
-/*returns the distance of the given point from the centrepoint*/
+/**
+ * returns the distance of the given point from the centrepoint
+ * @param  {int} x1
+ * @param  {int} y1
+ * @param  {int} x2
+ * @param  {int} y2
+ * @return {float}  //TODO: Change this to keep working with ints
+ */
 function distance(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
-
-/*Random walk function for "clumpy" randomness*/
-
+/**
+ * Random walk function for "clumpy" randomness
+ * @return {int}
+ */
 function randWalk() {
     var walk = Math.floor(Math.random() * 3);
     switch(walk) {
@@ -601,6 +742,11 @@ function randWalk() {
 }
 
 /*Get the tile x or y value for the tile the mouse is currently over*/
+/**
+ * Gets teh x or y value for the currently moused over tile
+ * @param  {string} axis Which axis are we workign with?
+ * @return {int}
+ */
 function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
 
@@ -654,7 +800,10 @@ function getTile(axis) {
     }
 }
 
-/*When the radar is clicked, moves the map to that location*/
+/**
+ * When the radar is clicked, moves the map to that location
+ * @return {nothing}
+ */
 function jump() {
     var x = Game.mouseX;
     var y = Game.mouseY;
@@ -670,6 +819,11 @@ function jump() {
     }
 }
 
+/**
+ * Returns the map array for the inputted level
+ * @param  {int} level Which level to get the map for
+ * @return {array}
+ */
 function returnLevel(level) {
     switch(level) {
     case 0:
@@ -688,7 +842,10 @@ function returnLevel(level) {
 }
 
 //MAPS**********************************************************************************
-/*a placeholder to fill in our radar*/
+/**
+ * Draws the radar properly
+ * @return {nothing}
+ */
 function drawRadar() {
     var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
     var surfaceColor = [
@@ -734,8 +891,15 @@ function drawRadar() {
     Game.radar.fillText('Depth: ' + Game.level * 50 + 'm', 215, 298);
 }
 
-/*accepts the kind of tile to draw, the x column number and the y column number, then draws it*/
-
+/**
+ * accepts the kind of tile to draw, the x column number and the y column number, then draws it
+ * @param  {int} tileType  type of tile to draw
+ * @param  {int} tilePosX  Tile's x coordinate
+ * @param  {int} tilePosY  Tile's y coordinate
+ * @param  {boolean} highlight Whether or not we should highlight the tile
+ * @param  {boolean} darkness  Whether or not we should darken this tile
+ * @return {nothing}
+ */
 function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     try {
         if(tilePosX < Game.zoomMap[tilePosY][0] || tilePosX >= Game.zoomMap[tilePosY][1]) {
@@ -779,7 +943,10 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     }
 }
 
-/*this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule*/
+/**
+ * this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
+ * @return {nothing}
+ */
 function drawZoomMap() {
     Game.mPanel.clearRect(0, 0, 720, 720);
     var y, x, end, sourceTile;
@@ -816,7 +983,10 @@ function drawZoomMap() {
     }
 }
 
-/*draws the current location on the small radar map*/
+/**
+ * draws the current location on the small radar map
+ * @return {nothing}
+ */
 function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
@@ -830,9 +1000,10 @@ function drawLoc() {
     Game.radarLoc.stroke();
     Game.radarLoc.closePath();
 }
-
-//TESTING SECTION********************************************************************
-//testing how to write to main map array
+/**
+ * Perfomrs the appropriate action for the tile that is clicked upon
+ * @return {nothing}
+ */
 function clicked() {
     var y = Game.retY + getTile('y') - 5;
     var x = Game.retX + getTile('x') - 5;
@@ -1068,9 +1239,12 @@ function clicked() {
     drawZoomMap();
     drawRadar();
 }
-
+/**
+ * When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
+ * @param  {string} id ID of clicked upon menu item
+ * @return {nothing}
+ */
 function construct(id) {
-    //When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
     if(Game.clickedOn === id) {
         document.getElementById(Game.clickedOn).style.background = '#000';
         Game.clickedOn = 'none';
