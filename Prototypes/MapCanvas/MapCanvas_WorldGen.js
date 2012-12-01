@@ -34,8 +34,8 @@ function getSeed(newGame) {
       Game.noise = new ClassicalNoise(Game.rng);
       Game.noise2 = new ClassicalNoise(Game.rng);
       Game.noise3 = new ClassicalNoise(Game.rng);
+      createMap();
     }, 50);
-    setTimeout(createMap, 100);
   }
 }
 
