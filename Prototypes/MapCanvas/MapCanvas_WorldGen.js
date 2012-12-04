@@ -1,7 +1,10 @@
 //WORLD GENERATION****************************************************************
-
+/**
+ * Accepts and parses the seed before passing it to the world generator
+ * @param  {boolean} newGame Is this a new game or not?
+ * @return {nothing}
+ */
 function getSeed(newGame) {
-  //var seedIn = prompt("Welcome to the Colony Management System, Captain", "Please enter your Dashboard Password");
   var input = document.getElementById('seed').value;
   var popup = document.getElementById("popupContainer");
   var seedString = '';
@@ -38,22 +41,34 @@ function getSeed(newGame) {
     }, 50);
   }
 }
-
+/**
+ * Sets altitude according to the world generator results
+ * @param  {int} x     X coordinate for the tie we're getting altitude for
+ * @param  {int} y     Y coordinate for the tile we're gettign altitude for
+ * @param  {int} level What level are we workign on?
+ * @return {int}       The altitude for the tile
+ */
 function altitude(x, y, level) {
   if(level === 0) {
     var gridSize = 75;
     var n = (Game.noise.noise(x / gridSize, y / gridSize, 0) + 1) * 127;
     var n2 = (Game.noise2.noise(x / (gridSize / 2), y / (gridSize / 2), 0) + 1) * 127;
     var n3 = (Game.noise3.noise(x / (gridSize / 4), y / (gridSize / 4), 0) + 1) * 127;
-    //console.log('attempted altitude?');
     return Math.round((n + n2 + n3) / 3);
   } else {
     return Game.map[y][x][1].altitude + level * 5;
   }
 }
-
+/**
+ * A global var for the incrementer function to keep track of where it is
+ * @type {Number}
+ */
 var incrementer = 1;
 
+/**
+ * Increments the loader bar
+ * @return {nothing}
+ */
 function increment() {
   if(incrementer < 6) {
     document.getElementById('thumb').style.width = incrementer * 20 + '%';
@@ -82,7 +97,10 @@ function increment() {
 }
 
 /*creates the map*/
-
+/**
+ * Creates the map Array
+ * @return {nothing}
+ */
 function createMap() {
   var popup = document.getElementById("popupContainer");
   var map = [];
@@ -111,8 +129,6 @@ function createMap() {
   default:
     console.log('There was a problem with creating level... ' + Game.level);
   }
-  console.log('current level: ' + Game.level);
-
 
   for(var y = 0; y < Game.radarRad * 2; y++) {
     map[y] = new Array(Game.radarRad * 2); //create an array to hold the x cell, we now have a 200x200 2d array
@@ -148,8 +164,13 @@ function createMap() {
   }
 }
 
-/*Sets the tile type as a function of altitude*/
 
+/**
+ * Sets the tile type as a function of altitude
+ * @param {int} x     X coordinate of the tile we're at
+ * @param {int} y     Y coordiante of the tile we're at
+ * @param {int} level The Level we're working with
+ */
 function setType(x, y, level) {
   var high = 160;
   var med = 130;
@@ -172,11 +193,18 @@ function setType(x, y, level) {
   level === 0 ? map.UG = false : map.UG = true;
 }
 
-/*sets the resources appropriately for the terrain type at x,y*/
 
+/**
+ * sets the resources appropriately for the terrain type at x,y
+ * @param  {int} x       X coordinate fo rthe tile we're at
+ * @param  {int} y       Y coordiante for the tile we're at
+ * @param  {int} terrain Kind of terrain we're on
+ * @param  {int} level   The level we're working on
+ * @return {nothing}
+ */
 function generateResources(x, y, terrain, level) {
   var map;
-  level ? map = returnLevel(level)[y][x][1] : map = Game.map[y][x][1];
+  level === 0 ? map = returnLevel(level)[y][x][1] : map = Game.map[y][x][1];
 
   switch(terrain) {
   case 0:
