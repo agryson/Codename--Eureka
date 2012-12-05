@@ -8,18 +8,22 @@ var Game; //Global so I can get at it from other scripts...
  * The main object for a tile, tracking its kind, and state
  */
 function Terrain() {
+    /*
     this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
     this.altitude; //altitude
     this.UG;
     this.resources; //an array that holds the different metal and resource kinds
     this.turns; //remembers how many turns are left to become a tile of the desired kind
     this.diggable;
+    */
     var wip = false; //Work in Progress?
     var prepared = false;
     this.willBe = 3;
     this.willBeDiggable = false;
     //robots
+    /*
     this.robotInUse;
+    */
     //buildings
     this.health = 0;
     this.air = false;
@@ -273,9 +277,10 @@ function Param() {
     this.tileHighlight.src = 'images/tools.png';
     this.clickedOn = 'none';
     this.level = 0;
+    /*
     this.mouseX;
     this.mouseY;
-
+    */
     //General game stuff
     this.turnNum = document.getElementById('turnNumber');
     this.turn = 0;
@@ -293,11 +298,12 @@ function Param() {
     ]; //number of drones: dozer/digger/miner/recycler [current/max]
     //Map generation vars
     this.seeder = '';
+    /*
     this.rng;
     this.noise;
     this.noise2;
     this.noise3;
-
+    */
     //General canvas vars...
     this.mPanCanvas = document.getElementById('mPanOverlay');
     this.mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
@@ -305,8 +311,9 @@ function Param() {
     this.radarCanvas = document.getElementById('mapOverlay');
     this.radar = document.getElementById('map').getContext('2d');
     this.radarLoc = document.getElementById('mapOverlay').getContext('2d');
+    /*
     this.overMPan;
-
+    */
 }
 
 /**
