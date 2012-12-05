@@ -488,7 +488,7 @@ function leftMenuResize(bool) {
 
 /**
  * manages the actual values for the resize (see leftMenuResize)
- * @param  {Object} e 
+ * @param  {Object} e
  * @return {nothing}
  */
 function resize(e) {
@@ -533,7 +533,7 @@ function mainLoop() {
 /*detect when an arrow key is pressed and move accordingly*/
 /**
  * reacts to keyboard input appropriately
- * @param  {Object} e 
+ * @param  {Object} e
  * @return {nothing}
  */
 function keypressed(e) {
@@ -591,7 +591,7 @@ function keypressed(e) {
 
 /**
  * Gets the mouse position on the main canvas
- * @param  {Object} canvas 
+ * @param  {Object} canvas
  * @param  {Event} evt
  * @return {nothing}
  */
@@ -1262,6 +1262,7 @@ function construct(id) {
         }
         document.getElementById(id).style.background = '#393939';
         Game.clickedOn = id;
+        /**TODO : Update this to be the primary key listener*/
         switch(id) {
         case 'dozer':
             document.body.style.cursor = "url('images/dozer.png'), default";
