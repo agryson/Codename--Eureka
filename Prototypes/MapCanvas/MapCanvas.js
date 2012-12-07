@@ -44,7 +44,7 @@ function Terrain() {
             }
             this.turns = false;
             this.wip = false;
-            this.kind = 3; //terrain is prepared before putting anythign else on it...
+            this.kind = 3; //terrain is prepared before putting anything else on it...
             switch(this.willBe) {
             case 1000:
                 this.build(6, 50, 2); //obviously building an airshaft here...
@@ -83,7 +83,7 @@ function Terrain() {
     /**
      * The 'dozing' function does everything necessary when we're dozing that terrain
      * @param  {int} x         X coordinate of tile to dig
-     * @param  {int} y         Y coordiante of the tile to dig
+     * @param  {int} y         Y coordinate of the tile to dig
      * @param  {Object} lowerTile The tile that is below this one
      * @return {nothing}
      */
@@ -105,9 +105,9 @@ function Terrain() {
     /*digCavern takes the x & y coordinates of the clicked upon tile, the level (0-4) you want the cavern built on (to allow for digging down)
     a boolean 'nearWallKnown' (true if digging down, false otherwise) and a willBe tile type so that we can place a building (airshaft) if necessary*/
     /**
-     * Digs a cavern at the given coordiantes
+     * Digs a cavern at the given coordinates
      * @param  {int} x             X coordinate
-     * @param  {int} y             Y coordiante
+     * @param  {int} y             Y coordinate
      * @param  {Object} tile          The tile to dig cavern at
      * @param  {int} level         What level we are on
      * @param  {boolean} nearWallKnown Do we know if we're near a wall/water or not?
@@ -151,7 +151,7 @@ function Terrain() {
     /**
      * The 'mining' function does everything necessary when we're mining that terrain
      * @param  {int} x         X coordinate
-     * @param  {int} y         Y coordiante
+     * @param  {int} y         Y coordinate
      * @param  {Object} lowerTile The tile below this one
      * @return {nothing}
      */
@@ -178,7 +178,7 @@ function Terrain() {
         } else {
             notify("You can't mine here...");
         }
-        //TODO: get the resoures from this and adjacent tiles...
+        //TODO: get the resources from this and adjacent tiles...
     };
 
     /**
@@ -197,13 +197,13 @@ function Terrain() {
         } else {
             notify("You can't recycle this...");
         }
-        //TODO: get the resoures from the recycled building if I can...
+        //TODO: get the resources from the recycled building if I can...
     };
 
     /**
      * Gives the number of turns necessary to build on a given terrain type
      * @param  {int} baseTurns The base number of turns taken to do something on that terrain
-     * @param  {int} kind      The kind fo tile we're dealing with
+     * @param  {int} kind      The kind of tile we're dealing with
      * @return {int}
      */
     function eta(baseTurns, kind) {
@@ -704,7 +704,7 @@ function adjacent(x, y, index) {
 
 /**
  * Checks if any adjacent tiles are wet
- * @param  {array} yxArrayIn is an array fo the y & x coordiantes of the tile to test
+ * @param  {array} yxArrayIn is an array of the y & x coordinates of the tile to test
  * @param  {int} level provides the level to test on
  * @return {boolean}
  */
@@ -751,7 +751,7 @@ function randWalk() {
 /*Get the tile x or y value for the tile the mouse is currently over*/
 /**
  * Gets the x or y value for the currently moused over tile
- * @param  {string} axis Which axis are we workign with?
+ * @param  {string} axis Which axis are we working with?
  * @return {int}
  */
 function getTile(axis) {
@@ -1008,7 +1008,7 @@ function drawLoc() {
     Game.radarLoc.closePath();
 }
 /**
- * Perfomrs the appropriate action for the tile that is clicked upon
+ * Performs the appropriate action for the tile that is clicked upon
  * @return {nothing}
  */
 function clicked() {
