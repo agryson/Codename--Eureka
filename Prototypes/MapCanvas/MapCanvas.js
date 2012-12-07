@@ -31,7 +31,7 @@ function Terrain() {
     this.exists = false; //does the building exist?
 
     /**
-     * Calculates teh next turn for the tile
+     * Calculates the next turn for the tile
      * @return {nothing}
      */
     this.nextTurn = function() {
@@ -83,7 +83,7 @@ function Terrain() {
     /**
      * The 'dozing' function does everything necessary when we're dozing that terrain
      * @param  {int} x         X coordinate of tile to dig
-     * @param  {int} y         Y coordiante of teh tile to dig
+     * @param  {int} y         Y coordiante of the tile to dig
      * @param  {Object} lowerTile The tile that is below this one
      * @return {nothing}
      */
@@ -201,7 +201,7 @@ function Terrain() {
     };
 
     /**
-     * Gives teh number of turns necessary to build on a given terrain type
+     * Gives the number of turns necessary to build on a given terrain type
      * @param  {int} baseTurns The base number of turns taken to do something on that terrain
      * @param  {int} kind      The kind fo tile we're dealing with
      * @return {int}
@@ -432,7 +432,7 @@ function nextTurn() {
 }
 
 /**
- * Recounts the number of bots available and updates teh counter bars appropriately
+ * Recounts the number of bots available and updates the counter bars appropriately
  * @param  {string} which is the type of robot we're dealing with
  * @return {nothing}
  */
@@ -617,7 +617,7 @@ function getMousePos(canvas, evt) {
 }
 
 /**
- * Depending on teh key pressed, changes teh reference reticule
+ * Depending on the key pressed, changes the reference reticule
  *and then redraws the maps and radar
  * @param  {string} dir is the direction to move
  * @return {nothing}
@@ -704,7 +704,7 @@ function adjacent(x, y, index) {
 
 /**
  * Checks if any adjacent tiles are wet
- * @param  {array} yxArrayIn is an array fo teh y & x coordiantes of the tile to test
+ * @param  {array} yxArrayIn is an array fo the y & x coordiantes of the tile to test
  * @param  {int} level provides the level to test on
  * @return {boolean}
  */
@@ -750,7 +750,7 @@ function randWalk() {
 
 /*Get the tile x or y value for the tile the mouse is currently over*/
 /**
- * Gets teh x or y value for the currently moused over tile
+ * Gets the x or y value for the currently moused over tile
  * @param  {string} axis Which axis are we workign with?
  * @return {int}
  */
