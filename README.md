@@ -21,12 +21,14 @@ Following licensing is valid for *_HTML_*, *_CSS_* and *_JS_* files _(unless oth
  - dozer.png
  - horiResize.png
  - miner.png
+ - pinhole.png
  - pointer.png
  - recycle.png
  - text.png
- - vertResize.png
  - texture.png
  - tools.png
+ - vertResize.png
+
 
 
   		*****	Licensed under GPL v3.0	*****
