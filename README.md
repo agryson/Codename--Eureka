@@ -13,6 +13,22 @@ This is not just about code, we need creative writers, artists, musical types - 
 Sources:
 Sand texture is heavily modified from a sand texture I found here: http://www.mayang.com/textures/
 
+Following licensing does **NOT** apply to all artwork.
+
+Following licensing is valid for *_HTML_*, *_CSS_* and *_JS_* files _(unless otherwise licensed in the file)_ and specifically listed images:
+ - build.png
+ - digger.png
+ - dozer.png
+ - horiResize.png
+ - miner.png
+ - pointer.png
+ - recycle.png
+ - text.png
+ - vertResize.png
+ - texture.png
+ - tools.png
+
+
   		*****	Licensed under GPL v3.0	*****
 			
 Copyright (C) 2012  Alexander Gryson agryson@gmail.com
