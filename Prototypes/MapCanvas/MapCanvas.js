@@ -1084,13 +1084,12 @@ function drawZoomMap() {
 function classChange(bool, targetID, classString){
     var target = document.getElementById(targetID);
     var targetPresent;
-    target.className.indexOf(' ' + classString) === -1 ? targetPresent = false : targetPresent = true;
-    if((targetPresent && bool) || (!targetPresent && !bool)){
-        //Do Nothing
+    var newClass = ' ' + classString;
+    target.className.indexOf(newClass) === -1 ? targetPresent = false : targetPresent = true;
+    if(targetPresent && !bool){
+        target.className = target.className.replace(newClass, '');
     } else if ((!targetPresent && bool)){
-        target.className += ' ' + classString;
-    } else {
-        target.className = target.className.replace(classString, '');
+        target.className += newClass;
     }
 }
 
