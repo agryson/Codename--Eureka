@@ -810,10 +810,10 @@ function wetTest(yxArrayIn, level) {
  * @param  {int} y1
  * @param  {int} x2
  * @param  {int} y2
- * @return {float}  //TODO: Change this to keep working with ints
+ * @return {float}
  */
 function distance(x1, y1, x2, y2) {
-    return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    return Math.round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
 /**
  * Random walk function for "clumpy" randomness
