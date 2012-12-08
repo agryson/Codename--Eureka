@@ -1107,35 +1107,19 @@ function clicked() {
         //TODO: add recycle code
         break;
     case 'agri':
-        if(Game.level === 0) {
-            tile.build(7, 70, 2); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 70, 2); //TODO: change this to a real connector...
         break;
     case 'agri2':
-        if(Game.level === 0) {
-            tile.build(7, 90, 3); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 90, 3); //TODO: change this to a real connector...
         break;
     case 'airport':
-        if(Game.level === 0) {
-            tile.build(7, 60, 3); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 60, 3); //TODO: change this to a real connector...
         break;
     case 'arp':
         tile.build(7, 80, 2);
         break;
     case 'barracks':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 60, 3); //TODO: change this to a real connector...
-        }
+        tile.build(7, 60, 3); //TODO: change this to a real connector...
         break;
     case 'civprot':
         tile.build(7, 70, 2);
@@ -1147,112 +1131,52 @@ function clicked() {
         tile.build(14, 100, 2);
         break;
     case 'commarray':
-        if(Game.level === 0) {
-            tile.build(7, 60, 1); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 60, 1); //TODO: change this to a real connector...
         break;
     case 'commarray2':
-        if(Game.level === 0) {
-            tile.build(7, 80, 2); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 80, 2); //TODO: change this to a real connector...
         break;
     case 'connector':
         tile.build(12, 20, 1);
         break;
     case 'dronefab':
-        if(Game.level === 0) {
-            tile.build(7, 80, 4); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 80, 4); //TODO: change this to a real connector...
         break;
     case 'chernobyl':
-        if(Game.level === 0) {
-            tile.build(7, 70, 4); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 70, 4); //TODO: change this to a real connector...
         break;
     case 'tokamak':
-        if(Game.level === 0) {
-            tile.build(7, 90, 5); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 90, 5); //TODO: change this to a real connector...
         break;
     case 'genfab':
-        if(Game.level === 0) {
-            tile.build(7, 70, 3); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 70, 3); //TODO: change this to a real connector...
         break;
     case 'geotherm':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 70, 4); //TODO: change this to a real connector...
-        }
+        tile.build(7, 70, 4); //TODO: change this to a real connector...
         break;
     case 'hab':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 70, 2); //TODO: change this to a real connector...
-        }
+        tile.build(7, 70, 2); //TODO: change this to a real connector...
         break;
     case 'hab2':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 80, 3); //TODO: change this to a real connector...
-        }
+        tile.build(7, 80, 3); //TODO: change this to a real connector...
         break;
     case 'hab3':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 90, 4); //TODO: change this to a real connector...
-        }
+        tile.build(7, 90, 4); //TODO: change this to a real connector...
         break;
     case 'er':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 80, 3); //TODO: change this to a real connector...
-        }
+        tile.build(7, 80, 3); //TODO: change this to a real connector...
         break;
     case 'nursery':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 70, 2); //TODO: change this to a real connector...
-        }
+        tile.build(7, 70, 2); //TODO: change this to a real connector...
         break;
     case 'oreproc':
-        if(Game.level === 0) {
-            tile.build(7, 80, 2); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 80, 2); //TODO: change this to a real connector...
         break;
     case 'rec':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 60, 3); //TODO: change this to a real connector...
-        }
+        tile.build(7, 60, 3); //TODO: change this to a real connector...
         break;
     case 'recycler':
-        if(Game.level === 0) {
-            tile.build(7, 70, 2); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 70, 2); //TODO: change this to a real connector...
         break;
     case 'clichy':
         tile.build(7, 30, 2);
@@ -1264,52 +1188,28 @@ function clicked() {
         tile.build(7, 60, 4);
         break;
     case 'solar':
-        if(Game.level === 0) {
-            tile.build(7, 30, 2); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 30, 2); //TODO: change this to a real connector...
         break;
     case 'space':
-        if(Game.level === 0) {
-            tile.build(7, 80, 5); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 80, 5); //TODO: change this to a real connector...
         break;
     case 'stasis':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 100, 4); //TODO: change this to a real connector...
-        }
+        tile.build(7, 100, 4); //TODO: change this to a real connector...
         break;
     case 'store':
         tile.build(7, 40, 1);
         break;
     case 'uni':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 70, 2); //TODO: change this to a real connector...
-        }
+        tile.build(7, 70, 2); //TODO: change this to a real connector...
         break;
     case 'warehouse':
         tile.build(7, 40, 1);
         break;
     case 'windfarm':
-        if(Game.level === 0) {
-            tile.build(7, 40, 2); //TODO: change this to a real connector...
-        } else {
-            notify('This is a surface construction...');
-        }
+        tile.build(7, 40, 2); //TODO: change this to a real connector...
         break;
     case 'workshop':
-        if(Game.level === 0) {
-            notify('This is a sub-surface construction...');
-        } else {
-            tile.build(7, 70, 3); //TODO: change this to a real connector...
-        }
+        tile.build(7, 70, 3); //TODO: change this to a real connector...
         break;
     default:
         console.log("I don't recognise that building code...");
