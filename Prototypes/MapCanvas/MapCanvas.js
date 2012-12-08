@@ -370,9 +370,6 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
-    for(var yoke in Game.buildings){
-        document.getElementById(Game.buildings[yoke][0]).onclick = construct;
-    }
     for(var mebob in Game.robotsList){
         document.getElementById(Game.robotsList[mebob]).onclick = construct;
     }
@@ -395,19 +392,24 @@ function checkBuildings() {
                 case 0:
                     if(Game.level === 0){
                         classChange(true, idString, 'active');
+                        document.getElementById(Game.buildings[thing][0]).onclick = construct;
                     } else {
                         classChange(false, idString, 'active');
+                        document.getElementById(Game.buildings[thing][0]).onclick = null;
                     }
                     break;
                 case 1:
                     if(Game.level > 0){
                         classChange(true, idString, 'active');
+                        document.getElementById(Game.buildings[thing][0]).onclick = construct;
                     } else {
                         classChange(false, idString, 'active');
+                        document.getElementById(Game.buildings[thing][0]).onclick = null;
                     }
                     break;
                 default:
                     classChange(true, idString, 'active');
+                    document.getElementById(Game.buildings[thing][0]).onclick = construct;
             }
         }
     }
