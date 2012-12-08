@@ -294,7 +294,7 @@ button:active {
     width: 100%;
     padding: 15px;
     background: #000;
-    -webkit-filter: grayscale(80%);
+    -webkit-filter: grayscale(80%) blur(1px);
     color: gray;
     -webkit-box-shadow: inset 0 0 3px 1px #138A0c;
     -moz-box-shadow: inset 0 0 3px 1px #138A0c;
@@ -303,7 +303,7 @@ button:active {
 }
 
 .active {
-    -webkit-filter: grayscale(0%);
+    -webkit-filter: grayscale(0%) blur(0px);
     color: #FFF;
     cursor: url(images/build.png),auto;
 }
