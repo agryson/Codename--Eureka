@@ -1014,11 +1014,11 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                 sourceX = 0;
                 sourceY = 0;
                 Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
-            } else if(tileType > 7 && tileType < 12) {
+            } else if(tileType > 7 && tileType < 12) { //animated tiles
                 sourceX = Game.animate * sourceWidth;
                 sourceY = tileType * sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
-            } else if(tileType !== 4) {
+            } else if(tileType <8) { //non-animated tiles
                 sourceX = 0;
                 sourceY = tileType * sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
