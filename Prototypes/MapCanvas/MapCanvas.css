@@ -299,12 +299,13 @@ button:active {
     -webkit-box-shadow: inset 0 0 3px 1px #138A0c;
     -moz-box-shadow: inset 0 0 3px 1px #138A0c;
     box-shadow: inset 0 0 3px 1px #138A0c;
-    cursor: url(images/build.png),auto;
+    cursor: url(images/pointer.png),auto;
 }
 
 .active {
     -webkit-filter: grayscale(0%);
     color: #FFF;
+    cursor: url(images/build.png),auto;
 }
 
 #droneContainer > .menuItem {
