@@ -289,7 +289,53 @@ function Param() {
     this.map2 = [];
     this.map3 = [];
     this.map4 = [];
-    this.buildings = ['agri', 'arp', 'command', 'connector', 'clichy', 'research', 'store', 'warehouse', 'hab', 'workshop', 'commarray', 'genfab', 'oreproc'];
+    //I <3  Sublime Text 2's multiple cursors!!!
+    //TODO: update the final value to reflect whether we can build above or below ground or both
+    //0: surface, 1: subsurface, 2: both
+    this.buildings = [
+        ["agri", true, 0],
+        ["agri2", false, 0],
+        ["airport", false, 0],
+        ["arp", true, 2],
+        ["barracks", false, 1],
+        ["civprot", false, 2],
+        ["civprot2", false, 2],
+        ["command", true, 2],
+        ["commarray", true, 0],
+        ["commarray2", false, 0],
+        ["connector", true, 2],
+        ["dronefab", false, 0],
+        ["chernobyl", false, 0],
+        ["tokamak", false, 0],
+        ["genfab", true, 0],
+        ["geotherm", false, 1],
+        ["hab", true, 1],
+        ["hab2", false, 1],
+        ["hab3", false, 1],
+        ["er", false, 1],
+        ["nursery", false, 1],
+        ["oreproc", true, 0],
+        ["rec", false, 1],
+        ["recycler", false, 0],
+        ["clichy", true, 2],
+        ["research", true, 2],
+        ["research2", false, 2],
+        ["solar", false, 0],
+        ["space", false, 0],
+        ["stasis", false, 1],
+        ["store", true, 2],
+        ["uni", false, 1],
+        ["warehouse", true, 2],
+        ["windfarm", false, 0],
+        ["workshop", true, 1]
+    ];
+    this.robotsList = [
+        'dozer',
+        'digger',
+        'cavernDigger',
+        'miner',
+        'recycler'
+    ];
     this.robots = [
         [0, 5],
         [0, 3],
@@ -324,6 +370,12 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
+    for(var yoke in Game.buildings){
+        document.getElementById(Game.buildings[yoke][0]).onclick = construct;
+    }
+    for(var mebob in Game.robotsList){
+        document.getElementById(Game.robotsList[mebob]).onclick = construct;
+    }
 }
 
 /**
@@ -332,8 +384,20 @@ function init() {
  * @return {nothing}
  */
 function checkBuildings() {
-    for(var i = 0; i < Game.buildings.length; i++) {
-        document.getElementById(Game.buildings[i]).style.display = 'table';
+    for(var thing in Game.buildings) {
+        var elem = document.getElementById(Game.buildings[thing][0]);
+        if(Game.buildings[thing][1]){
+            switch(Game.buildings[thing][2]){
+                case 0:
+                    Game.level === 0 ? elem.style.display = 'table' : elem.style.display = 'none';
+                    break;
+                case 1:
+                    Game.level > 0 ? elem.style.display = 'table' : elem.style.display = 'none';
+                    break;
+                default:
+                    elem.style.display = 'table';
+            }
+        }
     }
 }
 
@@ -395,12 +459,13 @@ function randGen(num, min) {
     return Math.floor(Math.random() * num) + min;
 }
 
-/**
+/**TODO does this ever get called?
  * [changeLevel description]
  * @param  {int} newLevel the level we whould change to
  */
 function changeLevel(newLevel) {
     Game.level = parseInt(newLevel, 10);
+    checkBuildings();
     drawRadar();
 }
 
@@ -556,26 +621,31 @@ function keypressed(e) {
         break;
     case 48:
         Game.level = 0;
+        checkBuildings();
         drawRadar();
         document.getElementById('slider').value = Game.level;
         break;
     case 49:
         Game.level = 1;
+        checkBuildings();
         drawRadar();
         document.getElementById('slider').value = Game.level;
         break;
     case 50:
         Game.level = 2;
+        checkBuildings();
         drawRadar();
         document.getElementById('slider').value = Game.level;
         break;
     case 51:
         Game.level = 3;
+        checkBuildings();
         drawRadar();
         document.getElementById('slider').value = Game.level;
         break;
     case 52:
         Game.level = 4;
+        checkBuildings();
         drawRadar();
         document.getElementById('slider').value = Game.level;
         break;
@@ -650,6 +720,7 @@ function move(dir) {
         break;
     case 'level':
         Game.level == 4 ? Game.level = 0 : Game.level += 1;
+        checkBuildings();
         document.getElementById('slider').value = Game.level;
         break;
     default:
@@ -1251,8 +1322,10 @@ function clicked() {
  * @param  {string} id ID of clicked upon menu item
  * @return {nothing}
  */
-function construct(id) {
-    if(Game.clickedOn === id) {
+function construct() {
+    var identity = this.id;
+    console.log(identity);
+    if(Game.clickedOn === identity) {
         document.getElementById(Game.clickedOn).style.background = '#000';
         Game.clickedOn = 'none';
         document.body.style.cursor = "url('images/pointer.png'), default";
@@ -1260,10 +1333,10 @@ function construct(id) {
         if(Game.clickedOn !== 'none') {
             document.getElementById(Game.clickedOn).style.background = '#000';
         }
-        document.getElementById(id).style.background = '#393939';
-        Game.clickedOn = id;
+        document.getElementById(identity).style.background = '#393939';
+        Game.clickedOn = identity;
         /**TODO : Update this to be the primary key listener*/
-        switch(id) {
+        switch(identity) {
         case 'dozer':
             document.body.style.cursor = "url('images/dozer.png'), default";
             break;
@@ -1276,7 +1349,7 @@ function construct(id) {
         case 'cavernDigger':
             document.body.style.cursor = "url('images/digger.png'), default";
             break;
-        case 'recycle':
+        case 'recycler':
             document.body.style.cursor = "url('images/recycle.png'), default";
             break;
             //TODO: Change the pointers below to appropriate icons for the relevant building...
