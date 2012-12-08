@@ -385,17 +385,29 @@ function init() {
  */
 function checkBuildings() {
     for(var thing in Game.buildings) {
-        var elem = document.getElementById(Game.buildings[thing][0]);
+        var idString = Game.buildings[thing][0];
+        var elem = document.getElementById(idString);
         if(Game.buildings[thing][1]){
+            if(elem.style.display !== 'table'){
+                elem.style.display = 'table';
+            }
             switch(Game.buildings[thing][2]){
                 case 0:
-                    Game.level === 0 ? elem.style.display = 'table' : elem.style.display = 'none';
+                    if(Game.level === 0){
+                        classChange(true, idString, 'active');
+                    } else {
+                        classChange(false, idString, 'active');
+                    }
                     break;
                 case 1:
-                    Game.level > 0 ? elem.style.display = 'table' : elem.style.display = 'none';
+                    if(Game.level > 0){
+                        classChange(true, idString, 'active');
+                    } else {
+                        classChange(false, idString, 'active');
+                    }
                     break;
                 default:
-                    elem.style.display = 'table';
+                    classChange(true, idString, 'active');
             }
         }
     }
@@ -1058,6 +1070,25 @@ function drawZoomMap() {
             }
             x++;
         }
+    }
+}
+/**
+ * appends or removes a  class from an element
+ * @param  {boolean} bool       true if we want to add a class, false if we want to remove it
+ * @param  {string} targetID    ID of target element
+ * @param  {string} classString name of class to add
+ */
+
+function classChange(bool, targetID, classString){
+    var target = document.getElementById(targetID);
+    var targetPresent;
+    target.className.indexOf(' ' + classString) === -1 ? targetPresent = false : targetPresent = true;
+    if((targetPresent && bool) || (!targetPresent && !bool)){
+        //Do Nothing
+    } else if ((!targetPresent && bool)){
+        target.className += ' ' + classString;
+    } else {
+        target.className = target.className.replace(classString, '');
     }
 }
 
