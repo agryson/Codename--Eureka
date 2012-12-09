@@ -445,9 +445,11 @@ function checkRobots(){
             if(wallE[1] - wallE[0] === 0){
                 classChange(false, wallE[2], 'active');
                 c3po.onclick = null;
-                document.getElementById(Game.clickedOn).style.background = '#000';
-                Game.clickedOn = 'none';
-                document.body.style.cursor = "url('images/pointer.png'), default";
+                document.getElementById(wallE[2]).style.background = '#000';
+                if(Game.clickedOn === idString){
+                    Game.clickedOn = 'none';
+                    document.body.style.cursor = "url('images/pointer.png'), default";
+                }
             }
         }
     }
@@ -456,8 +458,15 @@ function checkRobots(){
         classChange(false, Game.robotsList[1][2], 'active');
         document.getElementById(Game.robotsList[1][2]).onclick = null;
         document.getElementById(Game.robotsList[1][2]).style.background = '#000';
-        Game.clickedOn = 'none';
-        document.body.style.cursor = "url('images/pointer.png'), default";
+        if(Game.clickedOn === 'digger' || (Game.clickedOn === 'cavernDigger' && Game.robotsList[1][1]-Game.robotsList[1][0]===0)){
+            Game.clickedOn = 'none';
+            document.body.style.cursor = "url('images/pointer.png'), default";
+        }
+        if(Game.robotsList[1][1]-Game.robotsList[1][0]===0){
+            classChange(false, 'cavernDigger', 'active');
+            document.getElementById('cavernDigger').onclick = null;
+            document.getElementById('cavernDigger').style.background = '#000';
+        }
     }
 }
 
