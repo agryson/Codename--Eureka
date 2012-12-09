@@ -744,11 +744,6 @@ function move(dir) {
     drawLoc();
 }
 
-/*
-can do stuff with adjacent hexes
-e.g.
-map[adjacent(x,y,0)[0]][adjacent(x,y,0)[1]][1].kind = 0;
-*/
 /**
  * Returns the adjacent tile reference in y and x (inverted for historical reasons)
  * @param  {int} x
@@ -1074,18 +1069,31 @@ function drawZoomMap() {
         }
     }
 }
-/**
- * appends or removes a  class from an element
- * @param  {boolean} bool       true if we want to add a class, false if we want to remove it
- * @param  {string} targetID    ID of target element
- * @param  {string} classString name of class to add
- */
 
+/**
+ * Appends or removes a class to/from an element
+ * @param  {boolean} bool        True if appending class, false if removing
+ * @param  {string} targetID    ID of target element
+ * @param  {string} classString Class to be added / removed (case sensitive)
+ */
 function classChange(bool, targetID, classString){
     var target = document.getElementById(targetID);
     var targetPresent;
-    var newClass = ' ' + classString;
-    target.className.indexOf(newClass) === -1 ? targetPresent = false : targetPresent = true;
+    var newClass;
+    if (target.className.indexOf(classString) > 0){
+        newClass = ' ' + classString;
+        targetPresent = true;
+    } else if(target.className.indexOf(classString) === -1 && target.className.length > 0){
+        newClass = ' ' + classString;
+        targetPresent = false;
+    }else if(target.className.indexOf(classString) === -1){
+        newClass = classString;
+        targetPresent = false;
+    }else{
+        newClass = classString;
+        targetPresent = true;
+    }
+
     if(targetPresent && !bool){
         target.className = target.className.replace(newClass, '');
     } else if ((!targetPresent && bool)){
