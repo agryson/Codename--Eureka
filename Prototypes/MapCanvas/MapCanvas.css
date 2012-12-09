@@ -307,10 +307,6 @@ button:active {
     cursor: url(images/build.png),auto;
 }
 
-#droneContainer > .menuItem {
-    display: table;
-}
-
 .botCount {
     position: absolute;
     display: table-cell;

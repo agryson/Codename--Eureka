@@ -342,12 +342,6 @@ function Param() {
         [0,1,"miner", true, 2],
         [0,1,"recycler", false, 2]
     ];
-    this.robots = [
-        [0, 5],
-        [0, 3],
-        [0, 1],
-        [0, 1]
-    ]; //number of drones: dozer/digger/miner/recycler [current/max]
     //Map generation vars
     this.seeder = '';
     /*
@@ -375,7 +369,6 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
-    
 }
 
 /**
@@ -420,7 +413,45 @@ function checkBuildings() {
 
 function checkRobots(){
     for(var r2d2 in Game.robotsList){
-        document.getElementById(Game.robotsList[r2d2][2]).onclick = construct;
+        var wallE = Game.robotsList[r2d2];
+        var idString = wallE[2];
+        var c3po = document.getElementById(idString);
+        if(wallE[3]){
+            if(c3po.style.display !== 'table'){
+                c3po.style.display = 'table';
+            }
+            switch(wallE[4]){
+                case 0:
+                    if(Game.level === 0){
+                        classChange(true, idString, 'active');
+                        c3po.onclick = construct;
+                    } else {
+                        classChange(false, idString, 'active');
+                        c3po.onclick = null;
+                    }
+                    break;
+                case 1:
+                    if(Game.level > 0){
+                        classChange(true, idString, 'active');
+                        c3po.onclick = construct;
+                    } else {
+                        classChange(false, idString, 'active');
+                        c3po.onclick = null;
+                        console.log(idString);
+                    }
+                    break;
+                default:
+                    classChange(true, idString, 'active');
+                    c3po.onclick = construct;
+            }
+            if(wallE[1] - wallE[0] === 0){
+                classChange(false, wallE[2], 'active');
+                c3po.onclick = null;
+                document.getElementById(Game.clickedOn).style.background = '#000';
+                Game.clickedOn = 'none';
+                document.body.style.cursor = "url('images/pointer.png'), default";
+            }
+        }
     }
 }
 
@@ -557,6 +588,7 @@ function reCount(which) {
     default:
         console.log("Wait, I've lost count of the drones...");
     }
+    checkRobots();
 }
 
 /**
@@ -1249,9 +1281,9 @@ function clicked() {
     drawZoomMap();
     drawRadar();
 }
+
 /**
- * When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
- * @param  {string} id ID of clicked upon menu item
+ *  When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
  */
 function construct() {
     var identity = this.id;
