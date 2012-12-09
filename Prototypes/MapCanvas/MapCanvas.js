@@ -38,7 +38,7 @@ function Terrain() {
             this.turns -= 1;
         } else if(this.turns === 0) {
             if(this.robotInUse >= 0) {
-                Game.robots[this.robotInUse][0] -= 1;
+                Game.robotsList[this.robotInUse][0] -= 1;
                 this.robotInUse = -1;
             }
             this.turns = false;
@@ -66,13 +66,13 @@ function Terrain() {
 
      */
     this.prepare = function() {
-        if(!prepared && !this.wip && this.diggable && Game.robots[0][0] < Game.robots[0][1]) {
+        if(!prepared && !this.wip && this.diggable && Game.robotsList[0][0] < Game.robotsList[0][1]) {
             this.turns = eta(2, this.kind);
             this.kind = 8;
             this.wip = true; //tells us that work is in progress
             this.willBe = 3;
             this.robotInUse = 0;
-            Game.robots[0][0] += 1;
+            Game.robotsList[0][0] += 1;
             reCount('dozer');
         } else {
             notify("You can't prepare this terrain...");
@@ -88,11 +88,11 @@ function Terrain() {
      */
     this.digDown = function(x, y, lowerTile) {
 
-        if(Game.level < 4 && !wetTest([y, x], Game.level + 1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable && Game.robots[1][0] < Game.robots[1][1] - 1) {
+        if(Game.level < 4 && !wetTest([y, x], Game.level + 1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable && Game.robotsList[1][0] < Game.robotsList[1][1] - 1) {
             this.willBe = 1000; //TODO: fix to be a real airlift...
             this.turns = eta(2, this.kind);
             this.kind = 9;
-            Game.robots[1][0] += 1;
+            Game.robotsList[1][0] += 1;
             this.robotInUse = 1;
             this.digCavern(x, y, lowerTile, Game.level + 1, true, 1000);
             reCount('digger');
@@ -124,8 +124,8 @@ function Terrain() {
                 nearWall = true;
             }
         }
-        if(level > 0 && !wetTest([y, x], level) && nearWall && !tile.wip && Game.robots[1][0] < Game.robots[1][1] && !this.exists) {
-            Game.robots[1][0] += 1;
+        if(level > 0 && !wetTest([y, x], level) && nearWall && !tile.wip && Game.robotsList[1][0] < Game.robotsList[1][1] && !this.exists) {
+            Game.robotsList[1][0] += 1;
             tile.robotInUse = 1;
             reCount('digger');
             willBe >= 0 ? tile.willBe = willBe : tile.willBe = willBe + 5; //this is for if we try to do it on prepared terrain
@@ -161,8 +161,8 @@ function Terrain() {
                 wet = true;
             }
         }
-        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable && Game.robots[2][0] < Game.robots[2][1]) {
-            Game.robots[2][0] += 1;
+        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[2][0] < Game.robotsList[2][1]) {
+            Game.robotsList[2][0] += 1;
             this.robotInUse = 2;
             reCount('miner');
             this.turns = eta(5, this.kind);
@@ -185,12 +185,12 @@ function Terrain() {
 
      */
     this.recycle = function() {
-        if(!wip && this.kind !== 4 && Game.robots[3][0] < Game.robots[3][1]) {
+        if(!wip && this.kind !== 4 && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             this.turns = eta(3, this.kind);
             this.kind = 11;
             this.wip = true;
             this.willBe = 3;
-            Game.robots[3][0] += 1;
+            Game.robotsList[3][0] += 1;
             this.robotInUse = 3;
             reCount('recycler');
         } else {
@@ -289,8 +289,10 @@ function Param() {
     this.map3 = [];
     this.map4 = [];
     //I <3  Sublime Text 2's multiple cursors!!!
-    //TODO: update the final value to reflect whether we can build above or below ground or both
-    //0: surface, 1: subsurface, 2: both
+    /**
+     * [[string: 'id of menu option', boolean: available to player?, int: surface(0)/subsurface(1)/both(2)]]
+     * @type {Array}
+     */
     this.buildings = [
         ["agri", true, 0],
         ["agri2", false, 0],
@@ -328,12 +330,17 @@ function Param() {
         ["windfarm", false, 0],
         ["workshop", true, 1]
     ];
+    /**
+     * List of robots
+     * [[int: inUse, int: totalAvailable, string: 'idString', boolean: availableToPlayer, int: surface(0)/subsurface(1)/both(2)]]
+     * @type {Array}
+     */
     this.robotsList = [
-        'dozer',
-        'digger',
-        'cavernDigger',
-        'miner',
-        'recycler'
+        [0,5,"dozer", true, 2],
+        [0,3,"digger", true, 2],
+        [0,1,"cavernDigger", true, 1],
+        [0,1,"miner", true, 2],
+        [0,1,"recycler", false, 2]
     ];
     this.robots = [
         [0, 5],
@@ -368,9 +375,7 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
-    for(var mebob in Game.robotsList){
-        document.getElementById(Game.robotsList[mebob]).onclick = construct;
-    }
+    
 }
 
 /**
@@ -409,6 +414,13 @@ function checkBuildings() {
                     document.getElementById(Game.buildings[thing][0]).onclick = construct;
             }
         }
+    }
+    checkRobots();
+}
+
+function checkRobots(){
+    for(var r2d2 in Game.robotsList){
+        document.getElementById(Game.robotsList[r2d2][2]).onclick = construct;
     }
 }
 
@@ -513,34 +525,34 @@ function nextTurn() {
 function reCount(which) {
     switch(which) {
     case 'dozer':
-        document.getElementById('dozerCount').style.height = ((Game.robots[0][1] - Game.robots[0][0]) / Game.robots[0][1]) * 100 + '%';
-        document.getElementById('dozerCountNum').innerHTML = 'Available: ' + (Game.robots[0][1] - Game.robots[0][0]);
+        document.getElementById('dozerCount').style.height = ((Game.robotsList[0][1] - Game.robotsList[0][0]) / Game.robotsList[0][1]) * 100 + '%';
+        document.getElementById('dozerCountNum').innerHTML = 'Available: ' + (Game.robotsList[0][1] - Game.robotsList[0][0]);
         break;
     case 'digger':
-        document.getElementById('diggerCount').style.height = ((Game.robots[1][1] - Game.robots[1][0]) / Game.robots[1][1]) * 100 + '%';
-        document.getElementById('cavernDiggerCount').style.height = ((Game.robots[1][1] - Game.robots[1][0]) / Game.robots[1][1]) * 100 + '%';
-        document.getElementById('diggerCountNum').innerHTML = 'Available: ' + (Game.robots[1][1] - Game.robots[1][0]);
-        document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + (Game.robots[1][1] - Game.robots[1][0]);
+        document.getElementById('diggerCount').style.height = ((Game.robotsList[1][1] - Game.robotsList[1][0]) / Game.robotsList[1][1]) * 100 + '%';
+        document.getElementById('cavernDiggerCount').style.height = ((Game.robotsList[1][1] - Game.robotsList[1][0]) / Game.robotsList[1][1]) * 100 + '%';
+        document.getElementById('diggerCountNum').innerHTML = 'Available: ' + (Game.robotsList[1][1] - Game.robotsList[1][0]);
+        document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + (Game.robotsList[1][1] - Game.robotsList[1][0]);
         break;
     case 'miner':
-        document.getElementById('minerCount').style.height = ((Game.robots[2][1] - Game.robots[2][0]) / Game.robots[2][1]) * 100 + '%';
-        document.getElementById('minerCountNum').innerHTML = 'Available: ' + (Game.robots[2][1] - Game.robots[2][0]);
+        document.getElementById('minerCount').style.height = ((Game.robotsList[2][1] - Game.robotsList[2][0]) / Game.robotsList[2][1]) * 100 + '%';
+        document.getElementById('minerCountNum').innerHTML = 'Available: ' + (Game.robotsList[2][1] - Game.robotsList[2][0]);
         break;
     case 'recycler':
-        document.getElementById('recyclerCount').style.height = ((Game.robots[3][1] - Game.robots[3][0]) / Game.robots[3][1]) * 100 + '%';
-        document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + (Game.robots[3][1] - Game.robots[3][0]);
+        document.getElementById('recyclerCount').style.height = ((Game.robotsList[3][1] - Game.robotsList[3][0]) / Game.robotsList[3][1]) * 100 + '%';
+        document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + (Game.robotsList[3][1] - Game.robotsList[3][0]);
         break;
     case 'all':
-        document.getElementById('dozerCount').style.height = ((Game.robots[0][1] - Game.robots[0][0]) / Game.robots[0][1]) * 100 + '%';
-        document.getElementById('dozerCountNum').innerHTML = 'Available: ' + (Game.robots[0][1] - Game.robots[0][0]);
-        document.getElementById('diggerCount').style.height = ((Game.robots[1][1] - Game.robots[1][0]) / Game.robots[1][1]) * 100 + '%';
-        document.getElementById('cavernDiggerCount').style.height = ((Game.robots[1][1] - Game.robots[1][0]) / Game.robots[1][1]) * 100 + '%';
-        document.getElementById('diggerCountNum').innerHTML = 'Available: ' + (Game.robots[1][1] - Game.robots[1][0]);
-        document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + (Game.robots[1][1] - Game.robots[1][0]);
-        document.getElementById('minerCount').style.height = ((Game.robots[2][1] - Game.robots[2][0]) / Game.robots[2][1]) * 100 + '%';
-        document.getElementById('minerCountNum').innerHTML = 'Available: ' + (Game.robots[2][1] - Game.robots[2][0]);
-        document.getElementById('recyclerCount').style.height = ((Game.robots[3][1] - Game.robots[3][0]) / Game.robots[3][1]) * 100 + '%';
-        document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + (Game.robots[3][1] - Game.robots[3][0]);
+        document.getElementById('dozerCount').style.height = ((Game.robotsList[0][1] - Game.robotsList[0][0]) / Game.robotsList[0][1]) * 100 + '%';
+        document.getElementById('dozerCountNum').innerHTML = 'Available: ' + (Game.robotsList[0][1] - Game.robotsList[0][0]);
+        document.getElementById('diggerCount').style.height = ((Game.robotsList[1][1] - Game.robotsList[1][0]) / Game.robotsList[1][1]) * 100 + '%';
+        document.getElementById('cavernDiggerCount').style.height = ((Game.robotsList[1][1] - Game.robotsList[1][0]) / Game.robotsList[1][1]) * 100 + '%';
+        document.getElementById('diggerCountNum').innerHTML = 'Available: ' + (Game.robotsList[1][1] - Game.robotsList[1][0]);
+        document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + (Game.robotsList[1][1] - Game.robotsList[1][0]);
+        document.getElementById('minerCount').style.height = ((Game.robotsList[2][1] - Game.robotsList[2][0]) / Game.robotsList[2][1]) * 100 + '%';
+        document.getElementById('minerCountNum').innerHTML = 'Available: ' + (Game.robotsList[2][1] - Game.robotsList[2][0]);
+        document.getElementById('recyclerCount').style.height = ((Game.robotsList[3][1] - Game.robotsList[3][0]) / Game.robotsList[3][1]) * 100 + '%';
+        document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + (Game.robotsList[3][1] - Game.robotsList[3][0]);
         break;
     default:
         console.log("Wait, I've lost count of the drones...");
