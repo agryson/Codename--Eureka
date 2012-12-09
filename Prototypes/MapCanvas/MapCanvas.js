@@ -436,7 +436,6 @@ function checkRobots(){
                     } else {
                         classChange(false, idString, 'active');
                         c3po.onclick = null;
-                        console.log(idString);
                     }
                     break;
                 default:
@@ -451,6 +450,14 @@ function checkRobots(){
                 document.body.style.cursor = "url('images/pointer.png'), default";
             }
         }
+    }
+    //special case for digger
+    if(Game.robotsList[1][1]-Game.robotsList[1][0]<=1){
+        classChange(false, Game.robotsList[1][2], 'active');
+        document.getElementById(Game.robotsList[1][2]).onclick = null;
+        document.getElementById(Game.robotsList[1][2]).style.background = '#000';
+        Game.clickedOn = 'none';
+        document.body.style.cursor = "url('images/pointer.png'), default";
     }
 }
 
@@ -769,8 +776,9 @@ function move(dir) {
     default:
         break;
     }
-    drawZoomMap();
-    drawLoc();
+    drawZoomMap;
+    drawLoc;
+    drawRadar;
 }
 
 /**
