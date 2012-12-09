@@ -1121,7 +1121,7 @@ function classChange(bool, targetID, classString){
 
     if(targetPresent && !bool){
         target.className = target.className.replace(newClass, '');
-    } else if ((!targetPresent && bool)){
+    } else if (!targetPresent && bool){
         target.className += newClass;
     }
 }
