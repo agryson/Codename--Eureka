@@ -117,14 +117,13 @@ function Terrain() {
         var nearWall = nearWallKnown;
         var adj;
         var free;
-        //testing git plugin
         for(var i = 0; i < 6; i++) {
             adj = returnLevel(level)[adjacent(x, y, i)[0]][adjacent(x, y, i)[1]][1];
             if(adj.diggable) {
                 nearWall = true;
             }
         }
-        if(level > 0 && !wetTest([y, x], level) && nearWall && !tile.wip && Game.robotsList[1][0] < Game.robotsList[1][1] && !this.exists) {
+        if(!wetTest([y, x], level) && nearWall && !tile.wip && Game.robotsList[1][0] < Game.robotsList[1][1] && !this.exists) {
             Game.robotsList[1][0] += 1;
             tile.robotInUse = 1;
             reCount('digger');
