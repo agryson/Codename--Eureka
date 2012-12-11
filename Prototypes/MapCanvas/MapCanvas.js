@@ -385,24 +385,24 @@ function checkBuildings() {
             switch(Game.buildings[thing][2]){
                 case 0:
                     if(Game.level === 0){
-                        classChange(true, idString, 'active');
+                        elem.classList.add('active');
                         document.getElementById(Game.buildings[thing][0]).onclick = construct;
                     } else {
-                        classChange(false, idString, 'active');
+                        elem.classList.remove('active');
                         document.getElementById(Game.buildings[thing][0]).onclick = null;
                     }
                     break;
                 case 1:
                     if(Game.level > 0){
-                        classChange(true, idString, 'active');
+                        elem.classList.add('active');
                         document.getElementById(Game.buildings[thing][0]).onclick = construct;
                     } else {
-                        classChange(false, idString, 'active');
+                        elem.classList.remove('active');
                         document.getElementById(Game.buildings[thing][0]).onclick = null;
                     }
                     break;
                 default:
-                    classChange(true, idString, 'active');
+                    elem.classList.add('active');
                     document.getElementById(Game.buildings[thing][0]).onclick = construct;
             }
         }
@@ -422,28 +422,28 @@ function checkRobots(){
             switch(wallE[4]){
                 case 0:
                     if(Game.level === 0){
-                        classChange(true, idString, 'active');
+                        c3po.classList.add('active');
                         c3po.onclick = construct;
                     } else {
-                        classChange(false, idString, 'active');
+                        c3po.classList.remove('active');
                         c3po.onclick = null;
                     }
                     break;
                 case 1:
                     if(Game.level > 0){
-                        classChange(true, idString, 'active');
+                        c3po.classList.add('active');
                         c3po.onclick = construct;
                     } else {
-                        classChange(false, idString, 'active');
+                        c3po.classList.remove('active');
                         c3po.onclick = null;
                     }
                     break;
                 default:
-                    classChange(true, idString, 'active');
+                    c3po.classList.add('active');
                     c3po.onclick = construct;
             }
             if(wallE[1] - wallE[0] === 0){
-                classChange(false, wallE[2], 'active');
+                c3po.classList.remove('active');
                 c3po.onclick = null;
                 document.getElementById(wallE[2]).style.background = '#000';
                 if(Game.clickedOn === idString){
@@ -455,7 +455,7 @@ function checkRobots(){
     }
     //special case for digger
     if(Game.robotsList[1][1]-Game.robotsList[1][0]<=1){
-        classChange(false, Game.robotsList[1][2], 'active');
+        document.getElementById(Game.robotsList[1][2]).remove('active');
         document.getElementById(Game.robotsList[1][2]).onclick = null;
         document.getElementById(Game.robotsList[1][2]).style.background = '#000';
         if(Game.clickedOn === 'digger' || (Game.clickedOn === 'cavernDigger' && Game.robotsList[1][1]-Game.robotsList[1][0]===0)){
@@ -463,9 +463,10 @@ function checkRobots(){
             document.body.style.cursor = "url('images/pointer.png'), default";
         }
         if(Game.robotsList[1][1]-Game.robotsList[1][0]===0){
-            classChange(false, 'cavernDigger', 'active');
-            document.getElementById('cavernDigger').onclick = null;
-            document.getElementById('cavernDigger').style.background = '#000';
+            var cavDig = document.getElementById('cavernDigger');
+            cavDig.remove('active');
+            cavDig.onclick = null;
+            cavDig.style.background = '#000';
         }
     }
 }
@@ -1109,37 +1110,6 @@ function drawZoomMap() {
             }
             x++;
         }
-    }
-}
-
-/**
- * Appends or removes a class to/from an element
- * @param  {boolean} bool        True if appending class, false if removing
- * @param  {string} targetID    ID of target element
- * @param  {string} classString Class to be added / removed (case sensitive)
- */
-function classChange(bool, targetID, classString){
-    var target = document.getElementById(targetID);
-    var targetPresent;
-    var newClass;
-    if (target.className.indexOf(classString) > 0){
-        newClass = ' ' + classString;
-        targetPresent = true;
-    } else if(target.className.indexOf(classString) === -1 && target.className.length > 0){
-        newClass = ' ' + classString;
-        targetPresent = false;
-    }else if(target.className.indexOf(classString) === -1){
-        newClass = classString;
-        targetPresent = false;
-    }else{
-        newClass = classString;
-        targetPresent = true;
-    }
-
-    if(targetPresent && !bool){
-        target.className = target.className.replace(newClass, '');
-    } else if (!targetPresent && bool){
-        target.className += newClass;
     }
 }
 
