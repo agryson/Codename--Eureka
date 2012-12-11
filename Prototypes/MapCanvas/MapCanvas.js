@@ -223,6 +223,7 @@ function Terrain() {
 
      */
     this.build = function(building, health, turns) {
+        console.log(building);
         if(this.kind === 3) {
             this.kind = 8; //TODO: replace with a construction animation
             if(this.UG) {
@@ -455,16 +456,17 @@ function checkRobots(){
     }
     //special case for digger
     if(Game.robotsList[1][1]-Game.robotsList[1][0]<=1){
-        document.getElementById(Game.robotsList[1][2]).remove('active');
-        document.getElementById(Game.robotsList[1][2]).onclick = null;
-        document.getElementById(Game.robotsList[1][2]).style.background = '#000';
+        var rob = document.getElementById(Game.robotsList[1][2]);
+        rob.classList.remove('active');
+        rob.onclick = null;
+        rob.style.background = '#000';
         if(Game.clickedOn === 'digger' || (Game.clickedOn === 'cavernDigger' && Game.robotsList[1][1]-Game.robotsList[1][0]===0)){
             Game.clickedOn = 'none';
             document.body.style.cursor = "url('images/pointer.png'), default";
         }
         if(Game.robotsList[1][1]-Game.robotsList[1][0]===0){
             var cavDig = document.getElementById('cavernDigger');
-            cavDig.remove('active');
+            cavDig.classList.remove('active');
             cavDig.onclick = null;
             cavDig.style.background = '#000';
         }
@@ -1057,7 +1059,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                 sourceX = Game.animate * sourceWidth;
                 sourceY = tileType * sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
-            } else if(tileType <8) { //non-animated tiles
+            } else if(tileType <8 || tileType > 11) { //non-animated tiles
                 sourceX = 0;
                 sourceY = tileType * sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
@@ -1273,7 +1275,7 @@ function clicked() {
  */
 function construct() {
     var identity = this.id;
-    console.log(identity);
+    //console.log(identity);
     if(Game.clickedOn === identity) {
         document.getElementById(Game.clickedOn).style.background = '#000';
         Game.clickedOn = 'none';
