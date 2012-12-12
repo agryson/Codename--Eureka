@@ -36,7 +36,7 @@ button:active {
     box-shadow: inset 1px 1px 3px 1px #090909, 1px 1px 1px 0 white;
 }
 
-.itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitle,#loadMessage,.botCountNum {
+.itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitle,#loadMessage,.botCountNum,#contextMenu {
     font-family: Arial, sans-serif;
     font-weight: bold;
 }
@@ -373,11 +373,14 @@ button:active {
 
 #contextMenu {
     position: fixed;
-    display: none;
+    display: inline-block;
     padding: 10px;
-    margin: 40px;
-    background: white;
+    background: #292929;
+    border-radius: 3px;
+    color: white;
     z-index: 10000;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s ease;
 }
 
 /*        ******      Exec Dropdown    ******      */

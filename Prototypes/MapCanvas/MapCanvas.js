@@ -1146,20 +1146,21 @@ function rightClicked(){
     //TODO pop up a small div containing info on the  tile such as tile.health etc.
     var pop = document.getElementById('contextMenu');
     pop.innerHTML = contextContent();
+    pop.style.top = event.clientY +25 + 'px';
+    pop.style.left = event.clientX +40+ 'px';
     pop.style.display = 'inline-block';
-    pop.style.top = event.clientY -15 + 'px';
-    pop.style.left = event.clientX + 'px';
-            console.log(pop.nextElementSibling);
-
+    pop.style.opacity = '1';
     pop.addEventListener('mouseout', function(){
-        console.log(event.relatedTarget + event.toElement);
         if (((event.relatedTarget || event.toElement) == pop.nextElementSibling) ||
             ((event.relatedTarget || event.toElement) == pop.parentNode)){
-            pop.style.display = 'none';
-            pop.innerHTML = '';
-            pop.onmouseout = null;
+            pop.style.opacity = '0';
+            popup.addEventListener('webkitTransitionEnd', function() {
+                pop.style.display = 'none';
+                pop.innerHTML = '';
+                pop.onmouseout = null;
+            }, false);
             }
-        }, true);
+        }, false);
 }
 
 function contextContent(){
