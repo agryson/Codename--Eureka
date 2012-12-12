@@ -373,6 +373,7 @@ function init() {
         function(ev){
             ev.preventDefault();
             ev.stopPropagation();
+            rightClicked();
             console.log('clicked Right!');
             return false;
         };
@@ -1142,10 +1143,33 @@ function drawLoc() {
 }
 
 function rightClicked(){
+    //TODO pop up a small div containing info on the  tile such as tile.health etc.
+    var pop = document.getElementById('contextMenu');
+    pop.innerHTML = contextContent();
+    pop.style.display = 'inline-block';
+    pop.style.top = event.clientY -15 + 'px';
+    pop.style.left = event.clientX + 'px';
+            console.log(pop.nextElementSibling);
+
+    pop.addEventListener('mouseout', function(){
+        console.log(event.relatedTarget + event.toElement);
+        if (((event.relatedTarget || event.toElement) == pop.nextElementSibling) ||
+            ((event.relatedTarget || event.toElement) == pop.parentNode)){
+            pop.style.display = 'none';
+            pop.innerHTML = '';
+            pop.onmouseout = null;
+            }
+        }, true);
+}
+
+function contextContent(){
     var y = Game.retY + getTile('y') - 5;
     var x = Game.retX + getTile('x') - 5;
     var tile = returnLevel(Game.level)[y][x][1];
-    //TODO pop up a small div containing info on the  tile such as tile.health etc.
+    var htmlString = '';
+    htmlString += '<span>' + tile.kind + '</span><br>';
+    htmlString += '<span>' + 'GO GO Power Rangers!' + '</span><br>';
+    return htmlString;
 }
 /**
  * Performs the appropriate action for the tile that is clicked upon

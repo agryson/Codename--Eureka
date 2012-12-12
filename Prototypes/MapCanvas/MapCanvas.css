@@ -371,6 +371,15 @@ button:active {
     box-shadow: 0 0 0 5px #363636 inset;
 }
 
+#contextMenu {
+    position: fixed;
+    display: none;
+    padding: 10px;
+    margin: 40px;
+    background: white;
+    z-index: 10000;
+}
+
 /*        ******      Exec Dropdown    ******      */
 #execDropDown {
     position: absolute;

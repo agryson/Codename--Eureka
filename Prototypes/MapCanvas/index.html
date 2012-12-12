@@ -235,7 +235,8 @@
         <canvas id="mainPanel" width="720" height="720">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
-        
+        <div id='contextMenu'>
+        </div>
         <canvas id="mPanOverlay" width="720" height="720" 
             onmouseover="overCanvas(true, 'mPan'); Game.overMPan = true" onmouseout="overCanvas(false); Game.overMPan = false" 
             onMouseUp="clicked()">
@@ -257,8 +258,7 @@
             <button class="info" id="save">Save</button>
             <button class="action" id="turn" onclick="nextTurn()">Send Orders</button>
         </div>
-        <div id='contextMenu'>
-        </div>
+        
 
 <!--scripts moved down to improve initial page load-->
         <script language="JavaScript" src="MapCanvas.js"></script>
