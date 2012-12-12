@@ -628,17 +628,18 @@ function leftMenuResize(bool) {
 function resize(e) {
     var current = e.clientY;
     var total = window.innerHeight;
-    var percentage = ((current / total - 0.01) * 100);
-    if(percentage < 10) {
+    var percentage = ((current/total)*100);
+    if (percentage < 10) {
         percentage = 11;
-    } else if(percentage > 90) {
+        leftMenuResize(false);
+    } else if (percentage > 90){
         percentage = 89;
+        leftMenuResize(false);
     }
-    document.getElementById('buildingContainer').style.height = percentage + 2 + '%';
-    document.getElementById('droneContainer').style.height = 97.5 - percentage + '%';
+    document.getElementById('buildingContainer').style.height = percentage + '%';
+    document.getElementById('droneContainer').style.height = 100-percentage + '%';
     document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
 }
-
 /**
  * Manages the animation for the menu pulldown
  */

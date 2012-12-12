@@ -257,8 +257,9 @@ button:active {
     top: 0;
     height: 50%;
     width: 100%;
-    padding-bottom: 5px;
+    margin-bottom: 5px;
     background: #191919;
+    overflow-x: hidden;
     overflow-y: scroll;
     z-index: 1;
 }
@@ -267,7 +268,7 @@ button:active {
     position: absolute;
     height: 20px;
     width: 100%;
-    margin-top: 47.5%;
+    margin-top: 50%;
     border-radius: 5px;
     -webkit-box-shadow: inset -1px -1px 0 2px #000;
     -moz-box-shadow: inset -1px -1px 0 2px #000;
@@ -277,14 +278,20 @@ button:active {
     cursor: url(images/vertResize.png),auto;
 }
 
+#nasty_spacer {
+    height: 20px;
+    width: 100%;
+}
+
 #droneContainer {
     position: absolute;
     bottom: 0;
     width: 100%;
     height: 50%;
-    padding-top: 20px;
+    margin-top: 20px;
     background: #191919;
     z-index: 1;
+    overflow-x: hidden;
     overflow-y: scroll;
 }
 
