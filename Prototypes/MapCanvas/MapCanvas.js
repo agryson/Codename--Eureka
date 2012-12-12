@@ -369,13 +369,13 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
-    window.oncontextmenu = 
+    window.oncontextmenu =
         function(ev){
             ev.preventDefault();
             ev.stopPropagation();
             console.log('clicked Right!');
             return false;
-        }
+        };
 }
 
 
@@ -1139,6 +1139,13 @@ function drawLoc() {
     Game.radarLoc.strokeStyle = '#BD222A';
     Game.radarLoc.stroke();
     Game.radarLoc.closePath();
+}
+
+function rightClicked(){
+    var y = Game.retY + getTile('y') - 5;
+    var x = Game.retX + getTile('x') - 5;
+    var tile = returnLevel(Game.level)[y][x][1];
+    //TODO pop up a small div containing info on the  tile such as tile.health etc.
 }
 /**
  * Performs the appropriate action for the tile that is clicked upon
