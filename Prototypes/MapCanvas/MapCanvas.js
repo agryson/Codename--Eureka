@@ -369,7 +369,15 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
+    window.oncontextmenu = 
+        function(ev){
+            ev.preventDefault();
+            ev.stopPropagation();
+            console.log('clicked Right!');
+            return false;
+        }
 }
+
 
 /**
  * Checks which buildings are available to the player and
