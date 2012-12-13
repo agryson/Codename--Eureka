@@ -726,7 +726,8 @@ function keypressed(e) {
         document.getElementById('slider').value = Game.level;
         break;
     case 27:
-        Game.clickedOn = null;
+        document.getElementById(Game.clickedOn).style.background = '#000';
+        Game.clickedOn = 'none';
         document.body.style.cursor = "url('images/pointer.png'), default";
         break;
     default:
