@@ -137,6 +137,7 @@ function createMap() {
       if(distance(x, y, Game.radarRad, Game.radarRad) <= Game.radarRad) { //check the radius, mark true if it's mapped, mark false if it's not in the circle
         map[y][x][0] = true; //invert axes because referencing the array is not like referencing a graph
         map[y][x][1] = new Terrain(); //if we're in the circle, assign a tile value
+        map[y][x][1].ref = '#' + Game.level + ':' + ((x-150)) + ':' + ((y-150)*-1);
         map[y][x][1].altitude = altitude(x, y, Game.level);
         setType(x, y, Game.level);
         map[y][x][1].resources = new Array(2); //insert the number of resources we'll be looking for
@@ -182,12 +183,16 @@ function setType(x, y, level) {
 
   if(altitude >= high) {
     map.kind = 2 + increment;
+    map.ref = map.ref.insert(0, 'Mountainous ');
   } else if(altitude >= med) {
     map.kind = 1 + increment;
+    map.ref = map.ref.insert(0, 'Rough ');
   } else if(altitude >= low) {
     map.kind = 0 + increment;
+    map.ref = map.ref.insert(0, 'Smooth ');
   } else {
     map.kind = 4;
+    map.ref = map.ref.insert(0, 'Water ');
   }
   level === 0 && map.kind !== 4 ? map.diggable = true : map.diggable = false;
   level === 0 ? map.UG = false : map.UG = true;

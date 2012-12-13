@@ -18,6 +18,7 @@ function Terrain() {
     */
     var wip = false; //Work in Progress?
     var prepared = false;
+    this.ref;
     this.willBe = 3;
     this.willBeDiggable = false;
     //robots
@@ -74,6 +75,7 @@ function Terrain() {
             this.robotInUse = 0;
             Game.robotsList[0][0] += 1;
             reCount('dozer');
+            this.ref = changeName('Preparing', this.ref);
         } else {
             notify("You can't prepare this terrain...");
         }
@@ -1168,10 +1170,22 @@ function contextContent(){
     var x = Game.retX + getTile('x') - 5;
     var tile = returnLevel(Game.level)[y][x][1];
     var htmlString = '';
-    htmlString += '<span>' + tile.kind + '</span><br>';
-    htmlString += '<span>' + 'GO GO Power Rangers!' + '</span><br>';
+    htmlString += '<span>' + tile.ref + '</span><br>';
+    htmlString += '<span>' + 'WOW! Coordinates!' + '</span><br>';
     return htmlString;
 }
+
+String.prototype.insert = function (index, string) {
+  if (index > 0)
+    return this.slice(0, index) + string + this.slice(index);
+  else
+    return string + this;
+};
+
+function changeName(string, orig){
+    return string + ' #' + orig.split('#')[1];
+}
+
 /**
  * Performs the appropriate action for the tile that is clicked upon
  */
