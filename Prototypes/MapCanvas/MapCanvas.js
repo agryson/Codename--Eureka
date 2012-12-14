@@ -254,19 +254,16 @@ function Param() {
 
     //The zoomed in map related thigs...
     this.zoomMap = [
-        [3, 9],
-        [2, 9],
-        [1, 11],
-        [0, 11],
-        [1, 11],
-        [0, 11],
-        [0, 12],
-        [0, 11],
-        [1, 11],
-        [0, 11],
-        [1, 11],
-        [2, 9],
-        [3, 9]
+        [0,10],
+        [0,10],
+        [0,10],
+        [0,10],
+        [0,10],
+        [0,10],
+        [0,10],
+        [0,10],
+        [0,10],
+        [0,10]
     ];
 
     this.retX = this.radarRad;
@@ -527,7 +524,7 @@ function overCanvas(bool, which) {
          */
         Game.mPanCanvas.onmousemove = null;
         Game.radarCanvas.onmousemove = null;
-        Game.mPanLoc.clearRect(0, 0, 720, 720);
+        Game.mPanLoc.clearRect(0, 0, 945, 820);
     }
 }
 
@@ -757,7 +754,7 @@ function getMousePos(canvas, evt) {
     Game.mouseX = evt.clientX - left + window.pageXOffset;
     Game.mouseY = evt.clientY - top + window.pageYOffset;
     if(Game.overMPan) {
-        Game.mPanLoc.clearRect(0, 0, 720, 720);
+        Game.mPanLoc.clearRect(0, 0, 945, 820);
         drawTile(1, getTile('x'), getTile('y'), true);
     }
 }
@@ -900,16 +897,16 @@ function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
 
     //set the general cases
-    y = Math.floor(Game.mouseY / (70 * 0.74));
+    y = Math.floor(Game.mouseY / (105 * 0.74));
 
-    y % 2 !== 0 ? x = Math.floor((Game.mouseX - 30) / 60) : x = Math.floor(Game.mouseX / 60);
+    y % 2 !== 0 ? x = Math.floor((Game.mouseX - 45) / 90) : x = Math.floor(Game.mouseX / 90);
 
     //corner case code
-    yDiff = (Game.mouseY / (70 * 0.74)) - y;
+    yDiff = (Game.mouseY / (105 * 0.74)) - y;
     if(yDiff < 0.33) { //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
         if(y % 2 !== 0) {
-            xDiff = ((Game.mouseX - 30) / 60 - x);
+            xDiff = ((Game.mouseX - 45) / 90 - x);
             //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
             //Are we on the left or right hand side of the top third?
             if(xDiff < 0.5) {
@@ -1055,8 +1052,8 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
             var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
             sourceWidth = 173; //original tile width
             sourceHeight = 200; //original tile height
-            destinationWidth = 60; //tile width on zoomMap... If I want 13 tiles across... for s=35
-            destinationHeight = 70; //tile height on zoomMap
+            destinationWidth = 90; //tile width on zoomMap... If I want 13 tiles across... for s=35
+            destinationHeight = 105; //tile height on zoomMap
             destinationY = Math.floor(tilePosY * destinationWidth * 0.86); //shift it, the number here is a constant that depends ont eh hexagon deformation
             if(tilePosY % 2 === 0) { //if the row is even...
                 destinationX = Math.floor(tilePosX * destinationWidth); //we set its X normally
@@ -1093,7 +1090,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
  * this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
  */
 function drawZoomMap() {
-    Game.mPanel.clearRect(0, 0, 720, 720);
+    Game.mPanel.clearRect(0, 0, 930, 720);
     var y, x, end, sourceTile;
 
     switch(Game.level) {
