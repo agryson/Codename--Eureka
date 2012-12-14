@@ -134,7 +134,7 @@ function createMap() {
     map[y] = new Array(Game.radarRad * 2); //create an array to hold the x cell, we now have a 200x200 2d array
     for(var x = 0; x < Game.radarRad * 2; x++) {
       map[y][x] = new Array(2); //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-      if(distance(x, y, Game.radarRad, Game.radarRad) <= Game.radarRad) { //check the radius, mark true if it's mapped, mark false if it's not in the circle
+      if(/*distance(x, y, Game.radarRad, Game.radarRad) <= Game.radarRad*/true) { //check the radius, mark true if it's mapped, mark false if it's not in the circle
         map[y][x][0] = true; //invert axes because referencing the array is not like referencing a graph
         map[y][x][1] = new Terrain(); //if we're in the circle, assign a tile value
         map[y][x][1].ref = '#' + Game.level + ':' + ((x-150)) + ':' + ((y-150)*-1);

@@ -253,17 +253,21 @@ function Param() {
     this.radLimit = this.radarRad - 8;
 
     //The zoomed in map related thigs...
+    var ending = Math.ceil(document.width / 90);
     this.zoomMap = [
-        [0,10],
-        [0,10],
-        [0,10],
-        [0,10],
-        [0,10],
-        [0,10],
-        [0,10],
-        [0,10],
-        [0,10],
-        [0,10]
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending],
+        [0,ending]
     ];
 
     this.retX = this.radarRad;
@@ -352,6 +356,7 @@ function Param() {
     //General canvas vars...
     this.mPanCanvas = document.getElementById('mPanOverlay');
     this.mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
+    this.mPanelCanvas = document.getElementById('mainPanel');
     this.mPanel = document.getElementById('mainPanel').getContext('2d');
     this.radarCanvas = document.getElementById('mapOverlay');
     this.radar = document.getElementById('map').getContext('2d');
@@ -368,6 +373,10 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
+    Game.mPanCanvas.width = document.width;
+    Game.mPanCanvas.height = document.height+50;
+    Game.mPanelCanvas.width = document.width;
+    Game.mPanelCanvas.height = document.height+50;
     window.oncontextmenu =
         function(ev){
             ev.preventDefault();
@@ -524,7 +533,7 @@ function overCanvas(bool, which) {
          */
         Game.mPanCanvas.onmousemove = null;
         Game.radarCanvas.onmousemove = null;
-        Game.mPanLoc.clearRect(0, 0, 945, 820);
+        Game.mPanLoc.clearRect(0, 0, document.width, document.height+50);
     }
 }
 
@@ -754,7 +763,7 @@ function getMousePos(canvas, evt) {
     Game.mouseX = evt.clientX - left + window.pageXOffset;
     Game.mouseY = evt.clientY - top + window.pageYOffset;
     if(Game.overMPan) {
-        Game.mPanLoc.clearRect(0, 0, 945, 820);
+        Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
         drawTile(1, getTile('x'), getTile('y'), true);
     }
 }
@@ -798,9 +807,9 @@ function move(dir) {
     default:
         break;
     }
-    drawZoomMap;
-    drawLoc;
-    drawRadar;
+    drawZoomMap();
+    drawLoc();
+    drawRadar();
 }
 
 /**
@@ -923,7 +932,7 @@ function getTile(axis) {
             }
 
         } else {
-            xDiff = (Game.mouseX / 60 - x);
+            xDiff = (Game.mouseX / 90 - x);
             if(xDiff < 0.5) {
                 left = 0.5 - xDiff;
                 if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
@@ -1010,7 +1019,7 @@ function drawRadar() {
 
     for(var x = 0; x < radarPixels.width; x++) {
         for(var y = 0; y < radarPixels.height; y++) {
-            if(Game.map[y][x][0]) {
+            if(true/*Game.map[y][x][0]*/) {
 
                 // Index of the pixel in the array
                 var idx = (x + y * radarPixels.width) * 4;
@@ -1090,7 +1099,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
  * this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
  */
 function drawZoomMap() {
-    Game.mPanel.clearRect(0, 0, 930, 720);
+    Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     var y, x, end, sourceTile;
 
     switch(Game.level) {
@@ -1117,9 +1126,10 @@ function drawZoomMap() {
         end = Game.zoomMap[y][1];
         while(x < end) {
             drawTile(sourceTile[(Game.retY + y - 5)][(Game.retX + x - 5)][1].kind, x, y, false);
+            /*
             if(y === 0 || y == Game.zoomMap.length - 1 || x == Game.zoomMap[y][0] || x == end - 1) { //darkens the outer hexagons
                 drawTile(sourceTile[(Game.retY + y - 5)][(Game.retX + x - 5)][1].kind, x, y, false, 2);
-            }
+            }*/
             x++;
         }
     }

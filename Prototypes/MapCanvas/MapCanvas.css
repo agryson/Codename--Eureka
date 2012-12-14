@@ -43,10 +43,9 @@ button:active {
 
 #mainPanel,#mPanOverlay {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: -380px;
-    margin-left: -480px;
+    top: 0;
+    left: 0;
+    margin-top: -50px;
 }
 
 #map,#mapOverlay {
