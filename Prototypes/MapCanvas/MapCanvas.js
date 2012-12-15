@@ -375,6 +375,28 @@ function radRed(){
     parseInt(radar.style.top, 10) === 0 ? radar.style.top = -320 + 'px' : radar.style.top = 0;
 }
 
+function zoom(){
+    switch(document.getElementById('zoom').value) {
+        case '0':
+            Game.destinationWidth = 120;
+            Game.destinationHeight = 140;
+            break;
+        case '1':
+            Game.destinationWidth = 90;
+            Game.destinationHeight = 105;
+            break;
+        case '2':
+            Game.destinationWidth = 60;
+            Game.destinationHeight = 70;
+            break;
+        case '3':
+            Game.destinationWidth = 30;
+            Game.destinationHeight = 35;
+            break;
+        }
+    mapFit();
+}
+
 function mapFit() {
     console.log('I\'m refitting!');
     var quarterHeight = Game.destinationHeight*0.25;
@@ -1044,21 +1066,18 @@ function drawRadar() {
 
     for(var x = 0; x < radarPixels.width; x++) {
         for(var y = 0; y < radarPixels.height; y++) {
-            if(true /*Game.map[y][x][0]*/ ) {
-
-                // Index of the pixel in the array
-                var idx = (x + y * radarPixels.width) * 4;
-                var kind = returnLevel(Game.level)[y][x][1].kind;
-                for(var i = 0; i < 4; i++) {
-                    if(kind < 4 && kind >= 0) {
-                        radarPixels.data[idx + i] = surfaceColor[kind][i];
-                    } else if(kind > 4 && kind < 8) {
-                        radarPixels.data[idx + i] = ugColor[kind - 5][i];
-                    } else if(kind === 4) {
-                        Game.level !== 0 ? radarPixels.data[idx + i] = ugColor[4][i] : radarPixels.data[idx + i] = surfaceColor[4][i];
-                    } else {
-                        radarPixels.data[idx + i] = other[i];
-                    }
+            // Index of the pixel in the array
+            var idx = (x + y * radarPixels.width) * 4;
+            var kind = returnLevel(Game.level)[y][x][1].kind;
+            for(var i = 0; i < 4; i++) {
+                if(kind < 4 && kind >= 0) {
+                    radarPixels.data[idx + i] = surfaceColor[kind][i];
+                } else if(kind > 4 && kind < 8) {
+                    radarPixels.data[idx + i] = ugColor[kind - 5][i];
+                } else if(kind === 4) {
+                    Game.level !== 0 ? radarPixels.data[idx + i] = ugColor[4][i] : radarPixels.data[idx + i] = surfaceColor[4][i];
+                } else {
+                    radarPixels.data[idx + i] = other[i];
                 }
             }
         }
