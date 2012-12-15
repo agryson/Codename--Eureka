@@ -47,12 +47,42 @@ button:active {
     left: 115px;
     margin-top: -35px;
 }
-
-#map,#mapOverlay {
+#radarContainer{
     position: absolute;
-    top: 10px;
+    right: 0;
+    width: 340px;
+    height: 350px;
+    background: black;
+    border-radius: 0 0 0 10px;
+    background: #494949;
+    background-image: url(images/pinhole.png);
+    -webkit-box-shadow: -1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    -moz-box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    -webkit-transition: top ease 0.5s;
+    z-index: 50;
+}
+
+#radarbutton {
+    position: absolute;
+    bottom: 0;
+    text-align:center;
+    width: 100%;
+    height: 40px;
+}
+#map{
+    position: absolute;
     right: 10px;
-    z-index: 1;
+    top: 10px;
+    z-index: 30;
+}
+
+#mapOverlay {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: 1px inset white;
+    z-index: 35;
 }
 
 #slider {
@@ -71,8 +101,9 @@ button:active {
     background: linear-gradient(top left, #FAFFC9 0%, #5E4C31 100%);
     height: 5px;
     width: 300px;
-    top: 160px;
+    top: 155px;
     right: 170px;
+    border: 1px inset white;
     z-index: 1;
     cursor: url(images/vertResize.png),auto;
 }
@@ -392,6 +423,11 @@ button:active {
     border-radius: 0 0 10px 10px;
     background: #138A0C;
     z-index: 2;
+    background-image: url(images/pinhole.png);
+    -webkit-box-shadow: 1px 1px 3px 1px #000;
+    -moz-box-shadow: 1px 1px 3px 1px #000;
+    box-shadow: 1px 1px 3px 1px #000;
+
 }
 
 #execDropDownContainer {
@@ -403,6 +439,7 @@ button:active {
     -o-transition: all 0.2s ease-in-out;
     -ms-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
+    background-image: url(images/texture.png);
 }
 
 #notifications {

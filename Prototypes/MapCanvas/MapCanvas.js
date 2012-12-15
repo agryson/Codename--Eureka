@@ -357,6 +357,10 @@ function init() {
     window.onresize = function() {
         mapFit();
     };
+    radRed();
+    document.getElementById('radarbutton').onclick = function() {
+        radRed();
+    };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -366,7 +370,10 @@ function init() {
     };
 }
 
-//window.onload =
+function radRed(){
+    var radar = document.getElementById('radarContainer');
+    parseInt(radar.style.top, 10) > -50 ? radar.style.top = -320 + 'px' : radar.style.top = 0;
+}
 
 function mapFit() {
     console.log('I\'m refitting!');
@@ -376,7 +383,7 @@ function mapFit() {
     Game.mPanelCanvas.width = document.width;
     Game.mPanelCanvas.height = document.height + quarterHeight;
     Game.xLimit = Math.ceil(document.width / Game.destinationWidth);
-    Game.yLimit = Math.ceil(document.height / (quarterHeight*3));
+    Game.yLimit = Math.ceil(document.height / (quarterHeight*3)+1);
     drawRadar();
     //drawZoomMap();
     drawLoc();
@@ -1057,7 +1064,7 @@ function drawRadar() {
         }
     }
     Game.radar.putImageData(radarPixels, 0, 0);
-    Game.radar.fillStyle = "#ffffff";
+    Game.level === 0 ? Game.radar.fillStyle = "#000000" : Game.radar.fillStyle = "#ffffff";
     Game.radar.font = "14px Arial";
     Game.radar.fillText('Depth: ' + Game.level * 50 + 'm', 215, 298);
 }
@@ -1139,7 +1146,7 @@ function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
     Game.radarLoc.fillRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
-    Game.radarLoc.fillStyle = 'rgba(255,251,229,0.5)';
+    Game.radarLoc.fillStyle = 'rgba(255,251,229,0.3)';
     Game.radarLoc.fill();
     Game.radarLoc.closePath();
     Game.radarLoc.beginPath();

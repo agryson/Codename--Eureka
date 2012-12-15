@@ -243,15 +243,17 @@
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         
-        <canvas id="map" width="300" height="300">
-            Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
-        </canvas>
-        
-        <canvas id="mapOverlay" width="300" height="300" onclick="jump()" onmouseover="overCanvas(true, 'radar')" onmouseout="overCanvas(false)">
-            Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
-        </canvas>
-        <input id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
-        
+        <div id="radarContainer">
+            <canvas id="map" width="300" height="300">
+                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+            </canvas>
+            
+            <canvas id="mapOverlay" width="300" height="300" onclick="jump()" onmouseover="overCanvas(true, 'radar')" onmouseout="overCanvas(false)">
+                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+            </canvas>
+            <input id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
+            <div id="radarbutton"></div>
+        </div>
         <div id="globalActions">
             <span id="turnNumber">Week: 0</span>
             <button class="info" id="globalReport" onclick="pulldown()">Executive Report</button>
