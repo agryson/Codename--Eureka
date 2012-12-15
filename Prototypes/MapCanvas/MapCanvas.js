@@ -252,6 +252,8 @@ function Param() {
     this.radarRad = 150; //this is the radius of the map that we want, changing it here should change it everywhere except the html
 
     //The zoomed in map related thigs...
+    this.destinationWidth = 90;
+    this.destinationHeight = 105;
     //this.xLimit = Math.ceil(document.width / 90);
     //this.yLimit = Math.ceil(document.height / 78);
 
@@ -904,16 +906,16 @@ function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
 
     //set the general cases
-    y = Math.floor(Game.mouseY / (105 * 0.74));
+    y = Math.floor(Game.mouseY / (Game.destinationHeight * 0.74));
 
-    y % 2 !== 0 ? x = Math.floor((Game.mouseX - 45) / 90) : x = Math.floor(Game.mouseX / 90);
+    y % 2 !== 0 ? x = Math.floor((Game.mouseX - Game.destinationWidth/2) / Game.destinationWidth) : x = Math.floor(Game.mouseX / Game.destinationWidth);
 
     //corner case code
-    yDiff = (Game.mouseY / (105 * 0.74)) - y;
+    yDiff = (Game.mouseY / (Game.destinationHeight * 0.74)) - y;
     if(yDiff < 0.33) { //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
         if(y % 2 !== 0) {
-            xDiff = ((Game.mouseX - 45) / 90 - x);
+            xDiff = ((Game.mouseX - Game.destinationWidth/2) / Game.destinationWidth - x);
             //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
             //Are we on the left or right hand side of the top third?
             if(xDiff < 0.5) {
@@ -930,7 +932,7 @@ function getTile(axis) {
             }
 
         } else {
-            xDiff = (Game.mouseX / 90 - x);
+            xDiff = (Game.mouseX / Game.destinationWidth - x);
             if(xDiff < 0.5) {
                 left = 0.5 - xDiff;
                 if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
@@ -969,7 +971,7 @@ function jump() {
         Game.retY = y;
         drawLoc();
     }else{
-        notify('That\'s out of bounds!')
+        notify('That\'s out of bounds!');
     }
 }
 
@@ -1058,35 +1060,33 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
             //this if checks to make sure we requested a tile we can draw,
             //mainly to prevent highlighting outside of the map
         } else {
-            var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight; //Canvas vars
+            var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
             sourceWidth = 173; //original tile width
             sourceHeight = 200; //original tile height
-            destinationWidth = 90; //tile width on zoomMap... If I want 13 tiles across... for s=35
-            destinationHeight = 105; //tile height on zoomMap
-            destinationY = Math.floor(tilePosY * destinationWidth * 0.86); //shift it, the number here is a constant that depends ont eh hexagon deformation
+            destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends ont eh hexagon deformation
             if(tilePosY % 2 === 0) { //if the row is even...
-                destinationX = Math.floor(tilePosX * destinationWidth); //we set its X normally
+                destinationX = Math.floor(tilePosX * Game.destinationWidth); //we set its X normally
             } else { //if it’s odd though
-                destinationX = Math.floor(tilePosX * destinationWidth + destinationWidth / 2); //we need a little bit of displacement
+                destinationX = Math.floor(tilePosX * Game.destinationWidth + Game.destinationWidth / 2); //we need a little bit of displacement
             }
 
             if(highlight) { //highlight is an optional parameter to see which canvas to draw to and how
                 sourceX = 0;
                 sourceY = 0;
-                Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
+                Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
             } else if(tileType > 7 && tileType < 12) { //animated tiles
                 sourceX = Game.animate * sourceWidth;
                 sourceY = tileType * sourceHeight;
-                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
+                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
             } else if(tileType <8 || tileType > 11) { //non-animated tiles
                 sourceX = 0;
                 sourceY = tileType * sourceHeight;
-                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
+                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
             }
             if(darkness) {
                 sourceX = 0;
                 sourceY = darkness * sourceHeight;
-                Game.mPanel.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight);
+                Game.mPanel.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
             }
         }
     } catch(e) {
@@ -1170,8 +1170,12 @@ function rightClicked(){
 }
 
 function contextContent(){
-    var y = Game.retY + getTile('y')+6;//just testing
-    var x = Game.retX + getTile('x')+4;
+    var y = Game.retY-Math.round(Game.yLimit/2) + getTile('y');
+    var x = Game.retX-Math.round(Game.xLimit/2) + getTile('x');
+    console.log(Game.retX);
+    console.log(Game.retY);
+    console.log(getTile('x'));
+    console.log(getTile('y'));
     var tile = returnLevel(Game.level)[y][x][1];
     var htmlString = '';
     htmlString += '<span>' + tile.ref + '</span><br>';
@@ -1194,8 +1198,8 @@ function changeName(string, orig){
  * Performs the appropriate action for the tile that is clicked upon
  */
 function clicked() {
-    var y = Game.retY + getTile('y');
-    var x = Game.retX + getTile('x');
+    var y = Game.retY-Math.round(Game.yLimit/2) + getTile('y');
+    var x = Game.retX-Math.round(Game.xLimit/2) + getTile('x');
     //var kind;
     var tile = returnLevel(Game.level)[y][x][1];
     var lowerTile = returnLevel(Game.level + 1)[y][x][1];
