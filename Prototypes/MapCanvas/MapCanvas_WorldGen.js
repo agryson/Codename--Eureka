@@ -152,6 +152,7 @@ function createMap() {
     drawRadar();
     drawLoc();
     drawZoomMap();
+    mapFit();
     //start mainloop
     mainLoop();
     popup.style.opacity = '0';

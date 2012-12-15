@@ -358,7 +358,9 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
-    mapFit();
+    window.onresize=function(){
+        mapFit();
+    };
     window.oncontextmenu =
         function(ev){
             ev.preventDefault();
@@ -372,12 +374,15 @@ function init() {
 //window.onload =
 
 function mapFit(){
+    console.log('I\'m refitting!');
     Game.mPanCanvas.width = document.width;
     Game.mPanCanvas.height = document.height+30;
     Game.mPanelCanvas.width = document.width;
     Game.mPanelCanvas.height = document.height+30;
     Game.xLimit = Math.ceil(document.width / 90);
-    Game.yLimit = Math.ceil(document.height / 78);
+    Game.yLimit = Math.ceil(document.height / 75);
+    drawRadar();
+    drawZoomMap();
     drawLoc();
 }
 
