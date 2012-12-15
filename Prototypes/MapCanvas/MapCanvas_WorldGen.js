@@ -4,6 +4,7 @@
  * @param  {boolean} newGame Is this a new game or not?
  * @return {nothing}
  */
+
 function getSeed(newGame) {
   var input = document.getElementById('seed').value;
   var popup = document.getElementById("popupContainer");
@@ -48,6 +49,7 @@ function getSeed(newGame) {
  * @param  {int} level What level are we workign on?
  * @return {int}       The altitude for the tile
  */
+
 function altitude(x, y, level) {
   if(level === 0) {
     var gridSize = 75;
@@ -69,6 +71,7 @@ var incrementer = 1;
  * Increments the loader bar
  * @return {nothing}
  */
+
 function increment() {
   if(incrementer < 6) {
     document.getElementById('thumb').style.width = incrementer * 20 + '%';
@@ -101,6 +104,7 @@ function increment() {
  * Creates the map Array
  * @return {nothing}
  */
+
 function createMap() {
   var popup = document.getElementById("popupContainer");
   var map = [];
@@ -136,7 +140,7 @@ function createMap() {
       map[y][x] = new Array(2); //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
       map[y][x][0] = true; //invert axes because referencing the array is not like referencing a graph
       map[y][x][1] = new Terrain(); //if we're in the circle, assign a tile value
-      map[y][x][1].ref = '#' + Game.level + ':' + ((x-150)) + ':' + ((y-150)*(-1));
+      map[y][x][1].ref = '#' + Game.level + ':' + ((x - 150)) + ':' + ((y - 150) * (-1));
       map[y][x][1].altitude = altitude(x, y, Game.level);
       setType(x, y, Game.level);
       map[y][x][1].resources = new Array(2); //insert the number of resources we'll be looking for
@@ -169,6 +173,7 @@ function createMap() {
  * @param {int} y     Y coordiante of the tile we're at
  * @param {int} level The Level we're working with
  */
+
 function setType(x, y, level) {
   var high = 160;
   var med = 130;
@@ -204,6 +209,7 @@ function setType(x, y, level) {
  * @param  {int} level   The level we're working on
  * @return {nothing}
  */
+
 function generateResources(x, y, terrain, level) {
   var map;
   level === 0 ? map = returnLevel(level)[y][x][1] : map = Game.map[y][x][1];

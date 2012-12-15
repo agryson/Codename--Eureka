@@ -7,6 +7,7 @@ var Game; //Global so I can get at it from other scripts...
 /**
  * The main object for a tile, tracking its kind, and state
  */
+
 function Terrain() {
     /*
     this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
@@ -30,7 +31,6 @@ function Terrain() {
     this.air = false;
     this.age = 0;
     this.exists = false; //does the building exist?
-
     /**
      * Calculates the next turn for the tile
      */
@@ -64,7 +64,6 @@ function Terrain() {
 
     /**
      * The 'dozing' function does everything necessary when we're dozing that terrain
-
      */
     this.prepare = function() {
         if(!prepared && !this.wip && this.diggable && Game.robotsList[0][0] < Game.robotsList[0][1]) {
@@ -86,7 +85,6 @@ function Terrain() {
      * @param  {int} x         X coordinate of tile to dig
      * @param  {int} y         Y coordinate of the tile to dig
      * @param  {Object} lowerTile The tile that is below this one
-
      */
     this.digDown = function(x, y, lowerTile) {
 
@@ -113,7 +111,6 @@ function Terrain() {
      * @param  {int} level         What level we are on
      * @param  {boolean} nearWallKnown Do we know if we're near a wall/water or not?
      * @param  {int} willBe        The eventual type of this tile
-
      */
     this.digCavern = function(x, y, tile, level, nearWallKnown, willBe) {
         var nearWall = nearWallKnown;
@@ -153,7 +150,6 @@ function Terrain() {
      * @param  {int} x         X coordinate
      * @param  {int} y         Y coordinate
      * @param  {Object} lowerTile The tile below this one
-
      */
     this.mine = function(x, y, lowerTile) {
         var wet = false;
@@ -183,7 +179,6 @@ function Terrain() {
 
     /**
      * The 'recycling' function does everything necessary when we're recycling that terrain
-
      */
     this.recycle = function() {
         if(!wip && this.kind !== 4 && Game.robotsList[3][0] < Game.robotsList[3][1]) {
@@ -206,6 +201,7 @@ function Terrain() {
      * @param  {int} kind      The kind of tile we're dealing with
      * @return {int}
      */
+
     function eta(baseTurns, kind) {
         //calculates the turns necessary to do something on this terrain
         if(kind === 1 || kind === 6) {
@@ -222,7 +218,6 @@ function Terrain() {
      * @param  {int} building The building type we want to build
      * @param  {int} health   the health of that building
      * @param  {int} turns    The turns it takes to build that building
-
      */
     this.build = function(building, health, turns) {
         console.log(building);
@@ -243,20 +238,18 @@ function Terrain() {
 
 }
 //GENERAL SETUP AND TOOLS**********************************************************************************************
-
 /**
  * The main game object
  */
+
 function Param() {
     //Radar related vars...
     this.radarRad = 150; //this is the radius of the map that we want, changing it here should change it everywhere except the html
-
     //The zoomed in map related thigs...
     this.destinationWidth = 90;
     this.destinationHeight = 105;
     //this.xLimit = Math.ceil(document.width / 90);
     //this.yLimit = Math.ceil(document.height / 78);
-
     this.retX = this.radarRad;
     this.retY = this.radarRad;
     this.animate = 0;
@@ -326,11 +319,11 @@ function Param() {
      * @type {Array}
      */
     this.robotsList = [
-        [0,5,"dozer", true, 2],
-        [0,3,"digger", true, 2],
-        [0,1,"cavernDigger", true, 1],
-        [0,1,"miner", true, 2],
-        [0,1,"recycler", false, 2]
+        [0, 5, "dozer", true, 2],
+        [0, 3, "digger", true, 2],
+        [0, 1, "cavernDigger", true, 1],
+        [0, 1, "miner", true, 2],
+        [0, 1, "recycler", false, 2]
     ];
     //Map generation vars
     this.seeder = '';
@@ -356,31 +349,31 @@ function Param() {
 /**
  * Initialize the game
  */
+
 function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
-    window.onresize=function(){
+    window.onresize = function() {
         mapFit();
     };
-    window.oncontextmenu =
-        function(ev){
-            ev.preventDefault();
-            ev.stopPropagation();
-            rightClicked();
-            console.log('clicked Right!');
-            return false;
-        };
+    window.oncontextmenu = function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        rightClicked();
+        console.log('clicked Right!');
+        return false;
+    };
 }
 
 //window.onload =
 
-function mapFit(){
+function mapFit() {
     console.log('I\'m refitting!');
     Game.mPanCanvas.width = document.width;
-    Game.mPanCanvas.height = document.height+30;
+    Game.mPanCanvas.height = document.height + 30;
     Game.mPanelCanvas.width = document.width;
-    Game.mPanelCanvas.height = document.height+30;
+    Game.mPanelCanvas.height = document.height + 30;
     Game.xLimit = Math.ceil(document.width / 90);
     Game.yLimit = Math.ceil(document.height / 75);
     drawRadar();
@@ -392,79 +385,80 @@ function mapFit(){
  * Checks which buildings are available to the player and
  * populates the sidebar with those buildings
  */
+
 function checkBuildings() {
     for(var thing in Game.buildings) {
         var idString = Game.buildings[thing][0];
         var elem = document.getElementById(idString);
-        if(Game.buildings[thing][1]){
-            if(elem.style.display !== 'table'){
+        if(Game.buildings[thing][1]) {
+            if(elem.style.display !== 'table') {
                 elem.style.display = 'table';
             }
-            switch(Game.buildings[thing][2]){
-                case 0:
-                    if(Game.level === 0){
-                        elem.classList.add('active');
-                        document.getElementById(Game.buildings[thing][0]).onclick = construct;
-                    } else {
-                        elem.classList.remove('active');
-                        document.getElementById(Game.buildings[thing][0]).onclick = null;
-                    }
-                    break;
-                case 1:
-                    if(Game.level > 0){
-                        elem.classList.add('active');
-                        document.getElementById(Game.buildings[thing][0]).onclick = construct;
-                    } else {
-                        elem.classList.remove('active');
-                        document.getElementById(Game.buildings[thing][0]).onclick = null;
-                    }
-                    break;
-                default:
+            switch(Game.buildings[thing][2]) {
+            case 0:
+                if(Game.level === 0) {
                     elem.classList.add('active');
                     document.getElementById(Game.buildings[thing][0]).onclick = construct;
+                } else {
+                    elem.classList.remove('active');
+                    document.getElementById(Game.buildings[thing][0]).onclick = null;
+                }
+                break;
+            case 1:
+                if(Game.level > 0) {
+                    elem.classList.add('active');
+                    document.getElementById(Game.buildings[thing][0]).onclick = construct;
+                } else {
+                    elem.classList.remove('active');
+                    document.getElementById(Game.buildings[thing][0]).onclick = null;
+                }
+                break;
+            default:
+                elem.classList.add('active');
+                document.getElementById(Game.buildings[thing][0]).onclick = construct;
             }
         }
     }
     checkRobots();
 }
 
-function checkRobots(){
-    for(var r2d2 in Game.robotsList){
+function checkRobots() {
+    for(var r2d2 in Game.robotsList) {
         var wallE = Game.robotsList[r2d2];
         var idString = wallE[2];
         var c3po = document.getElementById(idString);
-        if(wallE[3]){
-            if(c3po.style.display !== 'table'){
+        if(wallE[3]) {
+            if(c3po.style.display !== 'table') {
                 c3po.style.display = 'table';
             }
-            switch(wallE[4]){
-                case 0:
-                    if(Game.level === 0){
-                        c3po.classList.add('active');
-                        c3po.onclick = construct;
-                    } else {
-                        c3po.classList.remove('active');
-                        c3po.onclick = null;
-                    }
-                    break;
-                case 1:
-                    if(Game.level > 0){
-                        c3po.classList.add('active');
-                        c3po.onclick = construct;
-                    } else {
-                        c3po.classList.remove('active');
-                        c3po.onclick = null;
-                    }
-                    break;
-                default:
+            switch(wallE[4]) {
+            case 0:
+                if(Game.level === 0) {
                     c3po.classList.add('active');
                     c3po.onclick = construct;
+                } else {
+                    c3po.classList.remove('active');
+                    c3po.onclick = null;
+                }
+                break;
+            case 1:
+                if(Game.level > 0) {
+                    c3po.classList.add('active');
+                    c3po.onclick = construct;
+                } else {
+                    c3po.classList.remove('active');
+                    c3po.onclick = null;
+                }
+                break;
+            default:
+                c3po.classList.add('active');
+                c3po.onclick = construct;
             }
-            if(wallE[1] - wallE[0] === 0){
+            if(wallE[1] - wallE[0] === 0) {
                 c3po.classList.remove('active');
                 c3po.onclick = null;
                 document.getElementById(wallE[2]).style.background = '#000';
-                if(Game.clickedOn === idString){
+                if(Game.clickedOn === idString) {
                     Game.clickedOn = 'none';
                     document.body.style.cursor = "url('images/pointer.png'), default";
                 }
@@ -472,16 +466,16 @@ function checkRobots(){
         }
     }
     //special case for digger
-    if(Game.robotsList[1][1]-Game.robotsList[1][0]<=1){
+    if(Game.robotsList[1][1] - Game.robotsList[1][0] <= 1) {
         var rob = document.getElementById(Game.robotsList[1][2]);
         rob.classList.remove('active');
         rob.onclick = null;
         rob.style.background = '#000';
-        if(Game.clickedOn === 'digger' || (Game.clickedOn === 'cavernDigger' && Game.robotsList[1][1]-Game.robotsList[1][0]===0)){
+        if(Game.clickedOn === 'digger' || (Game.clickedOn === 'cavernDigger' && Game.robotsList[1][1] - Game.robotsList[1][0] === 0)) {
             Game.clickedOn = 'none';
             document.body.style.cursor = "url('images/pointer.png'), default";
         }
-        if(Game.robotsList[1][1]-Game.robotsList[1][0]===0){
+        if(Game.robotsList[1][1] - Game.robotsList[1][0] === 0) {
             var cavDig = document.getElementById('cavernDigger');
             cavDig.classList.remove('active');
             cavDig.onclick = null;
@@ -494,6 +488,7 @@ function checkRobots(){
  * Provides notifications to the user
  * @param  {string} notif The notification to send
  */
+
 function notify(notif) {
     var notification = document.getElementById('notifications');
     notification.innerHTML = '';
@@ -512,6 +507,7 @@ function notify(notif) {
  * @param  {string} which Canvas are we on?
  * @return {[type]}
  */
+
 function overCanvas(bool, which) {
     /*
      * Event listeners track the mouse movements.
@@ -533,7 +529,7 @@ function overCanvas(bool, which) {
          */
         Game.mPanCanvas.onmousemove = null;
         Game.radarCanvas.onmousemove = null;
-        Game.mPanLoc.clearRect(0, 0, document.width, document.height+50);
+        Game.mPanLoc.clearRect(0, 0, document.width, document.height + 50);
     }
 }
 
@@ -543,6 +539,7 @@ function overCanvas(bool, which) {
  * @param  {int} min is the base value
  * @return {int}
  */
+
 function randGen(num, min) {
     return Math.floor(Math.random() * num) + min;
 }
@@ -551,6 +548,7 @@ function randGen(num, min) {
  * Changes level from an input (slider etc.)
  * @param  {int} newLevel the level we would change to
  */
+
 function changeLevel(newLevel) {
     Game.level = parseInt(newLevel, 10);
     checkBuildings();
@@ -561,6 +559,7 @@ function changeLevel(newLevel) {
  * Loops through the tiles, ordering them to calculate their next turn
  * @return {[type]}
  */
+
 function nextTurn() {
     var x;
     var y;
@@ -588,6 +587,7 @@ function nextTurn() {
  * Recounts the number of bots available and updates the counter bars appropriately
  * @param  {string} which is the type of robot we're dealing with
  */
+
 function reCount(which) {
     switch(which) {
     case 'dozer':
@@ -630,6 +630,7 @@ function reCount(which) {
  * resizes the left menus on mouse drag
  * @param  {boolean} bool check to see if we should be resizing
  */
+
 function leftMenuResize(bool) {
     if(bool) {
         document.getElementById('leftMenu').onmousemove = resize;
@@ -642,24 +643,26 @@ function leftMenuResize(bool) {
  * manages the actual values for the resize (see leftMenuResize)
  * @param  {Object} e
  */
+
 function resize(e) {
     var current = e.clientY;
     var total = window.innerHeight;
-    var percentage = ((current/total)*100);
-    if (percentage < 10) {
+    var percentage = ((current / total) * 100);
+    if(percentage < 10) {
         percentage = 11;
         leftMenuResize(false);
-    } else if (percentage > 90){
+    } else if(percentage > 90) {
         percentage = 89;
         leftMenuResize(false);
     }
     document.getElementById('buildingContainer').style.height = percentage + '%';
-    document.getElementById('droneContainer').style.height = 100-percentage + '%';
+    document.getElementById('droneContainer').style.height = 100 - percentage + '%';
     document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
 }
 /**
  * Manages the animation for the menu pulldown
  */
+
 function pulldown() {
     var i = document.getElementById('execDropDownContainer');
     if(parseInt(i.style.height, 10) === 0 || i.style.height === '') {
@@ -672,6 +675,7 @@ function pulldown() {
 /**
  * The main game loop
  */
+
 function mainLoop() {
     var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     Game.animate == N ? Game.animate = 0 : Game.animate += 1;
@@ -683,6 +687,7 @@ function mainLoop() {
  * reacts to keyboard input appropriately
  * @param  {Object} e
  */
+
 function keypressed(e) {
     switch(e.keyCode) {
     case 38:
@@ -747,6 +752,7 @@ function keypressed(e) {
  * @param  {Object} canvas
  * @param  {Event} evt
  */
+
 function getMousePos(canvas, evt) {
     // get canvas position
     var obj = canvas;
@@ -773,6 +779,7 @@ function getMousePos(canvas, evt) {
  *and then redraws the maps and radar
  * @param  {string} dir is the direction to move
  */
+
 function move(dir) {
     var upY = Game.retY - 2;
     var downY = Game.retY + 2;
@@ -780,22 +787,22 @@ function move(dir) {
     var rightX = Game.retX + 1;
     switch(dir) {
     case 'up':
-        if(upY >= (Game.yLimit/2)) {
+        if(upY >= (Game.yLimit / 2)) {
             Game.retY = upY;
         }
         break;
     case 'down':
-        if(downY <= (Game.radarRad*2)-(Game.yLimit/2)) {
+        if(downY <= (Game.radarRad * 2) - (Game.yLimit / 2)) {
             Game.retY = downY;
         }
         break;
     case 'left':
-        if(leftX >= (Game.xLimit/2)) {
+        if(leftX >= (Game.xLimit / 2)) {
             Game.retX = leftX;
         }
         break;
     case 'right':
-        if(leftX < (Game.radarRad*2)-(Game.xLimit/2)) {
+        if(leftX < (Game.radarRad * 2) - (Game.xLimit / 2)) {
             Game.retX = rightX;
         }
         break;
@@ -820,16 +827,17 @@ function move(dir) {
  * clockwise
  * @return {array}
  */
+
 function adjacent(x, y, index) {
     if(y % 2 !== 0) {
         index += 6;
     }
     switch(index) {
     case 0:
-        return [y + 1, x-1];
+        return [y + 1, x - 1];
     case 1:
     case 6:
-        return [y+1, x];
+        return [y + 1, x];
     case 2:
     case 8:
         return [y, x + 1];
@@ -837,14 +845,14 @@ function adjacent(x, y, index) {
     case 10:
         return [y - 1, x];
     case 4:
-        return [y - 1, x-1];
+        return [y - 1, x - 1];
     case 5:
     case 11:
-        return [y, x-1];
+        return [y, x - 1];
     case 7:
-        return [y + 1, x+1];
+        return [y + 1, x + 1];
     case 9:
-        return [y - 1, x+1];
+        return [y - 1, x + 1];
     default:
         console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
     }
@@ -856,6 +864,7 @@ function adjacent(x, y, index) {
  * @param  {int} level provides the level to test on
  * @return {boolean}
  */
+
 function wetTest(yxArrayIn, level) {
     var yxArray = yxArrayIn.slice(0);
     for(var i = 0; i < 6; i++) {
@@ -875,6 +884,7 @@ function wetTest(yxArrayIn, level) {
  * @param  {int} y2
  * @return {float}
  */
+
 function distance(x1, y1, x2, y2) {
     return Math.round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
@@ -882,6 +892,7 @@ function distance(x1, y1, x2, y2) {
  * Random walk function for "clumpy" randomness
  * @return {int}
  */
+
 function randWalk() {
     var walk = Math.floor(Math.random() * 3);
     switch(walk) {
@@ -902,20 +913,21 @@ function randWalk() {
  * @param  {string} axis Which axis are we working with?
  * @return {int}
  */
+
 function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
 
     //set the general cases
     y = Math.floor(Game.mouseY / (Game.destinationHeight * 0.74));
 
-    y % 2 !== 0 ? x = Math.floor((Game.mouseX - Game.destinationWidth/2) / Game.destinationWidth) : x = Math.floor(Game.mouseX / Game.destinationWidth);
+    y % 2 !== 0 ? x = Math.floor((Game.mouseX - Game.destinationWidth / 2) / Game.destinationWidth) : x = Math.floor(Game.mouseX / Game.destinationWidth);
 
     //corner case code
     yDiff = (Game.mouseY / (Game.destinationHeight * 0.74)) - y;
     if(yDiff < 0.33) { //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
         if(y % 2 !== 0) {
-            xDiff = ((Game.mouseX - Game.destinationWidth/2) / Game.destinationWidth - x);
+            xDiff = ((Game.mouseX - Game.destinationWidth / 2) / Game.destinationWidth - x);
             //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
             //Are we on the left or right hand side of the top third?
             if(xDiff < 0.5) {
@@ -958,6 +970,7 @@ function getTile(axis) {
 /**
  * When the radar is clicked, moves the map to that location
  */
+
 function jump() {
     var x = Game.mouseX;
     var y = Game.mouseY;
@@ -966,11 +979,11 @@ function jump() {
         y -= 1;
     }
     //then set the new values and draw
-    if(x > Game.xLimit/2 && y > Game.yLimit/2 && x < Game.radarRad*2 - Game.xLimit/2 && y < Game.radarRad*2 - Game.yLimit/2) {
+    if(x > Game.xLimit / 2 && y > Game.yLimit / 2 && x < Game.radarRad * 2 - Game.xLimit / 2 && y < Game.radarRad * 2 - Game.yLimit / 2) {
         Game.retX = x;
         Game.retY = y;
         drawLoc();
-    }else{
+    } else {
         notify('That\'s out of bounds!');
     }
 }
@@ -980,6 +993,7 @@ function jump() {
  * @param  {int} level Which level to get the map for
  * @return {array}
  */
+
 function returnLevel(level) {
     switch(level) {
     case 0:
@@ -1001,6 +1015,7 @@ function returnLevel(level) {
 /**
  * Draws the radar properly
  */
+
 function drawRadar() {
     var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
     var surfaceColor = [
@@ -1021,7 +1036,7 @@ function drawRadar() {
 
     for(var x = 0; x < radarPixels.width; x++) {
         for(var y = 0; y < radarPixels.height; y++) {
-            if(true/*Game.map[y][x][0]*/) {
+            if(true /*Game.map[y][x][0]*/ ) {
 
                 // Index of the pixel in the array
                 var idx = (x + y * radarPixels.width) * 4;
@@ -1054,6 +1069,7 @@ function drawRadar() {
  * @param  {boolean} highlight Whether or not we should highlight the tile
  * @param  {boolean} darkness  Whether or not we should darken this tile
  */
+
 function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     try {
         if(tilePosX < 0 || tilePosX >= Game.xLimit) {
@@ -1078,7 +1094,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
                 sourceX = Game.animate * sourceWidth;
                 sourceY = tileType * sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            } else if(tileType <8 || tileType > 11) { //non-animated tiles
+            } else if(tileType < 8 || tileType > 11) { //non-animated tiles
                 sourceX = 0;
                 sourceY = tileType * sourceHeight;
                 Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
@@ -1098,6 +1114,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 /**
  * this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
  */
+
 function drawZoomMap() {
     Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     var y, x, end, sourceTile;
@@ -1124,8 +1141,8 @@ function drawZoomMap() {
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         end = Game.yLimit;
-        while(x < Game.xLimit-1) {
-            drawTile(sourceTile[(Game.retY - Math.ceil(Game.yLimit/2)) + y][(Game.retX) - Math.ceil(Game.xLimit/2) + x][1].kind, x, y, false);
+        while(x < Game.xLimit - 1) {
+            drawTile(sourceTile[(Game.retY - Math.ceil(Game.yLimit / 2)) + y][(Game.retX) - Math.ceil(Game.xLimit / 2) + x][1].kind, x, y, false);
             x++;
         }
     }
@@ -1134,44 +1151,44 @@ function drawZoomMap() {
 /**
  * draws the current location on the small radar map
  */
+
 function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
-    Game.radarLoc.fillRect(Game.retX - (Game.xLimit/2), Game.retY - (Game.yLimit/2), Game.xLimit, Game.yLimit);
+    Game.radarLoc.fillRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
     Game.radarLoc.fillStyle = 'rgba(255,251,229,0.7)';
     Game.radarLoc.fill();
     Game.radarLoc.closePath();
     Game.radarLoc.beginPath();
-    Game.radarLoc.strokeRect(Game.retX - (Game.xLimit/2),Game.retY - (Game.yLimit/2), Game.xLimit, Game.yLimit);
+    Game.radarLoc.strokeRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
     Game.radarLoc.strokeStyle = '#BD222A';
     Game.radarLoc.stroke();
     Game.radarLoc.closePath();
 }
 
-function rightClicked(){
+function rightClicked() {
     //TODO pop up a small div containing info on the  tile such as tile.health etc.
     var pop = document.getElementById('contextMenu');
     pop.innerHTML = contextContent();
-    pop.style.top = event.clientY +25 + 'px';
-    pop.style.left = event.clientX +40+ 'px';
+    pop.style.top = event.clientY + 25 + 'px';
+    pop.style.left = event.clientX + 40 + 'px';
     pop.style.display = 'inline-block';
     pop.style.opacity = '1';
-    pop.addEventListener('mouseout', function(){
-        if (((event.relatedTarget || event.toElement) == pop.nextElementSibling) ||
-            ((event.relatedTarget || event.toElement) == pop.parentNode)){
+    pop.addEventListener('mouseout', function() {
+        if(((event.relatedTarget || event.toElement) == pop.nextElementSibling) || ((event.relatedTarget || event.toElement) == pop.parentNode)) {
             pop.style.opacity = '0';
             pop.addEventListener('webkitTransitionEnd', function() {
                 pop.style.display = 'none';
                 pop.innerHTML = '';
                 pop.onmouseout = null;
             }, false);
-            }
-        }, false);
+        }
+    }, false);
 }
 
-function contextContent(){
-    var y = Game.retY-Math.round(Game.yLimit/2) + getTile('y');
-    var x = Game.retX-Math.round(Game.xLimit/2) + getTile('x');
+function contextContent() {
+    var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
+    var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     console.log(Game.retX);
     console.log(Game.retY);
     console.log(getTile('x'));
@@ -1183,23 +1200,22 @@ function contextContent(){
     return htmlString;
 }
 
-String.prototype.insert = function (index, string) {
-  if (index > 0)
-    return this.slice(0, index) + string + this.slice(index);
-  else
-    return string + this;
+String.prototype.insert = function(index, string) {
+    if(index > 0) return this.slice(0, index) + string + this.slice(index);
+    else return string + this;
 };
 
-function changeName(string, orig){
+function changeName(string, orig) {
     return string + ' #' + orig.split('#')[1];
 }
 
 /**
  * Performs the appropriate action for the tile that is clicked upon
  */
+
 function clicked() {
-    var y = Game.retY-Math.round(Game.yLimit/2) + getTile('y');
-    var x = Game.retX-Math.round(Game.xLimit/2) + getTile('x');
+    var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
+    var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     //var kind;
     var tile = returnLevel(Game.level)[y][x][1];
     var lowerTile = returnLevel(Game.level + 1)[y][x][1];
@@ -1336,6 +1352,7 @@ function clicked() {
 /**
  *  When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
  */
+
 function construct() {
     var identity = this.id;
     //console.log(identity);
@@ -1348,8 +1365,7 @@ function construct() {
             document.getElementById(Game.clickedOn).style.background = '#000';
         }
         document.getElementById(identity).style.background = '#393939';
-        Game.clickedOn = identity;
-        /**TODO : Update this to be the primary key listener*/
+        Game.clickedOn = identity; /**TODO : Update this to be the primary key listener*/
         switch(identity) {
         case 'dozer':
             document.body.style.cursor = "url('images/dozer.png'), default";
