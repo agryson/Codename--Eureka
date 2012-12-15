@@ -776,7 +776,7 @@ function move(dir) {
         }
         break;
     case 'left':
-        if(leftX >= (Game.xLimit/2)-2) {
+        if(leftX >= (Game.xLimit/2)) {
             Game.retX = leftX;
         }
         break;
