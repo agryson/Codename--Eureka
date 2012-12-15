@@ -136,7 +136,7 @@ function createMap() {
       map[y][x] = new Array(2); //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
       map[y][x][0] = true; //invert axes because referencing the array is not like referencing a graph
       map[y][x][1] = new Terrain(); //if we're in the circle, assign a tile value
-      map[y][x][1].ref = '#' + Game.level + ':' + ((x-150)) + ':' + ((y-150)*-1);
+      map[y][x][1].ref = '#' + Game.level + ':' + ((x-150)) + ':' + ((y-150)*(-1));
       map[y][x][1].altitude = altitude(x, y, Game.level);
       setType(x, y, Game.level);
       map[y][x][1].resources = new Array(2); //insert the number of resources we'll be looking for

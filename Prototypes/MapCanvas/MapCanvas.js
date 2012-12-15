@@ -821,30 +821,30 @@ function move(dir) {
  * @return {array}
  */
 function adjacent(x, y, index) {
-    if(y % 2 === 0) {
+    if(y % 2 !== 0) {
         index += 6;
     }
     switch(index) {
     case 0:
-        return [y - 1, x - 1];
+        return [y + 1, x-1];
     case 1:
     case 6:
-        return [y - 1, x];
+        return [y+1, x];
     case 2:
     case 8:
         return [y, x + 1];
     case 3:
     case 10:
-        return [y + 1, x];
+        return [y - 1, x];
     case 4:
-        return [y + 1, x - 1];
+        return [y - 1, x-1];
     case 5:
     case 11:
-        return [y, x - 1];
+        return [y, x-1];
     case 7:
-        return [y - 1, x + 1];
+        return [y + 1, x+1];
     case 9:
-        return [y + 1, x + 1];
+        return [y - 1, x+1];
     default:
         console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
     }
