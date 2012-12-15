@@ -377,7 +377,7 @@ function mapFit() {
     Game.xLimit = Math.ceil(document.width / 90);
     Game.yLimit = Math.ceil(document.height / 75);
     drawRadar();
-    drawZoomMap();
+    //drawZoomMap();
     drawLoc();
 }
 
@@ -679,7 +679,7 @@ function pulldown() {
 function mainLoop() {
     var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     Game.animate == N ? Game.animate = 0 : Game.animate += 1;
-    drawZoomMap();
+    //drawZoomMap();
     setTimeout(mainLoop, 200); //set the framerate here
 }
 
@@ -814,7 +814,7 @@ function move(dir) {
     default:
         break;
     }
-    drawZoomMap();
+    //drawZoomMap();
     drawLoc();
     drawRadar();
 }
@@ -1117,27 +1117,9 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 
 function drawZoomMap() {
     Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-    var y, x, end, sourceTile;
-
-    switch(Game.level) {
-    case 0:
-        sourceTile = Game.map;
-        break;
-    case 1:
-        sourceTile = Game.map1;
-        break;
-    case 2:
-        sourceTile = Game.map2;
-        break;
-    case 3:
-        sourceTile = Game.map3;
-        break;
-    case 4:
-        sourceTile = Game.map4;
-        break;
-
-    }
-
+    var y, x, end;
+    var sourceTile = returnLevel(Game.level);
+    webkitRequestAnimationFrame(drawZoomMap);
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         end = Game.yLimit;
@@ -1345,7 +1327,7 @@ function clicked() {
     default:
         console.log("I don't recognise that building code...");
     }
-    drawZoomMap();
+    //drawZoomMap();
     drawRadar();
 }
 
