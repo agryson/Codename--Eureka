@@ -252,8 +252,8 @@ function Param() {
     this.radarRad = 150; //this is the radius of the map that we want, changing it here should change it everywhere except the html
 
     //The zoomed in map related thigs...
-    this.xLimit = Math.ceil(document.width / 90);
-    this.yLimit = Math.ceil(document.height / 78);
+    //this.xLimit = Math.ceil(document.width / 90);
+    //this.yLimit = Math.ceil(document.height / 78);
 
     this.retX = this.radarRad;
     this.retY = this.radarRad;
@@ -358,11 +358,7 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
-    Game.mPanCanvas.width = document.width;
-    Game.mPanCanvas.height = document.height+30;
-    Game.mPanelCanvas.width = document.width;
-    Game.mPanelCanvas.height = document.height+30;
-    drawLoc();
+    mapFit();
     window.oncontextmenu =
         function(ev){
             ev.preventDefault();
@@ -373,6 +369,17 @@ function init() {
         };
 }
 
+//window.onload =
+
+function mapFit(){
+    Game.mPanCanvas.width = document.width;
+    Game.mPanCanvas.height = document.height+30;
+    Game.mPanelCanvas.width = document.width;
+    Game.mPanelCanvas.height = document.height+30;
+    Game.xLimit = Math.ceil(document.width / 90);
+    Game.yLimit = Math.ceil(document.height / 78);
+    drawLoc();
+}
 
 /**
  * Checks which buildings are available to the player and
@@ -1158,8 +1165,8 @@ function rightClicked(){
 }
 
 function contextContent(){
-    var y = Game.retY + getTile('y');
-    var x = Game.retX + getTile('x');
+    var y = Game.retY + getTile('y')+6;//just testing
+    var x = Game.retX + getTile('x')+4;
     var tile = returnLevel(Game.level)[y][x][1];
     var htmlString = '';
     htmlString += '<span>' + tile.ref + '</span><br>';
