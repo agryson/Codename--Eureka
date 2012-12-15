@@ -250,25 +250,10 @@ function Terrain() {
 function Param() {
     //Radar related vars...
     this.radarRad = 150; //this is the radius of the map that we want, changing it here should change it everywhere except the html
-    this.radLimit = this.radarRad - 8;
 
     //The zoomed in map related thigs...
-    var ending = Math.ceil(document.width / 90);
-    this.zoomMap = [
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending],
-        [0,ending]
-    ];
+    this.xLimit = Math.ceil(document.width / 90);
+    this.yLimit = Math.ceil(document.height / 78);
 
     this.retX = this.radarRad;
     this.retY = this.radarRad;
@@ -374,9 +359,9 @@ function init() {
     checkBuildings();
     reCount('all');
     Game.mPanCanvas.width = document.width;
-    Game.mPanCanvas.height = document.height+50;
+    Game.mPanCanvas.height = document.height+30;
     Game.mPanelCanvas.width = document.width;
-    Game.mPanelCanvas.height = document.height+50;
+    Game.mPanelCanvas.height = document.height+30;
     window.oncontextmenu =
         function(ev){
             ev.preventDefault();
@@ -780,22 +765,22 @@ function move(dir) {
     var rightX = Game.retX + 1;
     switch(dir) {
     case 'up':
-        if(distance(Game.retX, upY, Game.radarRad, Game.radarRad) <= Game.radLimit) {
+        if(upY >= (Game.yLimit/2)) {
             Game.retY = upY;
         }
         break;
     case 'down':
-        if(distance(Game.retX, downY, Game.radarRad, Game.radarRad) <= Game.radLimit) {
+        if(downY <= (Game.radarRad*2)-(Game.yLimit/2)) {
             Game.retY = downY;
         }
         break;
     case 'left':
-        if(distance(leftX, Game.retY, Game.radarRad, Game.radarRad) <= Game.radLimit) {
+        if(leftX >= (Game.xLimit/2)) {
             Game.retX = leftX;
         }
         break;
     case 'right':
-        if(distance(rightX, Game.retY, Game.radarRad, Game.radarRad) <= Game.radLimit) {
+        if(leftX <= (Game.radarRad*2)-(Game.xLimit/2)) {
             Game.retX = rightX;
         }
         break;
@@ -1054,7 +1039,7 @@ function drawRadar() {
  */
 function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
     try {
-        if(tilePosX < Game.zoomMap[tilePosY][0] || tilePosX >= Game.zoomMap[tilePosY][1]) {
+        if(tilePosX < 0 || tilePosX >= Game.xLimit) {
             //this if checks to make sure we requested a tile we can draw,
             //mainly to prevent highlighting outside of the map
         } else {
@@ -1121,15 +1106,11 @@ function drawZoomMap() {
 
     }
 
-    for(y = 0; y < Game.zoomMap.length; y++) {
-        x = Game.zoomMap[y][0];
-        end = Game.zoomMap[y][1];
-        while(x < end) {
-            drawTile(sourceTile[(Game.retY + y - 5)][(Game.retX + x - 5)][1].kind, x, y, false);
-            /*
-            if(y === 0 || y == Game.zoomMap.length - 1 || x == Game.zoomMap[y][0] || x == end - 1) { //darkens the outer hexagons
-                drawTile(sourceTile[(Game.retY + y - 5)][(Game.retX + x - 5)][1].kind, x, y, false, 2);
-            }*/
+    for(y = 0; y < Game.yLimit; y++) {
+        x = 0;
+        end = Game.yLimit;
+        while(x < Game.xLimit) {
+            drawTile(sourceTile[(Game.retY - (Game.yLimit/2)) + y][(Game.retX) - (Game.xLimit/2) + x][1].kind, x, y, false);
             x++;
         }
     }
@@ -1174,8 +1155,8 @@ function rightClicked(){
 }
 
 function contextContent(){
-    var y = Game.retY + getTile('y') - 5;
-    var x = Game.retX + getTile('x') - 5;
+    var y = Game.retY + getTile('y');
+    var x = Game.retX + getTile('x');
     var tile = returnLevel(Game.level)[y][x][1];
     var htmlString = '';
     htmlString += '<span>' + tile.ref + '</span><br>';
@@ -1198,8 +1179,8 @@ function changeName(string, orig){
  * Performs the appropriate action for the tile that is clicked upon
  */
 function clicked() {
-    var y = Game.retY + getTile('y') - 5;
-    var x = Game.retX + getTile('x') - 5;
+    var y = Game.retY + getTile('y');
+    var x = Game.retX + getTile('x');
     //var kind;
     var tile = returnLevel(Game.level)[y][x][1];
     var lowerTile = returnLevel(Game.level + 1)[y][x][1];
