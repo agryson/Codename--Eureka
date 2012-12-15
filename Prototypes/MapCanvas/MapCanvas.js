@@ -837,7 +837,7 @@ function move(dir) {
  */
 
 function adjacent(x, y, index) {
-    if(y % 2 !== 0) {
+    if(y % 2 === 0) {
         index += 6;
     }
     switch(index) {
