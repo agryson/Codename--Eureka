@@ -1106,7 +1106,7 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
             var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
             sourceWidth = 173; //original tile width
             sourceHeight = 200; //original tile height
-            destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.87); //shift it, the number here is a constant that depends on the hexagon deformation
+            destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
             if(tilePosY % 2 === 0) { //if the row is even...
                 destinationX = Math.floor(tilePosX * Game.destinationWidth); //we set its X normally
             } else { //if it’s odd though
