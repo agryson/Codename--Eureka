@@ -372,7 +372,7 @@ function init() {
 
 function radRed(){
     var radar = document.getElementById('radarContainer');
-    parseInt(radar.style.top, 10) > -50 ? radar.style.top = -320 + 'px' : radar.style.top = 0;
+    parseInt(radar.style.top, 10) === 0 ? radar.style.top = -320 + 'px' : radar.style.top = 0;
 }
 
 function mapFit() {
