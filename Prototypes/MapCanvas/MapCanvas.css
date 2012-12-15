@@ -45,7 +45,7 @@ button:active {
     position: fixed;
     top: 0;
     left: 115px;
-    margin-top: -30px;
+    margin-top: -35px;
 }
 
 #map,#mapOverlay {

@@ -246,8 +246,8 @@ function Param() {
     //Radar related vars...
     this.radarRad = 150; //this is the radius of the map that we want, changing it here should change it everywhere except the html
     //The zoomed in map related thigs...
-    this.destinationWidth = 90;
-    this.destinationHeight = 105;
+    this.destinationWidth = 120;
+    this.destinationHeight = 140;
     //this.xLimit = Math.ceil(document.width / 90);
     //this.yLimit = Math.ceil(document.height / 78);
     this.retX = this.radarRad;
@@ -370,12 +370,13 @@ function init() {
 
 function mapFit() {
     console.log('I\'m refitting!');
+    var quarterHeight = Game.destinationHeight*0.25;
     Game.mPanCanvas.width = document.width;
-    Game.mPanCanvas.height = document.height + 30;
+    Game.mPanCanvas.height = document.height + quarterHeight;
     Game.mPanelCanvas.width = document.width;
-    Game.mPanelCanvas.height = document.height + 30;
-    Game.xLimit = Math.ceil(document.width / 90);
-    Game.yLimit = Math.ceil(document.height / 75);
+    Game.mPanelCanvas.height = document.height + quarterHeight;
+    Game.xLimit = Math.ceil(document.width / Game.destinationWidth);
+    Game.yLimit = Math.ceil(document.height / (quarterHeight*3));
     drawRadar();
     //drawZoomMap();
     drawLoc();
@@ -1138,7 +1139,7 @@ function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
     Game.radarLoc.fillRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
-    Game.radarLoc.fillStyle = 'rgba(255,251,229,0.7)';
+    Game.radarLoc.fillStyle = 'rgba(255,251,229,0.5)';
     Game.radarLoc.fill();
     Game.radarLoc.closePath();
     Game.radarLoc.beginPath();
