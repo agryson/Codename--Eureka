@@ -362,6 +362,7 @@ function init() {
     Game.mPanCanvas.height = document.height+30;
     Game.mPanelCanvas.width = document.width;
     Game.mPanelCanvas.height = document.height+30;
+    drawLoc();
     window.oncontextmenu =
         function(ev){
             ev.preventDefault();
@@ -775,12 +776,12 @@ function move(dir) {
         }
         break;
     case 'left':
-        if(leftX >= (Game.xLimit/2)) {
+        if(leftX >= (Game.xLimit/2)-2) {
             Game.retX = leftX;
         }
         break;
     case 'right':
-        if(leftX <= (Game.radarRad*2)-(Game.xLimit/2)) {
+        if(leftX < (Game.radarRad*2)-(Game.xLimit/2)) {
             Game.retX = rightX;
         }
         break;
@@ -1109,8 +1110,8 @@ function drawZoomMap() {
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         end = Game.yLimit;
-        while(x < Game.xLimit) {
-            drawTile(sourceTile[(Game.retY - (Game.yLimit/2)) + y][(Game.retX) - (Game.xLimit/2) + x][1].kind, x, y, false);
+        while(x < Game.xLimit-1) {
+            drawTile(sourceTile[(Game.retY - Math.ceil(Game.yLimit/2)) + y][(Game.retX) - Math.ceil(Game.xLimit/2) + x][1].kind, x, y, false);
             x++;
         }
     }
@@ -1122,12 +1123,12 @@ function drawZoomMap() {
 function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
-    Game.radarLoc.arc(Game.retX, Game.retY, 7, 0, Math.PI * 2, true);
+    Game.radarLoc.fillRect(Game.retX - (Game.xLimit/2), Game.retY - (Game.yLimit/2), Game.xLimit, Game.yLimit);
     Game.radarLoc.fillStyle = 'rgba(255,251,229,0.7)';
     Game.radarLoc.fill();
     Game.radarLoc.closePath();
     Game.radarLoc.beginPath();
-    Game.radarLoc.arc(Game.retX, Game.retY, 8, 0, Math.PI * 2, true);
+    Game.radarLoc.strokeRect(Game.retX - (Game.xLimit/2),Game.retY - (Game.yLimit/2), Game.xLimit, Game.yLimit);
     Game.radarLoc.strokeStyle = '#BD222A';
     Game.radarLoc.stroke();
     Game.radarLoc.closePath();
@@ -1145,7 +1146,7 @@ function rightClicked(){
         if (((event.relatedTarget || event.toElement) == pop.nextElementSibling) ||
             ((event.relatedTarget || event.toElement) == pop.parentNode)){
             pop.style.opacity = '0';
-            popup.addEventListener('webkitTransitionEnd', function() {
+            pop.addEventListener('webkitTransitionEnd', function() {
                 pop.style.display = 'none';
                 pop.innerHTML = '';
                 pop.onmouseout = null;
