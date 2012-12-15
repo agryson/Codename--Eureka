@@ -952,10 +952,12 @@ function jump() {
         y -= 1;
     }
     //then set the new values and draw
-    if(distance(x, y, Game.radarRad, Game.radarRad) < Game.radLimit) {
+    if(x > Game.xLimit/2 && y > Game.yLimit/2 && x < Game.radarRad*2 - Game.xLimit/2 && y < Game.radarRad*2 - Game.yLimit/2) {
         Game.retX = x;
         Game.retY = y;
         drawLoc();
+    }else{
+        notify('That\'s out of bounds!')
     }
 }
 
