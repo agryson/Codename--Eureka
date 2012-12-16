@@ -368,6 +368,11 @@ function init() {
         console.log('clicked Right!');
         return false;
     };
+    document.getElementById('infoContainer').style.height = 137 + 'px'; //I need to set the style cause the stylesheet one returns NaN!
+    document.getElementById('settings').onclick = function() {
+        var settings = document.getElementById('infoContainer');
+        parseInt(settings.style.height, 10) < 200 ? settings.style.height = parseInt(settings.style.height, 10) + 300 + 'px' : settings.style.height = parseInt(settings.style.height, 10) - 300 + 'px';
+    };
 }
 
 function radRed(){

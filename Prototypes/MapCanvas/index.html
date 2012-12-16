@@ -255,13 +255,24 @@
             <div id="radarbutton"></div>
         </div>
         <div id="globalActions">
-            <input id='zoom' type="range" min="0" max="3" value="0" step="1" onchange="zoom()" />
             <span id="turnNumber">Week: 0</span>
             <button class="info" id="globalReport" onclick="pulldown()">Executive Report</button>
             <button class="info" id="save">
-                <img src = 'images/icons/configuration02.png' </img>
             </button>
             <button class="action" id="turn" onclick="nextTurn()">Send Orders</button>
+        </div>
+        <div id='infoContainer'>
+            <div id='infoTabContainer'>
+                <div id='settings'>
+                    <img src = 'images/icons/configuration02.png' </img>
+                </div>
+                <div id='settingsPanel'>
+                    <div class='settingsItem'>
+                        <span>Zoom: </span>
+                        <input id='zoom' type="range" min="0" max="3" value="0" step="1" onchange="zoom()" />
+                    </div>
+                </div>
+            </div>
         </div>
         
 

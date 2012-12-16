@@ -36,7 +36,7 @@ button:active {
     box-shadow: inset 1px 1px 3px 1px #090909, 1px 1px 1px 0 white;
 }
 
-.itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitle,#loadMessage,.botCountNum,#contextMenu {
+span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitle,#loadMessage,.botCountNum,#contextMenu {
     font-family: Arial, sans-serif;
     font-weight: bold;
 }
@@ -499,20 +499,13 @@ button:active {
     box-shadow: 0 0 2px 0 #FFF;
     border-radius: 10px 0 0 0;
     cursor: url(images/pointers/pointer.png),auto;
+    z-index: 5;
 }
 
 #save {
     position: absolute;
     bottom: 10px;
     left: 10px;
-    background-color: transparent;
-    box-shadow: 0 0 0 0 transparent;
-}
-#save:hover{
-    box-shadow: 0 0 2px 0 #FFF;
-}
-#save:active{
-    box-shadow: inset 0 0 5px 0 #000;
 }
 
 #turn {
@@ -532,4 +525,72 @@ button:active {
     top: 14px;
     left: 14px;
     color: #D9F7FF;
+}
+
+#infoContainer{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 4;
+    width: 340px;
+    background: transparent;
+    overflow: hidden;
+    -webkit-transition: height 0.2s ease;
+}
+
+#infoTabContainer{
+    position: absolute;
+    top: 0;
+    right:0;
+    width: 100%;
+    height: 37px;
+    background: transparent;
+}
+
+#settings{
+    position: absolute;
+    right: 0;
+    width: 57px;
+    padding-left: 19px;
+    border-radius: 5px 0 0 0;
+    background: #494949;
+    background-image: url(images/pinhole.png);
+}
+
+#settingsPanel{
+    position: absolute;
+    right: 0;
+    top: 37px;
+    height: 400px;
+    width: 100%;
+    background: #494949;
+    border-radius: 5px 0 0 0;
+}
+
+.settingsItem{
+    margin: 15px;
+}
+
+#zoom {
+    position: absolute;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 5px;
+    width: 70%;
+    margin-left: 10px;
+    border: 1px inset white;
+    z-index: 1;
+    cursor: url(images/pointers/horiResize.png),auto;
+}
+
+#zoom::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: #AFAFAF;
+    border-radius: 5px;
+    height: 15px;
+    width: 30px;
+    -webkit-box-shadow: inset -1px 1px 0 2px #8C8C8C;
+    -moz-box-shadow: inset -1px 1px 0 2px #8C8C8C;
+    box-shadow: inset -1px 1px 0 2px #8C8C8C;
 }
