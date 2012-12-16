@@ -70,6 +70,12 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     width: 100%;
     height: 40px;
 }
+
+#radarButtonArrow{
+    margin-top: 10px;
+    -webkit-transition: -webkit-transform 0.5s ease;
+}
+
 #map{
     position: absolute;
     right: 10px;
@@ -535,7 +541,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     width: 340px;
     background: transparent;
     overflow: hidden;
-    -webkit-transition: height 0.2s ease;
+    -webkit-transition: height 0.5s ease;
 }
 
 #infoTabContainer{
@@ -550,7 +556,8 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     position: absolute;
     right: 0;
     width: 57px;
-    padding-left: 19px;
+    padding-left: 25px;
+    padding-top: 3px;
     border-radius: 5px 0 0 0;
     background: #494949;
     background-image: url(images/pinhole.png);
@@ -583,6 +590,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     height: 5px;
     width: 70%;
     margin-left: 10px;
+    margin-top: 3px;
     border: 1px inset white;
     z-index: 1;
     cursor: url(images/pointers/horiResize.png),auto;

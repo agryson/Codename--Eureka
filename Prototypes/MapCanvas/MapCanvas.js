@@ -377,7 +377,14 @@ function init() {
 
 function radRed(){
     var radar = document.getElementById('radarContainer');
-    parseInt(radar.style.top, 10) === 0 ? radar.style.top = -320 + 'px' : radar.style.top = 0;
+    var radarButton = document.getElementById('radarButtonArrow');
+    if(parseInt(radar.style.top, 10) === 0){
+        radar.style.top = -320 + 'px';
+        radarButton.style.webkitTransform = 'rotate(-90deg)';
+    }else{
+        radar.style.top = 0;
+        radarButton.style.webkitTransform = 'rotate(90deg)';
+    }
 }
 
 function zoom(){
