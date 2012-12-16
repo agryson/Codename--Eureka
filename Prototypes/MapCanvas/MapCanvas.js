@@ -391,7 +391,6 @@ function zoom(){
     var zoomLevel = document.getElementById('zoom').value;
     Game.destinationWidth = zoomLevel*6*5;
     Game.destinationHeight = zoomLevel*7*5;
-    console.log('zoom: ' + zoomLevel);
     mapFit();
 }
 
@@ -399,9 +398,9 @@ function mapFit() {
     console.log('I\'m refitting!');
     var quarterHeight = Game.destinationHeight*0.25;
     Game.mPanCanvas.width = document.width;
-    Game.mPanCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*10;
+    Game.mPanCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*50;
     Game.mPanelCanvas.width = document.width;
-    Game.mPanelCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*10;
+    Game.mPanelCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*50;
     Game.xLimit = Math.ceil(document.width / Game.destinationWidth);
     Game.yLimit = Math.ceil(document.height / (quarterHeight*3)+2);
     drawRadar();
@@ -1145,7 +1144,7 @@ function drawZoomMap() {
     var y, x, end;
     var sourceTile = returnLevel(Game.level);
     webkitRequestAnimationFrame(drawZoomMap);
-    for(y = 0; y < Game.yLimit-1; y++) {
+    for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         end = Game.yLimit;
         while(x < Game.xLimit - 1) {
