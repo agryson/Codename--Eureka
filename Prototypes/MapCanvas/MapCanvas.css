@@ -449,22 +449,24 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 }
 
 #notifications {
-    background: none;
+    position: absolute;
+    bottom:0;
+    right:340px;
+    background: gray;
     padding: 0.1em;
-    margin-top: 0.8em;
-    margin-bottom: 0.6em;
-    border-radius: 0 5px 5px 0;
+    border-radius: 5px 0 0 0;
     height: 1.2em;
     width: 0px;
-    margin-left: 25px;
     z-index: 2;
     overflow: hidden;
-    text-shadow: 1px 1px 1px #00EE00;
-    -webkit-transition: width 0.4s ease-in-out;
-    -moz-transition: width 0.4s ease-in-out;
-    -o-transition: width 0.4s ease-in-out;
-    -ms-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
+    background: #494949;
+    color: white;
+    -webkit-box-shadow: inset -1px -1px 0 2px white;
+    -webkit-transition: width 0.2s ease-in-out;
+    -moz-transition: width 0.2s ease-in-out;
+    -o-transition: width 0.2s ease-in-out;
+    -ms-transition: width 0.2s ease-in-out;
+    transition: width 0.2s ease-in-out;
 }
 
 /*        ******      Global Actions    ******      */
