@@ -389,8 +389,9 @@ function radRed(){
 
 function zoom(){
     var zoomLevel = document.getElementById('zoom').value;
-    Game.destinationWidth = zoomLevel*6;
-    Game.destinationHeight = zoomLevel*7;
+    Game.destinationWidth = zoomLevel*6*5;
+    Game.destinationHeight = zoomLevel*7*5;
+    console.log('zoom: ' + zoomLevel);
     mapFit();
 }
 
@@ -945,12 +946,12 @@ function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
 
     //set the general cases
-    y = Math.floor(Game.mouseY / (Game.destinationHeight * 0.74));
+    y = Math.floor(Game.mouseY / (Game.destinationHeight * 0.75));
 
     y % 2 !== 0 ? x = Math.floor((Game.mouseX - Game.destinationWidth / 2) / Game.destinationWidth) : x = Math.floor(Game.mouseX / Game.destinationWidth);
 
     //corner case code
-    yDiff = (Game.mouseY / (Game.destinationHeight * 0.74)) - y;
+    yDiff = (Game.mouseY / (Game.destinationHeight * 0.75)) - y;
     if(yDiff < 0.33) { //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
         if(y % 2 !== 0) {
@@ -1107,8 +1108,8 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
             if(tilePosY % 2 === 0) { //if the row is even...
                 destinationX = Math.floor(tilePosX * Game.destinationWidth); //we set its X normally
             } else { //if it’s odd though
-                destinationX = Math.floor(tilePosX * Game.destinationWidth + Game.destinationWidth / 2); //we need a little bit of displacement
-            }
+                destinationX = Math.floor(tilePosX * Game.destinationWidth + (Game.destinationWidth / 2)); //we need a little bit of displacement
+            }//TODO this is causing a shift of the x tiles in certain zoomLevels
 
             if(highlight) { //highlight is an optional parameter to see which canvas to draw to and how
                 sourceX = 0;
@@ -1144,11 +1145,11 @@ function drawZoomMap() {
     var y, x, end;
     var sourceTile = returnLevel(Game.level);
     webkitRequestAnimationFrame(drawZoomMap);
-    for(y = 0; y < Game.yLimit; y++) {
+    for(y = 0; y < Game.yLimit-1; y++) {
         x = 0;
         end = Game.yLimit;
         while(x < Game.xLimit - 1) {
-            drawTile(sourceTile[(Game.retY - Math.ceil(Game.yLimit / 2)) + y][(Game.retX) - Math.ceil(Game.xLimit / 2) + x][1].kind, x, y, false);
+            drawTile(sourceTile[(Game.retY - Math.round(Game.yLimit / 2)) + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind, x, y, false);
             x++;
         }
     }
