@@ -381,24 +381,9 @@ function radRed(){
 }
 
 function zoom(){
-    switch(document.getElementById('zoom').value) {
-        case '0':
-            Game.destinationWidth = 120;
-            Game.destinationHeight = 140;
-            break;
-        case '1':
-            Game.destinationWidth = 90;
-            Game.destinationHeight = 105;
-            break;
-        case '2':
-            Game.destinationWidth = 60;
-            Game.destinationHeight = 70;
-            break;
-        case '3':
-            Game.destinationWidth = 30;
-            Game.destinationHeight = 35;
-            break;
-        }
+    var zoomLevel = document.getElementById('zoom').value;
+    Game.destinationWidth = zoomLevel*6;
+    Game.destinationHeight = zoomLevel*7;
     mapFit();
 }
 
