@@ -368,10 +368,15 @@ function init() {
         console.log('clicked Right!');
         return false;
     };
-    document.getElementById('infoContainer').style.height = 137 + 'px'; //I need to set the style cause the stylesheet one returns NaN!
-    document.getElementById('settings').onclick = function() {
-        var settings = document.getElementById('infoContainer');
-        parseInt(settings.style.height, 10) < 200 ? settings.style.height = parseInt(settings.style.height, 10) + 300 + 'px' : settings.style.height = parseInt(settings.style.height, 10) - 300 + 'px';
+    listen('settingsContainer','settings');
+    listen('mailContainer','mail');
+}
+
+function listen(container, thing){
+    document.getElementById(container).style.height = 100 + 'px'; //I need to set the style cause the stylesheet one returns NaN!
+    document.getElementById(thing).onclick = function() {
+        var yoke = document.getElementById(container);
+        parseInt(yoke.style.height, 10) < 200 ? yoke.style.height = parseInt(yoke.style.height, 10) + 300 + 'px' : yoke.style.height = parseInt(yoke.style.height, 10) - 300 + 'px';
     };
 }
 

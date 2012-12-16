@@ -533,28 +533,20 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     color: #D9F7FF;
 }
 
-#infoContainer{
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    z-index: 4;
-    width: 340px;
-    background: transparent;
-    overflow: hidden;
-    -webkit-transition: height 0.5s ease;
-}
-
-#infoTabContainer{
+#settingsContainer{
     position: absolute;
     right:0;
-    width: 100%;
-    height: 37px;
+    bottom: 0;
+    width: 340px;
     background: transparent;
+    z-index: 4;
+    -webkit-transition: height 0.5s ease;
 }
 
 #settings{
     position: absolute;
     right: 0;
+    top: -37px;
     width: 57px;
     padding-left: 25px;
     padding-top: 3px;
@@ -569,7 +561,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 #settingsPanel{
     position: absolute;
     right: 0;
-    top: 37px;
+    top: 0;
     height: 400px;
     width: 340px;
     background: #494949;
@@ -581,6 +573,59 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 
 .settingsItem{
     margin: 15px;
+}
+
+#mailContainer{
+    position: absolute;
+    right:0;
+    bottom: 0;
+    width: 100%;
+    background: transparent;
+    z-index: 3;
+
+    -webkit-transition: height 0.5s ease;
+}
+
+#mail{
+    position: absolute;
+    right: 0;
+    top: -37px;
+    width: 139px;
+    padding-left: 25px;
+    padding-top: 3px;
+    border-radius: 5px 0 0 0;
+    background: #494949;
+    background-image: url(images/pinhole.png);
+    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    -moz-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+}
+
+#mailPanel{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 400px;
+    width: 340px;
+    background: #494949;
+    border-radius: 5px 0 0 0;
+    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    -moz-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+}
+
+.mailItem{
+    margin: 15px;
+}
+
+#wrapper{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 340px;
+    height: 600px;
+    overflow: hidden;
+
 }
 
 #zoom {
