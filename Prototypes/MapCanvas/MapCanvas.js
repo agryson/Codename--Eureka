@@ -401,9 +401,9 @@ function mapFit() {
     console.log('I\'m refitting!');
     var quarterHeight = Game.destinationHeight*0.25;
     Game.mPanCanvas.width = document.width;
-    Game.mPanCanvas.height = document.height + quarterHeight;
+    Game.mPanCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*10;
     Game.mPanelCanvas.width = document.width;
-    Game.mPanelCanvas.height = document.height + quarterHeight;
+    Game.mPanelCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*10;
     Game.xLimit = Math.ceil(document.width / Game.destinationWidth);
     Game.yLimit = Math.ceil(document.height / (quarterHeight*3)+2);
     drawRadar();
