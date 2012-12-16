@@ -4,7 +4,7 @@ body,html {
     background-image: url(images/texture.png);
     height: 100%;
     margin: 0;
-    cursor: url(images/pointer.png), default;
+    cursor: url(images/pointers/pointer.png), default;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -12,7 +12,7 @@ body,html {
 }
 
 button {
-    cursor: url(images/pointer.png),auto;
+    cursor: url(images/pointers/pointer.png),auto;
     background-color: #999999;
     background-color: rgba(100,100,100,0.6);
     color: #8F8F8F;
@@ -105,7 +105,7 @@ button:active {
     right: 170px;
     border: 1px inset white;
     z-index: 1;
-    cursor: url(images/vertResize.png),auto;
+    cursor: url(images/pointers/vertResize.png),auto;
 }
 
 #slider::-webkit-slider-thumb {
@@ -201,7 +201,7 @@ button:active {
     margin-right: auto;
     padding-left: 1em;
     padding-right: 1em;
-    cursor: url(images/text.png),auto;
+    cursor: url(images/pointers/text.png),auto;
 }
 
 #seed:focus {
@@ -305,7 +305,7 @@ button:active {
     box-shadow: inset -1px -1px 0 2px #000;
     background: #363636;
     z-index: 2;
-    cursor: url(images/vertResize.png),auto;
+    cursor: url(images/pointers/vertResize.png),auto;
 }
 
 #nasty_spacer {
@@ -341,7 +341,7 @@ button:active {
 .active {
     -webkit-filter: grayscale(0%) blur(0px);
     color: #FFF;
-    cursor: url(images/build.png),auto;
+    cursor: url(images/pointers/build.png),auto;
 }
 
 .botCount {
@@ -498,13 +498,21 @@ button:active {
     -moz-box-shadow: 0 0 2px 0 #FFF;
     box-shadow: 0 0 2px 0 #FFF;
     border-radius: 10px 0 0 0;
-    cursor: url(images/pointer.png),auto;
+    cursor: url(images/pointers/pointer.png),auto;
 }
 
 #save {
     position: absolute;
     bottom: 10px;
     left: 10px;
+    background-color: transparent;
+    box-shadow: 0 0 0 0 transparent;
+}
+#save:hover{
+    box-shadow: 0 0 2px 0 #FFF;
+}
+#save:active{
+    box-shadow: inset 0 0 5px 0 #000;
 }
 
 #turn {

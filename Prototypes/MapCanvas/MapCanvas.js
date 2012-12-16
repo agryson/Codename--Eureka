@@ -405,7 +405,7 @@ function mapFit() {
     Game.mPanelCanvas.width = document.width;
     Game.mPanelCanvas.height = document.height + quarterHeight;
     Game.xLimit = Math.ceil(document.width / Game.destinationWidth);
-    Game.yLimit = Math.ceil(document.height / (quarterHeight*3)+1);
+    Game.yLimit = Math.ceil(document.height / (quarterHeight*3)+2);
     drawRadar();
     //drawZoomMap();
     drawLoc();
@@ -490,7 +490,7 @@ function checkRobots() {
                 document.getElementById(wallE[2]).style.background = '#000';
                 if(Game.clickedOn === idString) {
                     Game.clickedOn = 'none';
-                    document.body.style.cursor = "url('images/pointer.png'), default";
+                    document.body.style.cursor = "url('images/pointers/pointer.png'), default";
                 }
             }
         }
@@ -503,7 +503,7 @@ function checkRobots() {
         rob.style.background = '#000';
         if(Game.clickedOn === 'digger' || (Game.clickedOn === 'cavernDigger' && Game.robotsList[1][1] - Game.robotsList[1][0] === 0)) {
             Game.clickedOn = 'none';
-            document.body.style.cursor = "url('images/pointer.png'), default";
+            document.body.style.cursor = "url('images/pointers/pointer.png'), default";
         }
         if(Game.robotsList[1][1] - Game.robotsList[1][0] === 0) {
             var cavDig = document.getElementById('cavernDigger');
@@ -769,7 +769,7 @@ function keypressed(e) {
     case 27:
         document.getElementById(Game.clickedOn).style.background = '#000';
         Game.clickedOn = 'none';
-        document.body.style.cursor = "url('images/pointer.png'), default";
+        document.body.style.cursor = "url('images/pointers/pointer.png'), default";
         break;
     default:
         console.log("Uhm... that key doesn't do anything... ");
@@ -1368,7 +1368,7 @@ function construct() {
     if(Game.clickedOn === identity) {
         document.getElementById(Game.clickedOn).style.background = '#000';
         Game.clickedOn = 'none';
-        document.body.style.cursor = "url('images/pointer.png'), default";
+        document.body.style.cursor = "url('images/pointers/pointer.png'), default";
     } else {
         if(Game.clickedOn !== 'none') {
             document.getElementById(Game.clickedOn).style.background = '#000';
@@ -1377,125 +1377,125 @@ function construct() {
         Game.clickedOn = identity; /**TODO : Update this to be the primary key listener*/
         switch(identity) {
         case 'dozer':
-            document.body.style.cursor = "url('images/dozer.png'), default";
+            document.body.style.cursor = "url('images/pointers/dozer.png'), default";
             break;
         case 'miner':
-            document.body.style.cursor = "url('images/miner.png'), default";
+            document.body.style.cursor = "url('images/pointers/miner.png'), default";
             break;
         case 'digger':
-            document.body.style.cursor = "url('images/digger.png'), default";
+            document.body.style.cursor = "url('images/pointers/digger.png'), default";
             break;
         case 'cavernDigger':
-            document.body.style.cursor = "url('images/digger.png'), default";
+            document.body.style.cursor = "url('images/pointers/digger.png'), default";
             break;
         case 'recycler':
-            document.body.style.cursor = "url('images/recycle.png'), default";
+            document.body.style.cursor = "url('images/pointers/recycle.png'), default";
             break;
             //TODO: Change the pointers below to appropriate icons for the relevant building...
         case 'agri':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'agri2':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'airport':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'arp':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'barracks':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'civprot':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'civprot2':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'command':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'commarray':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'commarray2':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'connector':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'dronefab':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'chernobyl':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'tokamak':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'genfab':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'geotherm':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'hab':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'hab2':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'hab3':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'er':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'nursery':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'oreproc':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'rec':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'recycler':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'clichy':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'research':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'research2':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'solar':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'space':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'stasis':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'store':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'uni':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'warehouse':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'windfarm':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'workshop':
-            document.body.style.cursor = "url('images/build.png'), default";
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         default:
             console.log("There was a problem finding out which building or drone you wanted...");
