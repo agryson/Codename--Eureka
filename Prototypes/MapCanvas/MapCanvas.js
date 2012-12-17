@@ -1153,7 +1153,9 @@ function drawZoomMap() {
         x = 0;
         end = Game.yLimit;
         while(x < Game.xLimit - 1) {
-            drawTile(sourceTile[(Game.retY - Math.round(Game.yLimit / 2)) + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind, x, y, false);
+            var yShift = Math.round(Game.yLimit / 2);
+            if(yShift % 2 === 0){yShift += 1};
+            drawTile(sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind, x, y, false);
             x++;
         }
     }

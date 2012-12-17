@@ -452,7 +452,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     position: absolute;
     bottom:0;
     right:340px;
-    background: gray;
     padding: 0.1em;
     border-radius: 5px 0 0 0;
     height: 1.2em;
@@ -461,7 +460,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     overflow: hidden;
     background: #494949;
     color: white;
-    -webkit-box-shadow: inset -1px -1px 0 2px white;
+    -webkit-box-shadow: inset -1px -1px 2px 0 white;
     -webkit-transition: width 0.2s ease-in-out;
     -moz-transition: width 0.2s ease-in-out;
     -o-transition: width 0.2s ease-in-out;
