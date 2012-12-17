@@ -1146,15 +1146,14 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
 
 function drawZoomMap() {
     Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-    var y, x, end;
+    var y, x;
     var sourceTile = returnLevel(Game.level);
     webkitRequestAnimationFrame(drawZoomMap);
+    var yShift = Math.round(Game.yLimit / 2);
+    if(yShift % 2 === 0){yShift += 1;}
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
-        end = Game.yLimit;
         while(x < Game.xLimit - 1) {
-            var yShift = Math.round(Game.yLimit / 2);
-            if(yShift % 2 === 0){yShift += 1};
             drawTile(sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind, x, y, false);
             x++;
         }
