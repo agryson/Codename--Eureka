@@ -426,6 +426,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     left: 50%;
     margin-left: -375px;
     width: 750px;
+    padding: 0 5px 30px 5px;
     border-radius: 0 0 10px 10px;
     background: #138A0C;
     z-index: 2;
@@ -438,7 +439,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 
 #execDropDownContainer {
     background-color: #FFFBE5;
-    margin: 0 5px 0 5px;
     overflow: hidden;
     -webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
