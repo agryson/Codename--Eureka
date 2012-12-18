@@ -112,28 +112,23 @@ function createMap() {
   switch(Game.level) {
   case 0:
     map = Game.map;
-    Game.level = 0;
     break;
   case 1:
     map = Game.map1;
-    Game.level = 1;
     break;
   case 2:
     map = Game.map2;
-    Game.level = 2;
     break;
   case 3:
     map = Game.map3;
-    Game.level = 3;
     break;
   case 4:
     map = Game.map4;
-    Game.level = 4;
     break;
   default:
     console.log('There was a problem with creating level... ' + Game.level);
   }
-
+  
   for(var y = 0; y < Game.radarRad * 2; y++) {
     map[y] = new Array(Game.radarRad * 2); //create an array to hold the x cell, we now have a 200x200 2d array
     for(var x = 0; x < Game.radarRad * 2; x++) {

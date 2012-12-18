@@ -599,9 +599,7 @@ function nextTurn() {
     for(y = 0; y < Game.radarRad * 2; y++) {
         for(x = 0; x < Game.radarRad * 2; x++) {
             for(var l = 0; l < 5; l++) {
-                if(returnLevel(l)[y][x][0] === true) {
-                    returnLevel(l)[y][x][1].nextTurn();
-                }
+                returnLevel(l)[y][x][1].nextTurn();
             }
         }
     }
