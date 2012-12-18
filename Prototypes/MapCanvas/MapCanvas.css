@@ -44,7 +44,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 #mainPanel,#mPanOverlay {
     position: fixed;
     top: 0;
-    left: 115px;
+    left: 0;
     margin-top: -35px;
 }
 #radarContainer{
@@ -564,7 +564,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     right: 0;
     top: 0;
     height: 400px;
-    width: 340px;
+    width: 335px;
     background: #494949;
     border-radius: 5px 0 0 0;
     -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
@@ -583,7 +583,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     width: 100%;
     background: transparent;
     z-index: 3;
-
     -webkit-transition: height 0.5s ease;
 }
 
@@ -617,6 +616,16 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 
 .mailItem{
     margin: 15px;
+}
+
+#wrapper{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 340px;
+    height: 600px;
+    overflow: hidden;
+    -webkit-transition: height 0.5s ease;
 }
 
 #zoom {

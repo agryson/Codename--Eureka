@@ -373,10 +373,18 @@ function init() {
 }
 
 function listen(container, thing){
-    document.getElementById(container).style.height = 100 + 'px'; //I need to set the style cause the stylesheet one returns NaN!
+    var yoke = document.getElementById(container);
+    var wrap = document.getElementById('wrapper');
+    yoke.style.height = 100 + 'px'; //I need to set the style cause the stylesheet one returns NaN!
+    wrap.style.height = 140 + 'px';
     document.getElementById(thing).onclick = function() {
-        var yoke = document.getElementById(container);
-        parseInt(yoke.style.height, 10) < 200 ? yoke.style.height = parseInt(yoke.style.height, 10) + 300 + 'px' : yoke.style.height = parseInt(yoke.style.height, 10) - 300 + 'px';
+        if(parseInt(yoke.style.height, 10) < 200){
+            yoke.style.height = parseInt(yoke.style.height, 10) + 300 + 'px';
+            wrap.style.height = parseInt(wrap.style.height, 10) + 300 + 'px';
+        }else{
+            yoke.style.height = parseInt(yoke.style.height, 10) - 300 + 'px';
+            wrap.style.height = parseInt(wrap.style.height, 10) - 300 + 'px';
+        }
     };
 }
 
@@ -1151,7 +1159,7 @@ function drawZoomMap() {
     if(yShift % 2 === 0){yShift += 1;}
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
-        while(x < Game.xLimit - 1) {
+        while(x < Game.xLimit) {
             drawTile(sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind, x, y, false);
             x++;
         }

@@ -264,29 +264,29 @@
             <button class="action" id="turn" onclick="nextTurn()">Send Orders</button>
         </div>
         <div id="notifications"></div> 
-    
-        <div id='settingsContainer'>
-            <div id='settings'>
-                <img src = 'images/icons/processing-02.png' </img>
+        <div id='wrapper'>
+            <div id='settingsContainer'>
+                <div id='settings'>
+                    <img src = 'images/icons/processing-02.png' </img>
+                </div>
+                <div id='settingsPanel'>
+                    <div class='settingsItem'>
+                        <span>Zoom: </span>
+                        <input id='zoom' type="range" min="1" max="5" value="3" step="1" onchange="zoom()" />
+                    </div>
+                </div>
             </div>
-            <div id='settingsPanel'>
-                <div class='settingsItem'>
-                    <span>Zoom: </span>
-                    <input id='zoom' type="range" min="1" max="5" value="3" step="1" onchange="zoom()" />
+            <div id='mailContainer'>
+                <div id='mail'>
+                    <img src = 'images/icons/email.png' </img>
+                </div>
+                <div id='mailPanel'>
+                    <div class='mailItem'>
+                        <span>Message: yay, you have mail! </span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id='mailContainer'>
-            <div id='mail'>
-                <img src = 'images/icons/email.png' </img>
-            </div>
-            <div id='mailPanel'>
-                <div class='mailItem'>
-                    <span>Message: yay, you have mail! </span>
-                </div>
-            </div>
-        </div>
-        
         <!--
         <div id='infoContainer'>
             <div id='infoTabContainer'>
