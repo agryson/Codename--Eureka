@@ -275,17 +275,30 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 }
 
 /*        ******      Map Context    ******      */
-#leftMenu {
-    position: relative;
-    width: 20%;
-    min-width: 150px;
+#menuWrap{
+    position: absolute;
     height: 100%;
+    top:0;
+    left:0;
+    overflow: hidden;
+    z-index: 1;
+    -webkit-transition: width 0.3s ease;
+
+}
+#leftMenu {
+    position: absolute;
+    width: 300px;
+    min-width: 50px;
+    height: 100%;
+    top:0;
+    right:0;
     overflow: hidden;
     background: #191919;
     -webkit-box-shadow: 0 0 2px 0 #FFF;
     -moz-box-shadow: 0 0 2px 0 #FFF;
     box-shadow: 0 0 2px 0 #FFF;
     z-index: 1;
+    -webkit-transition: width 0.3s ease;
 }
 
 #buildingContainer {

@@ -368,11 +368,26 @@ function init() {
         console.log('clicked Right!');
         return false;
     };
-    listen('settingsContainer','settings');
-    listen('mailContainer','mail');
+    document.getElementById('menuWrap').onmouseover = function(){
+        document.getElementById('menuWrap').style.width = 300 + 'px';
+    };
+    leftMenuSlide();
+    document.getElementById('menuWrap').onmouseout = function(){
+        leftMenuSlide();
+    };
+    menuListen('settingsContainer','settings');
+    menuListen('mailContainer','mail');
 }
 
-function listen(container, thing){
+function leftMenuSlide(){
+    if(Game.destinationWidth < 100){
+        document.getElementById('menuWrap').style.width = 50 + 'px';
+    }else{
+        document.getElementById('menuWrap').style.width = Game.destinationWidth/2 + 'px';
+    }
+}
+
+function menuListen(container, thing){
     var yoke = document.getElementById(container);
     var wrap = document.getElementById('wrapper');
     yoke.style.height = 100 + 'px'; //I need to set the style cause the stylesheet one returns NaN!
@@ -404,6 +419,7 @@ function zoom(){
     var zoomLevel = document.getElementById('zoom').value;
     Game.destinationWidth = zoomLevel*6*5;
     Game.destinationHeight = zoomLevel*7*5;
+    leftMenuSlide();
     mapFit();
 }
 
