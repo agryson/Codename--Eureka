@@ -619,16 +619,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     margin: 15px;
 }
 
-#wrapper{
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 340px;
-    height: 600px;
-    overflow: hidden;
-
-}
-
 #zoom {
     position: absolute;
     -webkit-appearance: none;
