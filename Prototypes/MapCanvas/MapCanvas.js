@@ -843,14 +843,14 @@ function getMousePos(canvas, evt) {
     var top = 0;
     var left = 0;
     while(obj && obj.tagName != 'BODY') {
-        top += obj.offsetTop;
+        top += obj.offsetTop -10;
         left += obj.offsetLeft;
         obj = obj.offsetParent;
 
     }
 
     // return relative mouse position
-    Game.mouseX = evt.clientX - left + window.pageXOffset;
+    Game.mouseX = evt.clientX - left + window.pageXOffset + Game.destinationWidth/2;
     Game.mouseY = evt.clientY - top + window.pageYOffset;
     if(Game.overMPan) {
         Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
