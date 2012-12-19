@@ -379,14 +379,15 @@ function init() {
         console.log('clicked Right!');
         return false;
     };
-    document.getElementById('menuWrap').onmouseover = function(){
-        document.getElementById('menuWrap').style.width = 300 + 'px';
-        document.getElementById('menuWrap').style.opacity = 1;
+    var leftMenu = document.getElementById('menuWrap');
+    leftMenu.onmouseover = function(){
+        leftMenu.style.width = 300 + 'px';
+        leftMenu.style.opacity = 1;
     };
-    leftMenuSlide();
-    document.getElementById('menuWrap').onmouseout = function(){
-        leftMenuSlide();
-        document.getElementById('menuWrap').style.opacity = 0.4;
+    leftMenu.style.width = 50 + 'px';
+    leftMenu.onmouseout = function(){
+        leftMenu.style.width = 50 + 'px';
+        leftMenu.style.opacity = 0.4;
     };
     var exec = document.getElementById('execDropDown');
     var execDrop = document.getElementById('execDropDownContainer');
@@ -403,14 +404,6 @@ function init() {
     };
     menuListen('settingsContainer','settings');
     menuListen('mailContainer','mail');
-}
-
-function leftMenuSlide(){
-    if(Game.destinationWidth < 100){
-        document.getElementById('menuWrap').style.width = 50 + 'px';
-    }else{
-        document.getElementById('menuWrap').style.width = Game.destinationWidth/2 + 'px';
-    }
 }
 
 function menuListen(container, thing){
@@ -447,7 +440,6 @@ function zoom(){
     var zoomLevel = document.getElementById('zoom').value;
     Game.destinationWidth = zoomLevel*6*5;
     Game.destinationHeight = zoomLevel*7*5;
-    leftMenuSlide();
     mapFit();
 }
 
