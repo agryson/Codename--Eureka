@@ -288,7 +288,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 #leftMenu {
     position: absolute;
     width: 300px;
-    min-width: 50px;
     height: 100%;
     top:0;
     right:0;
