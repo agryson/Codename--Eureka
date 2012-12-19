@@ -358,8 +358,19 @@ function init() {
         mapFit();
     };
     radRed();
+    var radar = document.getElementById('radarContainer')
     document.getElementById('radarbutton').onclick = function() {
         radRed();
+    };
+    radar.onmouseout = function(){
+        if(parseInt(radar.style.top, 10) < 0){
+            radar.style.opacity = 0.7;
+        }
+    };
+    radar.onmouseover = function(){
+        if(parseInt(radar.style.top, 10) < 0){
+            radar.style.opacity = 1;
+        }
     };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
@@ -370,10 +381,25 @@ function init() {
     };
     document.getElementById('menuWrap').onmouseover = function(){
         document.getElementById('menuWrap').style.width = 300 + 'px';
+        document.getElementById('menuWrap').style.opacity = 1;
     };
     leftMenuSlide();
     document.getElementById('menuWrap').onmouseout = function(){
         leftMenuSlide();
+        document.getElementById('menuWrap').style.opacity = 0.4;
+    };
+    var exec = document.getElementById('execDropDown');
+    var execDrop = document.getElementById('execDropDownContainer');
+    execDrop.style.height = 0;
+    exec.onmouseout = function(){
+        if(parseInt(execDrop.style.height, 10) < 100){
+            exec.style.opacity = 0.4;
+        }
+    };
+    exec.onmouseover = function(){
+        if(parseInt(execDrop.style.height, 10) < 100){
+            exec.style.opacity = 1;
+        }
     };
     menuListen('settingsContainer','settings');
     menuListen('mailContainer','mail');
@@ -409,9 +435,11 @@ function radRed(){
     if(parseInt(radar.style.top, 10) === 0){
         radar.style.top = -320 + 'px';
         radarButton.style.webkitTransform = 'rotate(-90deg)';
+        radar.style.opacity = 0.7;
     }else{
         radar.style.top = 0;
         radarButton.style.webkitTransform = 'rotate(90deg)';
+        radar.style.opacity = 1;
     }
 }
 
@@ -430,8 +458,8 @@ function mapFit() {
     Game.mPanCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*50;
     Game.mPanelCanvas.width = document.width;
     Game.mPanelCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*50;
-    Game.xLimit = Math.ceil(document.width / Game.destinationWidth);
-    Game.yLimit = Math.ceil(document.height / (quarterHeight*3)+2);
+    Game.xLimit = Math.ceil((document.width / Game.destinationWidth)+1);
+    Game.yLimit = Math.ceil((document.height / (quarterHeight*3))+2);
     drawRadar();
     //drawZoomMap();
     drawLoc();
@@ -721,8 +749,10 @@ function pulldown() {
     var i = document.getElementById('execDropDownContainer');
     if(parseInt(i.style.height, 10) === 0 || i.style.height === '') {
         i.style.height = '650px';
+        document.getElementById('execDropDown').style.opacity = 1;
     } else {
         i.style.height = '0px';
+        document.getElementById('execDropDown').style.opacity = 0.4;
     }
 }
 
@@ -1132,9 +1162,9 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
             sourceHeight = 200; //original tile height
             destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
             if(tilePosY % 2 === 0) { //if the row is even...
-                destinationX = Math.floor(tilePosX * Game.destinationWidth); //we set its X normally
+                destinationX = Math.floor(tilePosX * Game.destinationWidth - Game.destinationWidth/2); //we set its X normally
             } else { //if it’s odd though
-                destinationX = Math.floor(tilePosX * Game.destinationWidth + (Game.destinationWidth / 2)); //we need a little bit of displacement
+                destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
             }//TODO this is causing a shift of the x tiles in certain zoomLevels
 
             if(highlight) { //highlight is an optional parameter to see which canvas to draw to and how
@@ -1175,7 +1205,7 @@ function drawZoomMap() {
     if(yShift % 2 === 0){yShift += 1;}
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
-        while(x < Game.xLimit) {
+        while(x <= Game.xLimit) {
             drawTile(sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind, x, y, false);
             x++;
         }
