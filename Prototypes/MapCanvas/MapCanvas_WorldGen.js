@@ -167,7 +167,7 @@ function generateRivers(iterations){
   for(var i=0; i<iterations; i++){
     x = randGen(Game.radarRad*2,0);
     y = randGen(Game.radarRad*2,0);
-    if(Game.map[y][x][1].kind === 2){
+    if(Game.map[y][x][1].kind === 2 || Game.map[y][x][1].kind === 1){
       console.log('wtf rivers!? ' +  iterations + '  '+ i);
       slide(x,y);
     }else{
