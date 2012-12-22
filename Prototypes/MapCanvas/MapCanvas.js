@@ -1048,8 +1048,8 @@ function getTile(axis) {
  */
 
 function jump() {
-    var x = Game.mouseX;
-    var y = Game.mouseY;
+    var x = Game.mouseX - Game.destinationWidth/2;
+    var y = Game.mouseY - 20;
     //ensure we're dealing with a multiple of two (since we move up and down in twos)
     if(y % 2 !== 0) {
         y -= 1;
