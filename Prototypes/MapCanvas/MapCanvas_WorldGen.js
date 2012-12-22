@@ -142,7 +142,7 @@ function createMap() {
       generateResources(x, y, map[y][x][1].kind, Game.level);
     }
   }
-  if(Game.level === 0){generateRivers(5);}
+  if(Game.level === 0){generateRivers(40);}
   Game.level += 1;
   if(Game.level < 5) {
     increment();
@@ -167,22 +167,27 @@ function generateRivers(iterations){
   for(var i=0; i<iterations; i++){
     x = randGen(Game.radarRad*2,0);
     y = randGen(Game.radarRad*2,0);
-    console.log('wtf rivers!? ' +  iterations);
-    slide(x,y, iterations);
+    if(Game.map[y][x][1].kind === 2){
+      console.log('wtf rivers!? ' +  iterations + '  '+ i);
+      slide(x,y);
+    }else{
+      iterations+=1;
+    }
   }
 }
 
-function slide(x,y, iterations){
-  while(Game.map[y][x][1].altitude > 90 && Game.map[y][x][1].kind !== 4 && x > 0 && x < Game.radarRad*2 && y< Game.radarRad*2 &&y > 0 ){
+function slide(x,y){
+  //console.log('x: ' + x + ' y: '+ y);
+  while(x > 0 && x < Game.radarRad*2 && y< Game.radarRad*2 && y > 0  && Game.map[y][x][1].kind !== 4){
     Game.map[y][x][1].kind = 4;
     var lowest = [adjacent(x,y,0)[1],adjacent(x,y,0)[0]]; //x, y
     for(var j=1; j<6; j++){
-      if(Game.map[adjacent(x,y,j)[0]][adjacent(x,y,j)[1]][1].altitude < Game.map[lowest[1]][lowest[0]][1].altitude){
+      if(x > 1 && x < (Game.radarRad*2)-1 && y < (Game.radarRad*2)-1 && y > 1 && Game.map[adjacent(x,y,j)[0]][adjacent(x,y,j)[1]][1].altitude < Game.map[lowest[1]][lowest[0]][1].altitude && Game.map[adjacent(x,y,j)[0]][adjacent(x,y,j)[1]][1].kind !== 4) {
         lowest[1] = adjacent(x,y,j)[0];
         lowest[0] = adjacent(x,y,j)[1];
       }
     }
-    slide(lowest[0],lowest[1], iterations);
+    slide(lowest[0],lowest[1]);
   }
   //generateRivers(iterations-1);
 }
