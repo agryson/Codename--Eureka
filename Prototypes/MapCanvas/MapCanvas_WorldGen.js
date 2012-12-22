@@ -142,6 +142,7 @@ function createMap() {
       generateResources(x, y, map[y][x][1].kind, Game.level);
     }
   }
+  if(Game.level === 0){generateRivers(5);}
   Game.level += 1;
   if(Game.level < 5) {
     increment();
@@ -159,6 +160,31 @@ function createMap() {
       popup.style.zIndex = '-1';
     }, false);
   }
+}
+
+function generateRivers(iterations){
+  var x, y;
+  for(var i=0; i<iterations; i++){
+    x = randGen(Game.radarRad*2,0);
+    y = randGen(Game.radarRad*2,0);
+    console.log('wtf rivers!? ' +  iterations);
+    slide(x,y, iterations);
+  }
+}
+
+function slide(x,y, iterations){
+  while(Game.map[y][x][1].altitude > 90 && Game.map[y][x][1].kind !== 4 && x > 0 && x < Game.radarRad*2 && y< Game.radarRad*2 &&y > 0 ){
+    Game.map[y][x][1].kind = 4;
+    var lowest = [adjacent(x,y,0)[1],adjacent(x,y,0)[0]]; //x, y
+    for(var j=1; j<6; j++){
+      if(Game.map[adjacent(x,y,j)[0]][adjacent(x,y,j)[1]][1].altitude < Game.map[lowest[1]][lowest[0]][1].altitude){
+        lowest[1] = adjacent(x,y,j)[0];
+        lowest[0] = adjacent(x,y,j)[1];
+      }
+    }
+    slide(lowest[0],lowest[1], iterations);
+  }
+  //generateRivers(iterations-1);
 }
 
 
