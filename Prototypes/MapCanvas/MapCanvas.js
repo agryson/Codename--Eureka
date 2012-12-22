@@ -878,7 +878,7 @@ function move(dir) {
         }
         break;
     case 'right':
-        if(leftX < (Game.radarRad * 2) - (Game.xLimit / 2)) {
+        if(leftX < (Game.radarRad * 2) - (Game.xLimit / 2) - 2) {
             Game.retX = rightX;
         }
         break;
