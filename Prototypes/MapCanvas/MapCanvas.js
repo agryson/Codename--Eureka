@@ -383,13 +383,14 @@ function init() {
     };
     var leftMenu = document.getElementById('menuWrap');
     leftMenu.onmouseover = function(){
-        leftMenu.style.width = 300 + 'px';
+        leftMenu.classList.remove('left_menu_hide');
+        leftMenu.classList.add('left_menu_show');
         leftMenu.classList.add('menu_visible');
         leftMenu.classList.remove('menu_hidden');
     };
-    leftMenu.style.width = 50 + 'px';
     leftMenu.onmouseout = function(){
-        leftMenu.style.width = 50 + 'px';
+        leftMenu.classList.remove('left_menu_show');
+        leftMenu.classList.add('left_menu_hide');
         leftMenu.classList.remove('menu_visible');
         leftMenu.classList.add('menu_hidden');
     };

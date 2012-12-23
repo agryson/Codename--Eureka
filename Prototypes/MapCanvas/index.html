@@ -25,7 +25,7 @@
             </div>
         </div>
 <!--loading screen moved up to improve performance-->
-        <div class='menu_hidden' id='menuWrap'>
+        <div class='menu_hidden left_menu_hide' id='menuWrap'>
             <div id="leftMenu">
                 <div id="buildingContainer">        
                     <div class="menuItem building" id="agri">
@@ -228,7 +228,7 @@
             </div>
         </div>
         <div id="execDropDown" class='menu_hidden green_rubber' onclick="pulldown()">
-            <div id="execDropDownContainer"></div>      
+            <div id="execDropDownContainer" class='slide_out cream_felt'></div>      
         </div>
         
         <canvas id="mainPanel">
@@ -263,8 +263,8 @@
             </button>
             <button class="action green_glass" id="turn" onclick="nextTurn()">Send Orders</button>
         </div>
-        <div id="notifications"></div> 
-        <div id='wrapper'>
+        <div id="notifications" class='slide_out'></div> 
+        <div id='wrapper' class="slide_out">
             <div id='settingsContainer'>
                 <div class='grey_rubber' id='settings'>
                     <img src = 'images/icons/processing-02.png' </img>
@@ -272,7 +272,7 @@
                 <div id='settingsPanel'>
                     <div class='settingsItem'>
                         <span>Zoom: </span>
-                        <input class='horizontal_resize_pointer slider' id='zoom' type="range" min="1" max="5" value="3" step="1" onchange="zoom()" />
+                        <input id='zoom' class='horizontal_pointer slider' type="range" min="1" max="5" value="3" step="1" onchange="zoom()" />
                     </div>
                 </div>
             </div>

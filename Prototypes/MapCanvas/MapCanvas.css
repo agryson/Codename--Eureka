@@ -241,8 +241,9 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 #menuWrap{
     position: absolute;
     height: 100%;
+    width: 300px;
     top:0;
-    left:0;
+    left: -250px;
     overflow: hidden;
     z-index: 1;
 
@@ -406,17 +407,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     box-shadow: 1px 1px 3px 1px #000;
 }
 
-#execDropDownContainer {
-    background-color: #FFFBE5;
-    overflow: hidden;
-    -webkit-transition: all 0.2s ease-in-out;
-    -moz-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
-    -ms-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-    background-image: url(images/texture.png);
-}
-
 #notifications {
     position: absolute;
     bottom:0;
@@ -424,17 +414,12 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     padding: 0.1em;
     border-radius: 5px 0 0 0;
     height: 1.2em;
-    width: 0px;
+    width: 0;
     z-index: 2;
     overflow: hidden;
     background: #494949;
     color: white;
     -webkit-box-shadow: inset -1px -1px 2px 0 white;
-    -webkit-transition: width 0.2s ease-in-out;
-    -moz-transition: width 0.2s ease-in-out;
-    -o-transition: width 0.2s ease-in-out;
-    -ms-transition: width 0.2s ease-in-out;
-    transition: width 0.2s ease-in-out;
 }
 
 /*        ******      Global Actions    ******      */
@@ -579,15 +564,12 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     right: 0;
     width: 340px;
     height: 600px;
-    overflow: hidden;
-    -webkit-transition: height 0.5s ease;
 }
 
 #zoom {
     height: 5px;
     width: 70%;
     margin-left: 15px;
-    margin-top: 3px;
     z-index: 1;
 }
 
@@ -616,7 +598,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 }
 /*!Pointers*/
 
-/*Menu Animations*/
+/*Animations*/
 .menu_visible{
     opacity: 1;
     -webkit-transition: all 0.4s ease;
@@ -626,7 +608,25 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     opacity: 0.4;
     -webkit-transition: all 0.4s ease;
 }
-/*!Menu Animations*/
+
+/*For smaller stuff like notifications*/
+.slide_out{
+    overflow: hidden;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.left_menu_hide{
+    -webkit-transform: translate(0,0);
+}
+
+.left_menu_show{
+    -webkit-transform: translate(250px,0);
+}
+/*!Animations*/
 
 /*Textures*/
 .green_felt{
@@ -636,6 +636,11 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 
 .black_felt{
     background: #141414;
+    background-image: url(images/texture.png);
+}
+
+.cream_felt{
+    background-color: #FFFBE5;
     background-image: url(images/texture.png);
 }
 
@@ -688,6 +693,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     height: 20px;
     width: 40px;
     border-radius: 10px;
-    background: gray;
+    background: #00B000;
+    box-shadow: inset 0 0 10px 5px #333, 0 0 2px #111;
 }
 /*!Sliders*/
