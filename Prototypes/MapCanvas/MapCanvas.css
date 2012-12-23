@@ -59,9 +59,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     -webkit-box-shadow: -1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
     -moz-box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
     box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
-    -webkit-transition: top ease 0.5s, opacity ease 0.4s;
     z-index: 50;
-    opacity: 1;
 
 }
 
@@ -284,8 +282,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     left:0;
     overflow: hidden;
     z-index: 1;
-    opacity: 0.4;
-    -webkit-transition: width 0.3s ease, opacity 0.4s ease;
 
 }
 #leftMenu {
@@ -445,13 +441,10 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     border-radius: 0 0 10px 10px;
     background: #138A0C;
     z-index: 2;
-    opacity: 0.4;
     background-image: url(images/pinhole.png);
     -webkit-box-shadow: 1px 1px 3px 1px #000;
     -moz-box-shadow: 1px 1px 3px 1px #000;
     box-shadow: 1px 1px 3px 1px #000;
-    -webkit-transition: opacity 0.4s ease;
-
 }
 
 #execDropDownContainer {
@@ -669,3 +662,43 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     -moz-box-shadow: inset -1px 1px 0 2px #8C8C8C;
     box-shadow: inset -1px 1px 0 2px #8C8C8C;
 }
+
+
+
+
+
+
+/*Beginning the work on moving to classes for IDs*/
+/*Pointers*/
+.main_pointer{
+    cursor: url(images/pointers/pointer.png),auto;
+}
+
+.build_pointer{
+    cursor: url(images/pointers/build.png),auto;
+}
+
+.horizontal_pointer{
+    cursor: url(images/pointers/horiResize.png),auto;
+}
+
+.vertical__resize_pointer{
+    cursor: url(images/pointers/vertResize.png),auto;
+}
+
+.text_pointer{
+    cursor: url(images/pointers/text.png),auto;
+}
+/*!Pointers*/
+
+/*Menu Animations*/
+.menu_visible{
+    opacity: 1;
+    -webkit-transition: all 0.4s ease;
+}
+
+.menu_hidden{
+    opacity: 0.4;
+    -webkit-transition: all 0.4s ease;
+}
+/*!Menu Animations*/

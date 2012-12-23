@@ -7,7 +7,7 @@
 		<title>Prototype MapV1</title>
 	</head>
 
-	<body onload="init()">
+	<body class='main_pointer' onload="init()">
         
         <div class="popupContainer" id="popupContainer">
             <div id="mainTitle">Codename: Eureka!</div>
@@ -25,7 +25,7 @@
             </div>
         </div>
 <!--loading screen moved up to improve performance-->
-        <div id='menuWrap'>
+        <div class='menu_hidden' id='menuWrap'>
             <div id="leftMenu">
                 <div id="buildingContainer">        
                     <div class="menuItem building" id="agri">
@@ -227,7 +227,7 @@
                 </div>
             </div>
         </div>
-        <div id="execDropDown" onclick="pulldown()">
+        <div class='menu_hidden' id="execDropDown" onclick="pulldown()">
             <div id="execDropDownContainer"></div>      
         </div>
         
@@ -242,7 +242,7 @@
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         
-        <div id="radarContainer">
+        <div class='menu_visible' id="radarContainer">
             <canvas id="map" width="300" height="300">
                 Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
             </canvas>

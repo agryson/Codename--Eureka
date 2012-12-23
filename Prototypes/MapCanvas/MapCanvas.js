@@ -364,12 +364,14 @@ function init() {
     };
     radar.onmouseout = function(){
         if(parseInt(radar.style.top, 10) < 0){
-            radar.style.opacity = 0.7;
+            radar.classList.remove('menu_visible');
+            radar.classList.add('menu_hidden');
         }
     };
     radar.onmouseover = function(){
         if(parseInt(radar.style.top, 10) < 0){
-            radar.style.opacity = 1;
+            radar.classList.remove('menu_hidden');
+            radar.classList.add('menu_visible');
         }
     };
     window.oncontextmenu = function(ev) {
@@ -382,24 +384,28 @@ function init() {
     var leftMenu = document.getElementById('menuWrap');
     leftMenu.onmouseover = function(){
         leftMenu.style.width = 300 + 'px';
-        leftMenu.style.opacity = 1;
+        leftMenu.classList.add('menu_visible');
+        leftMenu.classList.remove('menu_hidden');
     };
     leftMenu.style.width = 50 + 'px';
     leftMenu.onmouseout = function(){
         leftMenu.style.width = 50 + 'px';
-        leftMenu.style.opacity = 0.4;
+        leftMenu.classList.remove('menu_visible');
+        leftMenu.classList.add('menu_hidden');
     };
     var exec = document.getElementById('execDropDown');
     var execDrop = document.getElementById('execDropDownContainer');
     execDrop.style.height = 0;
     exec.onmouseout = function(){
         if(parseInt(execDrop.style.height, 10) < 100){
-            exec.style.opacity = 0.4;
+            exec.classList.remove('menu_visible');
+            exec.classList.add('menu_hidden');
         }
     };
     exec.onmouseover = function(){
         if(parseInt(execDrop.style.height, 10) < 100){
-            exec.style.opacity = 1;
+            exec.classList.add('menu_visible');
+            exec.classList.remove('menu_hidden');
         }
     };
     menuListen('settingsContainer','settings');
