@@ -7,15 +7,15 @@
 		<title>Prototype MapV1</title>
 	</head>
 
-	<body class='main_pointer' onload="init()">
+	<body class='main_pointer black_felt' onload="init()">
         
-        <div class="popupContainer" id="popupContainer">
+        <div id="popupContainer" class="popupContainer green_felt">
             <div id="mainTitle">Codename: Eureka!</div>
-            <div class="popup" id="popup">
-                <input type="text" id="seed" placeholder="Dashboard Password" /><br/>
+            <div class="popup grey_rubber" id="popup">
+                <input class='text_pointer' type="text" id="seed" placeholder="Dashboard Password" /><br/>
                 <div id="buttonContainer">
-                    <button class="start-button" id="login" onclick="getSeed(false)">Login</button>
-                    <button class="start-button" id="newSession" onclick="getSeed(true)">New Session</button>
+                    <button class="start-button main_pointer smoky_glass" id="login" onclick="getSeed(false)">Login</button>
+                    <button class="start-button main_pointer smoky_glass" id="newSession" onclick="getSeed(true)">New Session</button>
                     <div id="loader">
                         <div id="thumb">
                         </div>
@@ -172,7 +172,7 @@
                 
                 <!-- This slider seperates the buildings from the actions, the nouns from the verbs... -->
 
-                <div id="leftMenuSlider" onmousedown="leftMenuResize(true)" onmouseup="leftMenuResize(false)"></div>
+                <div class='vertical_resize_pointer' id="leftMenuSlider" onmousedown="leftMenuResize(true)" onmouseup="leftMenuResize(false)"></div>
 
                 <!-- These comments are just so that I can see it easily... -->
                 
@@ -227,7 +227,7 @@
                 </div>
             </div>
         </div>
-        <div class='menu_hidden' id="execDropDown" onclick="pulldown()">
+        <div id="execDropDown" class='menu_hidden green_rubber' onclick="pulldown()">
             <div id="execDropDownContainer"></div>      
         </div>
         
@@ -242,7 +242,7 @@
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         
-        <div class='menu_visible' id="radarContainer">
+        <div id="radarContainer" class='menu_visible grey_rubber'>
             <canvas id="map" width="300" height="300">
                 Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
             </canvas>
@@ -250,34 +250,34 @@
             <canvas id="mapOverlay" width="300" height="300" onclick="jump()" onmouseover="overCanvas(true, 'radar')" onmouseout="overCanvas(false)">
                 Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
             </canvas>
-            <input id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
+            <input class='vertical_resize_pointer slider' id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
             <div id="radarbutton">
                 <img src="images/icons/arrow-round.png" id='radarButtonArrow' />
             </div>
         </div>
-        <div id="globalActions">
+        <div id="globalActions" class='grey_rubber'>
             <span id="turnNumber">Week: 0</span>
-            <button class="info" id="globalReport" onclick="pulldown()">Executive Report</button>
-            <button class="info" id="save">
+            <button class="info blue_glass" id="globalReport" onclick="pulldown()">Executive Report</button>
+            <button class="info blue_glass" id="save">
                 Save
             </button>
-            <button class="action" id="turn" onclick="nextTurn()">Send Orders</button>
+            <button class="action green_glass" id="turn" onclick="nextTurn()">Send Orders</button>
         </div>
         <div id="notifications"></div> 
         <div id='wrapper'>
             <div id='settingsContainer'>
-                <div id='settings'>
+                <div class='grey_rubber' id='settings'>
                     <img src = 'images/icons/processing-02.png' </img>
                 </div>
                 <div id='settingsPanel'>
                     <div class='settingsItem'>
                         <span>Zoom: </span>
-                        <input id='zoom' type="range" min="1" max="5" value="3" step="1" onchange="zoom()" />
+                        <input class='horizontal_resize_pointer slider' id='zoom' type="range" min="1" max="5" value="3" step="1" onchange="zoom()" />
                     </div>
                 </div>
             </div>
             <div id='mailContainer'>
-                <div id='mail'>
+                <div class='grey_rubber' id='mail'>
                     <img src = 'images/icons/email.png' </img>
                 </div>
                 <div id='mailPanel'>
@@ -286,23 +286,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!--
-        <div id='infoContainer'>
-            <div id='infoTabContainer'>
-                <div id='settings'>
-                    <img src = 'images/icons/processing-02.png' </img>
-                </div>
-                <div id='settingsPanel'>
-                    <div class='settingsItem'>
-                        <span>Zoom: </span>
-                        <input id='zoom' type="range" min="1" max="5" value="3" step="1" onchange="zoom()" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    -->
-        
+        </div>        
 
 <!--scripts moved down to improve initial page load-->
         <script language="JavaScript" src="MapCanvas.js"></script>
