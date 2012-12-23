@@ -88,8 +88,8 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
-    width: 300px;
-    top: 150px;
+    width: 280px;
+    top: 140px;
     right: 180px;
     z-index: 1;
 }
