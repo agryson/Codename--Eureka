@@ -7,15 +7,15 @@
 		<title>Prototype MapV1</title>
 	</head>
 
-	<body class='main_pointer black_felt' onload="init()">
+	<body class='main_pointer black_felt'>
         
         <div id="popupContainer" class="popupContainer green_felt main_pointer">
             <div id="mainTitle">Codename: Eureka!</div>
             <div class="popup grey_rubber" id="popup">
                 <input class='text_pointer' type="text" id="seed" placeholder="Dashboard Password" /><br/>
                 <div id="buttonContainer">
-                    <button class="start-button main_pointer smoky_glass" id="login" onclick="getSeed(false)">Login</button>
-                    <button class="start-button main_pointer smoky_glass" id="newSession" onclick="getSeed(true)">New Session</button>
+                    <button class="start-button main_pointer smoky_glass" id="login">Login</button>
+                    <button class="start-button main_pointer smoky_glass" id="newSession" >New Session</button>
                     <div id="loader">
                         <div id="thumb">
                         </div>
@@ -172,7 +172,7 @@
                 
                 <!-- This slider seperates the buildings from the actions, the nouns from the verbs... -->
 
-                <div class='vertical_resize_pointer' id="leftMenuSlider" onmousedown="leftMenuResize(true)" onmouseup="leftMenuResize(false)"></div>
+                <div class='vertical_resize_pointer' id="leftMenuSlider"></div>
 
                 <!-- These comments are just so that I can see it easily... -->
                 
@@ -239,9 +239,7 @@
         </canvas>
         <div id='contextMenu'>
         </div>
-        <canvas id="mPanOverlay"
-            onmouseover="overCanvas(true, 'mPan'); Game.overMPan = true" onmouseout="overCanvas(false); Game.overMPan = false" 
-            onMouseUp="clicked()">
+        <canvas id="mPanOverlay">
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         
@@ -253,7 +251,7 @@
             <canvas id="mapOverlay" class='map_overlay' width="300px" height="300px">
                 Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
             </canvas>
-            <input class='vertical_resize_pointer slider level_slider' id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
+            <input class='vertical_resize_pointer slider level_slider' id='slider' type="range" min="0" max="4" value="0" step="1"/>
             <div id='radarBtnContainer' class='button_container'>
                 <img id='radarButton' class='arrow_up' src="images/icons/arrow-round.png" />
             </div>
@@ -264,7 +262,7 @@
             <button class="info blue_glass main_pointer" id="save">
                 Save
             </button>
-            <button class="action green_glass main_pointer" id="turn" onclick="nextTurn()">Send Orders</button>
+            <button class="action green_glass main_pointer" id="turn">Send Orders</button>
         </div>
         <div id="notifications" class='slide_out'></div> 
         <div id='settingsContainer' class='global_container global_container_hidden settingsContainer'>
@@ -274,7 +272,7 @@
             <div id='settingsPanel' class='global_content_panel'>
                 <div class='settingsItem'>
                     <span>Zoom: </span>
-                    <input id='zoom' class='horizontal_pointer slider zoom' type="range" min="1" max="5" value="3" step="1" onchange="zoom()" />
+                    <input id='zoom' class='horizontal_pointer slider zoom' type="range" min="1" max="5" value="3" step="1"/>
                 </div>
             </div>
         </div>

@@ -350,14 +350,53 @@ function Param() {
  * Initialize the game
  */
 
-function init() {
-    Game = new Param(); //TODO: Should add save and load game code here...
-    checkBuildings();
-    reCount('all');
+window.onload = function init() {
     eavesdrop();
 }
 
 function eavesdrop() {
+    //Start Screen
+    document.getElementById('login').onclick = function(){
+        Game = new Param(); //TODO: Should add save and load game code here...
+        checkBuildings();
+        reCount('all');
+        getSeed(false);
+    };
+    document.getElementById('newSession').onclick = function(){
+        Game = new Param(); //TODO: Should add save and load game code here...
+        checkBuildings();
+        reCount('all');
+        getSeed(true);
+    };
+    //!Start Screen
+    //Left Menu
+    document.getElementById('leftMenuSlider').onmousedown = function(){
+        leftMenuResize(true);
+    };
+    document.getElementById('leftMenuSlider').onmouseup = function(){
+        leftMenuResize(false);
+    };
+    //!Left Menu
+    //Canvas Map
+    var mainMap = document.getElementById('mPanOverlay');
+    mainMap.onmouseover = function(){
+        Game.overMPan = true;
+        overCanvas(true, 'mPan');
+    };
+    mainMap.onmouseout = function(){
+        Game.overMPan = false
+        overCanvas(false);
+    };
+    mainMap.onmouseup = function(){
+        clicked();
+    };
+    //!Canvas Map
+    //Level Slider
+    var levelSlider = document.getElementById('slider');
+    levelSlider.onchange = function(){
+        changeLevel(levelSlider.value); 
+    };
+    //!Level Slider
     window.onresize = function() {
         mapFit();
     };
@@ -467,13 +506,32 @@ function eavesdrop() {
         button.classList.toggle('arrow_up');
 
     };
-}
-
-function zoom(){
-    var zoomLevel = document.getElementById('zoom').value;
-    Game.destinationWidth = zoomLevel*6*5;
-    Game.destinationHeight = zoomLevel*7*5;
-    mapFit();
+    document.getElementById('turn').onclick = function(){
+        var x;
+        var y;
+        Game.turn += 1;
+        for(y = 0; y < Game.radarRad * 2; y++) {
+            for(x = 0; x < Game.radarRad * 2; x++) {
+                for(var l = 0; l < 5; l++) {
+                    returnLevel(l)[y][x][1].nextTurn();
+                }
+            }
+        }
+        drawRadar();
+        Game.turnNum.innerHTML = "Week: " + Game.turn;
+        reCount('all');
+        //The following hold code just prevents accidentally skipping two turns with accidental clicks...
+        document.getElementById('turn').disabled = true;
+        setTimeout(function() {
+            document.getElementById('turn').disabled = false;
+        }, 300);
+    };
+    document.getElementById('zoom').onchange= function(){
+        var zoomLevel = document.getElementById('zoom').value;
+        Game.destinationWidth = zoomLevel*6*5;
+        Game.destinationHeight = zoomLevel*7*5;
+        mapFit();
+    };
 }
 
 function mapFit() {
@@ -661,32 +719,6 @@ function changeLevel(newLevel) {
     Game.level = parseInt(newLevel, 10);
     checkBuildings();
     drawRadar();
-}
-
-/**
- * Loops through the tiles, ordering them to calculate their next turn
- * @return {[type]}
- */
-
-function nextTurn() {
-    var x;
-    var y;
-    Game.turn += 1;
-    for(y = 0; y < Game.radarRad * 2; y++) {
-        for(x = 0; x < Game.radarRad * 2; x++) {
-            for(var l = 0; l < 5; l++) {
-                returnLevel(l)[y][x][1].nextTurn();
-            }
-        }
-    }
-    drawRadar();
-    Game.turnNum.innerHTML = "Week: " + Game.turn;
-    reCount('all');
-    //The following hold code just prevents accidentally skipping two turns with accidental clicks...
-    document.getElementById('turn').disabled = true;
-    setTimeout(function() {
-        document.getElementById('turn').disabled = false;
-    }, 300);
 }
 
 /**

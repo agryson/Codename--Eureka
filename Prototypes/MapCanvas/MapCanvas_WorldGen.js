@@ -156,6 +156,8 @@ function createMap() {
     //start mainloop
     mainLoop();
     popup.style.opacity = '0';
+    document.getElementById('login').onclick = null;
+    document.getElementById('newSession').onclick = null;
     popup.addEventListener('webkitTransitionEnd', function() {
       popup.style.zIndex = '-1';
     }, false);
