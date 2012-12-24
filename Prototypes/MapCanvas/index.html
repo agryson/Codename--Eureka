@@ -242,7 +242,7 @@
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         
-        <div id="radarContainer" class='menu_visible grey_rubber'>
+        <div id="radarContainer" class='radar menu_visible grey_rubber radar_visible'>
             <canvas id="map" width="300" height="300">
                 Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
             </canvas>
@@ -251,9 +251,7 @@
                 Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
             </canvas>
             <input class='vertical_resize_pointer slider' id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
-            <div id="radarbutton">
-                <img src="images/icons/arrow-round.png" id='radarButtonArrow' />
-            </div>
+            <img id='radarButton' class='radar_button arrow_up' src="images/icons/arrow-round.png" />
         </div>
         <div id="globalActions" class='grey_rubber'>
             <span id="turnNumber">Week: 0</span>

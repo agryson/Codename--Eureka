@@ -40,31 +40,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     left: 0;
     margin-top: -35px;
 }
-#radarContainer{
-    position: absolute;
-    right: 0;
-    width: 350px;
-    height: 350px;
-    border-radius: 0 0 0 10px;
-    -webkit-box-shadow: -1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
-    -moz-box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
-    box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
-    z-index: 50;
 
-}
-
-#radarbutton {
-    position: absolute;
-    bottom: 0;
-    text-align:center;
-    width: 100%;
-    height: 40px;
-}
-
-#radarButtonArrow{
-    margin-top: 10px;
-    -webkit-transition: -webkit-transform 0.5s ease;
-}
 
 #map{
     position: absolute;
@@ -90,7 +66,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     transform: rotate(90deg);
     width: 280px;
     top: 140px;
-    right: 180px;
+    right: 190px;
     z-index: 1;
 }
 
@@ -485,7 +461,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     width: 340px;
     background: transparent;
     z-index: 4;
-    -webkit-transition: height 0.5s ease;
+    -webkit-transition: height 0.4s ease;
 }
 
 #settings{
@@ -525,7 +501,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     width: 100%;
     background: transparent;
     z-index: 3;
-    -webkit-transition: height 0.5s ease;
+    -webkit-transition: height 0.4s ease;
 }
 
 #mail{
@@ -607,6 +583,43 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 .menu_hidden{
     opacity: 0.4;
     -webkit-transition: all 0.4s ease;
+}
+
+.radar_visible{
+    -webkit-transform: translate(0, 0);
+}
+
+.radar_hidden{
+    -webkit-transform: translate(0, -320px);
+}
+
+.radar{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 350px;
+    height: 350px;
+    border-radius: 0 0 0 10px;
+    -webkit-box-shadow: -1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    -moz-box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    z-index: 50;
+    -webkit-transition: all 0.5s ease;
+}
+
+.radar_button{
+    position: absolute;
+    bottom: 0;
+    left: 170px;
+    -webkit-transition: all 0.5s ease;
+}
+.arrow_down{
+    margin-top: 10px;
+    -webkit-transform: rotate(-90deg);
+}
+
+.arrow_up{
+    -webkit-transform: rotate(90deg);
 }
 
 /*For smaller stuff like notifications*/

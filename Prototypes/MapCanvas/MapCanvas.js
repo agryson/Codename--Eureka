@@ -357,28 +357,51 @@ function init() {
     window.onresize = function() {
         mapFit();
     };
-    radRed();
-    var radar = document.getElementById('radarContainer')
-    document.getElementById('radarbutton').onclick = function() {
-        radRed();
+    var radar = document.getElementById('radarContainer');
+    var radarButton = document.getElementById('radarButton');
+    radar.onclick = function() {
+        if(radarButton.classList.contains('arrow_down')){
+            radar.classList.add('radar_visible');
+            radar.classList.remove('radar_hidden');
+            radar.classList.add('menu_visible');
+            radar.classList.remove('menu_hidden');
+        }else{
+            radar.classList.remove('radar_visible');
+            radar.classList.add('radar_hidden');
+            radar.classList.remove('menu_visible');
+            radar.classList.add('menu_hidden');
+        }
+        radarButton.classList.toggle('arrow_down');
+        radarButton.classList.toggle('arrow_up');
+
     };
     radar.onmouseout = function(){
-        if(parseInt(radar.style.top, 10) < 0){
+        if(radar.classList.contains('radar_hidden')){
             radar.classList.remove('menu_visible');
             radar.classList.add('menu_hidden');
         }
     };
     radar.onmouseover = function(){
-        if(parseInt(radar.style.top, 10) < 0){
+        if(radar.classList.contains('radar_hidden')){
             radar.classList.remove('menu_hidden');
             radar.classList.add('menu_visible');
         }
     };
+    document.getElementById('mapOverlay').onclick = function(evt){
+        jump();
+        evt.preventDefault();
+        evt.stopPropagation();
+        return false;
+        };
+    document.getElementById('slider').onclick = function(evt){
+        evt.preventDefault();
+        evt.stopPropagation();
+        return false;
+        };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
         rightClicked();
-        console.log('clicked Right!');
         return false;
     };
     var leftMenu = document.getElementById('menuWrap');
@@ -427,22 +450,6 @@ function menuListen(container, thing){
             wrap.style.height = parseInt(wrap.style.height, 10) - 300 + 'px';
         }
     };
-}
-
-function radRed(){
-    var radar = document.getElementById('radarContainer');
-    var radarButton = document.getElementById('radarButtonArrow');
-    if(parseInt(radar.style.top, 10) === 0){
-        radar.style.top = -320 + 'px';
-        radarButton.style.webkitTransform = 'rotate(-90deg)';
-        radar.classList.remove('menu_visible');
-        radar.classList.add('menu_hidden');
-    }else{
-        radar.style.top = 0;
-        radarButton.style.webkitTransform = 'rotate(90deg)';
-        radar.classList.remove('menu_hidden');
-        radar.classList.add('menu_visible');
-    }
 }
 
 function zoom(){
