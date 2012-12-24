@@ -354,7 +354,7 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
-    eavesdrop();    
+    eavesdrop();
 }
 
 function eavesdrop() {
@@ -366,7 +366,7 @@ function eavesdrop() {
     var radarButton = document.getElementById('radarButton');
     radarBtnContainer.onclick = function(){
         menu(radar, radarButton, 'radar_hidden');
-    }
+    };
     radar.onmouseout = function(){
         if(radar.classList.contains('radar_hidden')){
             radar.classList.remove('menu_visible');
@@ -378,6 +378,16 @@ function eavesdrop() {
             radar.classList.remove('menu_hidden');
             radar.classList.add('menu_visible');
         }
+    };
+    var radarMap = document.getElementById('mapOverlay');
+    radarMap.onclick = function(){
+        jump();
+    };
+    radarMap.onmouseover = function(){
+        overCanvas(true, 'radar');
+    };
+    radarMap.onmouseout = function(){
+        overCanvas(false);
     };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
@@ -409,7 +419,7 @@ function eavesdrop() {
     var execButton = document.getElementById('execButton');
     execBtnContainer.onclick = function(){
         menu(exec, execButton, 'exec_hidden');
-    }
+    };
     exec.onmouseout = function(){
         if(execButton.classList.contains('arrow_down')){
             exec.classList.remove('menu_visible');
@@ -424,6 +434,9 @@ function eavesdrop() {
             exec.classList.add('menu_visible');
             exec.classList.remove('menu_hidden');
         }
+    };
+    document.getElementById('globalReport').onclick = function(){
+        menu(exec, execButton, 'exec_hidden');
     };
     //!Executive Drop Down
     //
@@ -473,7 +486,6 @@ function mapFit() {
     Game.xLimit = Math.ceil((document.width / Game.destinationWidth)+1);
     Game.yLimit = Math.ceil((document.height / (quarterHeight*3))+2);
     drawRadar();
-    //drawZoomMap();
     drawLoc();
 }
 
@@ -752,23 +764,6 @@ function resize(e) {
     document.getElementById('buildingContainer').style.height = percentage + '%';
     document.getElementById('droneContainer').style.height = 100 - percentage + '%';
     document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
-}
-/**
- * Manages the animation for the menu pulldown
- */
-
-function pulldown() {
-    var i = document.getElementById('execDropDownContainer');
-    var exec = document.getElementById('execDropDown');
-    if(parseInt(i.style.height, 10) === 0 || i.style.height === '') {
-        i.style.height = '650px';
-        exec.classList.add('menu_visible');
-        exec.classList.remove('menu_hidden');
-    } else {
-        i.style.height = '0px';
-        exec.classList.remove('menu_visible');
-        exec.classList.add('menu_hidden');
-    }
 }
 
 /**
@@ -1116,7 +1111,7 @@ function returnLevel(level) {
  */
 
 function drawRadar() {
-    var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
+    var radarPixels = Game.radar.createImageData(Game.radarRad*2, Game.radarRad*2);
     var surfaceColor = [
         [212, 197, 174, 255],
         [201, 179, 165, 255],

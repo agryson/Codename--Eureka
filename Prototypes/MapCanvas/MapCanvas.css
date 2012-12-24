@@ -43,35 +43,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     margin-top: -35px;
 }
 
-
-#map{
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    z-index: 30;
-}
-
-#mapOverlay {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    border: 1px inset white;
-    z-index: 35;
-}
-
-#slider {
-    position: absolute;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
-    width: 280px;
-    top: 140px;
-    right: 190px;
-    z-index: 1;
-}
-
 ::selection {
     background-color: transparent;
 }
@@ -525,12 +496,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     margin: 15px;
 }
 
-.zoom{
-    height: 5px;
-    width: 70%;
-    margin-left: 15px;
-}
-
 .radar{
     position: absolute;
     right: 0;
@@ -544,6 +509,21 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     z-index: 50;
     -webkit-transform: translate(0, 0);
     -webkit-transition: all 0.5s ease;
+}
+
+.map{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 30;
+}
+
+.map_overlay{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: 1px inset white;
+    z-index: 35;
 }
 
 .button_container{
@@ -696,5 +676,24 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     border-radius: 10px;
     background: #00B000;
     box-shadow: inset 0 0 10px 5px #333, 0 0 2px #111;
+}
+
+.level_slider{
+    position: absolute;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 280px;
+    top: 140px;
+    right: 190px;
+    z-index: 1;
+}
+
+.zoom{
+    height: 5px;
+    width: 70%;
+    margin-left: 15px;
 }
 /*!Sliders*/
