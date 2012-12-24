@@ -362,8 +362,9 @@ function eavesdrop() {
         mapFit();
     };
     var radar = document.getElementById('radarContainer');
+    var radarBtnContainer = document.getElementById('radarBtnContainer');
     var radarButton = document.getElementById('radarButton');
-    radar.onclick = function() {
+    radarBtnContainer.onclick = function() {
         if(radarButton.classList.contains('arrow_down')){
             radar.classList.add('radar_visible');
             radar.classList.remove('radar_hidden');
@@ -391,17 +392,6 @@ function eavesdrop() {
             radar.classList.add('menu_visible');
         }
     };
-    document.getElementById('mapOverlay').onclick = function(evt){
-        jump();
-        evt.preventDefault();
-        evt.stopPropagation();
-        return false;
-        };
-    document.getElementById('slider').onclick = function(evt){
-        evt.preventDefault();
-        evt.stopPropagation();
-        return false;
-        };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
         ev.stopPropagation();

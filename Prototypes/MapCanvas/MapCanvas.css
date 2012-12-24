@@ -456,38 +456,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     color: #D9F7FF;
 }
 
-.settingsContainer{
-    z-index: 4;
-}
-
-.settings{
-    width: 57px;
-}
-
-.settingsItem{
-    margin: 15px;
-}
-
-.mailContainer{
-    z-index: 3;
-}
-
-.mail{
-    width: 139px;
-}
-
-.mailItem{
-    margin: 15px;
-}
-
-.zoom{
-    height: 5px;
-    width: 70%;
-    margin-left: 15px;
-    z-index: 1;
-}
-
-
 
 /*Beginning the work on moving to classes for IDs*/
 /*Components*/
@@ -525,6 +493,37 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     box-shadow: inset 1px 1px 1px 0 #A1A1A1;
 }
 
+
+.settingsContainer{
+    z-index: 4;
+}
+
+.settings{
+    width: 57px;
+}
+
+.settingsItem{
+    margin: 15px;
+}
+
+.mailContainer{
+    z-index: 3;
+}
+
+.mail{
+    width: 139px;
+}
+
+.mailItem{
+    margin: 15px;
+}
+
+.zoom{
+    height: 5px;
+    width: 70%;
+    margin-left: 15px;
+}
+
 .radar{
     position: absolute;
     right: 0;
@@ -539,11 +538,12 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     -webkit-transition: all 0.5s ease;
 }
 
-.radar_button{
+.button_container{
     position: absolute;
     bottom: 0;
-    left: 170px;
-    -webkit-transition: all 0.5s ease;
+    height: 40px;
+    width: 100%;
+    text-align: center;
 }
 /*!Components*/
 
@@ -594,6 +594,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 }
 
 .arrow_up{
+    margin-top: 10px;
     -webkit-transform: rotate(90deg);
 }
 

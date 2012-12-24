@@ -228,7 +228,10 @@
             </div>
         </div>
         <div id="execDropDown" class='menu_hidden green_rubber' onclick="pulldown()">
-            <div id="execDropDownContainer" class='slide_out cream_felt'></div>      
+            <div id="execDropDownContainer" class='slide_out cream_felt'></div>
+            <div id='execBtnContainer' class='button_Container'>
+                <img id='execButton' class='arrow_up' src="images/icons/arrow-round.png" /> 
+            </div>    
         </div>
         
         <canvas id="mainPanel">
@@ -251,7 +254,9 @@
                 Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
             </canvas>
             <input class='vertical_resize_pointer slider' id='slider' type="range" min="0" max="4" value="0" step="1" onchange="changeLevel(this.value)" />
-            <img id='radarButton' class='radar_button arrow_up' src="images/icons/arrow-round.png" />
+            <div id='radarBtnContainer' class='button_container'>
+                <img id='radarButton' class='arrow_up' src="images/icons/arrow-round.png" />
+            </div>
         </div>
         <div id="globalActions" class='grey_rubber'>
             <span id="turnNumber">Week: 0</span>
