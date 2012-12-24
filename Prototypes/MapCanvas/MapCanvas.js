@@ -364,22 +364,9 @@ function eavesdrop() {
     var radar = document.getElementById('radarContainer');
     var radarBtnContainer = document.getElementById('radarBtnContainer');
     var radarButton = document.getElementById('radarButton');
-    radarBtnContainer.onclick = function() {
-        if(radarButton.classList.contains('arrow_down')){
-            radar.classList.add('radar_visible');
-            radar.classList.remove('radar_hidden');
-            radar.classList.add('menu_visible');
-            radar.classList.remove('menu_hidden');
-        }else{
-            radar.classList.remove('radar_visible');
-            radar.classList.add('radar_hidden');
-            radar.classList.remove('menu_visible');
-            radar.classList.add('menu_hidden');
-        }
-        radarButton.classList.toggle('arrow_down');
-        radarButton.classList.toggle('arrow_up');
-
-    };
+    radarBtnContainer.onclick = function(){
+        menu(radar, radarButton, 'radar_hidden');
+    }
     radar.onmouseout = function(){
         if(radar.classList.contains('radar_hidden')){
             radar.classList.remove('menu_visible');
@@ -418,15 +405,22 @@ function eavesdrop() {
     //Executive Drop-Down Menu
     var exec = document.getElementById('execDropDown');
     var execDrop = document.getElementById('execDropDownContainer');
-    execDrop.style.height = 0;
+    var execBtnContainer = document.getElementById('execBtnContainer');
+    var execButton = document.getElementById('execButton');
+    execBtnContainer.onclick = function(){
+        menu(exec, execButton, 'exec_hidden');
+    }
     exec.onmouseout = function(){
-        if(parseInt(execDrop.style.height, 10) < 100){
+        if(execButton.classList.contains('arrow_down')){
             exec.classList.remove('menu_visible');
             exec.classList.add('menu_hidden');
+        }else{
+            exec.classList.remove('menu_hidden');
+            exec.classList.add('menu_visible');
         }
     };
     exec.onmouseover = function(){
-        if(parseInt(execDrop.style.height, 10) < 100){
+        if(execButton.classList.contains('arrow_down')){
             exec.classList.add('menu_visible');
             exec.classList.remove('menu_hidden');
         }
@@ -443,6 +437,22 @@ function eavesdrop() {
     };
     mailBtn.onclick = function(){
         mail.classList.toggle('global_container_hidden');
+    };
+
+    var menu = function(containerIn, buttonIn, hideClass) {
+        var container = containerIn;
+        var button = buttonIn;
+        if(button.classList.contains('arrow_down')){
+            container.classList.add('menu_visible');
+            container.classList.remove('menu_hidden');
+        }else{
+            container.classList.remove('menu_visible');
+            container.classList.add('menu_hidden');
+        }
+        container.classList.toggle(hideClass);
+        button.classList.toggle('arrow_down');
+        button.classList.toggle('arrow_up');
+
     };
 }
 

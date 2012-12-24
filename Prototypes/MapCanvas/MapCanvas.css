@@ -371,19 +371,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 }
 
 /*        ******      Exec Dropdown    ******      */
-#execDropDown {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    margin-left: -375px;
-    width: 750px;
-    padding: 0 5px 30px 5px;
-    border-radius: 0 0 10px 10px;
-    z-index: 2;
-    -webkit-box-shadow: 1px 1px 3px 1px #000;
-    -moz-box-shadow: 1px 1px 3px 1px #000;
-    box-shadow: 1px 1px 3px 1px #000;
-}
 
 #notifications {
     position: absolute;
@@ -493,6 +480,26 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     box-shadow: inset 1px 1px 1px 0 #A1A1A1;
 }
 
+.exec_panel{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -375px;
+    width: 750px;
+    height: 640px;
+    padding: 0 5px 0 5px;
+    border-radius: 0 0 10px 10px;
+    z-index: 2;
+    -webkit-box-shadow: 1px 1px 3px 1px #000;
+    -moz-box-shadow: 1px 1px 3px 1px #000;
+    box-shadow: 1px 1px 3px 1px #000;
+}
+
+.exec_panel_screen{
+    width: 100%;
+    height: 600px;
+    overflow-y: scroll; 
+}
 
 .settingsContainer{
     z-index: 4;
@@ -535,6 +542,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     -moz-box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
     box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
     z-index: 50;
+    -webkit-transform: translate(0, 0);
     -webkit-transition: all 0.5s ease;
 }
 
@@ -576,16 +584,16 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 }
 
 .menu_hidden{
-    opacity: 0.4;
+    opacity: 0.7;
     -webkit-transition: all 0.4s ease;
-}
-
-.radar_visible{
-    -webkit-transform: translate(0, 0);
 }
 
 .radar_hidden{
     -webkit-transform: translate(0, -320px);
+}
+
+.exec_hidden{
+    -webkit-transform: translate(0, -600px);
 }
 
 .arrow_down{
