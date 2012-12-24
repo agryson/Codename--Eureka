@@ -354,6 +354,10 @@ function init() {
     Game = new Param(); //TODO: Should add save and load game code here...
     checkBuildings();
     reCount('all');
+    eavesdrop();    
+}
+
+function eavesdrop() {
     window.onresize = function() {
         mapFit();
     };
@@ -404,6 +408,8 @@ function init() {
         rightClicked();
         return false;
     };
+
+    //Left Menu
     var leftMenu = document.getElementById('menuWrap');
     leftMenu.onmouseover = function(){
         leftMenu.classList.remove('left_menu_hide');
@@ -417,6 +423,9 @@ function init() {
         leftMenu.classList.remove('menu_visible');
         leftMenu.classList.add('menu_hidden');
     };
+    //!Left Menu
+    
+    //Executive Drop-Down Menu
     var exec = document.getElementById('execDropDown');
     var execDrop = document.getElementById('execDropDownContainer');
     execDrop.style.height = 0;
@@ -432,23 +441,18 @@ function init() {
             exec.classList.remove('menu_hidden');
         }
     };
-    menuListen('settingsContainer','settings');
-    menuListen('mailContainer','mail');
-}
-
-function menuListen(container, thing){
-    var yoke = document.getElementById(container);
-    var wrap = document.getElementById('wrapper');
-    yoke.style.height = 100 + 'px'; //I need to set the style cause the stylesheet one returns NaN!
-    wrap.style.height = 140 + 'px';
-    document.getElementById(thing).onclick = function() {
-        if(parseInt(yoke.style.height, 10) < 200){
-            yoke.style.height = parseInt(yoke.style.height, 10) + 300 + 'px';
-            wrap.style.height = parseInt(wrap.style.height, 10) + 300 + 'px';
-        }else{
-            yoke.style.height = parseInt(yoke.style.height, 10) - 300 + 'px';
-            wrap.style.height = parseInt(wrap.style.height, 10) - 300 + 'px';
-        }
+    //!Executive Drop Down
+    //
+    //Global Menu
+    var settings = document.getElementById('settingsContainer');
+    var setBtn = document.getElementById('settings');
+    var mail = document.getElementById('mailContainer');
+    var mailBtn = document.getElementById('mail');
+    setBtn.onclick = function(){
+        settings.classList.toggle('global_container_hidden');
+    };
+    mailBtn.onclick = function(){
+        mail.classList.toggle('global_container_hidden');
     };
 }
 

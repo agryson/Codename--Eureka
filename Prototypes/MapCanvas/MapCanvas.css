@@ -1,6 +1,8 @@
 /*        ******      General Page Style    ******      */
 body,html {
     height: 100%;
+    width: 100%;
+    overflow: hidden;
     margin: 0;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -454,95 +456,31 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     color: #D9F7FF;
 }
 
-#settingsContainer{
-    position: absolute;
-    right:0;
-    bottom: 0;
-    width: 340px;
-    background: transparent;
+.settingsContainer{
     z-index: 4;
-    -webkit-transition: height 0.4s ease;
 }
 
-#settings{
-    position: absolute;
-    right: 0;
-    top: -37px;
+.settings{
     width: 57px;
-    padding-left: 25px;
-    padding-top: 3px;
-    border-radius: 5px 0 0 0;
-    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-    -moz-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-}
-
-#settingsPanel{
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 400px;
-    width: 335px;
-    background: #494949;
-    border-radius: 5px 0 0 0;
-    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-    -moz-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
 }
 
 .settingsItem{
     margin: 15px;
 }
 
-#mailContainer{
-    position: absolute;
-    right:0;
-    bottom: 0;
-    width: 100%;
-    background: transparent;
+.mailContainer{
     z-index: 3;
-    -webkit-transition: height 0.4s ease;
 }
 
-#mail{
-    position: absolute;
-    right: 0;
-    top: -37px;
+.mail{
     width: 139px;
-    padding-left: 25px;
-    padding-top: 3px;
-    border-radius: 5px 0 0 0;
-    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-    -moz-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-}
-
-#mailPanel{
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 400px;
-    width: 340px;
-    background: #494949;
-    border-radius: 5px 0 0 0;
-    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-    -moz-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
-    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
 }
 
 .mailItem{
     margin: 15px;
 }
 
-#wrapper{
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 340px;
-    height: 600px;
-}
-
-#zoom {
+.zoom{
     height: 5px;
     width: 70%;
     margin-left: 15px;
@@ -552,6 +490,63 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 
 
 /*Beginning the work on moving to classes for IDs*/
+/*Components*/
+.global_container{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 340px;
+    height: 440px;
+    -webkit-transition: all 0.4s ease;
+}
+
+.global_content_panel{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 400px;
+    width: 340px;
+    background: #494949;
+    border-radius: 5px 0 0 0;
+    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    -moz-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+}
+
+.global_icon{
+    position: absolute;
+    top: -37px;
+    right: 0;
+    padding-left: 25px;
+    padding-top: 3px;
+    border-radius: 5px 0 0 0;
+    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    -moz-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+}
+
+.radar{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 350px;
+    height: 350px;
+    border-radius: 0 0 0 10px;
+    -webkit-box-shadow: -1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    -moz-box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
+    z-index: 50;
+    -webkit-transition: all 0.5s ease;
+}
+
+.radar_button{
+    position: absolute;
+    bottom: 0;
+    left: 170px;
+    -webkit-transition: all 0.5s ease;
+}
+/*!Components*/
+
 /*Pointers*/
 .main_pointer{
     cursor: url(images/pointers/pointer.png),auto;
@@ -593,26 +588,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     -webkit-transform: translate(0, -320px);
 }
 
-.radar{
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 350px;
-    height: 350px;
-    border-radius: 0 0 0 10px;
-    -webkit-box-shadow: -1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
-    -moz-box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
-    box-shadow:-1px -1px 2px 0 #FFF, 1px 1px 2px 0 #000;
-    z-index: 50;
-    -webkit-transition: all 0.5s ease;
-}
-
-.radar_button{
-    position: absolute;
-    bottom: 0;
-    left: 170px;
-    -webkit-transition: all 0.5s ease;
-}
 .arrow_down{
     margin-top: 10px;
     -webkit-transform: rotate(-90deg);
@@ -638,6 +613,10 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 
 .left_menu_show{
     -webkit-transform: translate(250px,0);
+}
+
+.global_container_hidden{
+    -webkit-transform: translate(0, 340px);
 }
 /*!Animations*/
 
