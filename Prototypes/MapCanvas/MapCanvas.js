@@ -384,7 +384,7 @@ function eavesdrop() {
         overCanvas(true, 'mPan');
     };
     mainMap.onmouseout = function(){
-        Game.overMPan = false
+        Game.overMPan = false;
         overCanvas(false);
     };
     mainMap.onmouseup = function(){
@@ -394,7 +394,7 @@ function eavesdrop() {
     //Level Slider
     var levelSlider = document.getElementById('slider');
     levelSlider.onchange = function(){
-        changeLevel(levelSlider.value); 
+        changeLevel(levelSlider.value);
     };
     //!Level Slider
     window.onresize = function() {
@@ -536,13 +536,28 @@ function eavesdrop() {
 
 function mapFit() {
     console.log('I\'m refitting!');
+    var overlay = document.getElementById('mPanOverlay');
+    var mainMap = document.getElementById('mainPanel');
     var quarterHeight = Game.destinationHeight*0.25;
-    Game.mPanCanvas.width = document.width;
-    Game.mPanCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*50;
+    Game.mPanCanvas.width = document.width + Game.destinationWidth;
+    Game.mPanCanvas.height = document.height + quarterHeight*2;
+    overlay.style.top = -quarterHeight + 'px';
+    overlay.style.left = -Game.destinationWidth/2 + 'px';
+    Game.mPanelCanvas.width = document.width + Game.destinationWidth;
+    Game.mPanelCanvas.height = document.height + quarterHeight*2;
+    mainMap.style.top = -quarterHeight + 'px';
+    mainMap.style.left = -Game.destinationWidth/2 + 'px';
+    Game.xLimit = Math.round(Game.mPanCanvas.width / Game.destinationWidth) + 1;
+    Game.yLimit = Math.round(Game.mPanCanvas.height / Game.destinationHeight);
+    if(Game.yLimit % 2 !== 0){Game.yLimit += 1;}
+
+    /*
     Game.mPanelCanvas.width = document.width;
     Game.mPanelCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*50;
     Game.xLimit = Math.ceil((document.width / Game.destinationWidth)+1);
-    Game.yLimit = Math.ceil((document.height / (quarterHeight*3))+2);
+    var yTemp = Math.ceil((document.height / (quarterHeight*3))+2);
+    yTemp % 2 === 0 ? Game.yLimit = yTemp : Game.yLimit = yTemp +;
+    */
     drawRadar();
     drawLoc();
 }

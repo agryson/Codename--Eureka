@@ -170,7 +170,6 @@ function generateRivers(iterations){
     x = randGen(Game.radarRad*2,0);
     y = randGen(Game.radarRad*2,0);
     if(Game.map[y][x][1].kind === 2 || Game.map[y][x][1].kind === 1){
-      console.log('wtf rivers!? ' +  iterations + '  '+ i);
       slide(x,y);
     }else{
       iterations+=1;
@@ -182,6 +181,7 @@ function slide(x,y){
   //console.log('x: ' + x + ' y: '+ y);
   while(x > 0 && x < Game.radarRad*2 && y< Game.radarRad*2 && y > 0  && Game.map[y][x][1].kind !== 4){
     Game.map[y][x][1].kind = 4;
+    Game.map[y][x][1].diggable = false;
     var lowest = [adjacent(x,y,0)[1],adjacent(x,y,0)[0]]; //x, y
     for(var j=1; j<6; j++){
       if(x > 1 && x < (Game.radarRad*2)-1 && y < (Game.radarRad*2)-1 && y > 1 && Game.map[adjacent(x,y,j)[0]][adjacent(x,y,j)[1]][1].altitude < Game.map[lowest[1]][lowest[0]][1].altitude && Game.map[adjacent(x,y,j)[0]][adjacent(x,y,j)[1]][1].kind !== 4) {

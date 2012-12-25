@@ -37,10 +37,9 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 }
 
 #mainPanel,#mPanOverlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    margin-top: -35px;
 }
 
 ::selection {
