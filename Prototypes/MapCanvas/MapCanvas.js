@@ -794,11 +794,10 @@ function leftMenuResize(bool) {
 
 /**
  * manages the actual values for the resize (see leftMenuResize)
- * @param  {Object} e
  */
 
-function resize(e) {
-    var current = e.clientY;
+function resize() {
+    var current = e.clientY - 10;
     var total = window.innerHeight;
     var percentage = ((current / total) * 100);
     if(percentage < 10) {
