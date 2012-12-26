@@ -170,7 +170,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     top: 0;
     left: 0;
     height: 100%;
-    width: 220px;
+    width: 222px;
     border-radius: 3px;
     background: -webkit-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
     background: -moz-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
