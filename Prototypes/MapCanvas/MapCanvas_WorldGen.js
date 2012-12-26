@@ -30,7 +30,6 @@ function getSeed(newGame) {
   }
 
   if(Game.seeder !== '') {
-    document.getElementById('loader').style.height = 3 + 'px';
     increment();
     document.onkeydown = keypressed; //keyboard listener
     setTimeout(function() {
@@ -74,7 +73,7 @@ var incrementer = 1;
 
 function increment() {
   if(incrementer < 6) {
-    document.getElementById('thumb').style.width = incrementer * 20 + '%';
+    document.getElementById('thumb').style.WebkitTransform = 'translate(' + (-220+incrementer*44) + 'px, 0)';
     incrementer += 1;
   }
   var mess = document.getElementById('loadMessage');

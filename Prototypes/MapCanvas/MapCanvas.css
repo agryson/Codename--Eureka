@@ -152,23 +152,25 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 #loader {
     position: relative;
     top: 2em;
+    height: 3px;
     background: #1F1F1F;
     display: block;
     border-radius: 10px;
     -webkit-box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     -moz-box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     box-shadow: 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
-    height: 0;
     width: 220px;
     margin-left: auto;
     margin-right: auto;
+    overflow: hidden;
 }
 
 #thumb {
-    float: left;
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100%;
-    width: 0;
-    max-width: 100%;
+    width: 220px;
     border-radius: 3px;
     background: -webkit-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
     background: -moz-linear-gradient(top left, #114A0A 0%, #2ACC18 90%, #FFF 100%);
@@ -178,11 +180,8 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     -webkit-box-shadow: 0 0 5px 0 white;
     -moz-box-shadow: 0 0 5px 0 white;
     box-shadow: 0 0 5px 0 white;
-    -webkit-transition: width, 1s;
-    -moz-transition: width, 1s;
-    -o-transition: width, 1s;
-    -ms-transition: width, 1s;
-    transition: width, 1s;
+    -webkit-transform: translate(-222px, 0);
+    -webkit-transition: all 1s ease;
 }
 
 /*        ******      Map Context    ******      */
