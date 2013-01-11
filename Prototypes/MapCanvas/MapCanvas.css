@@ -31,7 +31,7 @@ button:active {
     box-shadow: inset 1px 1px 3px 1px #090909, 1px 1px 1px 0 white;
 }
 
-span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitle,#loadMessage,.botCountNum,#contextMenu {
+* {
     font-family: Arial, sans-serif;
     font-weight: bold;
 }
@@ -221,18 +221,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     z-index: 1;
 }
 
-#leftMenuSlider {
-    position: absolute;
-    height: 20px;
-    width: 100%;
-    margin-top: 50%;
-    border-radius: 5px;
-    -webkit-box-shadow: inset -1px -1px 0 2px #000;
-    -moz-box-shadow: inset -1px -1px 0 2px #000;
-    box-shadow: inset -1px -1px 0 2px #000;
-    background: #363636;
-    z-index: 2;
-}
+
 
 #nasty_spacer {
     height: 20px;
@@ -356,6 +345,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     -webkit-box-shadow: inset -1px -1px 2px 0 white;
 }
 
+/*Beginning the work on moving to classes for IDs*/
 /*        ******      Global Actions    ******      */
 .info {
     height: 2.5em;
@@ -374,47 +364,9 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     background: rgba(24,204,60,1);
 }
 
-#globalActions {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    min-height: 100px;
-    min-width: 350px;
-    -webkit-box-shadow: 0 0 2px 0 #FFF;
-    -moz-box-shadow: 0 0 2px 0 #FFF;
-    box-shadow: 0 0 2px 0 #FFF;
-    border-radius: 10px 0 0 0;
-    z-index: 5;
-}
-
-#save {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-}
-
-#turn {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-}
-
-#globalReport {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-#turnNumber {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    color: #D9F7FF;
-}
-
-
-/*Beginning the work on moving to classes for IDs*/
 /*Components*/
+    /*Main Menu, lower right*/
+        /*Tabs*/
 .global_container{
     position: absolute;
     bottom: 0;
@@ -449,27 +401,6 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     box-shadow: inset 1px 1px 1px 0 #A1A1A1;
 }
 
-.exec_panel{
-    position: absolute;
-    top: 0;
-    left: 50%;
-    margin-left: -375px;
-    width: 750px;
-    height: 640px;
-    padding: 0 5px 0 5px;
-    border-radius: 0 0 10px 10px;
-    z-index: 2;
-    -webkit-box-shadow: 1px 1px 3px 1px #000;
-    -moz-box-shadow: 1px 1px 3px 1px #000;
-    box-shadow: 1px 1px 3px 1px #000;
-}
-
-.exec_panel_screen{
-    width: 100%;
-    height: 600px;
-    overflow-y: scroll; 
-}
-
 .settingsContainer{
     z-index: 4;
 }
@@ -493,7 +424,82 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
 .mailItem{
     margin: 15px;
 }
+        /*Tabs*/
+.global_actions{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    min-height: 100px;
+    min-width: 350px;
+    -webkit-box-shadow: 0 0 2px 0 #FFF;
+    -moz-box-shadow: 0 0 2px 0 #FFF;
+    box-shadow: 0 0 2px 0 #FFF;
+    border-radius: 10px 0 0 0;
+    z-index: 5;
+}
 
+.save {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+.turn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.global_report {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.turn_number {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    color: #D9F7FF;
+}
+
+    /*!Main Menu, lower right*/
+    /*Executive Panel*/
+.exec_panel{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -375px;
+    width: 750px;
+    height: 640px;
+    padding: 0 5px 0 5px;
+    border-radius: 0 0 10px 10px;
+    z-index: 2;
+    -webkit-box-shadow: 1px 1px 3px 1px #000;
+    -moz-box-shadow: 1px 1px 3px 1px #000;
+    box-shadow: 1px 1px 3px 1px #000;
+}
+
+.exec_panel_screen{
+    width: 100%;
+    height: 600px;
+    overflow-y: scroll; 
+}
+    /*!Executive Panel*/
+    /*Left Menu*/
+.left_menu_slider {
+position: absolute;
+height: 20px;
+width: 100%;
+margin-top: 50%;
+border-radius: 5px;
+-webkit-box-shadow: inset -1px -1px 0 2px #000;
+-moz-box-shadow: inset -1px -1px 0 2px #000;
+box-shadow: inset -1px -1px 0 2px #000;
+z-index: 2;
+}
+    /*!Left Menu*/
+    /*Radar*/
 .radar{
     position: absolute;
     right: 0;
@@ -523,7 +529,7 @@ span, .itemText,#notifications,.info,.action,#turnNumber,.start-button,#mainTitl
     border: 1px inset white;
     z-index: 35;
 }
-
+    /*!Radar*/
 .button_container{
     position: absolute;
     bottom: 0;

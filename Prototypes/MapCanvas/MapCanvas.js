@@ -549,7 +549,7 @@ function mapFit() {
     mainMap.style.left = -Game.destinationWidth/2 + 'px';
     Game.xLimit = Math.round(Game.mPanCanvas.width / Game.destinationWidth) + 1;
     Game.yLimit = Math.round(Game.mPanCanvas.height / Game.destinationHeight);
-    if(Game.yLimit % 2 !== 0){Game.yLimit += 1;}
+    if(Game.yLimit % 2 === 0){Game.yLimit += 1;}
 
     /*
     Game.mPanelCanvas.width = document.width;
@@ -796,10 +796,10 @@ function leftMenuResize(bool) {
  * manages the actual values for the resize (see leftMenuResize)
  */
 
-function resize() {
+function resize(e) {
     var current = e.clientY - 10;
     var total = window.innerHeight;
-    var percentage = ((current / total) * 100);
+    var percentage = Math.round((current / total) * 100);
     if(percentage < 10) {
         percentage = 11;
         leftMenuResize(false);
@@ -819,7 +819,6 @@ function resize() {
 function mainLoop() {
     var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     Game.animate == N ? Game.animate = 0 : Game.animate += 1;
-    //drawZoomMap();
     setTimeout(mainLoop, 200); //set the framerate here
 }
 
@@ -954,7 +953,6 @@ function move(dir) {
     default:
         break;
     }
-    //drawZoomMap();
     drawLoc();
     drawRadar();
 }
@@ -1257,8 +1255,12 @@ function drawZoomMap() {
     var y, x;
     var sourceTile = returnLevel(Game.level);
     webkitRequestAnimationFrame(drawZoomMap);
+    //TODO : Maybe move all this yShift xShift stuff to Game?
     var yShift = Math.round(Game.yLimit / 2);
-    if(yShift % 2 === 0){yShift += 1;}
+    if(yShift % 2 === 0){
+        yShift -= 1;
+        Game.yLimit -=2;
+    }
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         while(x <= Game.xLimit) {
