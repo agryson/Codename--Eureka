@@ -1277,12 +1277,12 @@ function drawZoomMap() {
 function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
-    Game.radarLoc.fillRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
+    Game.radarLoc.fillRect(Game.retX - (Game.xLimit/2), Game.retY - (Game.yLimit/2), Game.xLimit, Game.yLimit);
     Game.radarLoc.fillStyle = 'rgba(255,251,229,0.3)';
     Game.radarLoc.fill();
     Game.radarLoc.closePath();
     Game.radarLoc.beginPath();
-    Game.radarLoc.strokeRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
+    Game.radarLoc.strokeRect(Game.retX - (Game.xLimit/2), Game.retY - (Game.yLimit/2), Game.xLimit, Game.yLimit);
     Game.radarLoc.strokeStyle = '#BD222A';
     Game.radarLoc.stroke();
     Game.radarLoc.closePath();
@@ -1467,7 +1467,6 @@ function clicked() {
     default:
         console.log("I don't recognise that building code...");
     }
-    //drawZoomMap();
     drawRadar();
 }
 
