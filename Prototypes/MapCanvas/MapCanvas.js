@@ -351,6 +351,7 @@ function Param() {
  */
 
 window.onload = function init() {
+    document.getElementById('zoom').value = 3;
     eavesdrop();
 };
 
@@ -395,12 +396,13 @@ function eavesdrop() {
         event.stopPropagation();
         var zoomPos = document.getElementById('zoom');
         var zoomMax = document.getElementById('zoom').max;
-        if(event.wheelDelta > 0 && zoomPos.value < zoomMax ){
-            zoomPos.value += 1;
-            zoom(zoomPos.value);
-        } else if(event.wheelDelta < 0 && zoomPos.value > 0){
-            zoomPos.value -= 1;
-            zoom(zoomPos.value);
+        var val = parseInt(zoomPos.value);
+        if(event.wheelDelta > 0 && val < zoomMax ){
+            zoomPos.value = val + 1;
+            zoom(val+1);
+        } else if(event.wheelDelta < 0 && val > 1){
+            zoomPos.value = val - 1;
+            zoom(val-1);
         }
         return false;
     };
@@ -547,8 +549,8 @@ function eavesdrop() {
 }
 
 function zoom(zoomLevel){
-    Game.destinationWidth = zoomLevel*6*5;
-    Game.destinationHeight = zoomLevel*7*5;
+    Game.destinationWidth = zoomLevel*6*6;
+    Game.destinationHeight = zoomLevel*7*6;
     mapFit();
 }
 
