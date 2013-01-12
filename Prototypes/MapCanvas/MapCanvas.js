@@ -1351,6 +1351,7 @@ function clicked() {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     //var kind;
+    console.log('x: ' + x + '  y: ' + y);
     var tile = returnLevel(Game.level)[y][x][1];
     var lowerTile = returnLevel(Game.level + 1)[y][x][1];
     switch(Game.clickedOn) {

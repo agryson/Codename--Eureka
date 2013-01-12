@@ -140,10 +140,13 @@ button:active {
 }
 
 .button_container {
+    position: absolute;
     top: 40%;
+    width: 100%;
     display: block;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
 }
 
 .loader {
@@ -356,8 +359,9 @@ button:active {
     overflow-y: scroll;
     overflow-x: hidden;
     background: #292929;
-    border-radius: 3px;
+    border-radius: 5px;
     color: white;
+    box-shadow: -1px -1px 2px 0 white, inset -1px -1px 2px 0 black;
 }
 /*!Main Map*/
 
@@ -399,7 +403,7 @@ button:active {
     box-shadow: inset 1px 1px 1px 0 #A1A1A1;
 }
 
-.settingsContainer{
+.settings_container{
     z-index: 4;
 }
 
@@ -411,7 +415,7 @@ button:active {
     margin: 15px;
 }
 
-.mailContainer{
+.mail_container{
     z-index: 3;
 }
 
@@ -528,7 +532,7 @@ z-index: 2;
     z-index: 35;
 }
     /*!Radar*/
-.button_container{
+.menu_button_container{
     position: absolute;
     bottom: 0;
     height: 40px;
