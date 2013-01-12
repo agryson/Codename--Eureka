@@ -10,24 +10,24 @@
 	<body class='main_pointer black_felt'>
         
         <div id="popupContainer" class="popupContainer green_felt main_pointer">
-            <div id="mainTitle">The Rotsbottom Exodus</div>
+            <div class="main_title">The Rotsbottom Exodus</div>
             <div class="popup grey_rubber" id="popup">
-                <input class='text_pointer' type="text" id="seed" placeholder="Dashboard Password" /><br/>
-                <div id="buttonContainer">
+                <input id="seed" class='text_pointer seed' type="text"  placeholder="Dashboard Password" /><br/>
+                <div class="button_container">
                     <button class="start-button main_pointer smoky_glass" id="login">Login</button>
                     <button class="start-button main_pointer smoky_glass" id="newSession" >New Session</button>
-                    <div id="loader">
-                        <div id="thumb">
+                    <div id="loader" class='loader'>
+                        <div id="thumb" class='thumb'>
                         </div>
                     </div>
-                    <div id="loadMessage"></div>
+                    <div id="loadMessage" class='load_message'></div>
                 </div>
             </div>
         </div>
 <!--loading screen moved up to improve performance-->
-        <div class='menu_hidden left_menu_hide' id='menuWrap'>
-            <div id="leftMenu">
-                <div id="buildingContainer">        
+        <div class='menu_hidden left_menu_hide menu_wrapper' id='menuWrap'>
+            <div id="leftMenu" class='left_menu'>
+                <div id="buildingContainer" class='left_menu_container building_container'>        
                     <div class="menuItem building" id="agri">
                         <img class="itemImage" src="images/pointers/dozer.png"></img>
                         <span class="itemText">Agridome</span>
@@ -176,9 +176,9 @@
 
                 <!-- These comments are just so that I can see it easily... -->
                 
-                <div id="droneContainer">
+                <div id="droneContainer" class='left_menu_container drone_container'>
                     <!--TODO Update the robots to work like the buildings -->
-                    <div id='nasty_spacer'></div>
+                    <div class='nasty_spacer'></div>
                     <div class="menuItem" id="dozer">
                         <div class="botCount">
                             <div class="botThumb" id="dozerCount">
@@ -234,14 +234,14 @@
             </div>    
         </div>
         
-        <canvas id="mainPanel">
+        <canvas id="mainPanel" class='panel'>
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         <div id='contextMenuWrapper' class='context_wrapper'>
             <div id="contextMenu" class='context'>
             </div>
         </div>
-        <canvas id="mPanOverlay">
+        <canvas id="mPanOverlay" class='panel'>
             Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
         </canvas>
         
@@ -266,7 +266,7 @@
             </button>
             <button class="action green_glass main_pointer turn" id="turn">Send Orders</button>
         </div>
-        <div id="notifications" class='slide_out'></div> 
+        <div id="notifications" class='slide_out notifications'></div> 
         <div id='settingsContainer' class='global_container global_container_hidden settingsContainer'>
             <div id='settings' class='grey_rubber global_icon settings' >
                 <img src = 'images/icons/processing-02.png' />
