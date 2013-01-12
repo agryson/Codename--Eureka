@@ -742,36 +742,30 @@ function changeLevel(newLevel) {
  */
 
 function reCount(which) {
+    var count = function(id, numID, index){
+        document.getElementById(id).style.height = ((Game.robotsList[index][1] - Game.robotsList[index][0]) / Game.robotsList[index][1]) * 100 + '%';
+        document.getElementById(numID).innerHTML = 'Available: ' + (Game.robotsList[index][1] - Game.robotsList[index][0]);
+    };
     switch(which) {
     case 'dozer':
-        document.getElementById('dozerCount').style.height = ((Game.robotsList[0][1] - Game.robotsList[0][0]) / Game.robotsList[0][1]) * 100 + '%';
-        document.getElementById('dozerCountNum').innerHTML = 'Available: ' + (Game.robotsList[0][1] - Game.robotsList[0][0]);
+        count('dozerCount', 'dozerCountNum', 0);
         break;
     case 'digger':
-        document.getElementById('diggerCount').style.height = ((Game.robotsList[1][1] - Game.robotsList[1][0]) / Game.robotsList[1][1]) * 100 + '%';
-        document.getElementById('cavernDiggerCount').style.height = ((Game.robotsList[1][1] - Game.robotsList[1][0]) / Game.robotsList[1][1]) * 100 + '%';
-        document.getElementById('diggerCountNum').innerHTML = 'Available: ' + (Game.robotsList[1][1] - Game.robotsList[1][0]);
-        document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + (Game.robotsList[1][1] - Game.robotsList[1][0]);
+        count('diggerCount', 'diggerCountNum', 1);
+        count('cavernDiggerCount', 'cavernDiggerCountNum', 1);
         break;
     case 'miner':
-        document.getElementById('minerCount').style.height = ((Game.robotsList[2][1] - Game.robotsList[2][0]) / Game.robotsList[2][1]) * 100 + '%';
-        document.getElementById('minerCountNum').innerHTML = 'Available: ' + (Game.robotsList[2][1] - Game.robotsList[2][0]);
+        count('minerCount', 'minerCountNum', 2);
         break;
     case 'recycler':
-        document.getElementById('recyclerCount').style.height = ((Game.robotsList[3][1] - Game.robotsList[3][0]) / Game.robotsList[3][1]) * 100 + '%';
-        document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + (Game.robotsList[3][1] - Game.robotsList[3][0]);
+        count('recyclerCount', 'recyclerCountNum', 3);
         break;
     case 'all':
-        document.getElementById('dozerCount').style.height = ((Game.robotsList[0][1] - Game.robotsList[0][0]) / Game.robotsList[0][1]) * 100 + '%';
-        document.getElementById('dozerCountNum').innerHTML = 'Available: ' + (Game.robotsList[0][1] - Game.robotsList[0][0]);
-        document.getElementById('diggerCount').style.height = ((Game.robotsList[1][1] - Game.robotsList[1][0]) / Game.robotsList[1][1]) * 100 + '%';
-        document.getElementById('cavernDiggerCount').style.height = ((Game.robotsList[1][1] - Game.robotsList[1][0]) / Game.robotsList[1][1]) * 100 + '%';
-        document.getElementById('diggerCountNum').innerHTML = 'Available: ' + (Game.robotsList[1][1] - Game.robotsList[1][0]);
-        document.getElementById('cavernDiggerCountNum').innerHTML = 'Available: ' + (Game.robotsList[1][1] - Game.robotsList[1][0]);
-        document.getElementById('minerCount').style.height = ((Game.robotsList[2][1] - Game.robotsList[2][0]) / Game.robotsList[2][1]) * 100 + '%';
-        document.getElementById('minerCountNum').innerHTML = 'Available: ' + (Game.robotsList[2][1] - Game.robotsList[2][0]);
-        document.getElementById('recyclerCount').style.height = ((Game.robotsList[3][1] - Game.robotsList[3][0]) / Game.robotsList[3][1]) * 100 + '%';
-        document.getElementById('recyclerCountNum').innerHTML = 'Available: ' + (Game.robotsList[3][1] - Game.robotsList[3][0]);
+        count('dozerCount', 'dozerCountNum', 0);
+        count('diggerCount', 'diggerCountNum', 1);
+        count('cavernDiggerCount', 'cavernDiggerCountNum', 1);
+        count('minerCount', 'minerCountNum', 2);
+        count('recyclerCount', 'recyclerCountNum', 3);
         break;
     default:
         console.log("Wait, I've lost count of the drones...");
