@@ -352,7 +352,7 @@ function Param() {
 
 window.onload = function init() {
     eavesdrop();
-}
+};
 
 function eavesdrop() {
     //Start Screen
@@ -1289,20 +1289,21 @@ function drawLoc() {
 }
 
 function rightClicked() {
-    //TODO pop up a small div containing info on the  tile such as tile.health etc.
+    //TODO : Make context menu appear on the correct side relative to mouse position near screen edges
+    var popFrame = document.getElementById('contextMenuWrapper');
     var pop = document.getElementById('contextMenu');
     pop.innerHTML = contextContent();
-    pop.style.top = event.clientY + 25 + 'px';
-    pop.style.left = event.clientX + 40 + 'px';
-    pop.style.display = 'inline-block';
-    pop.style.opacity = '1';
-    pop.addEventListener('mouseout', function() {
-        if(((event.relatedTarget || event.toElement) == pop.nextElementSibling) || ((event.relatedTarget || event.toElement) == pop.parentNode)) {
-            pop.style.opacity = '0';
-            pop.addEventListener('webkitTransitionEnd', function() {
-                pop.style.display = 'none';
+    popFrame.style.top = event.clientY - 25 + 'px';
+    popFrame.style.left = event.clientX - 10 + 'px';
+    popFrame.style.display = 'inline-block';
+    popFrame.style.opacity = '1';
+    popFrame.addEventListener('mouseout', function() {
+        if(((event.relatedTarget || event.toElement) == popFrame.nextElementSibling) || ((event.relatedTarget || event.toElement) == popFrame.parentNode)) {
+            popFrame.style.opacity = '0';
+            popFrame.addEventListener('webkitTransitionEnd', function() {
+                popFrame.style.display = 'none';
                 pop.innerHTML = '';
-                pop.onmouseout = null;
+                popFrame.onmouseout = null;
             }, false);
         }
     }, false);
@@ -1311,14 +1312,31 @@ function rightClicked() {
 function contextContent() {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
-    console.log(Game.retX);
-    console.log(Game.retY);
-    console.log(getTile('x'));
-    console.log(getTile('y'));
     var tile = returnLevel(Game.level)[y][x][1];
+    var resources = false;
     var htmlString = '';
     htmlString += '<span>' + tile.ref + '</span><br>';
     htmlString += '<span>' + 'WOW! Coordinates!' + '</span><br>';
+    htmlString += '<br><span>We can add all sorts of stuff here, whatever HTML we want! :-D I could go on for ages just to see what happens!</span><br>';
+    //resources?
+    for(var i = 0; i< tile.resources.length; i++){
+        if(tile.resources[i]>0){
+            if(!resources){
+                    htmlString += '<h3>Resources</h3><ul>';
+                    resources = true;
+            } 
+            switch(i){
+                case 0:
+                    htmlString += '<li>Unobtainium: ' + tile.resources[0] + 't</li>';
+                    break;
+                case 1:
+                    htmlString += '<li>Lucky Charms: ' + tile.resources[1] + 't</li>';
+                    break;
+            }
+        }
+    }
+    htmlString += '</ul>';
+    //!resources
     return htmlString;
 }
 

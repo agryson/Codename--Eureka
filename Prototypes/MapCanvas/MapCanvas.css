@@ -316,16 +316,24 @@ button:active {
     box-shadow: 0 0 0 5px #363636 inset;
 }
 
-#contextMenu {
+.context_wrapper {
     position: fixed;
-    display: inline-block;
-    padding: 10px;
-    background: #292929;
-    border-radius: 3px;
-    color: white;
+    display: none;
+    padding: 50px;
     z-index: 10000;
     opacity: 0;
     -webkit-transition: opacity 0.2s ease;
+}
+
+.context {
+    max-width: 250px;
+    max-height: 405px;
+    padding: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: #292929;
+    border-radius: 3px;
+    color: white;
 }
 
 /*        ******      Exec Dropdown    ******      */
