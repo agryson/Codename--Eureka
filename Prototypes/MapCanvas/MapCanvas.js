@@ -1212,8 +1212,8 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
             //mainly to prevent highlighting outside of the map
         } else {
             var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
-            sourceWidth = 173; //original tile width
-            sourceHeight = 200; //original tile height
+            sourceWidth = 216; //original tile width
+            sourceHeight = 252; //original tile height
             destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
             if(tilePosY % 2 === 0) { //if the row is even...
                 destinationX = Math.floor(tilePosX * Game.destinationWidth - Game.destinationWidth/2); //we set its X normally
