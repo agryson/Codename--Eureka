@@ -390,6 +390,20 @@ function eavesdrop() {
     mainMap.onmouseup = function(){
         clicked();
     };
+    mainMap.onmousewheel = function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        var zoomPos = document.getElementById('zoom');
+        var zoomMax = document.getElementById('zoom').max;
+        if(event.wheelDelta > 0 && zoomPos.value < zoomMax ){
+            zoomPos.value += 1;
+            zoom(zoomPos.value);
+        } else if(event.wheelDelta < 0 && zoomPos.value > 0){
+            zoomPos.value -= 1;
+            zoom(zoomPos.value);
+        }
+        return false;
+    };
     //!Canvas Map
     //Level Slider
     var levelSlider = document.getElementById('slider');
@@ -528,10 +542,14 @@ function eavesdrop() {
     };
     document.getElementById('zoom').onchange= function(){
         var zoomLevel = document.getElementById('zoom').value;
-        Game.destinationWidth = zoomLevel*6*5;
-        Game.destinationHeight = zoomLevel*7*5;
-        mapFit();
+        zoom(zoomLevel);
     };
+}
+
+function zoom(zoomLevel){
+    Game.destinationWidth = zoomLevel*6*5;
+    Game.destinationHeight = zoomLevel*7*5;
+    mapFit();
 }
 
 function mapFit() {
