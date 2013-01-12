@@ -559,16 +559,16 @@ function mapFit() {
     var overlay = document.getElementById('mPanOverlay');
     var mainMap = document.getElementById('mainPanel');
     var quarterHeight = Game.destinationHeight*0.25;
-    Game.mPanCanvas.width = document.width + Game.destinationWidth;
-    Game.mPanCanvas.height = document.height + quarterHeight*2;
+    Game.mPanCanvas.width = screen.width + Game.destinationWidth;
+    Game.mPanCanvas.height = screen.height + quarterHeight*2;
     overlay.style.top = -quarterHeight + 'px';
     overlay.style.left = -Game.destinationWidth/2 + 'px';
-    Game.mPanelCanvas.width = document.width + Game.destinationWidth;
-    Game.mPanelCanvas.height = document.height + quarterHeight*2;
+    Game.mPanelCanvas.width = screen.width + Game.destinationWidth;
+    Game.mPanelCanvas.height = screen.height + quarterHeight*2;
     mainMap.style.top = -quarterHeight + 'px';
     mainMap.style.left = -Game.destinationWidth/2 + 'px';
     Game.xLimit = Math.round(Game.mPanCanvas.width / Game.destinationWidth) + 1;
-    Game.yLimit = Math.round(Game.mPanCanvas.height / Game.destinationHeight);
+    Game.yLimit = Math.round(Game.mPanCanvas.height / (quarterHeight*3)) + 2;
     if(Game.yLimit % 2 === 0){Game.yLimit += 1;}
 
     /*
