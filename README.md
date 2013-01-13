@@ -15,6 +15,8 @@ Sand texture is heavily modified from a sand texture I found here: http://www.ma
 
 Following licensing does **NOT** apply to all artwork.
 
+Sound is Spatial Winds from @kmacleod, taken from FreeSFX.co.uk. This is a placeholder sound until homegrown music can be done.
+
 Following licensing is valid for *_HTML_*, *_CSS_* and *_JS_* files _(unless otherwise licensed in the file)_ and specifically listed images:
  - build.png
  - digger.png
