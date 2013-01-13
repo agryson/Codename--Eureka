@@ -160,6 +160,14 @@ function createMap() {
     popup.addEventListener('webkitTransitionEnd', function() {
       popup.style.zIndex = '-1';
     }, false);
+    //Sounds
+    Game.music.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+    }, false);
+    music();
+    //!Sounds
+    
   }
 }
 

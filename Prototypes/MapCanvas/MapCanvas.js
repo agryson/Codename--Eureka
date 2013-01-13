@@ -259,6 +259,9 @@ function Param() {
     this.tileHighlight.src = 'images/tools.png';
     this.clickedOn = 'none';
     this.level = 0;
+
+    this.music = new Audio('sound/spacial_winds_ambient_electronic.mp3');
+    this.musicOn = true;
     /*
     this.mouseX;
     this.mouseY;
@@ -546,6 +549,10 @@ function eavesdrop() {
         var zoomLevel = document.getElementById('zoom').value;
         zoom(zoomLevel);
     };
+}
+
+function music(){
+    Game.musicOn ? Game.music.play() : Game.music.stop();
 }
 
 function zoom(zoomLevel){
