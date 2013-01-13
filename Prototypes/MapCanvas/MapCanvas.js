@@ -374,17 +374,17 @@ function eavesdrop() {
     };
     //!Start Screen
     //Sound
-    var radio = document.getElementById('musicOption');
-    radio.checked = true;
-    radio.onchange = function(){
-        if (radio.checked) {
+    var radioCheck = document.getElementById('musicOptionViz');
+    radioCheck.onclick = function(){
+        radioCheck.classList.toggle('checkbox_checked');
+        if (!Game.musicOn) {
             Game.musicOn = true;
             music();
         }else{
             Game.musicOn = false;
             music();
         }
-    };
+    }
     //:Sound
     //Left Menu
     document.getElementById('leftMenuSlider').onmousedown = function(){
