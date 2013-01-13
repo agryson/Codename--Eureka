@@ -373,6 +373,19 @@ function eavesdrop() {
         getSeed(true);
     };
     //!Start Screen
+    //Sound
+    var radio = document.getElementById('musicOption');
+    radio.checked = true;
+    radio.onchange = function(){
+        if (radio.checked) {
+            Game.musicOn = true;
+            music();
+        }else{
+            Game.musicOn = false;
+            music();
+        }
+    };
+    //:Sound
     //Left Menu
     document.getElementById('leftMenuSlider').onmousedown = function(){
         leftMenuResize(true);
@@ -552,7 +565,7 @@ function eavesdrop() {
 }
 
 function music(){
-    Game.musicOn ? Game.music.play() : Game.music.stop();
+    Game.musicOn ? Game.music.play() : Game.music.pause();
 }
 
 function zoom(zoomLevel){
