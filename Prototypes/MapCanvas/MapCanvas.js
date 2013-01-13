@@ -1402,7 +1402,7 @@ function clicked() {
         tile.build(7, 60, 3); //TODO: change this to a real connector...
         break;
     case 'arp':
-        tile.build(7, 80, 2);
+        tile.build(14, 80, 2);
         break;
     case 'barracks':
         tile.build(7, 60, 3); //TODO: change this to a real connector...
@@ -1417,7 +1417,7 @@ function clicked() {
         tile.build(14, 100, 2);
         break;
     case 'commarray':
-        tile.build(7, 60, 1); //TODO: change this to a real connector...
+        tile.build(20, 60, 1); //TODO: change this to a real connector...
         break;
     case 'commarray2':
         tile.build(7, 80, 2); //TODO: change this to a real connector...
