@@ -1279,7 +1279,7 @@ function drawZoomMap() {
     var yShift = Math.round(Game.yLimit / 2);
     if(yShift % 2 === 0){
         yShift -= 1;
-        Game.yLimit -=2;
+        Game.yLimit +=2;
     }
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
