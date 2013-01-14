@@ -384,7 +384,7 @@ function eavesdrop() {
             Game.musicOn = false;
             music();
         }
-    }
+    };
     //:Sound
     //Left Menu
     document.getElementById('leftMenuSlider').onmousedown = function(){
@@ -412,7 +412,7 @@ function eavesdrop() {
         event.stopPropagation();
         var zoomPos = document.getElementById('zoom');
         var zoomMax = document.getElementById('zoom').max;
-        var val = parseInt(zoomPos.value);
+        var val = parseInt(zoomPos.value, 10);
         if(event.wheelDelta > 0 && val < zoomMax ){
             zoomPos.value = val + 1;
             zoom(val+1);
@@ -1239,44 +1239,30 @@ function drawRadar() {
  * @param  {boolean} darkness  Whether or not we should darken this tile
  */
 
-function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
-    try {
-        if(tilePosX < 0 || tilePosX >= Game.xLimit) {
-            //this if checks to make sure we requested a tile we can draw,
-            //mainly to prevent highlighting outside of the map
-        } else {
-            var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
-            sourceWidth = 216; //original tile width
-            sourceHeight = 252; //original tile height
-            destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
-            if(tilePosY % 2 === 0) { //if the row is even...
-                destinationX = Math.floor(tilePosX * Game.destinationWidth - Game.destinationWidth/2); //we set its X normally
-            } else { //if it’s odd though
-                destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
-            }//TODO this is causing a shift of the x tiles in certain zoomLevels
+function drawTile(tileType, tilePosX, tilePosY, highlight) {
+    var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
+    sourceWidth = 216; //original tile width
+    sourceHeight = 252; //original tile height
+    destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
+    if(tilePosY % 2 === 0) { //if the row is even...
+        destinationX = Math.floor(tilePosX * Game.destinationWidth - Game.destinationWidth/2); //we set its X normally
+    } else { //if it’s odd though
+        destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
+    }
 
-            if(highlight) { //highlight is an optional parameter to see which canvas to draw to and how
-                sourceX = 0;
-                sourceY = 0;
-                Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            } else if(tileType > 7 && tileType < 12) { //animated tiles
-                sourceX = Game.animate * sourceWidth;
-                sourceY = tileType * sourceHeight;
-                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            } else if(tileType < 8 || tileType > 11) { //non-animated tiles
-                sourceX = 0;
-                sourceY = tileType * sourceHeight;
-                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            }
-            if(darkness) {
-                sourceX = 0;
-                sourceY = darkness * sourceHeight;
-                Game.mPanel.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            }
-        }
-    } catch(e) {
-        //Do Nothing, we expect this error... unfortunately
-        //Basically, when I go off the local map to the south it throws an error...
+    if(highlight) { //highlight is an optional parameter to see which canvas to draw to and how
+        sourceX = 0;
+        sourceY = 0;
+        console.log("highighting");
+        Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
+    } else if(tileType > 7 && tileType < 12) { //animated tiles
+        sourceX = Game.animate * sourceWidth;
+        sourceY = tileType * sourceHeight;
+        Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
+    } else if(tileType < 8 || tileType > 11) { //non-animated tiles
+        sourceX = 0;
+        sourceY = tileType * sourceHeight;
+        Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
     }
 }
 
