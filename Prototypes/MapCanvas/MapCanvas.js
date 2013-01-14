@@ -280,41 +280,42 @@ function Param() {
      * @type {Array}
      */
     this.buildings = [
-        ["agri", true, 0],
+        ["lander", true, 0],
+        ["agri", false, 0],//
         ["agri2", false, 0],
         ["airport", false, 0],
-        ["arp", true, 2],
+        ["arp", false, 2],//
         ["barracks", false, 1],
         ["civprot", false, 2],
         ["civprot2", false, 2],
-        ["command", true, 2],
-        ["commarray", true, 0],
+        ["command", false, 2],//
+        ["commarray", false, 0],//
         ["commarray2", false, 0],
-        ["connector", true, 2],
+        ["connector", false, 2],//
         ["dronefab", false, 0],
         ["chernobyl", false, 0],
         ["tokamak", false, 0],
-        ["genfab", true, 0],
+        ["genfab", false, 0],//
         ["geotherm", false, 1],
-        ["hab", true, 1],
+        ["hab", false, 1],//
         ["hab2", false, 1],
         ["hab3", false, 1],
         ["er", false, 1],
         ["nursery", false, 1],
-        ["oreproc", true, 0],
+        ["oreproc", false, 0],//
         ["rec", false, 1],
         ["recycler", false, 0],
-        ["clichy", true, 2],
-        ["research", true, 2],
+        ["clichy", false, 2],//
+        ["research", false, 2],//
         ["research2", false, 2],
         ["solar", false, 0],
         ["space", false, 0],
         ["stasis", false, 1],
-        ["store", true, 2],
+        ["store", false, 2],//
         ["uni", false, 1],
-        ["warehouse", true, 2],
+        ["warehouse", false, 2],//
         ["windfarm", false, 0],
-        ["workshop", true, 1]
+        ["workshop", false, 1]//
     ];
     /**
      * List of robots
@@ -322,10 +323,10 @@ function Param() {
      * @type {Array}
      */
     this.robotsList = [
-        [0, 5, "dozer", true, 2],
-        [0, 3, "digger", true, 2],
-        [0, 1, "cavernDigger", true, 1],
-        [0, 1, "miner", true, 2],
+        [0, 5, "dozer", false, 2],//
+        [0, 3, "digger", false, 2],//
+        [0, 1, "cavernDigger", false, 1],//
+        [0, 1, "miner", false, 2],//
         [0, 1, "recycler", false, 2]
     ];
     //Map generation vars
@@ -612,7 +613,7 @@ function checkBuildings() {
         var idString = Game.buildings[thing][0];
         var elem = document.getElementById(idString);
         if(Game.buildings[thing][1]) {
-            if(elem.style.display !== 'table') {
+            if(elem.style.display === 'none' || elem.style.display === '') {
                 elem.style.display = 'table';
             }
             switch(Game.buildings[thing][2]) {
@@ -637,6 +638,13 @@ function checkBuildings() {
             default:
                 elem.classList.add('active');
                 document.getElementById(Game.buildings[thing][0]).onclick = construct;
+            }
+        }else{
+            elem.style.display = 'none';
+            console.log(elem.style.display);
+            if(Game.clickedOn === idString) {
+                    Game.clickedOn = 'none';
+                    document.body.style.cursor = "url('images/pointers/pointer.png'), default";
             }
         }
     }
@@ -1395,6 +1403,20 @@ function clicked() {
     var tile = returnLevel(Game.level)[y][x][1];
     var lowerTile = returnLevel(Game.level + 1)[y][x][1];
     switch(Game.clickedOn) {
+    case 'lander':
+        tile.kind = 4;
+        Game.buildings[0][1] = false;
+        console.log(Game.buildings[0][0] + '  ' + Game.buildings[0][1]);
+        var buildable = [1,4,8,9,11,15,17,22,25,26,31,33,35];
+        for(var ref in buildable){
+            Game.buildings[buildable[ref]][1] = true;
+        }
+        for(var i = 0; i < 4; i++){
+            Game.robotsList[i][3] = true;
+        }
+        checkBuildings();
+        Game.clickedOn = null;
+        break;
     case 'dozer':
         tile.prepare();
         break;
@@ -1541,6 +1563,9 @@ function construct() {
         document.getElementById(identity).style.background = '#393939';
         Game.clickedOn = identity; /**TODO : Update this to be the primary key listener*/
         switch(identity) {
+        case 'lander':
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
+            break;
         case 'dozer':
             document.body.style.cursor = "url('images/pointers/dozer.png'), default";
             break;
