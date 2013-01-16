@@ -68,7 +68,7 @@ function Terrain() {
     this.prepare = function() {
         if(!prepared && !this.wip && this.diggable && Game.robotsList[0][0] < Game.robotsList[0][1]) {
             this.turns = eta(2, this.kind);
-            this.kind = 8;
+            this.kind = 100;
             this.wip = true; //tells us that work is in progress
             this.willBe = 3;
             this.robotInUse = 0;
@@ -91,7 +91,7 @@ function Terrain() {
         if(Game.level < 4 && !wetTest([y, x], Game.level + 1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable && Game.robotsList[1][0] < Game.robotsList[1][1] - 1) {
             this.willBe = 1000; //TODO: fix to be a real airlift...
             this.turns = eta(2, this.kind);
-            this.kind = 9;
+            this.kind = 101;
             Game.robotsList[1][0] += 1;
             this.robotInUse = 1;
             this.digCavern(x, y, lowerTile, Game.level + 1, true, 1000);
@@ -129,13 +129,13 @@ function Terrain() {
             willBe >= 0 ? tile.willBe = willBe : tile.willBe = willBe + 5; //this is for if we try to do it on prepared terrain
             tile.wip = true;
             tile.turns = eta(2, this.kind);
-            tile.kind = 9;
+            tile.kind = 101;
             for(var j = 0; j < 6; j++) {
                 adj = returnLevel(level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
                 if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
-                    adj.kind = 9;
+                    adj.kind = 101;
                     adj.wip = true;
                     adj.willBeDiggable = true;
                 }
@@ -163,12 +163,12 @@ function Terrain() {
             this.robotInUse = 2;
             reCount('miner');
             this.turns = eta(5, this.kind);
-            this.kind = 10;
+            this.kind = 102;
             this.wip = true;
             this.willBe = 1100;
             lowerTile.turns = eta(5, lowerTile.kind);
             lowerTile.wip = true;
-            lowerTile.willBe = 1100;
+            lowerTile.willBe = 102;
             lowerTile.willBeDiggable = true;
             lowerTile.kind = 10;
         } else {
@@ -183,7 +183,7 @@ function Terrain() {
     this.recycle = function() {
         if(!wip && this.kind !== 4 && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             this.turns = eta(3, this.kind);
-            this.kind = 11;
+            this.kind = 103;
             this.wip = true;
             this.willBe = 3;
             Game.robotsList[3][0] += 1;
@@ -222,7 +222,7 @@ function Terrain() {
     this.build = function(building, health, turns) {
         console.log(building);
         if(this.kind === 3) {
-            this.kind = 8; //TODO: replace with a construction animation
+            this.kind = 100; //TODO: replace with a construction animation
             if(this.UG) {
                 this.willBe = building + 1; //TODO: if underground add 1 and have a different tile for underground ones...
             } else {
@@ -257,6 +257,8 @@ function Param() {
     this.tile.src = 'images/tiles.png';
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
+    this.drones = new Image();
+    this.drones.src = 'images/drones.png';
     this.clickedOn = 'none';
     this.level = 0;
 
@@ -943,7 +945,7 @@ function getMousePos(canvas, evt) {
     Game.mouseY = evt.clientY - top + window.pageYOffset;
     if(Game.overMPan) {
         Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-        drawTile(1, getTile('x'), getTile('y'), true);
+        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
     }
 }
 
@@ -1239,7 +1241,7 @@ function drawRadar() {
  * @param  {boolean} darkness  Whether or not we should darken this tile
  */
 
-function drawTile(tileType, tilePosX, tilePosY, highlight) {
+function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
     sourceWidth = 216; //original tile width
     sourceHeight = 252; //original tile height
@@ -1249,21 +1251,20 @@ function drawTile(tileType, tilePosX, tilePosY, highlight) {
     } else { //if it’s odd though
         destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
     }
-
+/*
     if(highlight) { //highlight is an optional parameter to see which canvas to draw to and how
         sourceX = 0;
         sourceY = 0;
-        console.log("highighting");
-        Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
+        Game.mPanLoc.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
     } else if(tileType > 7 && tileType < 12) { //animated tiles
         sourceX = Game.animate * sourceWidth;
         sourceY = tileType * sourceHeight;
-        Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
+        Game.mPanel.drawImage(WILLBEROBOTS, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
     } else if(tileType < 8 || tileType > 11) { //non-animated tiles
-        sourceX = 0;
+        */
+        animateIt ? sourceX = Game.animate * sourceWidth : sourceX = 0;
         sourceY = tileType * sourceHeight;
-        Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-    }
+        destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
 }
 
 /**
@@ -1284,7 +1285,12 @@ function drawZoomMap() {
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         while(x <= Game.xLimit) {
-            drawTile(sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind, x, y, false);
+            var tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind;
+            if(tileKind < 100){
+                drawTile(tileKind, x, y, Game.tile, Game.mPanel);
+            } else {
+                drawTile(tileKind-100, x, y, Game.drones, Game.mPanel, true);
+            }
             x++;
         }
     }
