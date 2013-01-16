@@ -168,9 +168,9 @@ function Terrain() {
             this.willBe = 1100;
             lowerTile.turns = eta(5, lowerTile.kind);
             lowerTile.wip = true;
-            lowerTile.willBe = 102;
+            lowerTile.willBe = 1100;
             lowerTile.willBeDiggable = true;
-            lowerTile.kind = 10;
+            lowerTile.kind = 102;
         } else {
             notify("You can't mine here...");
         }
