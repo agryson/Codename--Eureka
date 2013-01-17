@@ -253,6 +253,7 @@ function Param() {
     this.retX = this.radarRad;
     this.retY = this.radarRad;
     this.animate = 0;
+    this.augment = true;
     this.tile = new Image();
     this.tile.src = 'images/tiles.png';
     this.tileHighlight = new Image();
@@ -854,9 +855,34 @@ function resize(e) {
  */
 
 function mainLoop() {
-    var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
-    Game.animate == N ? Game.animate = 0 : Game.animate += 1;
-    setTimeout(mainLoop, 200); //set the framerate here
+    var N = 6; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
+    //var augment = true;
+    if(Game.augment && Game.animate < N){
+        Game.animate +=1;
+    }else if(!Game.augment && Game.animate > 0){
+        Game.animate -=1;
+    }else{
+        Game.augment ? Game.augment = false : Game.augment = true;
+    }
+    /*
+    if(Game.augment){
+        Game.animate += 1;
+        //if(Game.animate === N){
+            //augment = false;
+            console.log("here we go" + augment + Game.animate);
+        //}
+    } else {
+        Game.animate -= 1;
+        //if(Game.animate === 0){
+            //augment = true;
+        //}
+    }
+    if(Game.animate == 0){
+        augment = true;
+    } else if(Game.animate == N){
+        augment = false;
+    }*/
+    //setTimeout(mainLoop, 70); //set the framerate here
 }
 
 /**
@@ -1252,17 +1278,6 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt) 
     } else { //if it’s odd though
         destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
     }
-    /*
-    if(highlight) { //highlight is an optional parameter to see which canvas to draw to and how
-        sourceX = 0;
-        sourceY = 0;
-        Game.mPanLoc.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-    } else if(tileType > 7 && tileType < 12) { //animated tiles
-        sourceX = Game.animate * sourceWidth;
-        sourceY = tileType * sourceHeight;
-        Game.mPanel.drawImage(WILLBEROBOTS, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-    } else if(tileType < 8 || tileType > 11) { //non-animated tiles
-        */
     animateIt ? sourceX = Game.animate * sourceWidth : sourceX = 0;
     sourceY = tileType * sourceHeight;
     destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
@@ -1273,9 +1288,10 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt) 
  */
 
 function drawZoomMap() {
-    Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
+    //Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     var y, x;
     var sourceTile = returnLevel(Game.level);
+    mainLoop();
     webkitRequestAnimationFrame(drawZoomMap);
     //TODO : Maybe move all this yShift xShift stuff to Game?
     var yShift = Math.round(Game.yLimit / 2);
