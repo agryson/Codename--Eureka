@@ -855,7 +855,7 @@ function resize(e) {
  */
 
 function mainLoop() {
-    var N = 6; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
+    var N = 16; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     //var augment = true;
     if(Game.augment && Game.animate < N){
         Game.animate +=1;
@@ -864,25 +864,7 @@ function mainLoop() {
     }else{
         Game.augment ? Game.augment = false : Game.augment = true;
     }
-    /*
-    if(Game.augment){
-        Game.animate += 1;
-        //if(Game.animate === N){
-            //augment = false;
-            console.log("here we go" + augment + Game.animate);
-        //}
-    } else {
-        Game.animate -= 1;
-        //if(Game.animate === 0){
-            //augment = true;
-        //}
-    }
-    if(Game.animate == 0){
-        augment = true;
-    } else if(Game.animate == N){
-        augment = false;
-    }*/
-    //setTimeout(mainLoop, 70); //set the framerate here
+    //setTimeout(mainLoop, 200); //set the framerate here
 }
 
 /**
