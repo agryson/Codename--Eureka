@@ -855,7 +855,7 @@ function resize(e) {
  */
 
 function mainLoop() {
-    var N = 16; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
+    var N = 22; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     //var augment = true;
     if(Game.augment && Game.animate < N){
         Game.animate +=1;
