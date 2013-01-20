@@ -1421,7 +1421,7 @@ function clicked() {
         tile.build(7, 80, 2); //TODO: change this to a real connector...
         break;
     case 'connector':
-        tile.build(12, 20, 1);
+        tile.build(41, 20, 1);
         break;
     case 'dronefab':
         tile.build(7, 80, 4); //TODO: change this to a real connector...
@@ -1472,7 +1472,7 @@ function clicked() {
         tile.build(7, 60, 4);
         break;
     case 'solar':
-        tile.build(7, 30, 2); //TODO: change this to a real connector...
+        tile.build(41, 30, 2); //TODO: change this to a real connector...
         break;
     case 'space':
         tile.build(7, 80, 5); //TODO: change this to a real connector...
