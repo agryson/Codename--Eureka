@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+    <head>
+        <!--Import font and stylesheet, set characterset and title.-->
+        <link href="MapCanvas.css" rel="stylesheet" type="text/css" media="all">
+		<meta charset="UTF-8">
+		<title>Prototype MapV1</title>
+	</head>
+
+	<body class='main_pointer black_felt'>
+        
+        <div id="popupContainer" class="popupContainer green_felt main_pointer">
+            <div class="main_title">The Rotsbottom Exodus</div>
+            <div class="popup grey_rubber" id="popup">
+                <input id="seed" class='text_pointer seed' type="text"  placeholder="Dashboard Password" /><br/>
+                <div class="button_container">
+                    <button class="start-button main_pointer smoky_glass" id="login">Login</button>
+                    <button class="start-button main_pointer smoky_glass" id="newSession" >New Session</button>
+                    <div id="loader" class='loader'>
+                        <div id="thumb" class='thumb'>
+                        </div>
+                    </div>
+                    <div id="loadMessage" class='load_message'></div>
+                </div>
+            </div>
+        </div>
+<!--loading screen moved up to improve performance-->
+        <div class='menu_hidden left_menu_hide menu_wrapper' id='menuWrap'>
+            <div id="leftMenu" class='left_menu'>
+                <div id="buildingContainer" class='left_menu_container building_container'>        
+                    <div class="menuItem building" id="lander">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Landing Pods</span>
+                    </div>
+                    <div class="menuItem building" id="agri">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Agridome</span>
+                    </div>      
+                    <div class="menuItem building" id="agri2">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Advanced Agridome</span>
+                    </div>
+                    <div class="menuItem building" id="airport">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Airport</span>
+                    </div>
+                    <div class="menuItem building" id="arp">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Air Recycling  Processing (ARP)</span>
+                    </div>
+                    <div class="menuItem building" id="barracks">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Barracks</span>
+                    </div>
+                    <div class="menuItem building" id="civprot">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Civil Protection</span>
+                    </div>
+                    <div class="menuItem building" id="civprot2">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Advanced Civil Protection</span>
+                    </div>
+                    <div class="menuItem building" id="command">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Command Center</span>
+                    </div>
+                    <div class="menuItem building" id="commarray">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Communications Array</span>
+                    </div>
+                    <div class="menuItem building" id="commarray2">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Advanced Communications Array</span>
+                    </div>  
+                    <div class="menuItem building" id="connector">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Connector Node</span>
+                    </div>  
+                    <div class="menuItem building" id="dronefab">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Drone Factory</span>
+                    </div>
+                    <div class="menuItem building" id="chernobyl">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Fission Generator</span>
+                    </div>
+                    <div class="menuItem building" id="tokamak">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Fusion Generator</span>
+                    </div>
+                    <div class="menuItem building" id="genfab">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Factory</span>
+                    </div>
+                    <div class="menuItem building" id="geotherm">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Geothermal Generator</span>
+                    </div>
+                    <div class="menuItem building" id="hab">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Habitat</span>
+                    </div>  
+                    <div class="menuItem building" id="hab2">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Advanced Habitat</span>
+                    </div> 
+                    <div class="menuItem building" id="hab3">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText"><em>Really</em> Advanced Habitat</span>
+                    </div> 
+                    <div class="menuItem building" id="er">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Hospital</span>
+                    </div> 
+                    <div class="menuItem building" id="nursery">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Nursery</span>
+                    </div> 
+                    <div class="menuItem building" id="oreproc">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Ore Processor</span>
+                    </div> 
+                    <div class="menuItem building" id="rec">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Recreation Center</span>
+                    </div> 
+                    <div class="menuItem building" id="recycler">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Recycling Center</span>
+                    </div> 
+                    <div class="menuItem building" id="clichy">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Red Light District</span>
+                    </div> 
+                    <div class="menuItem building" id="research">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Research Center</span>
+                    </div> 
+                    <div class="menuItem building" id="research2">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Advanced Research Center</span>
+                    </div>
+                    <div class="menuItem building" id="solar">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Solar Farm</span>
+                    </div>   
+                    <div class="menuItem building" id="space">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Spaceport</span>
+                    </div>   
+                    <div class="menuItem building" id="stasis">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Stasis Block</span>
+                    </div>   
+                    <div class="menuItem building" id="store">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Storage Tanks</span>
+                    </div>   
+                    <div class="menuItem building" id="uni">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">University</span>
+                    </div>   
+                    <div class="menuItem building" id="warehouse">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Warehouse</span>
+                    </div>   
+                    <div class="menuItem building" id="windfarm">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Windfarm</span>
+                    </div>   
+                    <div class="menuItem building" id="workshop">
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Workshop</span>
+                    </div>   
+                </div>
+                
+                <!-- This slider seperates the buildings from the actions, the nouns from the verbs... -->
+
+                <div class='left_menu_slider vertical_resize_pointer grey_rubber' id="leftMenuSlider"></div>
+
+                <!-- These comments are just so that I can see it easily... -->
+                
+                <div id="droneContainer" class='left_menu_container drone_container'>
+                    <!--TODO Update the robots to work like the buildings -->
+                    <div class='nasty_spacer'></div>
+                    <div class="menuItem" id="dozer">
+                        <div class="botCount">
+                            <div class="botThumb" id="dozerCount">
+                            </div>
+                        </div>
+                        <span class="botCountNum" id="dozerCountNum" ></span>
+                        <img class="itemImage" src="images/pointers/dozer.png"></img>
+                        <span class="itemText">Dronedoze terrain</span>
+                    </div>
+                    <div class="menuItem" id="digger">
+                        <div class="botCount">
+                            <div class="botThumb" id="diggerCount">
+                            </div>
+                        </div>
+                        <span class="botCountNum" id="diggerCountNum" ></span>
+                        <img class="itemImage" src="images/pointers/digger.png"></img>
+                        <span class="itemText">Dig Down</span>
+                    </div>
+                    <div class="menuItem" id="cavernDigger">
+                        <div class="botCount">
+                            <div class="botThumb" id="cavernDiggerCount">
+                            </div>
+                        </div>
+                        <span class="botCountNum" id="cavernDiggerCountNum" ></span>
+                        <img class="itemImage" src="images/pointers/digger.png"></img>
+                        <span class="itemText">Expand Cavern</span>
+                    </div>
+                    <div class="menuItem" id="miner">
+                        <div class="botCount">
+                            <div class="botThumb" id="minerCount">
+                            </div>
+                        </div>
+                        <span class="botCountNum" id="minerCountNum" ></span>
+                        <img class="itemImage" src="images/pointers/miner.png"></img>
+                        <span class="itemText">Mine Resources</span>
+                    </div>
+                    <div class="menuItem" id="recycler">
+                        <div class="botCount">
+                            <div class="botThumb" id="recyclerCount">
+                            </div>
+                        </div>
+                        <span class="botCountNum" id="recyclerCountNum" ></span>
+                        <img class="itemImage" src="images/pointers/recycle.png"></img>
+                        <span class="itemText">Recycle Construction</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="execDropDown" class='menu_hidden green_rubber exec_panel exec_hidden'>
+            <div id="execDropDownContainer" class='slide_out cream_felt exec_panel_screen'></div>
+            <div id='execBtnContainer' class='menu_button_container'>
+                <img id='execButton' class='arrow_down' src="images/icons/arrow-round.png" /> 
+            </div>    
+        </div>
+        
+        <canvas id="mainPanel" class='panel'>
+            Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
+        </canvas>
+        <div id='contextMenuWrapper' class='context_wrapper'>
+            <div id="contextMenu" class='context grey_rubber'>
+            </div>
+        </div>
+        <canvas id="mPanOverlay" class='panel'>
+            Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>! 
+        </canvas>
+        
+        <div id="radarContainer" class='radar menu_visible grey_rubber'>
+            <canvas id="map" class='map' width="300px" height="300px">
+                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+            </canvas>
+            
+            <canvas id="mapOverlay" class='map_overlay' width="300px" height="300px">
+                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+            </canvas>
+            <input class='vertical_resize_pointer slider level_slider' id='slider' type="range" min="0" max="4" value="0" step="1"/>
+            <div id='radarBtnContainer' class='menu_button_container'>
+                <img id='radarButton' class='arrow_up' src="images/icons/arrow-round.png" />
+            </div>
+        </div>
+        <div id="globalActions" class='grey_rubber global_actions'>
+            <span id="turnNumber" class="turn_number">Week: 0</span>
+            <button class="info blue_glass main_pointer global_report" id="globalReport">Executive Report</button>
+            <button class="info blue_glass main_pointer save" id="save">
+                Save
+            </button>
+            <button class="action green_glass main_pointer turn" id="turn">Send Orders</button>
+        </div>
+        <div id="notifications" class='slide_out notifications'></div> 
+        <div id='settingsContainer' class='global_container global_container_hidden settings_container'>
+            <div id='settings' class='grey_rubber global_icon settings'>
+                <img src = 'images/icons/processing-02.png' />
+            </div>
+            <div id='settingsPanel' class='global_content_panel'>
+                <div class='settingsItem'>
+                    <span>Zoom: </span>
+                    <input id='zoom' class='horizontal_pointer slider zoom' type="range" min="1" max="6" value="3" step="1"/>
+                </div>
+                <div class='settingsItem'>
+                    <span>Music: </span>
+                    <div id="musicOptionViz" class="checkbox checkbox_checked music_checkbox"></div>
+                </div>
+            </div>
+        </div>
+        <div id='mailContainer' class='global_container global_container_hidden mail_container'>
+            <div id='mail' class='global_icon grey_rubber mail' >
+                <img src = 'images/icons/email.png' </img>
+            </div>
+            <div id='mailPanel' class='global_content_panel'>
+                <div class='mailItem'>
+                    <span>Message: yay, you have mail! </span>
+                </div>
+            </div>
+        </div>     
+
+<!--scripts moved down to improve initial page load-->
+        <script language="JavaScript" src="scripts\CNE_Main.js"></script>
+        <script language="JavaScript" src="scripts\Mersenne.js"></script>
+        <script language="JavaScript" src="scripts\CNE_WorldGen.js"></script>
+	</body>
+
+</html>
