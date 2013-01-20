@@ -68,7 +68,7 @@ function Terrain() {
     this.prepare = function() {
         if(!prepared && !this.wip && this.diggable && Game.robotsList[0][0] < Game.robotsList[0][1]) {
             this.turns = eta(2, this.kind);
-            this.kind = 8;
+            this.kind = 100;
             this.wip = true; //tells us that work is in progress
             this.willBe = 3;
             this.robotInUse = 0;
@@ -91,7 +91,7 @@ function Terrain() {
         if(Game.level < 4 && !wetTest([y, x], Game.level + 1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable && Game.robotsList[1][0] < Game.robotsList[1][1] - 1) {
             this.willBe = 1000; //TODO: fix to be a real airlift...
             this.turns = eta(2, this.kind);
-            this.kind = 9;
+            this.kind = 101;
             Game.robotsList[1][0] += 1;
             this.robotInUse = 1;
             this.digCavern(x, y, lowerTile, Game.level + 1, true, 1000);
@@ -129,13 +129,13 @@ function Terrain() {
             willBe >= 0 ? tile.willBe = willBe : tile.willBe = willBe + 5; //this is for if we try to do it on prepared terrain
             tile.wip = true;
             tile.turns = eta(2, this.kind);
-            tile.kind = 9;
+            tile.kind = 101;
             for(var j = 0; j < 6; j++) {
                 adj = returnLevel(level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
                 if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
-                    adj.kind = 9;
+                    adj.kind = 101;
                     adj.wip = true;
                     adj.willBeDiggable = true;
                 }
@@ -158,19 +158,19 @@ function Terrain() {
                 wet = true;
             }
         }
-        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[2][0] < Game.robotsList[2][1]) {
-            Game.robotsList[2][0] += 1;
+        if(Game.level < 4 && lowerTile.kind !==4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1]) {
+            Game.robotsList[3][0] += 1;
             this.robotInUse = 2;
             reCount('miner');
             this.turns = eta(5, this.kind);
-            this.kind = 10;
+            this.kind = 102;
             this.wip = true;
             this.willBe = 1100;
             lowerTile.turns = eta(5, lowerTile.kind);
             lowerTile.wip = true;
             lowerTile.willBe = 1100;
             lowerTile.willBeDiggable = true;
-            lowerTile.kind = 10;
+            lowerTile.kind = 102;
         } else {
             notify("You can't mine here...");
         }
@@ -183,7 +183,7 @@ function Terrain() {
     this.recycle = function() {
         if(!wip && this.kind !== 4 && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             this.turns = eta(3, this.kind);
-            this.kind = 11;
+            this.kind = 103;
             this.wip = true;
             this.willBe = 3;
             Game.robotsList[3][0] += 1;
@@ -222,7 +222,7 @@ function Terrain() {
     this.build = function(building, health, turns) {
         console.log(building);
         if(this.kind === 3) {
-            this.kind = 8; //TODO: replace with a construction animation
+            this.kind = 100; //TODO: replace with a construction animation
             if(this.UG) {
                 this.willBe = building + 1; //TODO: if underground add 1 and have a different tile for underground ones...
             } else {
@@ -253,10 +253,13 @@ function Param() {
     this.retX = this.radarRad;
     this.retY = this.radarRad;
     this.animate = 0;
+    this.augment = true;
     this.tile = new Image();
     this.tile.src = 'images/tiles.png';
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
+    this.drones = new Image();
+    this.drones.src = 'images/drones.png';
     this.clickedOn = 'none';
     this.level = 0;
 
@@ -361,13 +364,13 @@ window.onload = function init() {
 
 function eavesdrop() {
     //Start Screen
-    document.getElementById('login').onclick = function(){
+    document.getElementById('login').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
         checkBuildings();
         reCount('all');
         getSeed(false);
     };
-    document.getElementById('newSession').onclick = function(){
+    document.getElementById('newSession').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
         checkBuildings();
         reCount('all');
@@ -376,57 +379,57 @@ function eavesdrop() {
     //!Start Screen
     //Sound
     var radioCheck = document.getElementById('musicOptionViz');
-    radioCheck.onclick = function(){
+    radioCheck.onclick = function() {
         radioCheck.classList.toggle('checkbox_checked');
-        if (!Game.musicOn) {
+        if(!Game.musicOn) {
             Game.musicOn = true;
             music();
-        }else{
+        } else {
             Game.musicOn = false;
             music();
         }
-    }
+    };
     //:Sound
     //Left Menu
-    document.getElementById('leftMenuSlider').onmousedown = function(){
+    document.getElementById('leftMenuSlider').onmousedown = function() {
         leftMenuResize(true);
     };
-    document.getElementById('leftMenuSlider').onmouseup = function(){
+    document.getElementById('leftMenuSlider').onmouseup = function() {
         leftMenuResize(false);
     };
     //!Left Menu
     //Canvas Map
     var mainMap = document.getElementById('mPanOverlay');
-    mainMap.onmouseover = function(){
+    mainMap.onmouseover = function() {
         Game.overMPan = true;
         overCanvas(true, 'mPan');
     };
-    mainMap.onmouseout = function(){
+    mainMap.onmouseout = function() {
         Game.overMPan = false;
         overCanvas(false);
     };
-    mainMap.onmouseup = function(){
+    mainMap.onmouseup = function() {
         clicked();
     };
-    mainMap.onmousewheel = function(event){
+    mainMap.onmousewheel = function(event) {
         event.preventDefault();
         event.stopPropagation();
         var zoomPos = document.getElementById('zoom');
         var zoomMax = document.getElementById('zoom').max;
-        var val = parseInt(zoomPos.value);
-        if(event.wheelDelta > 0 && val < zoomMax ){
+        var val = parseInt(zoomPos.value, 10);
+        if(event.wheelDelta > 0 && val < zoomMax) {
             zoomPos.value = val + 1;
-            zoom(val+1);
-        } else if(event.wheelDelta < 0 && val > 1){
+            zoom(val + 1);
+        } else if(event.wheelDelta < 0 && val > 1) {
             zoomPos.value = val - 1;
-            zoom(val-1);
+            zoom(val - 1);
         }
         return false;
     };
     //!Canvas Map
     //Level Slider
     var levelSlider = document.getElementById('slider');
-    levelSlider.onchange = function(){
+    levelSlider.onchange = function() {
         changeLevel(levelSlider.value);
     };
     //!Level Slider
@@ -436,29 +439,29 @@ function eavesdrop() {
     var radar = document.getElementById('radarContainer');
     var radarBtnContainer = document.getElementById('radarBtnContainer');
     var radarButton = document.getElementById('radarButton');
-    radarBtnContainer.onclick = function(){
+    radarBtnContainer.onclick = function() {
         menu(radar, radarButton, 'radar_hidden');
     };
-    radar.onmouseout = function(){
-        if(radar.classList.contains('radar_hidden')){
+    radar.onmouseout = function() {
+        if(radar.classList.contains('radar_hidden')) {
             radar.classList.remove('menu_visible');
             radar.classList.add('menu_hidden');
         }
     };
-    radar.onmouseover = function(){
-        if(radar.classList.contains('radar_hidden')){
+    radar.onmouseover = function() {
+        if(radar.classList.contains('radar_hidden')) {
             radar.classList.remove('menu_hidden');
             radar.classList.add('menu_visible');
         }
     };
     var radarMap = document.getElementById('mapOverlay');
-    radarMap.onclick = function(){
+    radarMap.onclick = function() {
         jump();
     };
-    radarMap.onmouseover = function(){
+    radarMap.onmouseover = function() {
         overCanvas(true, 'radar');
     };
-    radarMap.onmouseout = function(){
+    radarMap.onmouseout = function() {
         overCanvas(false);
     };
     window.oncontextmenu = function(ev) {
@@ -470,44 +473,43 @@ function eavesdrop() {
 
     //Left Menu
     var leftMenu = document.getElementById('menuWrap');
-    leftMenu.onmouseover = function(){
+    leftMenu.onmouseover = function() {
         leftMenu.classList.remove('left_menu_hide');
         leftMenu.classList.add('left_menu_show');
         leftMenu.classList.add('menu_visible');
         leftMenu.classList.remove('menu_hidden');
     };
-    leftMenu.onmouseout = function(){
+    leftMenu.onmouseout = function() {
         leftMenu.classList.remove('left_menu_show');
         leftMenu.classList.add('left_menu_hide');
         leftMenu.classList.remove('menu_visible');
         leftMenu.classList.add('menu_hidden');
     };
     //!Left Menu
-    
     //Executive Drop-Down Menu
     var exec = document.getElementById('execDropDown');
     var execDrop = document.getElementById('execDropDownContainer');
     var execBtnContainer = document.getElementById('execBtnContainer');
     var execButton = document.getElementById('execButton');
-    execBtnContainer.onclick = function(){
+    execBtnContainer.onclick = function() {
         menu(exec, execButton, 'exec_hidden');
     };
-    exec.onmouseout = function(){
-        if(execButton.classList.contains('arrow_down')){
+    exec.onmouseout = function() {
+        if(execButton.classList.contains('arrow_down')) {
             exec.classList.remove('menu_visible');
             exec.classList.add('menu_hidden');
-        }else{
+        } else {
             exec.classList.remove('menu_hidden');
             exec.classList.add('menu_visible');
         }
     };
-    exec.onmouseover = function(){
-        if(execButton.classList.contains('arrow_down')){
+    exec.onmouseover = function() {
+        if(execButton.classList.contains('arrow_down')) {
             exec.classList.add('menu_visible');
             exec.classList.remove('menu_hidden');
         }
     };
-    document.getElementById('globalReport').onclick = function(){
+    document.getElementById('globalReport').onclick = function() {
         menu(exec, execButton, 'exec_hidden');
     };
     //!Executive Drop Down
@@ -517,29 +519,29 @@ function eavesdrop() {
     var setBtn = document.getElementById('settings');
     var mail = document.getElementById('mailContainer');
     var mailBtn = document.getElementById('mail');
-    setBtn.onclick = function(){
+    setBtn.onclick = function() {
         settings.classList.toggle('global_container_hidden');
     };
-    mailBtn.onclick = function(){
+    mailBtn.onclick = function() {
         mail.classList.toggle('global_container_hidden');
     };
 
     var menu = function(containerIn, buttonIn, hideClass) {
-        var container = containerIn;
-        var button = buttonIn;
-        if(button.classList.contains('arrow_down')){
-            container.classList.add('menu_visible');
-            container.classList.remove('menu_hidden');
-        }else{
-            container.classList.remove('menu_visible');
-            container.classList.add('menu_hidden');
-        }
-        container.classList.toggle(hideClass);
-        button.classList.toggle('arrow_down');
-        button.classList.toggle('arrow_up');
+            var container = containerIn;
+            var button = buttonIn;
+            if(button.classList.contains('arrow_down')) {
+                container.classList.add('menu_visible');
+                container.classList.remove('menu_hidden');
+            } else {
+                container.classList.remove('menu_visible');
+                container.classList.add('menu_hidden');
+            }
+            container.classList.toggle(hideClass);
+            button.classList.toggle('arrow_down');
+            button.classList.toggle('arrow_up');
 
-    };
-    document.getElementById('turn').onclick = function(){
+        };
+    document.getElementById('turn').onclick = function() {
         var x;
         var y;
         Game.turn += 1;
@@ -559,19 +561,19 @@ function eavesdrop() {
             document.getElementById('turn').disabled = false;
         }, 300);
     };
-    document.getElementById('zoom').onchange= function(){
+    document.getElementById('zoom').onchange = function() {
         var zoomLevel = document.getElementById('zoom').value;
         zoom(zoomLevel);
     };
 }
 
-function music(){
+function music() {
     Game.musicOn ? Game.music.play() : Game.music.pause();
 }
 
-function zoom(zoomLevel){
-    Game.destinationWidth = zoomLevel*6*6;
-    Game.destinationHeight = zoomLevel*7*6;
+function zoom(zoomLevel) {
+    Game.destinationWidth = zoomLevel * 6 * 6;
+    Game.destinationHeight = zoomLevel * 7 * 6;
     mapFit();
 }
 
@@ -579,26 +581,20 @@ function mapFit() {
     console.log('I\'m refitting!');
     var overlay = document.getElementById('mPanOverlay');
     var mainMap = document.getElementById('mainPanel');
-    var quarterHeight = Game.destinationHeight*0.25;
+    var quarterHeight = Game.destinationHeight * 0.25;
     Game.mPanCanvas.width = screen.width + Game.destinationWidth;
-    Game.mPanCanvas.height = screen.height + quarterHeight*2;
+    Game.mPanCanvas.height = screen.height + quarterHeight * 2;
     overlay.style.top = -quarterHeight + 'px';
-    overlay.style.left = -Game.destinationWidth/2 + 'px';
+    overlay.style.left = -Game.destinationWidth / 2 + 'px';
     Game.mPanelCanvas.width = screen.width + Game.destinationWidth;
-    Game.mPanelCanvas.height = screen.height + quarterHeight*2;
+    Game.mPanelCanvas.height = screen.height + quarterHeight * 2;
     mainMap.style.top = -quarterHeight + 'px';
-    mainMap.style.left = -Game.destinationWidth/2 + 'px';
+    mainMap.style.left = -Game.destinationWidth / 2 + 'px';
     Game.xLimit = Math.round(Game.mPanCanvas.width / Game.destinationWidth) + 1;
-    Game.yLimit = Math.round(Game.mPanCanvas.height / (quarterHeight*3)) + 2;
-    if(Game.yLimit % 2 === 0){Game.yLimit += 1;}
-
-    /*
-    Game.mPanelCanvas.width = document.width;
-    Game.mPanelCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*50;
-    Game.xLimit = Math.ceil((document.width / Game.destinationWidth)+1);
-    var yTemp = Math.ceil((document.height / (quarterHeight*3))+2);
-    yTemp % 2 === 0 ? Game.yLimit = yTemp : Game.yLimit = yTemp +;
-    */
+    Game.yLimit = Math.round(Game.mPanCanvas.height / (quarterHeight * 3)) + 2;
+    if(Game.yLimit % 2 === 0) {
+        Game.yLimit += 1;
+    }
     drawRadar();
     drawLoc();
 }
@@ -790,10 +786,10 @@ function changeLevel(newLevel) {
  */
 
 function reCount(which) {
-    var count = function(id, numID, index){
-        document.getElementById(id).style.height = ((Game.robotsList[index][1] - Game.robotsList[index][0]) / Game.robotsList[index][1]) * 100 + '%';
-        document.getElementById(numID).innerHTML = 'Available: ' + (Game.robotsList[index][1] - Game.robotsList[index][0]);
-    };
+    var count = function(id, numID, index) {
+            document.getElementById(id).style.height = ((Game.robotsList[index][1] - Game.robotsList[index][0]) / Game.robotsList[index][1]) * 100 + '%';
+            document.getElementById(numID).innerHTML = 'Available: ' + (Game.robotsList[index][1] - Game.robotsList[index][0]);
+        };
     switch(which) {
     case 'dozer':
         count('dozerCount', 'dozerCountNum', 0);
@@ -803,17 +799,17 @@ function reCount(which) {
         count('cavernDiggerCount', 'cavernDiggerCountNum', 1);
         break;
     case 'miner':
-        count('minerCount', 'minerCountNum', 2);
+        count('minerCount', 'minerCountNum', 3);
         break;
     case 'recycler':
-        count('recyclerCount', 'recyclerCountNum', 3);
+        count('recyclerCount', 'recyclerCountNum', 4);
         break;
     case 'all':
         count('dozerCount', 'dozerCountNum', 0);
         count('diggerCount', 'diggerCountNum', 1);
         count('cavernDiggerCount', 'cavernDiggerCountNum', 1);
-        count('minerCount', 'minerCountNum', 2);
-        count('recyclerCount', 'recyclerCountNum', 3);
+        count('minerCount', 'minerCountNum', 3);
+        count('recyclerCount', 'recyclerCountNum', 4);
         break;
     default:
         console.log("Wait, I've lost count of the drones...");
@@ -859,9 +855,11 @@ function resize(e) {
  */
 
 function mainLoop() {
-    var N = 1; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
-    Game.animate == N ? Game.animate = 0 : Game.animate += 1;
-    setTimeout(mainLoop, 200); //set the framerate here
+    var N = 22; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
+    Game.augment ? Game.animate += 1 : Game.animate -=1;
+    if(Game.animate ===0 || Game.animate ===N){
+        Game.augment ? Game.augment = false : Game.augment = true;
+    }
 }
 
 /**
@@ -940,18 +938,18 @@ function getMousePos(canvas, evt) {
     var top = 0;
     var left = 0;
     while(obj && obj.tagName != 'BODY') {
-        top += obj.offsetTop -10;
+        top += obj.offsetTop - 10;
         left += obj.offsetLeft;
         obj = obj.offsetParent;
 
     }
 
     // return relative mouse position
-    Game.mouseX = evt.clientX - left + window.pageXOffset + Game.destinationWidth/2;
+    Game.mouseX = evt.clientX - left + window.pageXOffset + Game.destinationWidth / 2;
     Game.mouseY = evt.clientY - top + window.pageYOffset;
     if(Game.overMPan) {
         Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-        drawTile(1, getTile('x'), getTile('y'), true);
+        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
     }
 }
 
@@ -1152,7 +1150,7 @@ function getTile(axis) {
  */
 
 function jump() {
-    var x = Game.mouseX - Game.destinationWidth/2;
+    var x = Game.mouseX - Game.destinationWidth / 2;
     var y = Game.mouseY - 20;
     //ensure we're dealing with a multiple of two (since we move up and down in twos)
     if(y % 2 !== 0) {
@@ -1197,7 +1195,7 @@ function returnLevel(level) {
  */
 
 function drawRadar() {
-    var radarPixels = Game.radar.createImageData(Game.radarRad*2, Game.radarRad*2);
+    var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
     var surfaceColor = [
         [212, 197, 174, 255],
         [201, 179, 165, 255],
@@ -1247,45 +1245,19 @@ function drawRadar() {
  * @param  {boolean} darkness  Whether or not we should darken this tile
  */
 
-function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
-    try {
-        if(tilePosX < 0 || tilePosX >= Game.xLimit) {
-            //this if checks to make sure we requested a tile we can draw,
-            //mainly to prevent highlighting outside of the map
-        } else {
-            var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
-            sourceWidth = 216; //original tile width
-            sourceHeight = 252; //original tile height
-            destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
-            if(tilePosY % 2 === 0) { //if the row is even...
-                destinationX = Math.floor(tilePosX * Game.destinationWidth - Game.destinationWidth/2); //we set its X normally
-            } else { //if it’s odd though
-                destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
-            }//TODO this is causing a shift of the x tiles in certain zoomLevels
-
-            if(highlight) { //highlight is an optional parameter to see which canvas to draw to and how
-                sourceX = 0;
-                sourceY = 0;
-                Game.mPanLoc.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            } else if(tileType > 7 && tileType < 12) { //animated tiles
-                sourceX = Game.animate * sourceWidth;
-                sourceY = tileType * sourceHeight;
-                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            } else if(tileType < 8 || tileType > 11) { //non-animated tiles
-                sourceX = 0;
-                sourceY = tileType * sourceHeight;
-                Game.mPanel.drawImage(Game.tile, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            }
-            if(darkness) {
-                sourceX = 0;
-                sourceY = darkness * sourceHeight;
-                Game.mPanel.drawImage(Game.tileHighlight, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
-            }
-        }
-    } catch(e) {
-        //Do Nothing, we expect this error... unfortunately
-        //Basically, when I go off the local map to the south it throws an error...
+function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt) {
+    var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
+    sourceWidth = 216; //original tile width
+    sourceHeight = 252; //original tile height
+    destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
+    if(tilePosY % 2 === 0) { //if the row is even...
+        destinationX = Math.floor(tilePosX * Game.destinationWidth - Game.destinationWidth / 2); //we set its X normally
+    } else { //if it’s odd though
+        destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
     }
+    animateIt ? sourceX = Game.animate * sourceWidth : sourceX = 0;
+    sourceY = tileType * sourceHeight;
+    destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
 }
 
 /**
@@ -1293,20 +1265,26 @@ function drawTile(tileType, tilePosX, tilePosY, highlight, darkness) {
  */
 
 function drawZoomMap() {
-    Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
+    //Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     var y, x;
     var sourceTile = returnLevel(Game.level);
+    mainLoop();
     webkitRequestAnimationFrame(drawZoomMap);
     //TODO : Maybe move all this yShift xShift stuff to Game?
     var yShift = Math.round(Game.yLimit / 2);
-    if(yShift % 2 === 0){
+    if(yShift % 2 === 0) {
         yShift -= 1;
-        Game.yLimit -=2;
+        Game.yLimit += 2;
     }
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         while(x <= Game.xLimit) {
-            drawTile(sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind, x, y, false);
+            var tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind;
+            if(tileKind < 100) {
+                drawTile(tileKind, x, y, Game.tile, Game.mPanel);
+            } else {
+                drawTile(tileKind - 100, x, y, Game.drones, Game.mPanel, true);
+            }
             x++;
         }
     }
@@ -1319,12 +1297,12 @@ function drawZoomMap() {
 function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
-    Game.radarLoc.fillRect(Game.retX - (Game.xLimit/2), Game.retY - (Game.yLimit/2), Game.xLimit, Game.yLimit);
+    Game.radarLoc.fillRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
     Game.radarLoc.fillStyle = 'rgba(255,251,229,0.3)';
     Game.radarLoc.fill();
     Game.radarLoc.closePath();
     Game.radarLoc.beginPath();
-    Game.radarLoc.strokeRect(Game.retX - (Game.xLimit/2), Game.retY - (Game.yLimit/2), Game.xLimit, Game.yLimit);
+    Game.radarLoc.strokeRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
     Game.radarLoc.strokeStyle = '#BD222A';
     Game.radarLoc.stroke();
     Game.radarLoc.closePath();
@@ -1361,19 +1339,19 @@ function contextContent() {
     htmlString += '<span>' + 'WOW! Coordinates!' + '</span><br>';
     htmlString += '<br><span>We can add all sorts of stuff here, whatever HTML we want! :-D I could go on for ages just to see what happens!</span><br>';
     //resources?
-    for(var i = 0; i< tile.resources.length; i++){
-        if(tile.resources[i]>0){
-            if(!resources){
-                    htmlString += '<h3>Resources</h3><ul>';
-                    resources = true;
-            } 
-            switch(i){
-                case 0:
-                    htmlString += '<li>Unobtainium: ' + tile.resources[0] + 't</li>';
-                    break;
-                case 1:
-                    htmlString += '<li>Lucky Charms: ' + tile.resources[1] + 't</li>';
-                    break;
+    for(var i = 0; i < tile.resources.length; i++) {
+        if(tile.resources[i] > 0) {
+            if(!resources) {
+                htmlString += '<h3>Resources</h3><ul>';
+                resources = true;
+            }
+            switch(i) {
+            case 0:
+                htmlString += '<li>Unobtainium: ' + tile.resources[0] + 't</li>';
+                break;
+            case 1:
+                htmlString += '<li>Lucky Charms: ' + tile.resources[1] + 't</li>';
+                break;
             }
         }
     }
@@ -1465,7 +1443,7 @@ function clicked() {
         tile.build(7, 80, 2); //TODO: change this to a real connector...
         break;
     case 'connector':
-        tile.build(12, 20, 1);
+        tile.build(41, 20, 1);
         break;
     case 'dronefab':
         tile.build(7, 80, 4); //TODO: change this to a real connector...
@@ -1516,7 +1494,7 @@ function clicked() {
         tile.build(7, 60, 4);
         break;
     case 'solar':
-        tile.build(7, 30, 2); //TODO: change this to a real connector...
+        tile.build(41, 30, 2); //TODO: change this to a real connector...
         break;
     case 'space':
         tile.build(7, 80, 5); //TODO: change this to a real connector...
