@@ -158,8 +158,8 @@ function Terrain() {
                 wet = true;
             }
         }
-        if(Game.level < 4 && lowerTile.kind !== 4 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[2][0] < Game.robotsList[2][1]) {
-            Game.robotsList[2][0] += 1;
+        if(Game.level < 4 && lowerTile.kind !==4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1]) {
+            Game.robotsList[3][0] += 1;
             this.robotInUse = 2;
             reCount('miner');
             this.turns = eta(5, this.kind);
@@ -594,14 +594,6 @@ function mapFit() {
     if(Game.yLimit % 2 === 0) {
         Game.yLimit += 1;
     }
-
-    /*
-    Game.mPanelCanvas.width = document.width;
-    Game.mPanelCanvas.height = document.height + quarterHeight + document.getElementById('zoom').value*50;
-    Game.xLimit = Math.ceil((document.width / Game.destinationWidth)+1);
-    var yTemp = Math.ceil((document.height / (quarterHeight*3))+2);
-    yTemp % 2 === 0 ? Game.yLimit = yTemp : Game.yLimit = yTemp +;
-    */
     drawRadar();
     drawLoc();
 }
@@ -799,17 +791,17 @@ function reCount(which) {
         count('cavernDiggerCount', 'cavernDiggerCountNum', 1);
         break;
     case 'miner':
-        count('minerCount', 'minerCountNum', 2);
+        count('minerCount', 'minerCountNum', 3);
         break;
     case 'recycler':
-        count('recyclerCount', 'recyclerCountNum', 3);
+        count('recyclerCount', 'recyclerCountNum', 4);
         break;
     case 'all':
         count('dozerCount', 'dozerCountNum', 0);
         count('diggerCount', 'diggerCountNum', 1);
         count('cavernDiggerCount', 'cavernDiggerCountNum', 1);
-        count('minerCount', 'minerCountNum', 2);
-        count('recyclerCount', 'recyclerCountNum', 3);
+        count('minerCount', 'minerCountNum', 3);
+        count('recyclerCount', 'recyclerCountNum', 4);
         break;
     default:
         console.log("Wait, I've lost count of the drones...");
@@ -856,15 +848,10 @@ function resize(e) {
 
 function mainLoop() {
     var N = 22; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
-    //var augment = true;
-    if(Game.augment && Game.animate < N){
-        Game.animate +=1;
-    }else if(!Game.augment && Game.animate > 0){
-        Game.animate -=1;
-    }else{
+    Game.augment ? Game.animate += 1 : Game.animate -=1;
+    if(Game.animate ===0 || Game.animate ===N){
         Game.augment ? Game.augment = false : Game.augment = true;
     }
-    //setTimeout(mainLoop, 200); //set the framerate here
 }
 
 /**
