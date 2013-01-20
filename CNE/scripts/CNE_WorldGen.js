@@ -147,7 +147,7 @@ function createMap() {
     setTimeout(createMap, 450);
   } else {
     Game.level = 0; /*draw the radar background & map once on load*/
-    //generateResources();
+    generateResources();
     drawRadar();
     drawLoc();
     drawZoomMap();
@@ -244,23 +244,62 @@ function setType(x, y, level) {
  * @return {nothing}
  */
 
-function generateResources(x, y, terrain, level) {
-  var map;
-  
-  level === 0 ? map = returnLevel(level)[y][x][1] : map = Game.map[y][x][1];
-  /*
-  for(var i=0; i<iterations; i++){
+function generateResources() {
+  var map, x, y;
+  var resourceArray = [ //[MAXALT,MINALT,AMOUNT,ORENAME,PRODUCTNAME]
+  [120, 60, 50, "Bauxite", "Aluminium (Al)"],
+  [120, 60, 50, "Corundum", "Aluminium (Al)"],
+  [120, 60, 50, "Kryolite", "Aluminium (Al)"],
+  [120, 60, 50, "Haematite", "Iron (Fe)"],
+  [120, 60, 50, "Magnetite", "Iron (Fe)"],
+  [120, 60, 50, "Iron Pyrite", "Iron (Fe)"],
+  [120, 60, 50, "Siderite", "Iron (Fe)"],
+  [120, 60, 50, "Copper Pyrite", "Copper (Cu)"],
+  [120, 60, 50, "Copper Glance", "Copper (Cu)"],
+  [120, 60, 50, "Malachite", "Copper (Cu)"],
+  [120, 60, 50, "Zinc Blende", "Zinc (Zn)"],
+  [120, 60, 50, "Calamine", "Zinc (Zn)"],
+  [120, 60, 50, "Rock Salt", "Sodium (Na)"],
+  [120, 60, 50, "Sodium Carbonate", "Sodium (Na)"],
+  [120, 60, 50, "Karnalite", "Potassium (K)"],
+  [120, 60, 50, "Salt Petre", "Potassium (K)"],
+  [120, 60, 50, "Galena", "Lead (Pb)"],
+  [120, 60, 50, "Anglesite", "Lead (Pb)"],
+  [120, 60, 50, "Tin Pyrites", "Tin (Sn)"],
+  [120, 60, 50, "Cassiterite", "Tin (Sn)"],
+  [120, 60, 50, "Silver Glance", "Silver"],
+  [120, 60, 50, "Calverite", "Gold (Au)"],
+  [120, 60, 50, "Syvanite", "Gold (Au)"],
+  [120, 60, 50, "Cinnabar", "Mercury (Hg)"],
+  [120, 60, 50, "Calomel", "Mercury (Hg)"],
+  [120, 60, 50, "Dolomite", "Magnesium (Mg)"],
+  [120, 60, 50, "Karnalite", "Magnesium (Mg)"],
+  [120, 60, 50, "Lime Stone", "Calcium (Ca)"],
+  [120, 60, 50, "Dolomite", "Calcium (Ca)"],
+  [120, 60, 50, "Phosphorite", "Phosphorous (P)"],
+  [120, 60, 50, "Floreapetite", "Phosphorous (P)"]
+  ];
+  for(var iter=0; iter<30; iter++){
     x = randGen(Game.radarRad*2,0);
     y = randGen(Game.radarRad*2,0);
-    if(Game.map[y][x][1].kind === 2 || Game.map[y][x][1].kind === 1){
-      slide(x,y);
-    }else{
-      iterations+=1;
+    var testAltitude = Game.map[y][x][1].altitude;
+    for(var i = 0; i < resourceArray.length; i++){
+      if(testAltitude < resourceArray[i][0] && testAltitude > resourceArray[i][1]){
+        Game.map[y][x][1].resources[i] = randGen(resourceArray[i][2], 0);
+        Game.map[y][x][1].kind = 100;
+        for(var count = 0; count < 6; count++){
+          Game.map[adjacent(x,y,count)[0]][adjacent(x,y,count)[1]][1].resources[i] = randGen(resourceArray[i][2], 0);
+        }
+        console.log(x + '  ' + y);
+      }
     }
-  }
+}
+  //level === 0 ? map = returnLevel(level)[y][x][1] : map = Game.map[y][x][1];
+  /*
+  
 }
 */
-
+/*
   switch(terrain) {
   case 0:
     map.resources[0] = randGen(2, 0);
@@ -277,4 +316,5 @@ function generateResources(x, y, terrain, level) {
   default:
     //do nothing
   }
+  */
 }

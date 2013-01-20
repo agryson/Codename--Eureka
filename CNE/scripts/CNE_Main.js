@@ -17,9 +17,10 @@ function Terrain() {
     this.turns; //remembers how many turns are left to become a tile of the desired kind
     this.diggable;
     */
+    this.resources = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
     var wip = false; //Work in Progress?
     var prepared = false;
-    this.ref;
+    //this.ref;
     this.willBe = 3;
     this.willBeDiggable = false;
     //robots
@@ -1335,6 +1336,39 @@ function contextContent() {
     var tile = returnLevel(Game.level)[y][x][1];
     var resources = false;
     var htmlString = '';
+    var resourceArray = [ //[ORENAME,PRODUCTNAME]
+      ["Bauxite", "Aluminium (Al)"],
+      ["Corundum", "Aluminium (Al)"],
+      ["Kryolite", "Aluminium (Al)"],
+      ["Haematite", "Iron (Fe)"],
+      ["Magnetite", "Iron (Fe)"],
+      ["Iron Pyrite", "Iron (Fe)"],
+      ["Siderite", "Iron (Fe)"],
+      ["Copper Pyrite", "Copper (Cu)"],
+      ["Copper Glance", "Copper (Cu)"],
+      ["Malachite", "Copper (Cu)"],
+      ["Zinc Blende", "Zinc (Zn)"],
+      ["Calamine", "Zinc (Zn)"],
+      ["Rock Salt", "Sodium (Na)"],
+      ["Sodium Carbonate", "Sodium (Na)"],
+      ["Karnalite", "Potassium (K)"],
+      ["Salt Petre", "Potassium (K)"],
+      ["Galena", "Lead (Pb)"],
+      ["Anglesite", "Lead (Pb)"],
+      ["Tin Pyrites", "Tin (Sn)"],
+      ["Cassiterite", "Tin (Sn)"],
+      ["Silver Glance", "Silver"],
+      ["Calverite", "Gold (Au)"],
+      ["Syvanite", "Gold (Au)"],
+      ["Cinnabar", "Mercury (Hg)"],
+      ["Calomel", "Mercury (Hg)"],
+      ["Dolomite", "Magnesium (Mg)"],
+      ["Karnalite", "Magnesium (Mg)"],
+      ["Lime Stone", "Calcium (Ca)"],
+      ["Dolomite", "Calcium (Ca)"],
+      ["Phosphorite", "Phosphorous (P)"],
+      ["Floreapetite", "Phosphorous (P)"]
+    ];
     htmlString += '<span>' + tile.ref + '</span><br>';
     htmlString += '<span>' + 'WOW! Coordinates!' + '</span><br>';
     htmlString += '<br><span>We can add all sorts of stuff here, whatever HTML we want! :-D I could go on for ages just to see what happens!</span><br>';
@@ -1345,14 +1379,15 @@ function contextContent() {
                 htmlString += '<h3>Resources</h3><ul>';
                 resources = true;
             }
-            switch(i) {
+            htmlString += '<li>' + resourceArray[i][0] + ': '  + tile.resources[i] + 't</li>';
+            /*switch(i) {
             case 0:
-                htmlString += '<li>Unobtainium: ' + tile.resources[0] + 't</li>';
+                htmlString += '<li>' +  + ':'  + tile.resources[0] + 't</li>';
                 break;
             case 1:
                 htmlString += '<li>Lucky Charms: ' + tile.resources[1] + 't</li>';
                 break;
-            }
+            }*/
         }
     }
     htmlString += '</ul>';
