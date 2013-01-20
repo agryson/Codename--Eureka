@@ -189,7 +189,7 @@ function slide(x,y){
     Game.map[y][x][1].kind = 4;
     Game.map[y][x][1].diggable = false;
     var lowest = [adjacent(x,y,0)[1],adjacent(x,y,0)[0]]; //x, y
-    for(var j=1; j<6; j++){
+    for(var j=0; j<6; j++){
       if(x > 1 && x < (Game.radarRad*2)-1 && y < (Game.radarRad*2)-1 && y > 1 && Game.map[adjacent(x,y,j)[0]][adjacent(x,y,j)[1]][1].altitude < Game.map[lowest[1]][lowest[0]][1].altitude && Game.map[adjacent(x,y,j)[0]][adjacent(x,y,j)[1]][1].kind !== 4) {
         lowest[1] = adjacent(x,y,j)[0];
         lowest[0] = adjacent(x,y,j)[1];
@@ -279,42 +279,18 @@ function generateResources() {
   [120, 60, 50, "Phosphorite", "Phosphorous (P)"],
   [120, 60, 50, "Floreapetite", "Phosphorous (P)"]
   ];
-  for(var iter=0; iter<30; iter++){
+  for(var iter=0; iter<3000; iter++){
     x = randGen(Game.radarRad*2,0);
     y = randGen(Game.radarRad*2,0);
     var testAltitude = Game.map[y][x][1].altitude;
     for(var i = 0; i < resourceArray.length; i++){
-      if(testAltitude < resourceArray[i][0] && testAltitude > resourceArray[i][1]){
+      if(testAltitude < resourceArray[i][0] && testAltitude > resourceArray[i][1] && x > 0 && x < (Game.radarRad*2) - 1 && y < (Game.radarRad*2) - 1 && y > 0  && Game.map[y][x][1].kind !== 4){
         Game.map[y][x][1].resources[i] = randGen(resourceArray[i][2], 0);
-        Game.map[y][x][1].kind = 100;
         for(var count = 0; count < 6; count++){
           Game.map[adjacent(x,y,count)[0]][adjacent(x,y,count)[1]][1].resources[i] = randGen(resourceArray[i][2], 0);
+          Game.map[y][x][1].kind = 8; //This is just so that we can see it until I get the radar sorted...
         }
-        console.log(x + '  ' + y);
       }
     }
-}
-  //level === 0 ? map = returnLevel(level)[y][x][1] : map = Game.map[y][x][1];
-  /*
-  
-}
-*/
-/*
-  switch(terrain) {
-  case 0:
-    map.resources[0] = randGen(2, 0);
-    map.resources[1] = randGen(2, 0);
-    break;
-  case 1:
-    map.resources[0] = randGen(5, 10);
-    map.resources[1] = randGen(5, 10);
-    break;
-  case 2:
-    map.resources[0] = randGen(5, 20);
-    map.resources[1] = randGen(5, 20);
-    break;
-  default:
-    //do nothing
   }
-  */
 }
