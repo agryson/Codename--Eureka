@@ -1379,15 +1379,8 @@ function contextContent() {
                 htmlString += '<h3>Resources</h3><ul>';
                 resources = true;
             }
-            htmlString += '<li>' + resourceArray[i][0] + ': '  + tile.resources[i] + 't</li>';
-            /*switch(i) {
-            case 0:
-                htmlString += '<li>' +  + ':'  + tile.resources[0] + 't</li>';
-                break;
-            case 1:
-                htmlString += '<li>Lucky Charms: ' + tile.resources[1] + 't</li>';
-                break;
-            }*/
+            htmlString += '<li>' + resourceArray[i][0] + ': '  + tile.resources[i] + 't';
+            htmlString += '<ul><li>' + resourceArray[i][1] + '</ul>';
         }
     }
     htmlString += '</ul>';
