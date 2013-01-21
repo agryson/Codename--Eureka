@@ -247,50 +247,64 @@ function setType(x, y, level) {
 function generateResources() {
   var map, x, y;
   var resourceArray = [ //[MAXALT,MINALT,AMOUNT,ORENAME,PRODUCTNAME]
-  [120, 60, 50, "Bauxite", "Aluminium (Al)"],
-  [120, 60, 50, "Corundum", "Aluminium (Al)"],
-  [120, 60, 50, "Kryolite", "Aluminium (Al)"],
-  [120, 60, 50, "Haematite", "Iron (Fe)"],
-  [120, 60, 50, "Magnetite", "Iron (Fe)"],
-  [120, 60, 50, "Iron Pyrite", "Iron (Fe)"],
-  [120, 60, 50, "Siderite", "Iron (Fe)"],
-  [120, 60, 50, "Copper Pyrite", "Copper (Cu)"],
-  [120, 60, 50, "Copper Glance", "Copper (Cu)"],
-  [120, 60, 50, "Malachite", "Copper (Cu)"],
-  [120, 60, 50, "Zinc Blende", "Zinc (Zn)"],
-  [120, 60, 50, "Calamine", "Zinc (Zn)"],
-  [120, 60, 50, "Rock Salt", "Sodium (Na)"],
-  [120, 60, 50, "Sodium Carbonate", "Sodium (Na)"],
-  [120, 60, 50, "Karnalite", "Potassium (K)"],
-  [120, 60, 50, "Salt Petre", "Potassium (K)"],
-  [120, 60, 50, "Galena", "Lead (Pb)"],
-  [120, 60, 50, "Anglesite", "Lead (Pb)"],
-  [120, 60, 50, "Tin Pyrites", "Tin (Sn)"],
-  [120, 60, 50, "Cassiterite", "Tin (Sn)"],
-  [120, 60, 50, "Silver Glance", "Silver"],
-  [120, 60, 50, "Calverite", "Gold (Au)"],
-  [120, 60, 50, "Syvanite", "Gold (Au)"],
-  [120, 60, 50, "Cinnabar", "Mercury (Hg)"],
-  [120, 60, 50, "Calomel", "Mercury (Hg)"],
-  [120, 60, 50, "Dolomite", "Magnesium (Mg)"],
-  [120, 60, 50, "Karnalite", "Magnesium (Mg)"],
-  [120, 60, 50, "Lime Stone", "Calcium (Ca)"],
-  [120, 60, 50, "Dolomite", "Calcium (Ca)"],
-  [120, 60, 50, "Phosphorite", "Phosphorous (P)"],
-  [120, 60, 50, "Floreapetite", "Phosphorous (P)"]
+  [210, 160, 40, "Bauxite", "Aluminium (Al)"],
+  [190, 160, 20, "Corundum", "Aluminium (Al)"],
+  [220, 190, 10, "Kryolite", "Aluminium (Al)"],
+  [280, 150, 60, "Haematite", "Iron (Fe)"],
+  [200, 160, 30, "Magnetite", "Iron (Fe)"],
+  [230, 180, 40, "Iron Pyrite", "Iron (Fe)"],
+  [220, 160, 20, "Siderite", "Iron (Fe)"],
+  [200, 100, 50, "Copper Pyrite", "Copper (Cu)"],
+  [180, 100, 30, "Copper Glance", "Copper (Cu)"],
+  [200, 90, 40, "Malachite", "Copper (Cu)"],
+  [120, 90, 30, "Zinc Blende", "Zinc (Zn)"],
+  [150, 90, 20, "Calamine", "Zinc (Zn)"],
+  [100, 90, 50, "Rock Salt", "Sodium (Na)"],
+  [160, 120, 20, "Sodium Carbonate", "Sodium (Na)"],
+  [110, 90, 10, "Karnalite", "Potassium (K)"],
+  [130, 100, 20, "Salt Petre", "Potassium (K)"],
+  [150, 120, 20, "Galena", "Lead (Pb)"],
+  [160, 130, 10, "Anglesite", "Lead (Pb)"],
+  [140, 100, 30, "Tin Pyrites", "Tin (Sn)"],
+  [130, 120, 20, "Cassiterite", "Tin (Sn)"],
+  [180, 190, 10, "Silver Glance", "Silver"],
+  [180, 90, 10, "Calverite", "Gold (Au)"],
+  [180, 90, 3, "Syvanite", "Gold (Au)"],
+  [160, 130, 10, "Cinnabar", "Mercury (Hg)"],
+  [150, 140, 5, "Calomel", "Mercury (Hg)"],
+  [160, 110, 50, "Dolomite", "Magnesium (Mg)"],
+  [200, 160, 20, "Karnalite", "Magnesium (Mg)"],
+  [200, 90, 150, "Lime Stone", "Calcium (Ca)"],
+  [210, 90, 120, "Dolomite", "Calcium (Ca)"],
+  [170, 140, 30, "Phosphorite", "Phosphorous (P)"],
+  [180, 130, 10, "Floreapetite", "Phosphorous (P)"]
   ];
-  for(var iter=0; iter<3000; iter++){
-    x = randGen(Game.radarRad*2,0);
-    y = randGen(Game.radarRad*2,0);
-    var testAltitude = Game.map[y][x][1].altitude;
-    for(var i = 0; i < resourceArray.length; i++){
+  var closest = [];
+  var testAltitude = 0;
+  x = randGen(Game.radarRad*2,0);
+  y = randGen(Game.radarRad*2,0);
+  for(var i = 0; i < resourceArray.length; i++){
+    for(var iter=0; iter<30; iter++){
+      console.log('x: ' + x + ' y: ' + y);
+      testAltitude = Game.map[y][x][1].altitude;
       if(testAltitude < resourceArray[i][0] && testAltitude > resourceArray[i][1] && x > 0 && x < (Game.radarRad*2) - 1 && y < (Game.radarRad*2) - 1 && y > 0  && Game.map[y][x][1].kind !== 4){
         Game.map[y][x][1].resources[i] = randGen(resourceArray[i][2], 0);
+        closest[0] = adjacent(x,y,0)[0];
+        closest[1] = adjacent(x,y,0)[1];
         for(var count = 0; count < 6; count++){
-          Game.map[adjacent(x,y,count)[0]][adjacent(x,y,count)[1]][1].resources[i] = randGen(resourceArray[i][2], 0);
-          Game.map[y][x][1].kind = 8; //This is just so that we can see it until I get the radar sorted...
+          Game.map[adjacent(x,y,count)[0]][adjacent(x,y,count)[1]][1].resources[i] += randGen(resourceArray[i][2], 0);
+          if(Game.map[adjacent(x,y,count)[0]][adjacent(x,y,count)[1]][1].altitude - testAltitude < Game.map[closest[0]][closest[1]][1].altitude - testAltitude && Game.map[adjacent(x,y,count)[0]][adjacent(x,y,count)[1]][1].altitude - testAltitude > 0){
+            closest[0] = adjacent(x,y,count)[0];
+            closest[1] = adjacent(x,y,count)[1];
+          }
         }
+        x = closest[1];
+        y = closest[0];
+      } else {
+        x = randGen(Game.radarRad*2,0);
+  y = randGen(Game.radarRad*2,0);
       }
+      Game.map[y][x][1].kind = 8; //This is just so that we can see it until I get the radar sorted...
     }
   }
 }
