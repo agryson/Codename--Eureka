@@ -285,34 +285,29 @@ function generateResources() {
 }
 
 function rinseRepeat(resourceArray, i, x, y) {
-  var xIn = x;
-  var yIn = y;
+  var limit = (Game.radarRad * 2) - 1;
   for(var iter = 0; iter < resourceArray[i][2]; iter++) {
     var testAltitude = Game.map[y][x][1].altitude;
-    if(testAltitude < resourceArray[i][0] && testAltitude > resourceArray[i][1] && x > 0 && x < (Game.radarRad * 2) - 1 && y < (Game.radarRad * 2) - 1 && y > 0 && Game.map[y][x][1].kind !== 4) {
-      Game.map[y][x][1].resources[i] = randGen(resourceArray[i][2], 0) + 1;
+    if(testAltitude < resourceArray[i][0] && testAltitude > resourceArray[i][1] && x > 0 && x < limit && y < limit && y > 0 && Game.map[y][x][1].kind !== 4) {
+      Game.map[y][x][1].resources[i] = randGen(resourceArray[i][2], 1);
       Game.map[y][x][1].kind = 8; //tester
       var check = sameLevel(x, y, i);
       for(var count = 0; count < 6; count++) {
-        if(Game.map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]][1].kind !== 4 && (adjacent(x, y, count)[0] != check[0] && adjacent(x, y, count)[1] != check[1])) {
-          Game.map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]][1].resources[i] = randGen(resourceArray[i][2], 0) + 1;
-          Game.map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]][1].kind = 8; //This is just so that we can see it until I get the radar sorted...
+        var tempX = adjacent(x, y, count)[1];
+        var tempY = adjacent(x, y, count)[0];
+        if(Game.map[tempY][tempX][1].kind !== 4 && (tempY != check[0] && tempX != check[1])) {
+          Game.map[tempY][tempX][1].resources[i] = randGen(resourceArray[i][2], 1);
+          Game.map[tempY][tempX][1].kind = 8; //This is just so that we can see it until I get the radar sorted...
         }
       }
-      x < Game.radarRad * 2 - 1 && x > 0 ? x = check[1] : x = randGen(Game.radarRad * 2 - 1, 0);
-      y < Game.radarRad * 2 - 1 && y > 0 ? y = check[0] : y = randGen(Game.radarRad * 2 - 1, 0);
+      x < Game.radarRad * 2 - 1 && x > 0 ? x = check[1] : x = randGen(Game.radarRad * 2, 0);
+      y < Game.radarRad * 2 - 1 && y > 0 ? y = check[0] : y = randGen(Game.radarRad * 2, 0);
     } else {
       iter -= 1;
-      x = randGen(Game.radarRad * 2 - 1, 0);
-      y = randGen(Game.radarRad * 2 - 1, 0);
-      xIn = x;
-      yIn = y;
+      x = randGen(Game.radarRad * 2, 0);
+      y = randGen(Game.radarRad * 2, 0);
     }
   }
-  if(!Game.map[yIn][xIn][1].resources[i]) {
-    rinseRepeat(resourceArray, i, randGen(Game.radarRad * 2 - 1, 0), randGen(Game.radarRad * 2 - 1, 0));
-  }
-
 }
 
 
@@ -323,11 +318,10 @@ function sameLevel(x, y, i) {
   var next = Game.map[adjacent(x, y, randIndex)[0]][adjacent(x, y, randIndex)[1]][1].altitude;
   for(var count = 0; count < 6; count++) {
     var nextTest = Game.map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]][1].altitude;
-    if(Math.abs(next - current) > Math.abs(nextTest - current) && Game.map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]][1].resources[i] === 0) {
+    if(Math.abs(next - current) > Math.abs(nextTest - current) && !Game.map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]][1].resources[i]) {
       next = nextTest;
       closest = [adjacent(x, y, count)[0], adjacent(x, y, count)[1]];
     }
   }
-  //console.log(next + '  ' + nextTest);
   return closest;
 }
