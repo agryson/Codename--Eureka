@@ -1370,6 +1370,12 @@ function contextContent() {
       ["Floreapetite", "Phosphorous (P)"]
     ];
     htmlString += '<span>' + tile.ref + '</span><br>';
+    //build time left
+    if(tile.exists &&tile.kind === 100){
+        htmlString += '<span>' + 'Build time remaining: ' + (tile.turns + 1) + ' week';
+        if(tile.turns >= 1){ htmlString += 's';}
+        htmlString += '</span><br>';
+    }
     htmlString += '<span>' + 'WOW! Coordinates!' + '</span><br>';
     htmlString += '<br><span>We can add all sorts of stuff here, whatever HTML we want! :-D I could go on for ages just to see what happens!</span><br>';
     //resources?

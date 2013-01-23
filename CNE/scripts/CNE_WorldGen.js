@@ -247,37 +247,37 @@ function setType(x, y, level) {
 
 function generateResources() {
   var resourceArray = [ //[MAXALT,MINALT,AMOUNT,ORENAME,PRODUCTNAME]
-  [210, 160, 40, "Bauxite", "Aluminium (Al)"],
-    [190, 160, 20, "Corundum", "Aluminium (Al)"],
-    [220, 160, 10, "Kryolite", "Aluminium (Al)"],
-    [280, 150, 60, "Haematite", "Iron (Fe)"],
-    [200, 160, 30, "Magnetite", "Iron (Fe)"],
-    [230, 170, 40, "Iron Pyrite", "Iron (Fe)"],
-    [220, 160, 20, "Siderite", "Iron (Fe)"],
-    [200, 100, 50, "Copper Pyrite", "Copper (Cu)"],
-    [180, 100, 30, "Copper Glance", "Copper (Cu)"],
-    [200, 90, 40, "Malachite", "Copper (Cu)"],
-    [120, 90, 30, "Zinc Blende", "Zinc (Zn)"],
-    [150, 90, 20, "Calamine", "Zinc (Zn)"],
-    [100, 90, 50, "Rock Salt", "Sodium (Na)"],
-    [160, 120, 20, "Sodium Carbonate", "Sodium (Na)"],
-    [110, 90, 10, "Karnalite", "Potassium (K)"],
-    [130, 100, 20, "Salt Petre", "Potassium (K)"],
-    [150, 120, 20, "Galena", "Lead (Pb)"],
-    [160, 130, 10, "Anglesite", "Lead (Pb)"],
-    [140, 100, 30, "Tin Pyrites", "Tin (Sn)"],
-    [130, 120, 20, "Cassiterite", "Tin (Sn)"],
-    [180, 170, 10, "Silver Glance", "Silver"],
-    [180, 90, 10, "Calverite", "Gold (Au)"],
-    [180, 90, 3, "Syvanite", "Gold (Au)"],
-    [160, 130, 10, "Cinnabar", "Mercury (Hg)"],
-    [150, 140, 5, "Calomel", "Mercury (Hg)"],
-    [160, 110, 50, "Dolomite", "Magnesium (Mg)"],
-    [200, 160, 20, "Karnalite", "Magnesium (Mg)"],
-    [200, 90, 90, "Lime Stone", "Calcium (Ca)"],
-    [170, 140, 30, "Phosphorite", "Phosphorous (P)"],
-    [180, 130, 10, "Floreapetite", "Phosphorous (P)"]
-  ];
+  [190, 160, 40],//Bauxite", "Aluminium (Al)"
+  [190, 160, 20],//Corundum", "Aluminium (Al)"
+  [220, 160, 10],//Kryolite", "Aluminium (Al)"
+  [220, 150, 60],//Haematite", "Iron (Fe)"
+  [200, 160, 30],//Magnetite", "Iron (Fe)"
+  [230, 170, 40],//Iron Pyrite", "Iron (Fe)"
+  [220, 160, 20],//Siderite", "Iron (Fe)"
+  [200, 100, 50],//Copper Pyrite", "Copper (Cu)"
+  [180, 100, 30],//Copper Glance", "Copper (Cu)"
+  [200, 90, 40],//Malachite", "Copper (Cu)"
+  [120, 90, 30],//Zinc Blende", "Zinc (Zn)"
+  [150, 90, 20],//Calamine", "Zinc (Zn)"
+  [100, 90, 50],//Rock Salt", "Sodium (Na)"
+  [130, 90, 20],//Sodium Carbonate", "Sodium (Na)"
+  [110, 90, 10],//Karnalite", "Potassium (K)"
+  [130, 90, 20],//Salt Petre", "Potassium (K)"
+  [150, 130, 20],//Galena", "Lead (Pb)"
+  [160, 130, 10],//Anglesite", "Lead (Pb)"
+  [140, 100, 30],//Tin Pyrites", "Tin (Sn)"
+  [130, 120, 20],//Cassiterite", "Tin (Sn)"
+  [180, 170, 10],//"Silver Glance", "Silver"
+  [100, 90, 10],//Calverite", "Gold (Au)"
+  [110, 90, 3],//Syvanite", "Gold (Au)"
+  [160, 130, 10],//Cinnabar", "Mercury (Hg)"
+  [150, 140, 5],//Calomel", "Mercury (Hg)"
+  [130, 90, 50],//Dolomite", "Magnesium (Mg)"
+  [200, 160, 20],//Karnalite", "Magnesium (Mg)"
+  [200, 90, 90],//Limestone", "Calcium (Ca)"
+  [170, 140, 30],//Phosphorite", "Phosphorous (P)"
+  [180, 130, 10]//Floreapetite", "Phosphorous (P)"
+    ];
   for(var i = 0; i < resourceArray.length; i++) {
     rinseRepeat(resourceArray, i, randGen(Game.radarRad * 2 - 1, 0), randGen(Game.radarRad * 2 - 1, 0));
   }
