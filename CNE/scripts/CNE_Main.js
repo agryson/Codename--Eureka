@@ -409,6 +409,8 @@ function eavesdrop() {
     mainMap.onmouseup = function() {
         clicked();
     };
+    //should consider having zoom on the radar instead of the main map or storing the retX retY for a second or two
+    var blocked = false;
     mainMap.onmousewheel = function(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -416,9 +418,28 @@ function eavesdrop() {
         var zoomMax = document.getElementById('zoom').max;
         var val = parseInt(zoomPos.value, 10);
         if(event.wheelDelta > 0 && val < zoomMax) {
+            if(!blocked){
+                blocked = true;
+                setTimeout(blocked = false, 10000);
+                console.log(blocked);
+                Game.retY = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
+                if(Game.retY % 2 !== 0) {
+                    Game.retY -= 1;
+                }
+                Game.retX = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
+            }
             zoomPos.value = val + 1;
             zoom(val + 1);
         } else if(event.wheelDelta < 0 && val > 1) {
+            if(!blocked){
+                blocked = true;
+                setTimeout(blocked = false, 10000);
+                Game.retY = Game.retY - Math.round(Game.yLimit/2) + getTile('y');
+                if(Game.retY % 2 !== 0) {
+                    Game.retY -= 1;
+                }
+                Game.retX = Game.retX - Math.round(Game.xLimit/2) + getTile('x');
+            }
             zoomPos.value = val - 1;
             zoom(val - 1);
         }
@@ -576,9 +597,10 @@ function zoom(zoomLevel) {
 
 function mapFit() {
     console.log('I\'m refitting!');
+    Game.map[Game.retY][Game.retX][1].kind = 100; //so we can see where the center is
     var overlay = document.getElementById('mPanOverlay');
     var mainMap = document.getElementById('mainPanel');
-    var quarterHeight = Game.destinationHeight * 0.25;
+    var quarterHeight = Math.round(Game.destinationHeight * 0.25);
     Game.mPanCanvas.width = screen.width + Game.destinationWidth;
     Game.mPanCanvas.height = screen.height + quarterHeight * 2;
     overlay.style.top = -quarterHeight + 'px';
@@ -587,8 +609,8 @@ function mapFit() {
     Game.mPanelCanvas.height = screen.height + quarterHeight * 2;
     mainMap.style.top = -quarterHeight + 'px';
     mainMap.style.left = -Game.destinationWidth / 2 + 'px';
-    Game.xLimit = Math.round(Game.mPanCanvas.width / Game.destinationWidth) + 1;
-    Game.yLimit = Math.round(Game.mPanCanvas.height / (quarterHeight * 3)) + 2;
+    Game.xLimit = Math.floor(Game.mPanCanvas.width / Game.destinationWidth) + 1;
+    Game.yLimit = Math.floor(Game.mPanCanvas.height / (quarterHeight * 3)) + 1;
     if(Game.yLimit % 2 === 0) {
         Game.yLimit += 1;
     }
