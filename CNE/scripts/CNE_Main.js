@@ -418,27 +418,27 @@ function eavesdrop() {
         var zoomMax = document.getElementById('zoom').max;
         var val = parseInt(zoomPos.value, 10);
         if(event.wheelDelta > 0 && val < zoomMax) {
+            console.log(blocked);
             if(!blocked){
                 blocked = true;
-                setTimeout(blocked = false, 10000);
-                console.log(blocked);
-                Game.retY = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
+                setTimeout(function(){blocked = false;}, 2000);
+                Game.retY = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 4;
                 if(Game.retY % 2 !== 0) {
                     Game.retY -= 1;
                 }
-                Game.retX = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
+                Game.retX = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
             }
             zoomPos.value = val + 1;
             zoom(val + 1);
         } else if(event.wheelDelta < 0 && val > 1) {
             if(!blocked){
                 blocked = true;
-                setTimeout(blocked = false, 10000);
-                Game.retY = Game.retY - Math.round(Game.yLimit/2) + getTile('y');
+                setTimeout(function(){blocked = false;}, 2000);
+                Game.retY = Game.retY - Math.round(Game.yLimit/2) + getTile('y') + 4;
                 if(Game.retY % 2 !== 0) {
                     Game.retY -= 1;
                 }
-                Game.retX = Game.retX - Math.round(Game.xLimit/2) + getTile('x');
+                Game.retX = Game.retX - Math.round(Game.xLimit/2) + getTile('x') + 1;
             }
             zoomPos.value = val - 1;
             zoom(val - 1);
