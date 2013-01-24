@@ -349,9 +349,6 @@ function Param() {
     this.radarCanvas = document.getElementById('mapOverlay');
     this.radar = document.getElementById('map').getContext('2d');
     this.radarLoc = document.getElementById('mapOverlay').getContext('2d');
-    /*
-    this.overMPan;
-    */
 }
 
 /**
@@ -401,13 +398,13 @@ function eavesdrop() {
     //!Left Menu
     //Canvas Map
     var mainMap = document.getElementById('mPanOverlay');
-    mainMap.onmouseover = function() {
-        Game.overMPan = true;
-        overCanvas(true, 'mPan');
+    mainMap.onmousemove = function(evt) {
+        getMousePos(Game.mPanCanvas, evt, true);//tracker
+        Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
+        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
     };
     mainMap.onmouseout = function() {
-        Game.overMPan = false;
-        overCanvas(false);
+        Game.mPanLoc.clearRect(0, 0, document.width, document.height + 50);
     };
     mainMap.onmouseup = function() {
         clicked();
@@ -454,16 +451,15 @@ function eavesdrop() {
             radar.classList.remove('menu_hidden');
             radar.classList.add('menu_visible');
         }
+        Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     };
     var radarMap = document.getElementById('mapOverlay');
-    radarMap.onclick = function() {
+    radarMap.onclick = function(evt) {
+        getMousePos(Game.radarCanvas, evt);
         jump();
     };
-    radarMap.onmouseover = function() {
-        overCanvas(true, 'radar');
-    };
     radarMap.onmouseout = function() {
-        overCanvas(false);
+        Game.radarCanvas.onmousemove = null;
     };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
@@ -728,38 +724,6 @@ function notify(notif) {
 }
 
 /**
- * Tracks mouse movements relative to the appopriate canvas
- * @param  {boolean} bool  Are we on a canvas?
- * @param  {string} which Canvas are we on?
- * @return {[type]}
- */
-
-function overCanvas(bool, which) {
-    /*
-     * Event listeners track the mouse movements.
-     * N.B.: You need to track on the topmost layer!!!
-     */
-    if(bool && which == 'mPan') {
-        Game.mPanCanvas.addEventListener('mousemove', function(evt) {
-            getMousePos(Game.mPanCanvas, evt);
-        }, false);
-    } else if(bool && which == 'radar') {
-        //mPanCanvas.onmousemove = null;
-        Game.radarCanvas.addEventListener('mousemove', function(evt) {
-            getMousePos(Game.radarCanvas, evt);
-        }, false);
-    } else {
-        /*
-         * Event listeners track the mouse movements.
-         * N.B.: You need to track on the topmost layer!!!
-         */
-        Game.mPanCanvas.onmousemove = null;
-        Game.radarCanvas.onmousemove = null;
-        Game.mPanLoc.clearRect(0, 0, document.width, document.height + 50);
-    }
-}
-
-/**
  * Generates a random number, from a base value
  * @param  {int} num is the modifier
  * @param  {int} min is the base value
@@ -933,7 +897,7 @@ function keypressed(e) {
  * @param  {Event} evt
  */
 
-function getMousePos(canvas, evt) {
+function getMousePos(canvas, evt, onMap) {
     // get canvas position
     var obj = canvas;
     var top = 0;
@@ -942,16 +906,15 @@ function getMousePos(canvas, evt) {
         top += obj.offsetTop - 10;
         left += obj.offsetLeft;
         obj = obj.offsetParent;
-
     }
 
     // return relative mouse position
     Game.mouseX = evt.clientX - left + window.pageXOffset + Game.destinationWidth / 2;
     Game.mouseY = evt.clientY - top + window.pageYOffset;
-    if(Game.overMPan) {
-        Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
-    }
+    //if(onMap){
+      //  Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
+        //drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
+    //}
 }
 
 /**
@@ -1357,7 +1320,7 @@ function contextContent() {
       ["Anglesite", "Lead (Pb)"],
       ["Tin Pyrites", "Tin (Sn)"],
       ["Cassiterite", "Tin (Sn)"],
-      ["Silver Glance", "Silver"],
+      ["Silver Glance", "Silver (Ag)"],
       ["Calverite", "Gold (Au)"],
       ["Syvanite", "Gold (Au)"],
       ["Cinnabar", "Mercury (Hg)"],
