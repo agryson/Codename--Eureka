@@ -597,7 +597,6 @@ function zoom(zoomLevel) {
 
 function mapFit() {
     console.log('I\'m refitting!');
-    Game.map[Game.retY][Game.retX][1].kind = 100; //so we can see where the center is
     var overlay = document.getElementById('mPanOverlay');
     var mainMap = document.getElementById('mainPanel');
     var quarterHeight = Math.round(Game.destinationHeight * 0.25);
@@ -611,8 +610,18 @@ function mapFit() {
     mainMap.style.left = -Game.destinationWidth / 2 + 'px';
     Game.xLimit = Math.floor(Game.mPanCanvas.width / Game.destinationWidth) + 1;
     Game.yLimit = Math.floor(Game.mPanCanvas.height / (quarterHeight * 3)) + 1;
+    if(Game.retY - Game.yLimit/2 < 0){
+        Game.retY = Math.ceil(Game.retY + (Game.retY - Game.yLimit/2)*(-1));
+    } else if (Game.retY + Game.yLimit/2 > Game.radarRad*2){
+        Game.retY = Math.floor(Game.retY - Game.yLimit/2);
+    }
+    if(Game.retX - Game.xLimit/2 < 0){
+        Game.retX = Math.ceil(Game.retX + (Game.retX - Game.xLimit/2)*(-1));
+    } else if (Game.retX + Game.xLimit/2 > Game.radarRad*2){
+        Game.retX = Math.floor(Game.retX - Game.xLimit/2);
+    }
     if(Game.yLimit % 2 === 0) {
-        Game.yLimit += 1;
+        Game.yLimit -= 1;
     }
     drawRadar();
     drawLoc();
