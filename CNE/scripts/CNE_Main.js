@@ -601,7 +601,7 @@ function mapFit(bool) {
         var overlay = document.getElementById('mPanOverlay');
         var mainMap = document.getElementById('mainPanel');
     
-        //Nasty stuff...
+        //Nasty stuff... hence we use the if to touch this as little as possible
         overlay.width = screen.width + Game.destinationWidth;
         overlay.height = screen.height + quarterHeight * 2;
         overlay.style.top = -quarterHeight + 'px';
