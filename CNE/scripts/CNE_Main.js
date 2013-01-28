@@ -251,6 +251,7 @@ function Param() {
     this.destinationHeight = 140;
     //this.xLimit = Math.ceil(document.width / 90);
     //this.yLimit = Math.ceil(document.height / 78);
+    this.highlight = false;
     this.retX = this.radarRad;
     this.retY = this.radarRad;
     this.animate = 0;
@@ -399,8 +400,9 @@ function eavesdrop() {
     var mainMap = document.getElementById('mPanOverlay');
     mainMap.onmousemove = function(evt) {
         getMousePos(Game.mPanCanvas, evt, true);//tracker
-        Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
+    };
+    mainMap.onmouseover = function(){
+        Game.highlight = true;
     };
     mainMap.onmouseout = function() {
         Game.mPanLoc.clearRect(0, 0, document.width, document.height + 50);
@@ -420,11 +422,8 @@ function eavesdrop() {
         var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
         var setRet = function(){
             blocked = true;
-            setTimeout(function(){blocked = false;}, 2000);
+            setTimeout(function(){blocked = false;}, 300);
             Game.retY = yTemp;
-            if(Game.retY % 2 !== 0) {
-                Game.retY -= 1;
-            }
             Game.retX = xTemp;
         };
         if(event.wheelDelta > 0 && val < zoomMax) {
@@ -470,13 +469,18 @@ function eavesdrop() {
             radar.classList.remove('menu_hidden');
             radar.classList.add('menu_visible');
         }
+        Game.highlight = false;
         Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     };
     var radarMap = document.getElementById('mapOverlay');
     radarMap.onclick = function(evt) {
         getMousePos(Game.radarCanvas, evt);
+        Game.highlight = false;
         jump();
     };
+    radarMap.onmouseover = function(){
+        Game.highlight = false;
+    }
     radarMap.onmouseout = function() {
         Game.radarCanvas.onmousemove = null;
     };
@@ -1148,20 +1152,10 @@ function getTile(axis) {
  */
 
 function jump() {
-    var x = Game.mouseX - Game.destinationWidth / 2;
-    var y = Game.mouseY - 20;
-    //ensure we're dealing with a multiple of two (since we move up and down in twos)
-    if(y % 2 !== 0) {
-        y -= 1;
-    }
-    //then set the new values and draw
-    if(x > Game.xLimit / 2 && y > Game.yLimit / 2 && x < Game.radarRad * 2 - Game.xLimit / 2 && y < Game.radarRad * 2 - Game.yLimit / 2) {
-        Game.retX = x;
-        Game.retY = y;
-        drawLoc();
-    } else {
-        notify('That\'s out of bounds!');
-    }
+    Game.retX = Math.floor(Game.mouseX - Game.destinationWidth / 2);
+    Game.retY = Math.floor(Game.mouseY - Game.destinationHeight / 2);
+    mapFit();
+    drawLoc();
 }
 
 /**
@@ -1268,6 +1262,13 @@ function drawZoomMap() {
     var sourceTile = returnLevel(Game.level);
     mainLoop();
     webkitRequestAnimationFrame(drawZoomMap);
+    Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
+    if(Game.highlight){
+        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
+    }
+    if(Game.retY % 2 !== 0) {
+        Game.retY -= 1;
+    }
     //TODO : Maybe move all this yShift xShift stuff to Game?
     var yShift = Math.round(Game.yLimit / 2);
     if(yShift % 2 === 0) {
