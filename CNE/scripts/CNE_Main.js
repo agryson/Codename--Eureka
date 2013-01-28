@@ -356,7 +356,6 @@ function Param() {
  */
 
 window.onload = function init() {
-    document.getElementById('zoom').value = 3;
     eavesdrop();
 };
 
@@ -417,28 +416,27 @@ function eavesdrop() {
         var zoomPos = document.getElementById('zoom');
         var zoomMax = document.getElementById('zoom').max;
         var val = parseInt(zoomPos.value, 10);
+        var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 4;
+        var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
+        var setRet = function(){
+            blocked = true;
+            setTimeout(function(){blocked = false;}, 2000);
+            Game.retY = yTemp;
+            if(Game.retY % 2 !== 0) {
+                Game.retY -= 1;
+            }
+            Game.retX = xTemp;
+        };
         if(event.wheelDelta > 0 && val < zoomMax) {
             console.log(blocked);
             if(!blocked){
-                blocked = true;
-                setTimeout(function(){blocked = false;}, 2000);
-                Game.retY = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 4;
-                if(Game.retY % 2 !== 0) {
-                    Game.retY -= 1;
-                }
-                Game.retX = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
+                setRet();
             }
             zoomPos.value = val + 1;
             zoom(val + 1);
         } else if(event.wheelDelta < 0 && val > 1) {
             if(!blocked){
-                blocked = true;
-                setTimeout(function(){blocked = false;}, 2000);
-                Game.retY = Game.retY - Math.round(Game.yLimit/2) + getTile('y') + 4;
-                if(Game.retY % 2 !== 0) {
-                    Game.retY -= 1;
-                }
-                Game.retX = Game.retX - Math.round(Game.xLimit/2) + getTile('x') + 1;
+                setRet();
             }
             zoomPos.value = val - 1;
             zoom(val - 1);
@@ -453,7 +451,7 @@ function eavesdrop() {
     };
     //!Level Slider
     window.onresize = function() {
-        mapFit();
+        mapFit(true);
     };
     var radar = document.getElementById('radarContainer');
     var radarBtnContainer = document.getElementById('radarBtnContainer');
@@ -596,28 +594,36 @@ function zoom(zoomLevel) {
 }
 
 //TODO: Clean this up! :-S
-function mapFit() {
+function mapFit(bool) {
     console.log('I\'m refitting!');
-    var overlay = document.getElementById('mPanOverlay');
-    var mainMap = document.getElementById('mainPanel');
     var quarterHeight = Math.round(Game.destinationHeight * 0.25);
-    Game.mPanCanvas.width = screen.width + Game.destinationWidth;
-    Game.mPanCanvas.height = screen.height + quarterHeight * 2;
-    overlay.style.top = -quarterHeight + 'px';
-    overlay.style.left = -Game.destinationWidth / 2 + 'px';
-    Game.mPanelCanvas.width = screen.width + Game.destinationWidth;
-    Game.mPanelCanvas.height = screen.height + quarterHeight * 2;
-    mainMap.style.top = -quarterHeight + 'px';
-    mainMap.style.left = -Game.destinationWidth / 2 + 'px';
+    if(bool){
+        var overlay = document.getElementById('mPanOverlay');
+        var mainMap = document.getElementById('mainPanel');
+    
+        //Nasty stuff...
+        overlay.width = screen.width + Game.destinationWidth;
+        overlay.height = screen.height + quarterHeight * 2;
+        overlay.style.top = -quarterHeight + 'px';
+        overlay.style.left = -Game.destinationWidth / 2 + 'px';
+        mainMap.width = screen.width + Game.destinationWidth;
+        mainMap.height = screen.height + quarterHeight * 2;
+        mainMap.style.top = -quarterHeight + 'px';
+        mainMap.style.left = -Game.destinationWidth / 2 + 'px';
+    }
     Game.xLimit = Math.floor(Game.mPanCanvas.width / Game.destinationWidth) + 1;
     Game.yLimit = Math.floor(Game.mPanCanvas.height / (quarterHeight * 3)) + 1;
+    Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
+    drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
+
+    //Messy stuff...
     if(Game.retY - Game.yLimit/2 < 0){
-        Game.retY = Math.ceil(Game.retY + (Game.retY - Game.yLimit/2)*(-1));
+        Game.retY = Math.ceil(Game.retY - (Game.retY - Game.yLimit/2));
     } else if (Game.retY + Game.yLimit/2 > Game.radarRad*2){
         Game.retY = Math.floor(Game.retY - Game.yLimit/2);
     }
     if(Game.retX - Game.xLimit/2 < 0){
-        Game.retX = Math.ceil(Game.retX + (Game.retX - Game.xLimit/2)*(-1));
+        Game.retX = Math.ceil(Game.retX - (Game.retX - Game.xLimit/2));
     } else if (Game.retX + Game.xLimit/2 > Game.radarRad*2){
         Game.retX = Math.floor(Game.retX - Game.xLimit/2);
     }

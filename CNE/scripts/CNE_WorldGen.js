@@ -133,8 +133,8 @@ function createMap() {
     Game.level = 0; /*draw the radar background & map once on load*/
     drawRadar();
     drawLoc();
+    mapFit(true);
     drawZoomMap();
-    mapFit();
     //start mainloop
     popup.style.opacity = '0';
     document.getElementById('login').onclick = null;
