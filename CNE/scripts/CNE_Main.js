@@ -595,6 +595,7 @@ function zoom(zoomLevel) {
     mapFit();
 }
 
+//TODO: Clean this up! :-S
 function mapFit() {
     console.log('I\'m refitting!');
     var overlay = document.getElementById('mPanOverlay');
@@ -621,7 +622,7 @@ function mapFit() {
         Game.retX = Math.floor(Game.retX - Game.xLimit/2);
     }
     if(Game.yLimit % 2 === 0) {
-        Game.yLimit -= 1;
+        Game.yLimit += 1;
     }
     drawRadar();
     drawLoc();
@@ -942,10 +943,6 @@ function getMousePos(canvas, evt, onMap) {
     // return relative mouse position
     Game.mouseX = evt.clientX - left + window.pageXOffset + Game.destinationWidth / 2;
     Game.mouseY = evt.clientY - top + window.pageYOffset;
-    //if(onMap){
-      //  Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-        //drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
-    //}
 }
 
 /**
