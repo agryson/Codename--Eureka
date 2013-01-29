@@ -1150,9 +1150,9 @@ function getTile(axis) {
  * When the radar is clicked, moves the map to that location
  */
 
-function jump() {
+function jump(bool) {
     Game.retX = Math.floor(Game.mouseX - Game.destinationWidth / 2);
-    Game.retY = Math.floor(Game.mouseY - Game.destinationHeight / 2);
+    Game.retY = Game.mouseY - 20;
     mapFit();
     drawLoc();
 }
