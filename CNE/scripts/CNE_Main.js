@@ -136,7 +136,7 @@ function Terrain() {
                 if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
-                    adj.kind = adj.kind - 5;
+                    adj.kind = 8;
                     adj.wip = true;
                     adj.willBeDiggable = true;
                 }
@@ -1419,7 +1419,14 @@ function clicked() {
     var lowerTile = returnLevel(Game.level + 1)[y][x][1];
     switch(Game.clickedOn) {
     case 'lander':
-        tile.kind = 4; //change this to lander tile
+        tile.kind = 8; //change to lander
+        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].kind = 3; //change to command center
+        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].kind = 3; //change to ARP
+        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].kind = 3; //change to Agridome
+        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(8, 70, 2); //change to command center
+        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(8, 70, 2); //change to ARP
+        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(8, 70, 2); //change to Agridome
+        // ...
         Game.buildings[0][1] = false;
         //console.log(Game.buildings[0][0] + '  ' + Game.buildings[0][1]);
         var buildable = [1, 4, 8, 9, 11, 15, 17, 22, 25, 26, 31, 33, 35];
