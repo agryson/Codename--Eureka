@@ -136,7 +136,7 @@ function Terrain() {
                 if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
-                    adj.kind = 101;
+                    adj.kind = adj.kind - 5;
                     adj.wip = true;
                     adj.willBeDiggable = true;
                 }
@@ -197,24 +197,6 @@ function Terrain() {
     };
 
     /**
-     * Gives the number of turns necessary to build on a given terrain type
-     * @param  {int} baseTurns The base number of turns taken to do something on that terrain
-     * @param  {int} kind      The kind of tile we're dealing with
-     * @return {int}
-     */
-
-    function eta(baseTurns, kind) {
-        //calculates the turns necessary to do something on this terrain
-        if(kind === 1 || kind === 6) {
-            return Math.floor(baseTurns * 1.5);
-        } else if(kind === 2 || kind === 7) {
-            return Math.floor(baseTurns * 2.4);
-        } else {
-            return baseTurns;
-        }
-    }
-
-    /**
      * The 'building' function does everything necessary when we're building on that terrain
      * @param  {int} building The building type we want to build
      * @param  {int} health   the health of that building
@@ -237,6 +219,24 @@ function Terrain() {
         }
     };
 
+}
+
+/**
+ * Gives the number of turns necessary to build on a given terrain type
+ * @param  {int} baseTurns The base number of turns taken to do something on that terrain
+ * @param  {int} kind      The kind of tile we're dealing with
+ * @return {int}
+ */
+
+function eta(baseTurns, kind) {
+    //calculates the turns necessary to do something on this terrain
+    if(kind === 1 || kind === 6) {
+        return Math.floor(baseTurns * 1.5);
+    } else if(kind === 2 || kind === 7) {
+        return Math.floor(baseTurns * 2.4);
+    } else {
+        return baseTurns;
+    }
 }
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 /**
@@ -407,22 +407,21 @@ function eavesdrop() {
     mainMap.onmouseout = function() {
         Game.mPanLoc.clearRect(0, 0, document.width, document.height + 50);
     };
-    mainMap.onmouseup = function() {
+    mainMap.onclick = function() {
         clicked();
     };
     //should consider having zoom on the radar instead of the main map or storing the retX retY for a second or two
     var blocked = false;
     mainMap.onmousewheel = function(event) {
         event.preventDefault();
-        event.stopPropagation();
         var zoomPos = document.getElementById('zoom');
         var zoomMax = document.getElementById('zoom').max;
         var val = parseInt(zoomPos.value, 10);
-        var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 4;
-        var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
         var setRet = function(){
             blocked = true;
-            setTimeout(function(){blocked = false;}, 300);
+            setTimeout(function(){blocked = false;}, 500);
+            var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 4;
+            var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
             Game.retY = yTemp;
             Game.retX = xTemp;
         };
@@ -431,14 +430,14 @@ function eavesdrop() {
             if(!blocked){
                 setRet();
             }
-            zoomPos.value = val + 1;
             zoom(val + 1);
+            zoomPos.value = val + 1;
         } else if(event.wheelDelta < 0 && val > 1) {
             if(!blocked){
                 setRet();
             }
-            zoomPos.value = val - 1;
             zoom(val - 1);
+            zoomPos.value = val - 1;
         }
         return false;
     };
@@ -1200,7 +1199,7 @@ function drawRadar() {
         [101, 79, 65, 255],
         [111, 106, 103, 255],
         [0, 32, 0, 255],
-        [8, 68, 104, 155]
+        [8, 68, 104, 255]
     ]; //rgba of terrain 0,1,2,3,4
     var other = [0, 180, 0, 255];
 
