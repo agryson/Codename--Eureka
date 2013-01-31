@@ -206,11 +206,13 @@ function Terrain() {
         console.log(building);
         if(this.kind === 3) {
             this.kind = 100; //TODO: replace with a construction animation
+            /*
             if(this.UG) {
                 this.willBe = building + 1; //TODO: if underground add 1 and have a different tile for underground ones...
             } else {
                 this.willBe = building;
-            }
+            }*/
+            this.willBe=building;
             this.wip = true;
             this.health = health; //health of building
             this.turns = turns;
@@ -256,12 +258,16 @@ function Param() {
     this.retY = this.radarRad;
     this.animate = 0;
     this.augment = true;
-    this.tile = new Image();
-    this.tile.src = 'images/tiles.png';
+
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
     this.drones = new Image();
     this.drones.src = 'images/drones.png';
+    this.constructions = new Image();
+    this.constructions.src = 'images/buildings.png';
+    this.terrain = new Image();
+    this.terrain.src = 'images/terrain.png';
+
     this.clickedOn = 'none';
     this.level = 0;
 
@@ -613,7 +619,7 @@ function mapFit(bool) {
         overlay.height = screen.height + quarterHeight * 2;
         overlay.style.top = -quarterHeight + 'px';
         overlay.style.left = -Game.destinationWidth / 2 + 'px';
-        mainMap.width = screen.width + Game.destinationWidth;
+        mainMap.width = screen.width + Game.destinationWidth;//Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
         mainMap.height = screen.height + quarterHeight * 2;
         mainMap.style.top = -quarterHeight + 'px';
         mainMap.style.left = -Game.destinationWidth / 2 + 'px';
@@ -1283,7 +1289,10 @@ function drawZoomMap() {
         while(x <= Game.xLimit) {
             var tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind;
             if(tileKind < 100) {
-                drawTile(tileKind, x, y, Game.tile, Game.mPanel);
+                drawTile(tileKind, x, y, Game.terrain, Game.mPanel);
+            } else if(tileKind >= 200){
+                console.log(tileKind - 200);
+                drawTile(tileKind - 200, x, y, Game.constructions, Game.mPanel);
             } else {
                 drawTile(tileKind - 100, x, y, Game.drones, Game.mPanel, true);
             }
@@ -1423,9 +1432,9 @@ function clicked() {
         Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].kind = 3; //change to command center
         Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].kind = 3; //change to ARP
         Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].kind = 3; //change to Agridome
-        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(8, 70, 2); //change to command center
-        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(8, 70, 2); //change to ARP
-        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(8, 70, 2); //change to Agridome
+        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(210, 70, 2); //change to command center
+        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(203, 70, 2); //change to ARP
+        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(200, 70, 2); //change to Agridome
         // ...
         Game.buildings[0][1] = false;
         //console.log(Game.buildings[0][0] + '  ' + Game.buildings[0][1]);
@@ -1458,19 +1467,19 @@ function clicked() {
         //TODO: add recycle code
         break;
     case 'agri':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(200, 70, 2);
         break;
     case 'agri2':
-        tile.build(7, 90, 3); //TODO: change this to a real connector...
+        tile.build(201, 90, 3);
         break;
     case 'airport':
-        tile.build(7, 60, 3); //TODO: change this to a real connector...
+        tile.build(202, 60, 3);
         break;
     case 'arp':
-        tile.build(14, 80, 2);
+        tile.build(203, 80, 2);
         break;
     case 'barracks':
-        tile.build(7, 60, 3); //TODO: change this to a real connector...
+        tile.build(7, 60, 3);
         break;
     case 'civprot':
         tile.build(7, 70, 2);
@@ -1482,52 +1491,52 @@ function clicked() {
         tile.build(14, 100, 2);
         break;
     case 'commarray':
-        tile.build(20, 60, 1); //TODO: change this to a real connector...
+        tile.build(20, 60, 1);
         break;
     case 'commarray2':
-        tile.build(7, 80, 2); //TODO: change this to a real connector...
+        tile.build(7, 80, 2);
         break;
     case 'connector':
         tile.build(41, 20, 1);
         break;
     case 'dronefab':
-        tile.build(7, 80, 4); //TODO: change this to a real connector...
+        tile.build(7, 80, 4);
         break;
     case 'chernobyl':
-        tile.build(7, 70, 4); //TODO: change this to a real connector...
+        tile.build(7, 70, 4);
         break;
     case 'tokamak':
-        tile.build(7, 90, 5); //TODO: change this to a real connector...
+        tile.build(7, 90, 5);
         break;
     case 'genfab':
-        tile.build(7, 70, 3); //TODO: change this to a real connector...
+        tile.build(7, 70, 3);
         break;
     case 'geotherm':
-        tile.build(7, 70, 4); //TODO: change this to a real connector...
+        tile.build(7, 70, 4);
         break;
     case 'hab':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(7, 70, 2);
         break;
     case 'hab2':
-        tile.build(7, 80, 3); //TODO: change this to a real connector...
+        tile.build(7, 80, 3);
         break;
     case 'hab3':
-        tile.build(7, 90, 4); //TODO: change this to a real connector...
+        tile.build(7, 90, 4);
         break;
     case 'er':
-        tile.build(7, 80, 3); //TODO: change this to a real connector...
+        tile.build(7, 80, 3);
         break;
     case 'nursery':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(7, 70, 2);
         break;
     case 'oreproc':
-        tile.build(7, 80, 2); //TODO: change this to a real connector...
+        tile.build(7, 80, 2);
         break;
     case 'rec':
-        tile.build(7, 60, 3); //TODO: change this to a real connector...
+        tile.build(7, 60, 3);
         break;
     case 'recycler':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(7, 70, 2);
         break;
     case 'clichy':
         tile.build(7, 30, 2);
@@ -1539,28 +1548,28 @@ function clicked() {
         tile.build(7, 60, 4);
         break;
     case 'solar':
-        tile.build(41, 30, 2); //TODO: change this to a real connector...
+        tile.build(41, 30, 2);
         break;
     case 'space':
-        tile.build(7, 80, 5); //TODO: change this to a real connector...
+        tile.build(7, 80, 5);
         break;
     case 'stasis':
-        tile.build(7, 100, 4); //TODO: change this to a real connector...
+        tile.build(7, 100, 4);
         break;
     case 'store':
         tile.build(7, 40, 1);
         break;
     case 'uni':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(7, 70, 2);
         break;
     case 'warehouse':
         tile.build(7, 40, 1);
         break;
     case 'windfarm':
-        tile.build(7, 40, 2); //TODO: change this to a real connector...
+        tile.build(7, 40, 2);
         break;
     case 'workshop':
-        tile.build(7, 70, 3); //TODO: change this to a real connector...
+        tile.build(7, 70, 3);
         break;
     default:
         console.log("I don't recognise that building code...");
