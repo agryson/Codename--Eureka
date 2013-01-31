@@ -1293,7 +1293,7 @@ function drawZoomMap() {
             } else if(tileKind >= 200){
                 console.log(tileKind - 200);
                 drawTile(tileKind - 200, x, y, Game.constructions, Game.mPanel);
-            } ellse {
+            } else {
                 drawTile(tileKind - 100, x, y, Game.drones, Game.mPanel, true);
             }
             x++;
