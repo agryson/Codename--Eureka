@@ -17,7 +17,7 @@ function Terrain() {
     this.turns; //remembers how many turns are left to become a tile of the desired kind
     this.diggable;
     */
-    this.resources = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    this.resources = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var wip = false; //Work in Progress?
     var prepared = false;
     //this.ref;
@@ -136,7 +136,7 @@ function Terrain() {
                 if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
-                    adj.kind = adj.kind - 5;
+                    adj.kind = 8;
                     adj.wip = true;
                     adj.willBeDiggable = true;
                 }
@@ -159,7 +159,7 @@ function Terrain() {
                 wet = true;
             }
         }
-        if(Game.level < 4 && lowerTile.kind !==4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1]) {
+        if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             Game.robotsList[3][0] += 1;
             this.robotInUse = 2;
             reCount('miner');
@@ -206,11 +206,13 @@ function Terrain() {
         console.log(building);
         if(this.kind === 3) {
             this.kind = 100; //TODO: replace with a construction animation
+            /*
             if(this.UG) {
                 this.willBe = building + 1; //TODO: if underground add 1 and have a different tile for underground ones...
             } else {
                 this.willBe = building;
-            }
+            }*/
+            this.willBe=building;
             this.wip = true;
             this.health = health; //health of building
             this.turns = turns;
@@ -256,12 +258,16 @@ function Param() {
     this.retY = this.radarRad;
     this.animate = 0;
     this.augment = true;
-    this.tile = new Image();
-    this.tile.src = 'images/tiles.png';
+
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
     this.drones = new Image();
     this.drones.src = 'images/drones.png';
+    this.constructions = new Image();
+    this.constructions.src = 'images/buildings.png';
+    this.terrain = new Image();
+    this.terrain.src = 'images/terrain.png';
+
     this.clickedOn = 'none';
     this.level = 0;
 
@@ -286,52 +292,52 @@ function Param() {
      */
     this.buildings = [
         ["lander", true, 0],
-        ["agri", false, 0],//
+        ["agri", false, 0], //
         ["agri2", false, 0],
         ["airport", false, 0],
-        ["arp", false, 2],//
+        ["arp", false, 2], //
         ["barracks", false, 1],
         ["civprot", false, 2],
         ["civprot2", false, 2],
-        ["command", false, 2],//
-        ["commarray", false, 0],//
+        ["command", false, 2], //
+        ["commarray", false, 0], //
         ["commarray2", false, 0],
-        ["connector", false, 2],//
+        ["connector", false, 2], //
         ["dronefab", false, 0],
         ["chernobyl", false, 0],
         ["tokamak", false, 0],
-        ["genfab", false, 0],//
+        ["genfab", false, 0], //
         ["geotherm", false, 1],
-        ["hab", false, 1],//
+        ["hab", false, 1], //
         ["hab2", false, 1],
         ["hab3", false, 1],
         ["er", false, 1],
         ["nursery", false, 1],
-        ["oreproc", false, 0],//
+        ["oreproc", false, 0], //
         ["rec", false, 1],
         ["recycler", false, 0],
-        ["clichy", false, 2],//
-        ["research", false, 2],//
+        ["clichy", false, 2], //
+        ["research", false, 2], //
         ["research2", false, 2],
         ["solar", false, 0],
         ["space", false, 0],
         ["stasis", false, 1],
-        ["store", false, 2],//
+        ["store", false, 2], //
         ["uni", false, 1],
-        ["warehouse", false, 2],//
+        ["warehouse", false, 2], //
         ["windfarm", false, 0],
-        ["workshop", false, 1]//
-    ];
+        ["workshop", false, 1] //
+        ];
     /**
      * List of robots
      * [[int: inUse, int: totalAvailable, string: 'idString', boolean: availableToPlayer, int: surface(0)/subsurface(1)/both(2)]]
      * @type {Array}
      */
     this.robotsList = [
-        [0, 5, "dozer", false, 2],//
-        [0, 3, "digger", false, 2],//
-        [0, 1, "cavernDigger", false, 1],//
-        [0, 1, "miner", false, 2],//
+        [0, 5, "dozer", false, 2], //
+        [0, 3, "digger", false, 2], //
+        [0, 1, "cavernDigger", false, 1], //
+        [0, 1, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
     //Map generation vars
@@ -399,9 +405,9 @@ function eavesdrop() {
     //Canvas Map
     var mainMap = document.getElementById('mPanOverlay');
     mainMap.onmousemove = function(evt) {
-        getMousePos(Game.mPanCanvas, evt, true);//tracker
+        getMousePos(Game.mPanCanvas, evt, true); //tracker
     };
-    mainMap.onmouseover = function(){
+    mainMap.onmouseover = function() {
         Game.highlight = true;
     };
     mainMap.onmouseout = function() {
@@ -417,23 +423,25 @@ function eavesdrop() {
         var zoomPos = document.getElementById('zoom');
         var zoomMax = document.getElementById('zoom').max;
         var val = parseInt(zoomPos.value, 10);
-        var setRet = function(){
-            blocked = true;
-            setTimeout(function(){blocked = false;}, 500);
-            var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 4;
-            var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
-            Game.retY = yTemp;
-            Game.retX = xTemp;
-        };
+        var setRet = function() {
+                blocked = true;
+                setTimeout(function() {
+                    blocked = false;
+                }, 500);
+                var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 4;
+                var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
+                Game.retY = yTemp;
+                Game.retX = xTemp;
+            };
         if(event.wheelDelta > 0 && val < zoomMax) {
             console.log(blocked);
-            if(!blocked){
+            if(!blocked) {
                 setRet();
             }
             zoom(val + 1);
             zoomPos.value = val + 1;
         } else if(event.wheelDelta < 0 && val > 1) {
-            if(!blocked){
+            if(!blocked) {
                 setRet();
             }
             zoom(val - 1);
@@ -477,7 +485,7 @@ function eavesdrop() {
         Game.highlight = false;
         jump();
     };
-    radarMap.onmouseover = function(){
+    radarMap.onmouseover = function() {
         Game.highlight = false;
     }
     radarMap.onmouseout = function() {
@@ -597,19 +605,21 @@ function zoom(zoomLevel) {
 }
 
 //TODO: Clean this up! :-S
+
+
 function mapFit(bool) {
     console.log('I\'m refitting!');
     var quarterHeight = Math.round(Game.destinationHeight * 0.25);
-    if(bool){
+    if(bool) {
         var overlay = document.getElementById('mPanOverlay');
         var mainMap = document.getElementById('mainPanel');
-    
+
         //Nasty stuff... hence we use the if to touch this as little as possible
         overlay.width = screen.width + Game.destinationWidth;
         overlay.height = screen.height + quarterHeight * 2;
         overlay.style.top = -quarterHeight + 'px';
         overlay.style.left = -Game.destinationWidth / 2 + 'px';
-        mainMap.width = screen.width + Game.destinationWidth;
+        mainMap.width = screen.width + Game.destinationWidth;//Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
         mainMap.height = screen.height + quarterHeight * 2;
         mainMap.style.top = -quarterHeight + 'px';
         mainMap.style.left = -Game.destinationWidth / 2 + 'px';
@@ -620,15 +630,15 @@ function mapFit(bool) {
     drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
 
     //Messy stuff...
-    if(Game.retY - Game.yLimit/2 < 0){
-        Game.retY = Math.ceil(Game.retY - (Game.retY - Game.yLimit/2));
-    } else if (Game.retY + Game.yLimit/2 > Game.radarRad*2){
-        Game.retY = Math.floor(Game.retY - Game.yLimit/2);
+    if(Game.retY - Game.yLimit / 2 < 0) {
+        Game.retY = Math.ceil(Game.retY - (Game.retY - Game.yLimit / 2));
+    } else if(Game.retY + Game.yLimit / 2 > Game.radarRad * 2) {
+        Game.retY = Math.floor(Game.retY - Game.yLimit / 2);
     }
-    if(Game.retX - Game.xLimit/2 < 0){
-        Game.retX = Math.ceil(Game.retX - (Game.retX - Game.xLimit/2));
-    } else if (Game.retX + Game.xLimit/2 > Game.radarRad*2){
-        Game.retX = Math.floor(Game.retX - Game.xLimit/2);
+    if(Game.retX - Game.xLimit / 2 < 0) {
+        Game.retX = Math.ceil(Game.retX - (Game.retX - Game.xLimit / 2));
+    } else if(Game.retX + Game.xLimit / 2 > Game.radarRad * 2) {
+        Game.retX = Math.floor(Game.retX - Game.xLimit / 2);
     }
     if(Game.yLimit % 2 === 0) {
         Game.yLimit += 1;
@@ -673,12 +683,12 @@ function checkBuildings() {
                 elem.classList.add('active');
                 document.getElementById(Game.buildings[thing][0]).onclick = construct;
             }
-        }else{
+        } else {
             elem.style.display = 'none';
             console.log(elem.style.display);
             if(Game.clickedOn === idString) {
-                    Game.clickedOn = 'none';
-                    document.body.style.cursor = "url('images/pointers/pointer.png'), default";
+                Game.clickedOn = 'none';
+                document.body.style.cursor = "url('images/pointers/pointer.png'), default";
             }
         }
     }
@@ -862,8 +872,8 @@ function resize(e) {
 
 function mainLoop() {
     var N = 22; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
-    Game.augment ? Game.animate += 1 : Game.animate -=1;
-    if(Game.animate ===0 || Game.animate ===N){
+    Game.augment ? Game.animate += 1 : Game.animate -= 1;
+    if(Game.animate === 0 || Game.animate === N) {
         Game.augment ? Game.augment = false : Game.augment = true;
     }
 }
@@ -1262,7 +1272,7 @@ function drawZoomMap() {
     mainLoop();
     webkitRequestAnimationFrame(drawZoomMap);
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-    if(Game.highlight){
+    if(Game.highlight) {
         drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
     }
     if(Game.retY % 2 !== 0) {
@@ -1279,7 +1289,10 @@ function drawZoomMap() {
         while(x <= Game.xLimit) {
             var tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind;
             if(tileKind < 100) {
-                drawTile(tileKind, x, y, Game.tile, Game.mPanel);
+                drawTile(tileKind, x, y, Game.terrain, Game.mPanel);
+            } else if(tileKind >= 200){
+                console.log(tileKind - 200);
+                drawTile(tileKind - 200, x, y, Game.constructions, Game.mPanel);
             } else {
                 drawTile(tileKind - 100, x, y, Game.drones, Game.mPanel, true);
             }
@@ -1334,43 +1347,45 @@ function contextContent() {
     var resources = false;
     var htmlString = '';
     var resourceArray = [ //[ORENAME,PRODUCTNAME]
-      ["Bauxite", "Aluminium (Al)"],
-      ["Corundum", "Aluminium (Al)"],
-      ["Kryolite", "Aluminium (Al)"],
-      ["Haematite", "Iron (Fe)"],
-      ["Magnetite", "Iron (Fe)"],
-      ["Iron Pyrite", "Iron (Fe)"],
-      ["Siderite", "Iron (Fe)"],
-      ["Copper Pyrite", "Copper (Cu)"],
-      ["Copper Glance", "Copper (Cu)"],
-      ["Malachite", "Copper (Cu)"],
-      ["Zinc Blende", "Zinc (Zn)"],
-      ["Calamine", "Zinc (Zn)"],
-      ["Rock Salt", "Sodium (Na)"],
-      ["Sodium Carbonate", "Sodium (Na)"],
-      ["Karnalite", "Potassium (K)"],
-      ["Salt Petre", "Potassium (K)"],
-      ["Galena", "Lead (Pb)"],
-      ["Anglesite", "Lead (Pb)"],
-      ["Tin Pyrites", "Tin (Sn)"],
-      ["Cassiterite", "Tin (Sn)"],
-      ["Silver Glance", "Silver (Ag)"],
-      ["Calverite", "Gold (Au)"],
-      ["Syvanite", "Gold (Au)"],
-      ["Cinnabar", "Mercury (Hg)"],
-      ["Calomel", "Mercury (Hg)"],
-      ["Dolomite", "Magnesium (Mg)"],
-      ["Karnalite", "Magnesium (Mg)"],
-      ["Lime Stone", "Calcium (Ca)"],
-      ["Dolomite", "Calcium (Ca)"],
-      ["Phosphorite", "Phosphorous (P)"],
-      ["Floreapetite", "Phosphorous (P)"]
+    ["Bauxite", "Aluminium (Al)"],
+        ["Corundum", "Aluminium (Al)"],
+        ["Kryolite", "Aluminium (Al)"],
+        ["Haematite", "Iron (Fe)"],
+        ["Magnetite", "Iron (Fe)"],
+        ["Iron Pyrite", "Iron (Fe)"],
+        ["Siderite", "Iron (Fe)"],
+        ["Copper Pyrite", "Copper (Cu)"],
+        ["Copper Glance", "Copper (Cu)"],
+        ["Malachite", "Copper (Cu)"],
+        ["Zinc Blende", "Zinc (Zn)"],
+        ["Calamine", "Zinc (Zn)"],
+        ["Rock Salt", "Sodium (Na)"],
+        ["Sodium Carbonate", "Sodium (Na)"],
+        ["Karnalite", "Potassium (K)"],
+        ["Salt Petre", "Potassium (K)"],
+        ["Galena", "Lead (Pb)"],
+        ["Anglesite", "Lead (Pb)"],
+        ["Tin Pyrites", "Tin (Sn)"],
+        ["Cassiterite", "Tin (Sn)"],
+        ["Silver Glance", "Silver (Ag)"],
+        ["Calverite", "Gold (Au)"],
+        ["Syvanite", "Gold (Au)"],
+        ["Cinnabar", "Mercury (Hg)"],
+        ["Calomel", "Mercury (Hg)"],
+        ["Dolomite", "Magnesium (Mg)"],
+        ["Karnalite", "Magnesium (Mg)"],
+        ["Lime Stone", "Calcium (Ca)"],
+        ["Dolomite", "Calcium (Ca)"],
+        ["Phosphorite", "Phosphorous (P)"],
+        ["Floreapetite", "Phosphorous (P)"]
     ];
     htmlString += '<span>' + tile.ref + '</span><br>';
     //build time left
-    if(tile.exists &&tile.kind === 100){
+    if(tile.exists && tile.kind === 100) {
         htmlString += '<span>' + 'Build time remaining: ' + (tile.turns + 1) + ' week';
-        if(tile.turns >= 1){ htmlString += 's';}
+        if(tile.turns >= 1) {
+            htmlString += 's';
+        }
         htmlString += '</span><br>';
     }
     htmlString += '<span>' + 'WOW! Coordinates!' + '</span><br>';
@@ -1382,7 +1397,7 @@ function contextContent() {
                 htmlString += '<h3>Resources</h3><ul>';
                 resources = true;
             }
-            htmlString += '<li>' + resourceArray[i][0] + ': '  + tile.resources[i] + 't';
+            htmlString += '<li>' + resourceArray[i][0] + ': ' + tile.resources[i] + 't';
             htmlString += '<ul><li>' + resourceArray[i][1] + '</ul>';
         }
     }
@@ -1413,15 +1428,22 @@ function clicked() {
     var lowerTile = returnLevel(Game.level + 1)[y][x][1];
     switch(Game.clickedOn) {
     case 'lander':
-        tile.kind = 4; //change this to lander tile
+        tile.kind = 8; //change to lander
+        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].kind = 3; //change to command center
+        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].kind = 3; //change to ARP
+        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].kind = 3; //change to Agridome
+        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(210, 70, 2); //change to command center
+        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(203, 70, 2); //change to ARP
+        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(200, 70, 2); //change to Agridome
+        // ...
         Game.buildings[0][1] = false;
         //console.log(Game.buildings[0][0] + '  ' + Game.buildings[0][1]);
-        var buildable = [1,4,8,9,11,15,17,22,25,26,31,33,35];
-        for(var ref in buildable){
+        var buildable = [1, 4, 8, 9, 11, 15, 17, 22, 25, 26, 31, 33, 35];
+        for(var ref in buildable) {
             Game.buildings[buildable[ref]][1] = true;
             console.log(Game.buildings[buildable[ref]][1]);
         }
-        for(var i = 0; i < Game.robotsList.length; i++){
+        for(var i = 0; i < Game.robotsList.length; i++) {
             Game.robotsList[i][3] = true;
         }
         //Game.clickedOn = null;
@@ -1445,19 +1467,19 @@ function clicked() {
         //TODO: add recycle code
         break;
     case 'agri':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(200, 70, 2);
         break;
     case 'agri2':
-        tile.build(7, 90, 3); //TODO: change this to a real connector...
+        tile.build(201, 90, 3);
         break;
     case 'airport':
-        tile.build(7, 60, 3); //TODO: change this to a real connector...
+        tile.build(202, 60, 3);
         break;
     case 'arp':
-        tile.build(14, 80, 2);
+        tile.build(203, 80, 2);
         break;
     case 'barracks':
-        tile.build(7, 60, 3); //TODO: change this to a real connector...
+        tile.build(7, 60, 3);
         break;
     case 'civprot':
         tile.build(7, 70, 2);
@@ -1469,52 +1491,52 @@ function clicked() {
         tile.build(14, 100, 2);
         break;
     case 'commarray':
-        tile.build(20, 60, 1); //TODO: change this to a real connector...
+        tile.build(20, 60, 1);
         break;
     case 'commarray2':
-        tile.build(7, 80, 2); //TODO: change this to a real connector...
+        tile.build(7, 80, 2);
         break;
     case 'connector':
         tile.build(41, 20, 1);
         break;
     case 'dronefab':
-        tile.build(7, 80, 4); //TODO: change this to a real connector...
+        tile.build(7, 80, 4);
         break;
     case 'chernobyl':
-        tile.build(7, 70, 4); //TODO: change this to a real connector...
+        tile.build(7, 70, 4);
         break;
     case 'tokamak':
-        tile.build(7, 90, 5); //TODO: change this to a real connector...
+        tile.build(7, 90, 5);
         break;
     case 'genfab':
-        tile.build(7, 70, 3); //TODO: change this to a real connector...
+        tile.build(7, 70, 3);
         break;
     case 'geotherm':
-        tile.build(7, 70, 4); //TODO: change this to a real connector...
+        tile.build(7, 70, 4);
         break;
     case 'hab':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(7, 70, 2);
         break;
     case 'hab2':
-        tile.build(7, 80, 3); //TODO: change this to a real connector...
+        tile.build(7, 80, 3);
         break;
     case 'hab3':
-        tile.build(7, 90, 4); //TODO: change this to a real connector...
+        tile.build(7, 90, 4);
         break;
     case 'er':
-        tile.build(7, 80, 3); //TODO: change this to a real connector...
+        tile.build(7, 80, 3);
         break;
     case 'nursery':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(7, 70, 2);
         break;
     case 'oreproc':
-        tile.build(7, 80, 2); //TODO: change this to a real connector...
+        tile.build(7, 80, 2);
         break;
     case 'rec':
-        tile.build(7, 60, 3); //TODO: change this to a real connector...
+        tile.build(7, 60, 3);
         break;
     case 'recycler':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(7, 70, 2);
         break;
     case 'clichy':
         tile.build(7, 30, 2);
@@ -1526,28 +1548,28 @@ function clicked() {
         tile.build(7, 60, 4);
         break;
     case 'solar':
-        tile.build(41, 30, 2); //TODO: change this to a real connector...
+        tile.build(41, 30, 2);
         break;
     case 'space':
-        tile.build(7, 80, 5); //TODO: change this to a real connector...
+        tile.build(7, 80, 5);
         break;
     case 'stasis':
-        tile.build(7, 100, 4); //TODO: change this to a real connector...
+        tile.build(7, 100, 4);
         break;
     case 'store':
         tile.build(7, 40, 1);
         break;
     case 'uni':
-        tile.build(7, 70, 2); //TODO: change this to a real connector...
+        tile.build(7, 70, 2);
         break;
     case 'warehouse':
         tile.build(7, 40, 1);
         break;
     case 'windfarm':
-        tile.build(7, 40, 2); //TODO: change this to a real connector...
+        tile.build(7, 40, 2);
         break;
     case 'workshop':
-        tile.build(7, 70, 3); //TODO: change this to a real connector...
+        tile.build(7, 70, 3);
         break;
     default:
         console.log("I don't recognise that building code...");
