@@ -1,6 +1,7 @@
 /*jslint node: true */
 "use strict"; //this will break everything if there's any errors... that's a good thing
 var Game; //Global so I can get at it from other scripts...
+var Lang;
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 
@@ -77,7 +78,7 @@ function Terrain() {
             reCount('dozer');
             this.ref = changeName('Preparing', this.ref);
         } else {
-            notify("You can't prepare this terrain...");
+            notify(Lang.noDoze);
         }
     };
 
@@ -98,7 +99,7 @@ function Terrain() {
             this.digCavern(x, y, lowerTile, Game.level + 1, true, 1000);
             reCount('digger');
         } else {
-            notify("Can't dig here...");
+            notify(Lang.noDig);
         }
     };
 
@@ -142,7 +143,7 @@ function Terrain() {
                 }
             }
         } else {
-            notify("You can't dig a cavern here...");
+            notify(Lang.noCavern);
         }
     };
 
@@ -173,7 +174,7 @@ function Terrain() {
             lowerTile.willBeDiggable = true;
             lowerTile.kind = 102;
         } else {
-            notify("You can't mine here...");
+            notify(Lang.noMine);
         }
         //TODO: get the resources from this and adjacent tiles...
     };
@@ -363,6 +364,7 @@ function Param() {
  */
 
 window.onload = function init() {
+    Lang = new Lang();
     eavesdrop();
 };
 
@@ -487,7 +489,7 @@ function eavesdrop() {
     };
     radarMap.onmouseover = function() {
         Game.highlight = false;
-    }
+    };
     radarMap.onmouseout = function() {
         Game.radarCanvas.onmousemove = null;
     };
@@ -764,9 +766,19 @@ function checkRobots() {
 
 function notify(notif) {
     var notification = document.getElementById('notifications');
+    //var test = new JSON;
+    //test.src = "../strings/strings.jsonp";
+    //var notifString = JSON.parse(warnings);
+    notification.innerHTML = notif;
+    notification.style.width = 700 + 'px';
+
+
+    /*
+    var notification = document.getElementById('notifications');
     notification.innerHTML = '';
     notification.innerHTML = notif;
     notification.style.width = 700 + 'px';
+    */
     setTimeout(
 
     function() {
