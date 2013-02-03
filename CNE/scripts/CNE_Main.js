@@ -160,7 +160,7 @@ function Terrain() {
                 wet = true;
             }
         }
-        if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1]) {
+        if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1] && (!upperTile || upperTile.kind === 6)) {
             Game.robotsList[3][0] += 1;
             this.robotInUse = 2;
             reCount('miner');
@@ -338,7 +338,7 @@ function Param() {
         [0, 5, "dozer", false, 2], //
         [0, 3, "digger", false, 2], //
         [0, 1, "cavernDigger", false, 1], //
-        [0, 1, "miner", false, 2], //
+        [0, 3, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
     //Map generation vars
@@ -1331,11 +1331,11 @@ function drawLoc() {
     Game.radarLoc.closePath();
 }
 
-function rightClicked() {
+function rightClicked(content) {
     //TODO : Make context menu appear on the correct side relative to mouse position near screen edges
     var popFrame = document.getElementById('contextMenuWrapper');
     var pop = document.getElementById('contextMenu');
-    pop.innerHTML = contextContent();
+    pop.innerHTML = contextContent(content);
     popFrame.style.top = event.clientY - 25 + 'px';
     popFrame.style.left = event.clientX - 10 + 'px';
     popFrame.style.display = 'inline-block';
@@ -1352,7 +1352,7 @@ function rightClicked() {
     }, false);
 }
 
-function contextContent() {
+function contextContent(content) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     var tile = returnLevel(Game.level)[y][x][1];
@@ -1400,8 +1400,7 @@ function contextContent() {
         }
         htmlString += '</span><br>';
     }
-    htmlString += '<span>' + 'WOW! Coordinates!' + '</span><br>';
-    htmlString += '<br><span>We can add all sorts of stuff here, whatever HTML we want! :-D I could go on for ages just to see what happens!</span><br>';
+    htmlString += content;
     //resources?
     for(var i = 0; i < tile.resources.length; i++) {
         if(tile.resources[i] > 0) {
@@ -1431,16 +1430,22 @@ function changeName(string, orig) {
  * Performs the appropriate action for the tile that is clicked upon
  */
 
-function clicked() {
+function clicked(direction) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     //var kind;
     console.log('x: ' + x + '  y: ' + y);
     var tile = returnLevel(Game.level)[y][x][1];
-    var lowerTile = returnLevel(Game.level + 1)[y][x][1];
+    var lowerTile, upperTile;
+    if(Game.level < 5){
+        lowerTile = returnLevel(Game.level + 1)[y][x][1];
+    }
+    if(Game.level > 0){
+        upperTile = returnLevel(Game.level - 1)[y][x][1];
+    }
     switch(Game.clickedOn) {
     case 'lander':
-        tile.kind = 8; //change to lander
+        tile.kind = 8; //change to lander, check for water etc.
         Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].kind = 3; //change to command center
         Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].kind = 3; //change to ARP
         Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].kind = 3; //change to Agridome
@@ -1472,7 +1477,10 @@ function clicked() {
         tile.digCavern(x, y, tile, Game.level, false, tile.kind - 5);
         break;
     case 'miner':
-        tile.mine(x, y, lowerTile);
+        rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmMine + "</span><br>");
+        if(direction){
+            tile.mine(x, y, lowerTile);
+        }
         break;
     case 'recycler':
         tile.recycle();
