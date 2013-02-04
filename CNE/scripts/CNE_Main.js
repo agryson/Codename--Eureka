@@ -14,11 +14,11 @@ function Terrain() {
     this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
     this.altitude; //altitude
     this.UG;
-    this.resources; //an array that holds the different metal and resource kinds
     this.turns; //remembers how many turns are left to become a tile of the desired kind
     this.diggable;
     */
     this.resources = [];
+    this.mining = false;
     var wip = false; //Work in Progress?
     var prepared = false;
     //this.ref;
@@ -41,8 +41,9 @@ function Terrain() {
             this.turns -= 1;
         } else if(this.turns === 0) {
             if(this.robotInUse >= 0) {
+                console.log(this.ref);
                 Game.robotsList[this.robotInUse][0] -= 1;
-                this.robotInUse = null;
+                this.robotInUse = -1;
             }
             this.turns = false;
             this.wip = false;
@@ -52,7 +53,8 @@ function Terrain() {
                 this.build(6, 50, 2); //obviously building an airshaft here...
                 break;
             case 1100:
-                this.build(6, 80, 2); //obviously building a mine...
+                this.build(206, 80, 0); //obviously building a mine...
+                this.mining = true;
                 break;
             case 3:
                 this.kind = this.willBe;
@@ -63,6 +65,17 @@ function Terrain() {
                 this.ref = changeName(Game.buildings[this.kind-199][3], this.ref);
             }
             this.diggable = this.willBeDiggable;
+        }
+        if(this.mining){
+            var stillMining = false;
+            for(var ore in this.resources){
+                if(this.resources[ore] && this.resources[ore] > 0){
+                    stillMining = true;
+                    this.resources[ore] -= 1;
+                    Game.resources[ore] ? Game.resources[ore] += 1 : Game.resources[ore] = 1;
+                }
+            }
+            if(!stillMining){this.mining = false;}
         }
         if(this.exists) {
             this.age += 1;
@@ -170,7 +183,7 @@ function Terrain() {
         }
         if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             Game.robotsList[3][0] += 1;
-            this.robotInUse = 2;
+            this.robotInUse = 3;
             reCount('miner');
             this.turns = eta(5, this.kind);
             this.kind = 102;
@@ -231,6 +244,7 @@ function Terrain() {
             this.turns = turns;
             this.exists = true;
             this.age = 0;
+            if(turns === 0){this.nextTurn();}
         }
     };
 
@@ -257,9 +271,6 @@ function eta(baseTurns, kind) {
 /**
  * The main game object
  */
-
-function getName(ref){
-}
 
 function Param() {
     //Radar related vars...
@@ -356,6 +367,9 @@ function Param() {
         [0, 3, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
+
+    this.resources = [];
+
     //Map generation vars
     this.seeder = '';
     /*
