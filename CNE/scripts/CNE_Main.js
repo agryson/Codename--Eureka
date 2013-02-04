@@ -18,7 +18,7 @@ function Terrain() {
     this.turns; //remembers how many turns are left to become a tile of the desired kind
     this.diggable;
     */
-    this.resources = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.resources = [];
     var wip = false; //Work in Progress?
     var prepared = false;
     //this.ref;
@@ -76,7 +76,7 @@ function Terrain() {
             this.robotInUse = 0;
             Game.robotsList[0][0] += 1;
             reCount('dozer');
-            this.ref = changeName('Preparing', this.ref);
+            this.ref = changeName(Lang.preparing, this.ref);
         } else {
             notify(Lang.noDoze);
         }
@@ -192,7 +192,7 @@ function Terrain() {
             this.robotInUse = 3;
             reCount('recycler');
         } else {
-            notify("You can't recycle this...");
+            notify(Lang.noRecycle);
         }
         //TODO: get the resources from the recycled building if I can...
     };
@@ -1303,7 +1303,6 @@ function drawZoomMap() {
             if(tileKind < 100) {
                 drawTile(tileKind, x, y, Game.terrain, Game.mPanel);
             } else if(tileKind >= 200){
-                console.log(tileKind - 200);
                 drawTile(tileKind - 200, x, y, Game.constructions, Game.mPanel);
             } else {
                 drawTile(tileKind - 100, x, y, Game.drones, Game.mPanel, true);
@@ -1359,6 +1358,7 @@ function contextContent() {
     var resources = false;
     var htmlString = '';
     var resourceArray = [ //[ORENAME,PRODUCTNAME]
+    //Will need to look into this for internationalisation
     ["Bauxite", "Aluminium (Al)"],
         ["Corundum", "Aluminium (Al)"],
         ["Kryolite", "Aluminium (Al)"],
@@ -1394,19 +1394,19 @@ function contextContent() {
     htmlString += '<span>' + tile.ref + '</span><br>';
     //build time left
     if(tile.exists && tile.kind === 100) {
-        htmlString += '<span>' + 'Build time remaining: ' + (tile.turns + 1) + ' week';
+        htmlString += '<span>' + Lang.buildTime + (tile.turns + 1) + Lang.week;
+
+        //This next part is language specific, should have some means of checking...
         if(tile.turns >= 1) {
             htmlString += 's';
         }
         htmlString += '</span><br>';
     }
-    htmlString += '<span>' + 'WOW! Coordinates!' + '</span><br>';
-    htmlString += '<br><span>We can add all sorts of stuff here, whatever HTML we want! :-D I could go on for ages just to see what happens!</span><br>';
     //resources?
     for(var i = 0; i < tile.resources.length; i++) {
         if(tile.resources[i] > 0) {
             if(!resources) {
-                htmlString += '<h3>Resources</h3><ul>';
+                htmlString += '<h3>' + Lang.resources + '</h3><ul>';
                 resources = true;
             }
             htmlString += '<li>' + resourceArray[i][0] + ': ' + tile.resources[i] + 't';
