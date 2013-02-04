@@ -94,6 +94,7 @@ function Terrain() {
             this.willBe = 1000; //TODO: fix to be a real airlift...
             this.turns = eta(2, this.kind);
             this.kind = 101;
+            changeName(Lang.digging, this.ref);
             Game.robotsList[1][0] += 1;
             this.robotInUse = 1;
             this.digCavern(x, y, lowerTile, Game.level + 1, true, 1000);
@@ -132,12 +133,14 @@ function Terrain() {
             tile.wip = true;
             tile.turns = eta(2, this.kind);
             tile.kind = 101;
+            changeName(Lang.diggingCavern, this.ref);
             for(var j = 0; j < 6; j++) {
                 adj = returnLevel(level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
                 if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
                     adj.kind = 8;
+                    changeName(Lang.diggingCavern, this.ref);
                     adj.wip = true;
                     adj.willBeDiggable = true;
                 }
@@ -166,6 +169,7 @@ function Terrain() {
             reCount('miner');
             this.turns = eta(5, this.kind);
             this.kind = 102;
+            changeName(Lang.mining, this.ref);
             this.wip = true;
             this.willBe = 1100;
             lowerTile.turns = eta(5, lowerTile.kind);
@@ -186,6 +190,7 @@ function Terrain() {
         if(!wip && this.kind !== 4 && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             this.turns = eta(3, this.kind);
             this.kind = 103;
+            changeName(Lang.recycling, this.ref);
             this.wip = true;
             this.willBe = 3;
             Game.robotsList[3][0] += 1;
@@ -214,6 +219,9 @@ function Terrain() {
                 this.willBe = building;
             }*/
             this.willBe=building;
+            var buildString = Lang.building + Game.buildings[building-199][3];
+            console.log(buildString);
+            this.ref = changeName(buildString, this.ref);
             this.wip = true;
             this.health = health; //health of building
             this.turns = turns;
@@ -245,6 +253,9 @@ function eta(baseTurns, kind) {
 /**
  * The main game object
  */
+
+function getName(ref){
+}
 
 function Param() {
     //Radar related vars...
@@ -292,42 +303,42 @@ function Param() {
      * @type {Array}
      */
     this.buildings = [
-        ["lander", true, 0],
-        ["agri", false, 0], //
-        ["agri2", false, 0],
-        ["airport", false, 0],
-        ["arp", false, 2], //
-        ["barracks", false, 1],
-        ["civprot", false, 2],
-        ["civprot2", false, 2],
-        ["command", false, 2], //
-        ["commarray", false, 0], //
-        ["commarray2", false, 0],
-        ["connector", false, 2], //
-        ["dronefab", false, 0],
-        ["chernobyl", false, 0],
-        ["tokamak", false, 0],
-        ["genfab", false, 0], //
-        ["geotherm", false, 1],
-        ["hab", false, 1], //
-        ["hab2", false, 1],
-        ["hab3", false, 1],
-        ["er", false, 1],
-        ["nursery", false, 1],
-        ["oreproc", false, 0], //
-        ["rec", false, 1],
-        ["recycler", false, 0],
-        ["clichy", false, 2], //
-        ["research", false, 2], //
-        ["research2", false, 2],
-        ["solar", false, 0],
-        ["space", false, 0],
-        ["stasis", false, 1],
-        ["store", false, 2], //
-        ["uni", false, 1],
-        ["warehouse", false, 2], //
-        ["windfarm", false, 0],
-        ["workshop", false, 1] //
+        ["lander", true, 0, Lang.lander],
+        ["agri", false, 0, Lang.agri], //
+        ["agri2", false, 0, Lang.agri2],
+        ["airport", false, 0, Lang.airport],
+        ["arp", false, 2, Lang.arp], //
+        ["barracks", false, 1, Lang.barracks],
+        ["civprot", false, 2, Lang.civprot],
+        ["civprot2", false, 2, Lang.civprot2],
+        ["command", false, 2, Lang.command], //
+        ["commarray", false, 0, Lang.commarray], //
+        ["commarray2", false, 0, Lang.commarray2],
+        ["connector", false, 2, Lang.connector], //
+        ["dronefab", false, 0, Lang.dronefab],
+        ["chernobyl", false, 0, Lang.chernobyl],
+        ["tokamak", false, 0, Lang.tokamak],
+        ["genfab", false, 0, Lang.genfab], //
+        ["geotherm", false, 1, Lang.geotherm],
+        ["hab", false, 1, Lang.hab], //
+        ["hab2", false, 1, Lang.hab2],
+        ["hab3", false, 1, Lang.hab3],
+        ["er", false, 1, Lang.er],
+        ["nursery", false, 1, Lang.nursery],
+        ["oreproc", false, 0, Lang.oreproc], //
+        ["rec", false, 1, Lang.rec],
+        ["recycler", false, 0, Lang.recycler],
+        ["clichy", false, 2, Lang.clichy], //
+        ["research", false, 2, Lang.research], //
+        ["research2", false, 2, Lang.research2],
+        ["solar", false, 0, Lang.solar],
+        ["space", false, 0, Lang.space],
+        ["stasis", false, 1, Lang.stasis],
+        ["store", false, 2, Lang.store], //
+        ["uni", false, 1, Lang.uni],
+        ["warehouse", false, 2, Lang.warehouse], //
+        ["windfarm", false, 0, Lang.windfarm],
+        ["workshop", false, 1, Lang.workshop] //
         ];
     /**
      * List of robots
@@ -1404,7 +1415,7 @@ function contextContent(content, option) {
         }
         htmlString += '</span><br>';
     }
-    htmlString += content;
+    if(content){htmlString += content;}
     //resources?
     for(var i = 0; i < tile.resources.length; i++) {
         if(tile.resources[i] > 0 && !option) {
@@ -1462,7 +1473,6 @@ function clicked(direction) {
         var buildable = [1, 4, 8, 9, 11, 15, 17, 22, 25, 26, 31, 33, 35];
         for(var ref in buildable) {
             Game.buildings[buildable[ref]][1] = true;
-            console.log(Game.buildings[buildable[ref]][1]);
         }
         for(var i = 0; i < Game.robotsList.length; i++) {
             Game.robotsList[i][3] = true;
@@ -1474,27 +1484,42 @@ function clicked(direction) {
         if(!direction){
             rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDoze + "</span><br>", true);
         } else {
-            rightClicked(Lang.preaparing, true);
+            rightClicked(Lang.preparing, true);
             tile.prepare();
         }
         break;
     case 'digger':
         //This let's me dig down to create airshafts
-        tile.digDown(x, y, lowerTile);
+        if(!direction){
+            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDig + "</span><br>", true);
+        } else {
+            rightClicked(Lang.digging, true);
+            tile.digDown(x, y, lowerTile);
+        }
         break;
     case 'cavernDigger':
-        tile.digCavern(x, y, tile, Game.level, false, tile.kind - 5);
+        if(!direction){
+            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDigCavern + "</span><br>", true);
+        } else {
+            rightClicked(Lang.diggingCavern, true);
+            tile.digCavern(x, y, tile, Game.level, false, tile.kind - 5);
+        }
         break;
     case 'miner':
         if(!direction){
             rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmMine + "</span><br>", true);
         } else {
-            rightClicked("", true);
+            rightClicked(Lang.mining, true);
             tile.mine(x, y, lowerTile);
         }
         break;
     case 'recycler':
-        tile.recycle();
+        if(!direction){
+            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmRecycle + "</span><br>", true);
+        } else {
+            rightClicked(Lang.recycling, true);
+            tile.recycle();
+        }
         //TODO: add recycle code
         break;
     case 'agri':
