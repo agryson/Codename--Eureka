@@ -36,7 +36,7 @@ function Lang(){
 	this.agri = "Agri-Dome";
 	this.agri2 = "Advanced Agri-Dome";
 	this.airport = "Airport";
-	this.arp = "Air Recycling & Processing (ARP)";
+	this.arp = "ARP";
 	this.barracks = "Barracks";
 	this.civprot = "Civil Protection";
 	this.civprot2 = "Advanced Civil Protection";

@@ -42,7 +42,7 @@ function Terrain() {
         } else if(this.turns === 0) {
             if(this.robotInUse >= 0) {
                 Game.robotsList[this.robotInUse][0] -= 1;
-                this.robotInUse = -1;
+                this.robotInUse = null;
             }
             this.turns = false;
             this.wip = false;
