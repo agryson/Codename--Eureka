@@ -54,8 +54,13 @@ function Terrain() {
             case 1100:
                 this.build(6, 80, 2); //obviously building a mine...
                 break;
+            case 3:
+                this.kind = this.willBe;
+                this.ref = changeName(Lang.prepared, this.ref);
+                break;
             default:
                 this.kind = this.willBe;
+                this.ref = changeName(Game.buildings[this.kind-199][3], this.ref);
             }
             this.diggable = this.willBeDiggable;
         }
@@ -94,7 +99,7 @@ function Terrain() {
             this.willBe = 1000; //TODO: fix to be a real airlift...
             this.turns = eta(2, this.kind);
             this.kind = 101;
-            changeName(Lang.digging, this.ref);
+            this.ref = changeName(Lang.digging, this.ref);
             Game.robotsList[1][0] += 1;
             this.robotInUse = 1;
             this.digCavern(x, y, lowerTile, Game.level + 1, true, 1000);
@@ -133,14 +138,14 @@ function Terrain() {
             tile.wip = true;
             tile.turns = eta(2, this.kind);
             tile.kind = 101;
-            changeName(Lang.diggingCavern, this.ref);
+            tile.ref = changeName(Lang.diggingCavern, tile.ref);
             for(var j = 0; j < 6; j++) {
                 adj = returnLevel(level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
                 if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
                     adj.turns = eta(2, adj.kind);
                     adj.willBe = adj.kind - 5;
                     adj.kind = 8;
-                    changeName(Lang.diggingCavern, this.ref);
+                    adj.ref = changeName(Lang.diggingCavern, adj.ref);
                     adj.wip = true;
                     adj.willBeDiggable = true;
                 }
@@ -169,12 +174,13 @@ function Terrain() {
             reCount('miner');
             this.turns = eta(5, this.kind);
             this.kind = 102;
-            changeName(Lang.mining, this.ref);
+            this.ref = changeName(Lang.mining, this.ref);
             this.wip = true;
             this.willBe = 1100;
             lowerTile.turns = eta(5, lowerTile.kind);
             lowerTile.wip = true;
             lowerTile.willBe = 1100;
+            lowerTile.ref = changeName(Lang.mining, lowerTile.ref);
             lowerTile.willBeDiggable = true;
             lowerTile.kind = 102;
         } else {
@@ -190,7 +196,7 @@ function Terrain() {
         if(!wip && this.kind !== 4 && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             this.turns = eta(3, this.kind);
             this.kind = 103;
-            changeName(Lang.recycling, this.ref);
+            this.ref = changeName(Lang.recycling, this.ref);
             this.wip = true;
             this.willBe = 3;
             Game.robotsList[3][0] += 1;
@@ -219,9 +225,7 @@ function Terrain() {
                 this.willBe = building;
             }*/
             this.willBe=building;
-            var buildString = Lang.building + Game.buildings[building-199][3];
-            console.log(buildString);
-            this.ref = changeName(buildString, this.ref);
+            this.ref = changeName(Lang.building + Game.buildings[building-199][3], this.ref);
             this.wip = true;
             this.health = health; //health of building
             this.turns = turns;

@@ -171,6 +171,7 @@ function slide(x, y) {
   while(x > 0 && x < Game.radarRad * 2 && y < Game.radarRad * 2 && y > 0 && Game.map[y][x][1].kind !== 4) {
     Game.map[y][x][1].kind = 4;
     Game.map[y][x][1].diggable = false;
+    Game.map[y][x][1].ref = changeName(Lang.water, Game.map[y][x][1].ref);
     var lowest = [adjacent(x, y, randIndex)[1], adjacent(x, y, randIndex)[0]]; //x, y
     for(var j = 0; j < 6; j++) {
       if(x > 1 && x < (Game.radarRad * 2) - 1 && y < (Game.radarRad * 2) - 1 && y > 1 && Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].altitude < Game.map[lowest[1]][lowest[0]][1].altitude && Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind !== 4) {
@@ -202,16 +203,16 @@ function setType(x, y, level) {
 
   if(altitude >= high) {
     map.kind = 2 + increment;
-    map.ref = map.ref.insert(0, 'Mountainous ');
+    map.ref = map.ref.insert(0, Lang.mountaineous + ' ');
   } else if(altitude >= med) {
     map.kind = 1 + increment;
-    map.ref = map.ref.insert(0, 'Rough ');
+    map.ref = map.ref.insert(0, Lang.rough + ' ');
   } else if(altitude >= low) {
     map.kind = 0 + increment;
-    map.ref = map.ref.insert(0, 'Smooth ');
+    map.ref = map.ref.insert(0, Lang.smooth + ' ');
   } else {
     map.kind = 4;
-    map.ref = map.ref.insert(0, 'Water ');
+    map.ref = map.ref.insert(0, Lang.water + ' ');
   }
   level === 0 && map.kind !== 4 ? map.diggable = true : map.diggable = false;
   level === 0 ? map.UG = false : map.UG = true;

@@ -24,6 +24,13 @@ function Lang(){
 	this.confirmDigCavern = "Are you sure you want to dig a cavern here?";
 	this.confirmRecycle = "Are you sure you want to recycle this construction?";
 
+	//Terrain types
+	this.smooth = "Smooth";
+	this.rough = "Rough";
+	this.mountaineous = "Mountaineous";
+	this.prepared = "Prepared";
+	this.water = "Water";
+
 	//Buildings
 	this.lander = "Lander";
 	this.agri = "Agri-Dome";
