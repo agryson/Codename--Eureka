@@ -160,7 +160,7 @@ function Terrain() {
                 wet = true;
             }
         }
-        if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1] && (!upperTile || upperTile.kind === 6)) {
+        if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             Game.robotsList[3][0] += 1;
             this.robotInUse = 2;
             reCount('miner');
@@ -1331,7 +1331,7 @@ function drawLoc() {
     Game.radarLoc.closePath();
 }
 
-function rightClicked(content) {
+function rightClicked(content, option) {
     //TODO : Make context menu appear on the correct side relative to mouse position near screen edges
     var popFrame = document.getElementById('contextMenuWrapper');
     var pop = document.getElementById('contextMenu');
@@ -1352,7 +1352,7 @@ function rightClicked(content) {
     }, false);
 }
 
-function contextContent(content) {
+function contextContent(content, option) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     var tile = returnLevel(Game.level)[y][x][1];
@@ -1391,9 +1391,11 @@ function contextContent(content) {
         ["Phosphorite", "Phosphorous (P)"],
         ["Floreapetite", "Phosphorous (P)"]
     ];
-    htmlString += '<span>' + tile.ref + '</span><br>';
+    if(!option){
+        htmlString += '<span>' + tile.ref + '</span><br>';
+    }
     //build time left
-    if(tile.exists && tile.kind === 100) {
+    if(tile.exists && tile.kind === 100 && !option) {
         htmlString += '<span>' + 'Build time remaining: ' + (tile.turns + 1) + ' week';
         if(tile.turns >= 1) {
             htmlString += 's';
@@ -1403,7 +1405,7 @@ function contextContent(content) {
     htmlString += content;
     //resources?
     for(var i = 0; i < tile.resources.length; i++) {
-        if(tile.resources[i] > 0) {
+        if(tile.resources[i] > 0 && !option) {
             if(!resources) {
                 htmlString += '<h3>Resources</h3><ul>';
                 resources = true;
@@ -1467,7 +1469,12 @@ function clicked(direction) {
         checkBuildings();
         break;
     case 'dozer':
-        tile.prepare();
+        if(!direction){
+            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDoze + "</span><br>", true);
+        } else {
+            rightClicked(Lang.preaparing, true);
+            tile.prepare();
+        }
         break;
     case 'digger':
         //This let's me dig down to create airshafts
@@ -1477,8 +1484,10 @@ function clicked(direction) {
         tile.digCavern(x, y, tile, Game.level, false, tile.kind - 5);
         break;
     case 'miner':
-        rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmMine + "</span><br>");
-        if(direction){
+        if(!direction){
+            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmMine + "</span><br>", true);
+        } else {
+            rightClicked("", true);
             tile.mine(x, y, lowerTile);
         }
         break;
