@@ -62,20 +62,22 @@ function Terrain() {
                 break;
             default:
                 this.kind = this.willBe;
-                this.ref = changeName(Game.buildings[this.kind-199][3], this.ref);
+                this.ref = changeName(Game.buildings[this.kind - 199][3], this.ref);
             }
             this.diggable = this.willBeDiggable;
         }
-        if(this.mining){
+        if(this.mining) {
             var stillMining = false;
-            for(var ore in this.resources){
-                if(this.resources[ore] && this.resources[ore] > 0){
+            for(var ore in this.resources) {
+                if(this.resources[ore] && this.resources[ore] > 0) {
                     stillMining = true;
                     this.resources[ore] -= 1;
                     Game.resources[ore] ? Game.resources[ore] += 1 : Game.resources[ore] = 1;
                 }
             }
-            if(!stillMining){this.mining = false;}
+            if(!stillMining) {
+                this.mining = false;
+            }
         }
         if(this.exists) {
             this.age += 1;
@@ -237,14 +239,16 @@ function Terrain() {
             } else {
                 this.willBe = building;
             }*/
-            this.willBe=building;
-            this.ref = changeName(Lang.building + Game.buildings[building-199][3], this.ref);
+            this.willBe = building;
+            this.ref = changeName(Lang.building + Game.buildings[building - 199][3], this.ref);
             this.wip = true;
             this.health = health; //health of building
             this.turns = turns;
             this.exists = true;
             this.age = 0;
-            if(turns === 0){this.nextTurn();}
+            if(turns === 0) {
+                this.nextTurn();
+            }
         }
     };
 
@@ -459,8 +463,8 @@ function eavesdrop() {
                 setTimeout(function() {
                     blocked = false;
                 }, 500);
-                var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 4;
-                var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x') + 1;
+                var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 1;
+                var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
                 Game.retY = yTemp;
                 Game.retX = xTemp;
             };
@@ -637,7 +641,6 @@ function zoom(zoomLevel) {
 
 //TODO: Clean this up! :-S
 
-
 function mapFit(bool) {
     console.log('I\'m refitting!');
     var quarterHeight = Math.round(Game.destinationHeight * 0.25);
@@ -646,17 +649,17 @@ function mapFit(bool) {
         var mainMap = document.getElementById('mainPanel');
 
         //Nasty stuff... hence we use the if to touch this as little as possible
-        overlay.width = screen.width + Game.destinationWidth;
-        overlay.height = screen.height + quarterHeight * 2;
+        overlay.width = window.innerWidth + Game.destinationWidth;
+        overlay.height = window.innerHeight + quarterHeight * 2;
         overlay.style.top = -quarterHeight + 'px';
         overlay.style.left = -Game.destinationWidth / 2 + 'px';
-        mainMap.width = screen.width + Game.destinationWidth;//Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
-        mainMap.height = screen.height + quarterHeight * 2;
+        mainMap.width = window.innerWidth + Game.destinationWidth; //Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
+        mainMap.height = window.innerHeight + quarterHeight * 2;
         mainMap.style.top = -quarterHeight + 'px';
         mainMap.style.left = -Game.destinationWidth / 2 + 'px';
     }
-    Game.xLimit = Math.floor(Game.mPanCanvas.width / Game.destinationWidth) + 1;
-    Game.yLimit = Math.floor(Game.mPanCanvas.height / (quarterHeight * 3)) + 1;
+    Game.xLimit = Math.floor(Game.mPanCanvas.width / Game.destinationWidth);
+    Game.yLimit = Math.floor(Game.mPanCanvas.height / (quarterHeight * 3);
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
 
@@ -1331,7 +1334,7 @@ function drawZoomMap() {
             var tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind;
             if(tileKind < 100) {
                 drawTile(tileKind, x, y, Game.terrain, Game.mPanel);
-            } else if(tileKind >= 200){
+            } else if(tileKind >= 200) {
                 drawTile(tileKind - 200, x, y, Game.constructions, Game.mPanel);
             } else {
                 drawTile(tileKind - 100, x, y, Game.drones, Game.mPanel, true);
@@ -1420,7 +1423,7 @@ function contextContent(content, option) {
         ["Phosphorite", "Phosphorous (P)"],
         ["Floreapetite", "Phosphorous (P)"]
     ];
-    if(!option){
+    if(!option) {
         htmlString += '<span>' + tile.ref + '</span><br>';
     }
     //build time left
@@ -1433,7 +1436,9 @@ function contextContent(content, option) {
         }
         htmlString += '</span><br>';
     }
-    if(content){htmlString += content;}
+    if(content) {
+        htmlString += content;
+    }
     //resources?
     for(var i = 0; i < tile.resources.length; i++) {
         if(tile.resources[i] > 0 && !option) {
@@ -1470,10 +1475,10 @@ function clicked(direction) {
     console.log('x: ' + x + '  y: ' + y);
     var tile = returnLevel(Game.level)[y][x][1];
     var lowerTile, upperTile;
-    if(Game.level < 5){
+    if(Game.level < 5) {
         lowerTile = returnLevel(Game.level + 1)[y][x][1];
     }
-    if(Game.level > 0){
+    if(Game.level > 0) {
         upperTile = returnLevel(Game.level - 1)[y][x][1];
     }
     switch(Game.clickedOn) {
@@ -1499,7 +1504,7 @@ function clicked(direction) {
         checkBuildings();
         break;
     case 'dozer':
-        if(!direction){
+        if(!direction) {
             rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDoze + "</span><br>", true);
         } else {
             rightClicked(Lang.preparing, true);
@@ -1508,7 +1513,7 @@ function clicked(direction) {
         break;
     case 'digger':
         //This let's me dig down to create airshafts
-        if(!direction){
+        if(!direction) {
             rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDig + "</span><br>", true);
         } else {
             rightClicked(Lang.digging, true);
@@ -1516,7 +1521,7 @@ function clicked(direction) {
         }
         break;
     case 'cavernDigger':
-        if(!direction){
+        if(!direction) {
             rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDigCavern + "</span><br>", true);
         } else {
             rightClicked(Lang.diggingCavern, true);
@@ -1524,7 +1529,7 @@ function clicked(direction) {
         }
         break;
     case 'miner':
-        if(!direction){
+        if(!direction) {
             rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmMine + "</span><br>", true);
         } else {
             rightClicked(Lang.mining, true);
@@ -1532,7 +1537,7 @@ function clicked(direction) {
         }
         break;
     case 'recycler':
-        if(!direction){
+        if(!direction) {
             rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmRecycle + "</span><br>", true);
         } else {
             rightClicked(Lang.recycling, true);
