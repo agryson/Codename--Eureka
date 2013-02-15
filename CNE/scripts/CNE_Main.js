@@ -53,7 +53,7 @@ function Terrain() {
                 this.build(6, 50, 2); //obviously building an airshaft here...
                 break;
             case 1100:
-                this.build(206, 80, 0); //obviously building a mine...
+                this.build(206, 80, 0); //obviously building a mine... TODO: cahnge this to the mine ;)
                 this.mining = true;
                 break;
             case 3:
@@ -192,6 +192,27 @@ function Terrain() {
             this.ref = changeName(Lang.mining, this.ref);
             this.wip = true;
             this.willBe = 1100;
+            for(var j = 0; j < 6; j++) {
+                var adj = returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
+                if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level) && !adj.wip && !adj.exists) {
+                    adj.turns = eta(5, this.kind);
+                    adj.ref = changeName(Lang.mining, adj.ref);
+                    adj.wip = true;
+                    adj.willBeDiggable = true;
+                    adj.willBe = 1100;
+                    console.log("digging underground");
+                }
+                if(Game.level + 1 !== 4){
+                    adj = returnLevel(Game.level + 1)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
+                    if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level + 1) && !adj.diggable && !adj.wip && !adj.exists) {
+                        adj.turns = eta(5, this.kind);
+                        adj.ref = changeName(Lang.mining, adj.ref);
+                        adj.wip = true;
+                        adj.willBeDiggable = true;
+                        adj.willBe = 1100;
+                    }
+                }
+            }
             lowerTile.turns = eta(5, lowerTile.kind);
             lowerTile.wip = true;
             lowerTile.willBe = 1100;
