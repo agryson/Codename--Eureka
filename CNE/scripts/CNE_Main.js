@@ -71,8 +71,9 @@ function Terrain() {
             for(var ore in this.resources) {
                 if(this.resources[ore] && this.resources[ore] > 0) {
                     stillMining = true;
-                    this.resources[ore] -= 1;
-                    Game.resources[ore] ? Game.resources[ore] += 1 : Game.resources[ore] = 1;
+                    var mined = Math.floor(Math.random() + 1);
+                    this.resources[ore] -= mined;
+                    Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = 1;
                 }
             }
             if(!stillMining) {
@@ -183,7 +184,7 @@ function Terrain() {
                 wet = true;
             }
         }
-        if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1]) {
+        if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1] && (this.mineable || lowerTile.mineable)) {
             Game.robotsList[3][0] += 1;
             this.robotInUse = 3;
             reCount('miner');
@@ -194,7 +195,7 @@ function Terrain() {
             this.willBe = 1100;
             for(var j = 0; j < 6; j++) {
                 var adj = returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
-                if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level) && !adj.wip && !adj.exists) {
+                if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level) && !adj.wip && !adj.exists && adj.mineable) {
                     adj.turns = eta(5, this.kind);
                     adj.ref = changeName(Lang.mining, adj.ref);
                     adj.wip = true;
@@ -204,7 +205,7 @@ function Terrain() {
                 }
                 if(Game.level + 1 !== 4){
                     adj = returnLevel(Game.level + 1)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
-                    if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level + 1) && !adj.diggable && !adj.wip && !adj.exists) {
+                    if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level + 1) && !adj.diggable && !adj.wip && !adj.exists && adj.mineable) {
                         adj.turns = eta(5, this.kind);
                         adj.ref = changeName(Lang.mining, adj.ref);
                         adj.wip = true;
@@ -213,12 +214,14 @@ function Terrain() {
                     }
                 }
             }
-            lowerTile.turns = eta(5, lowerTile.kind);
-            lowerTile.wip = true;
-            lowerTile.willBe = 1100;
-            lowerTile.ref = changeName(Lang.mining, lowerTile.ref);
-            lowerTile.willBeDiggable = true;
-            lowerTile.kind = 102;
+            if(lowerTile.mineable){
+                lowerTile.turns = eta(5, lowerTile.kind);
+                lowerTile.wip = true;
+                lowerTile.willBe = 1100;
+                lowerTile.ref = changeName(Lang.mining, lowerTile.ref);
+                lowerTile.willBeDiggable = true;
+                lowerTile.kind = 102;
+            }
         } else {
             notify(Lang.noMine);
         }
@@ -393,7 +396,7 @@ function Param() {
         [0, 1, "recycler", false, 2]
     ];
 
-    this.resources = [];
+    this.ores = [];
 
     //Map generation vars
     this.seeder = '';
