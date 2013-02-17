@@ -50,10 +50,10 @@ function Terrain() {
             this.kind = 3; //terrain is prepared before putting anything else on it...
             switch(this.willBe) {
             case 1000:
-                this.build(6, 50, 2); //obviously building an airshaft here...
+                this.build(204, 50, 2); //obviously building an airshaft here...
                 break;
             case 1100:
-                this.build(221, 80, 0); //obviously building a mine... TODO: cahnge this to the mine ;)
+                this.build(221, 80, 2); //obviously building a mine... TODO: cahnge this to the mine ;)
                 this.mining = true;
                 break;
             case 3:
@@ -489,7 +489,7 @@ function eavesdrop() {
                 setTimeout(function() {
                     blocked = false;
                 }, 500);
-                var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 1;
+                var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 2;
                 var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
                 Game.retY = yTemp;
                 Game.retX = xTemp;
@@ -669,7 +669,7 @@ function zoom(zoomLevel) {
 
 function mapFit(bool) {
     console.log('I\'m refitting!');
-    var quarterHeight = Math.round(Game.destinationHeight * 0.25);
+    var quarterHeight = Math.floor(Game.destinationHeight * 0.25);
     if(bool) {
         var overlay = document.getElementById('mPanOverlay');
         var mainMap = document.getElementById('mainPanel');
@@ -1514,11 +1514,11 @@ function clicked(direction) {
         for (var j = 0; j<6; j++){
             Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind = 3;
             if(j%2 !==0){
-                Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].build(211, 70, 2);
+                Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].build(211, 20, 1);
             }
         }
-        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(210, 70, 2);
-        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(203, 70, 2);
+        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(210, 100, 2);
+        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(203, 80, 2);
         Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(200, 70, 2);
         // ...
         Game.buildings[37][1] = false;
@@ -1587,13 +1587,13 @@ function clicked(direction) {
         tile.build(203, 80, 2);
         break;
     case 'barracks':
-        tile.build(205, 60, 3);
+        tile.build(205, 90, 2);
         break;
     case 'civprot':
         tile.build(206, 70, 2);
         break;
     case 'civprot2':
-        tile.build(207, 90, 2);
+        tile.build(207, 90, 3);
         break;
     case 'command':
         tile.build(210, 100, 2);
