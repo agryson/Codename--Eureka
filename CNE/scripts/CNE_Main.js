@@ -62,7 +62,13 @@ function Terrain() {
                 break;
             default:
                 this.kind = this.willBe;
-                this.ref = changeName(Game.buildings[this.kind - 200][3], this.ref);
+                if(this.kind < 100){
+                    var names = [Lang.smooth, Lang.rough, Lang.mountainous, Lang.prepared];
+                    this.ref = changeName(names[this.kind], this.ref);
+                } else {
+                    this.ref = changeName(Game.buildings[this.kind - 200][3], this.ref);
+                }
+                
             }
             this.diggable = this.willBeDiggable;
         }
