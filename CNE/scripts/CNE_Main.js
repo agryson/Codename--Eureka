@@ -62,7 +62,7 @@ function Terrain() {
                 break;
             default:
                 this.kind = this.willBe;
-                this.ref = changeName(Game.buildings[this.kind - 199][3], this.ref);
+                this.ref = changeName(Game.buildings[this.kind - 200][3], this.ref);
             }
             this.diggable = this.willBeDiggable;
         }
@@ -264,7 +264,7 @@ function Terrain() {
                 this.willBe = building;
             }*/
             this.willBe = building;
-            this.ref = changeName(Lang.building + Game.buildings[building - 199][3], this.ref);
+            this.ref = changeName(Lang.building + Game.buildings[building - 200][3], this.ref);
             this.wip = true;
             this.health = health; //health of building
             this.turns = turns;
@@ -346,17 +346,17 @@ function Param() {
      * @type {Array}
      */
     this.buildings = [
-        ["lander", true, 0, Lang.lander],
         ["agri", false, 0, Lang.agri], //
         ["agri2", false, 0, Lang.agri2],
         ["airport", false, 0, Lang.airport],
         ["arp", false, 2, Lang.arp], //
+        ["airlift", false, 2, Lang.airlift], //
         ["barracks", false, 1, Lang.barracks],
         ["civprot", false, 2, Lang.civprot],
         ["civprot2", false, 2, Lang.civprot2],
-        ["command", false, 2, Lang.command], //
         ["commarray", false, 0, Lang.commarray], //
         ["commarray2", false, 0, Lang.commarray2],
+        ["command", false, 2, Lang.command], //
         ["connector", false, 2, Lang.connector], //
         ["dronefab", false, 0, Lang.dronefab],
         ["chernobyl", false, 0, Lang.chernobyl],
@@ -367,6 +367,7 @@ function Param() {
         ["hab2", false, 1, Lang.hab2],
         ["hab3", false, 1, Lang.hab3],
         ["er", false, 1, Lang.er],
+        ["mine", false, 2, Lang.mine],
         ["nursery", false, 1, Lang.nursery],
         ["oreproc", false, 0, Lang.oreproc], //
         ["rec", false, 1, Lang.rec],
@@ -381,7 +382,8 @@ function Param() {
         ["uni", false, 1, Lang.uni],
         ["warehouse", false, 2, Lang.warehouse], //
         ["windfarm", false, 0, Lang.windfarm],
-        ["workshop", false, 1, Lang.workshop] //
+        ["workshop", false, 1, Lang.workshop], //
+        ["lander", true, 0, Lang.lander]
         ];
     /**
      * List of robots
@@ -1507,17 +1509,20 @@ function clicked(direction) {
     }
     switch(Game.clickedOn) {
     case 'lander':
-        tile.kind = 8; //change to lander, check for water etc.
-        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].kind = 3; //change to command center
-        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].kind = 3; //change to ARP
-        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].kind = 3; //change to Agridome
-        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(210, 70, 2); //change to command center
-        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(203, 70, 2); //change to ARP
-        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(200, 70, 2); //change to Agridome
+        tile.kind = 3;
+        tile.build(237, 70, 0); //change to lander, check for water etc.
+        for (var j = 0; j<6; j++){
+            Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind = 3;
+            if(j%2 !==0){
+                Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].build(211, 70, 2);
+            }
+        }
+        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(210, 70, 2);
+        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(203, 70, 2);
+        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(200, 70, 2);
         // ...
-        Game.buildings[0][1] = false;
-        //console.log(Game.buildings[0][0] + '  ' + Game.buildings[0][1]);
-        var buildable = [1, 4, 8, 9, 11, 15, 17, 22, 25, 26, 31, 33, 35];
+        Game.buildings[37][1] = false;
+        var buildable = [0, 3, 8, 10, 11, 15, 17, 23, 26, 27, 32, 34, 36];
         for(var ref in buildable) {
             Game.buildings[buildable[ref]][1] = true;
         }
@@ -1582,97 +1587,97 @@ function clicked(direction) {
         tile.build(203, 80, 2);
         break;
     case 'barracks':
-        tile.build(7, 60, 3);
+        tile.build(205, 60, 3);
         break;
     case 'civprot':
-        tile.build(7, 70, 2);
+        tile.build(206, 70, 2);
         break;
     case 'civprot2':
-        tile.build(7, 90, 2);
+        tile.build(207, 90, 2);
         break;
     case 'command':
-        tile.build(14, 100, 2);
+        tile.build(210, 100, 2);
         break;
     case 'commarray':
-        tile.build(20, 60, 1);
+        tile.build(208, 60, 1);
         break;
     case 'commarray2':
-        tile.build(7, 80, 2);
+        tile.build(209, 80, 2);
         break;
     case 'connector':
-        tile.build(41, 20, 1);
+        tile.build(211, 20, 1);
         break;
     case 'dronefab':
-        tile.build(7, 80, 4);
+        tile.build(212, 80, 4);
         break;
     case 'chernobyl':
-        tile.build(7, 70, 4);
+        tile.build(213, 70, 4);
         break;
     case 'tokamak':
-        tile.build(7, 90, 5);
+        tile.build(214, 90, 5);
         break;
     case 'genfab':
-        tile.build(7, 70, 3);
+        tile.build(215, 70, 3);
         break;
     case 'geotherm':
-        tile.build(7, 70, 4);
+        tile.build(216, 70, 4);
         break;
     case 'hab':
-        tile.build(7, 70, 2);
+        tile.build(217, 70, 2);
         break;
     case 'hab2':
-        tile.build(7, 80, 3);
+        tile.build(218, 80, 3);
         break;
     case 'hab3':
-        tile.build(7, 90, 4);
+        tile.build(219, 90, 4);
         break;
     case 'er':
-        tile.build(7, 80, 3);
+        tile.build(220, 80, 3);
         break;
     case 'nursery':
-        tile.build(7, 70, 2);
+        tile.build(222, 70, 2);
         break;
     case 'oreproc':
-        tile.build(7, 80, 2);
+        tile.build(223, 80, 2);
         break;
     case 'rec':
-        tile.build(7, 60, 3);
+        tile.build(224, 60, 3);
         break;
     case 'recycler':
-        tile.build(7, 70, 2);
+        tile.build(225, 70, 2);
         break;
     case 'clichy':
-        tile.build(7, 30, 2);
+        tile.build(226, 30, 2);
         break;
     case 'research':
-        tile.build(7, 80, 3);
+        tile.build(227, 80, 3);
         break;
     case 'research2':
-        tile.build(7, 60, 4);
+        tile.build(228, 60, 4);
         break;
     case 'solar':
-        tile.build(41, 30, 2);
+        tile.build(229, 30, 2);
         break;
     case 'space':
-        tile.build(7, 80, 5);
+        tile.build(230, 80, 5);
         break;
     case 'stasis':
-        tile.build(7, 100, 4);
+        tile.build(231, 100, 4);
         break;
     case 'store':
-        tile.build(7, 40, 1);
+        tile.build(232, 40, 1);
         break;
     case 'uni':
-        tile.build(7, 70, 2);
+        tile.build(233, 70, 2);
         break;
     case 'warehouse':
-        tile.build(7, 40, 1);
+        tile.build(234, 40, 1);
         break;
     case 'windfarm':
-        tile.build(7, 40, 2);
+        tile.build(235, 40, 2);
         break;
     case 'workshop':
-        tile.build(7, 70, 3);
+        tile.build(236, 70, 3);
         break;
     default:
         console.log("I don't recognise that building code...");

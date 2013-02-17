@@ -37,6 +37,7 @@ function Lang(){
 	this.agri2 = "Advanced Agri-Dome";
 	this.airport = "Airport";
 	this.arp = "ARP";
+	this.airlift = "Airshaft";
 	this.barracks = "Barracks";
 	this.civprot = "Civil Protection";
 	this.civprot2 = "Advanced Civil Protection";
@@ -53,6 +54,7 @@ function Lang(){
 	this.hab2 = "Advanced Habitat";
 	this.hab3 = "<em>Really</em> Advanced Habitat";
 	this.er = "Hospital";
+	this.mine = "Mine";
 	this.nursery = "Nursery";
 	this.oreproc = "Ore Processor";
 	this.rec = "Recreation Center";
