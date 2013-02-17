@@ -387,7 +387,7 @@ function Param() {
         ["store", false, 2, Lang.store], //
         ["uni", false, 1, Lang.uni],
         ["warehouse", false, 2, Lang.warehouse], //
-        ["windfarm", false, 0, Lang.windfarm],
+        ["windfarm", false, 0, Lang.windfarm], //
         ["workshop", false, 1, Lang.workshop], //
         ["lander", true, 0, Lang.lander]
         ];
@@ -1525,10 +1525,10 @@ function clicked(direction) {
         }
         Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(210, 100, 2);
         Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(203, 80, 2);
-        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(200, 70, 2);
+        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(235, 70, 2);
         // ...
         Game.buildings[37][1] = false;
-        var buildable = [0, 3, 8, 10, 11, 15, 17, 23, 26, 27, 32, 34, 36];
+        var buildable = [0, 3, 8, 10, 11, 15, 17, 23, 26, 27, 32, 34, 35, 36];
         for(var ref in buildable) {
             Game.buildings[buildable[ref]][1] = true;
         }
