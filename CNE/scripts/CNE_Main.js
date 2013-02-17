@@ -60,6 +60,11 @@ function Terrain() {
                 this.kind = this.willBe;
                 this.ref = changeName(Lang.prepared, this.ref);
                 break;
+            case 217:
+                this.kind = this.willBe;
+                this.ref = changeName(Lang.hab, this.ref);
+                Game.housing += 10;
+                break;
             default:
                 this.kind = this.willBe;
                 if(this.kind < 100) {
@@ -423,6 +428,13 @@ function Param() {
     this.radarCanvas = document.getElementById('mapOverlay');
     this.radar = document.getElementById('map').getContext('2d');
     this.radarLoc = document.getElementById('mapOverlay').getContext('2d');
+
+    //Stats
+    this.housing = 0;
+    this.tossPop = 50;
+    this.hipPop = 50;
+    this.artPop = 50;
+    this.sdf = 150;
 }
 
 /**
@@ -647,6 +659,7 @@ function eavesdrop() {
                 }
             }
         }
+        Game.sdf = (Game.artPop + Game.hipPop + Game.tossPop) - Game.housing;
         drawRadar();
         Game.turnNum.innerHTML = "Week: " + Game.turn;
         reCount('all');
