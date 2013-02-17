@@ -5,6 +5,7 @@ function Lang(){
 	this.noDoze = "You can\'t prepare this terrain.";
 	this.noMine = "You can\'t mine here. Ensure a mine is in place.";
 	this.noRecycle = "This can't be recycled.";
+	this.noconnection = "No adjacent connector node.";
 
 	//Actions and references
 	this.preparing = "Preparing";

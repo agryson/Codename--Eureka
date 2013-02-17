@@ -1581,114 +1581,266 @@ function clicked(direction) {
         //TODO: add recycle code
         break;
     case 'agri':
-        tile.build(200, 70, 2);
+        if(checkConnection(y,x)){
+            tile.build(200, 70, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'agri2':
-        tile.build(201, 90, 3);
+        if(checkConnection(y,x)){
+            tile.build(201, 90, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'airport':
-        tile.build(202, 60, 3);
+        if(checkConnection(y,x)){
+            tile.build(202, 60, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'arp':
-        tile.build(203, 80, 2);
+        if(checkConnection(y,x)){
+            tile.build(203, 80, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'barracks':
-        tile.build(205, 90, 2);
+        if(checkConnection(y,x)){
+            tile.build(205, 90, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'civprot':
-        tile.build(206, 70, 2);
+        if(checkConnection(y,x)){
+            tile.build(206, 70, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'civprot2':
-        tile.build(207, 90, 3);
+        if(checkConnection(y,x)){
+            tile.build(207, 90, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'command':
-        tile.build(210, 100, 2);
+        if(checkConnection(y,x)){
+            tile.build(210, 100, 2);
+
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'commarray':
-        tile.build(208, 60, 1);
+        if(checkConnection(y,x)){
+            tile.build(208, 60, 1);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'commarray2':
-        tile.build(209, 80, 2);
+        if(checkConnection(y,x)){
+            tile.build(209, 80, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'connector':
-        tile.build(211, 20, 1);
+        if(checkConnection(y,x)){
+            tile.build(211, 20, 1);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'dronefab':
-        tile.build(212, 80, 4);
+        if(checkConnection(y,x)){
+            tile.build(212, 80, 4);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'chernobyl':
-        tile.build(213, 70, 4);
+        if(checkConnection(y,x)){
+            tile.build(213, 70, 4);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'tokamak':
-        tile.build(214, 90, 5);
+        if(checkConnection(y,x)){
+            tile.build(214, 90, 5);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'genfab':
-        tile.build(215, 70, 3);
+        if(checkConnection(y,x)){
+            tile.build(215, 70, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'geotherm':
-        tile.build(216, 70, 4);
+        if(checkConnection(y,x)){
+            tile.build(216, 70, 4);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'hab':
-        tile.build(217, 70, 2);
+        if(checkConnection(y,x)){
+            tile.build(217, 70, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'hab2':
-        tile.build(218, 80, 3);
+        if(checkConnection(y,x)){
+            tile.build(218, 80, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'hab3':
-        tile.build(219, 90, 4);
+        if(checkConnection(y,x)){
+            tile.build(219, 90, 4);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'er':
-        tile.build(220, 80, 3);
+        if(checkConnection(y,x)){
+            tile.build(220, 80, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'nursery':
-        tile.build(222, 70, 2);
+        if(checkConnection(y,x)){
+            tile.build(222, 70, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'oreproc':
-        tile.build(223, 80, 2);
+        if(checkConnection(y,x)){
+            tile.build(223, 80, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'rec':
-        tile.build(224, 60, 3);
+        if(checkConnection(y,x)){
+            tile.build(224, 60, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'recycler':
-        tile.build(225, 70, 2);
+        if(checkConnection(y,x)){
+            tile.build(225, 70, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'clichy':
-        tile.build(226, 30, 2);
+        if(checkConnection(y,x)){
+            tile.build(226, 30, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'research':
-        tile.build(227, 80, 3);
+        if(checkConnection(y,x)){
+            tile.build(227, 80, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'research2':
-        tile.build(228, 60, 4);
+        if(checkConnection(y,x)){
+            tile.build(228, 60, 4);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'solar':
-        tile.build(229, 30, 2);
+        if(checkConnection(y,x)){
+            tile.build(229, 30, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'space':
-        tile.build(230, 80, 5);
+        if(checkConnection(y,x)){
+            tile.build(230, 80, 5);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'stasis':
-        tile.build(231, 100, 4);
+        if(checkConnection(y,x)){
+            tile.build(231, 100, 4);
+
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'store':
-        tile.build(232, 40, 1);
+        if(checkConnection(y,x)){
+            tile.build(232, 40, 1);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'uni':
-        tile.build(233, 70, 2);
+        if(checkConnection(y,x)){
+            tile.build(233, 70, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'warehouse':
-        tile.build(234, 40, 1);
+        if(checkConnection(y,x)){
+            tile.build(234, 40, 1);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'windfarm':
-        tile.build(235, 40, 2);
+        if(checkConnection(y,x)){
+            tile.build(235, 40, 2);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     case 'workshop':
-        tile.build(236, 70, 3);
+        if(checkConnection(y,x)){
+            tile.build(236, 70, 3);
+        }else{
+            notify(Lang.noconnection);
+        }
         break;
     default:
         console.log("I don't recognise that building code...");
     }
     drawRadar();
+}
+
+function checkConnection(y,x){
+    var connected = false;
+    for(var j=0; j<6; j++){
+        if(returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind === 211){
+            connected = true;
+        }
+    }
+    return connected;
 }
 
 /**
