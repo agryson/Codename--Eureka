@@ -62,13 +62,13 @@ function Terrain() {
                 break;
             default:
                 this.kind = this.willBe;
-                if(this.kind < 100){
+                if(this.kind < 100) {
                     var names = [Lang.smooth, Lang.rough, Lang.mountainous, Lang.prepared];
                     this.ref = changeName(names[this.kind], this.ref);
                 } else {
                     this.ref = changeName(Game.buildings[this.kind - 200][3], this.ref);
                 }
-                
+
             }
             this.diggable = this.willBeDiggable;
         }
@@ -160,6 +160,7 @@ function Terrain() {
             tile.wip = true;
             tile.turns = eta(2, this.kind);
             tile.kind = 101;
+            tile.willBeDiggable = true;
             tile.ref = changeName(Lang.diggingCavern, tile.ref);
             for(var j = 0; j < 6; j++) {
                 adj = returnLevel(level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
@@ -209,7 +210,7 @@ function Terrain() {
                     adj.willBe = 1100;
                     console.log("digging underground");
                 }
-                if(Game.level + 1 !== 4){
+                if(Game.level + 1 !== 4) {
                     adj = returnLevel(Game.level + 1)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
                     if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level + 1) && !adj.diggable && !adj.wip && !adj.exists && adj.mineable) {
                         adj.turns = eta(5, this.kind);
@@ -220,7 +221,7 @@ function Terrain() {
                     }
                 }
             }
-            if(lowerTile.mineable){
+            if(lowerTile.mineable) {
                 lowerTile.turns = eta(5, lowerTile.kind);
                 lowerTile.wip = true;
                 lowerTile.willBe = 1100;
@@ -378,7 +379,7 @@ function Param() {
         ["oreproc", false, 0, Lang.oreproc], //
         ["rec", false, 1, Lang.rec],
         ["recycler", false, 0, Lang.recycler],
-        ["clichy", false, 2, Lang.clichy], //
+        ["clichy", false, 1, Lang.clichy], //
         ["research", false, 2, Lang.research], //
         ["research2", false, 2, Lang.research2],
         ["solar", false, 0, Lang.solar],
@@ -390,7 +391,7 @@ function Param() {
         ["windfarm", false, 0, Lang.windfarm], //
         ["workshop", false, 1, Lang.workshop], //
         ["lander", true, 0, Lang.lander]
-        ];
+    ];
     /**
      * List of robots
      * [[int: inUse, int: totalAvailable, string: 'idString', boolean: availableToPlayer, int: surface(0)/subsurface(1)/both(2)]]
@@ -1517,9 +1518,9 @@ function clicked(direction) {
     case 'lander':
         tile.kind = 3;
         tile.build(237, 70, 0); //change to lander, check for water etc.
-        for (var j = 0; j<6; j++){
+        for(var j = 0; j < 6; j++) {
             Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind = 3;
-            if(j%2 !==0){
+            if(j % 2 !== 0) {
                 Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].build(211, 20, 1);
             }
         }
@@ -1542,16 +1543,13 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
-            //rightClicked(Lang.preparing, true);
             tile.prepare();
         }
         break;
     case 'digger':
-        //This let's me dig down to create airshafts
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>", true);
         } else {
-            //rightClicked(Lang.digging, true);
             tile.digDown(x, y, lowerTile);
         }
         break;
@@ -1559,7 +1557,6 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>", true);
         } else {
-            //rightClicked(Lang.diggingCavern, true);
             tile.digCavern(x, y, tile, Game.level, false, tile.kind - 5);
         }
         break;
@@ -1567,7 +1564,6 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmMine + "</button><br>", true);
         } else {
-            //rightClicked(Lang.mining, true);
             tile.mine(x, y, lowerTile);
         }
         break;
@@ -1575,255 +1571,254 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmRecycle + "</button><br>", true);
         } else {
-            //rightClicked(Lang.recycling, true);
             tile.recycle();
         }
         //TODO: add recycle code
         break;
     case 'agri':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(200, 70, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'agri2':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(201, 90, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'airport':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(202, 60, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'arp':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(203, 80, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'barracks':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(205, 90, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'civprot':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(206, 70, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'civprot2':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(207, 90, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'command':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(210, 100, 2);
 
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'commarray':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(208, 60, 1);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'commarray2':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(209, 80, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'connector':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(211, 20, 1);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'dronefab':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(212, 80, 4);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'chernobyl':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(213, 70, 4);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'tokamak':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(214, 90, 5);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'genfab':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(215, 70, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'geotherm':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(216, 70, 4);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'hab':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(217, 70, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'hab2':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(218, 80, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'hab3':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(219, 90, 4);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'er':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(220, 80, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'nursery':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(222, 70, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'oreproc':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(223, 80, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'rec':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(224, 60, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'recycler':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(225, 70, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'clichy':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(226, 30, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'research':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(227, 80, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'research2':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(228, 60, 4);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'solar':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(229, 30, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'space':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(230, 80, 5);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'stasis':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(231, 100, 4);
 
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'store':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(232, 40, 1);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'uni':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(233, 70, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'warehouse':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(234, 40, 1);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'windfarm':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(235, 40, 2);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
     case 'workshop':
-        if(checkConnection(y,x)){
+        if(checkConnection(y, x)) {
             tile.build(236, 70, 3);
-        }else{
+        } else {
             notify(Lang.noconnection);
         }
         break;
@@ -1833,10 +1828,10 @@ function clicked(direction) {
     drawRadar();
 }
 
-function checkConnection(y,x){
+function checkConnection(y, x) {
     var connected = false;
-    for(var j=0; j<6; j++){
-        if(returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind === 211){
+    for(var j = 0; j < 6; j++) {
+        if(returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind === 211 || returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind === 204) {
             connected = true;
         }
     }
