@@ -1529,42 +1529,42 @@ function clicked(direction) {
         break;
     case 'dozer':
         if(!direction) {
-            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDoze + "</span><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
-            rightClicked(Lang.preparing, true);
+            //rightClicked(Lang.preparing, true);
             tile.prepare();
         }
         break;
     case 'digger':
         //This let's me dig down to create airshafts
         if(!direction) {
-            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDig + "</span><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>", true);
         } else {
-            rightClicked(Lang.digging, true);
+            //rightClicked(Lang.digging, true);
             tile.digDown(x, y, lowerTile);
         }
         break;
     case 'cavernDigger':
         if(!direction) {
-            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmDigCavern + "</span><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>", true);
         } else {
-            rightClicked(Lang.diggingCavern, true);
+            //rightClicked(Lang.diggingCavern, true);
             tile.digCavern(x, y, tile, Game.level, false, tile.kind - 5);
         }
         break;
     case 'miner':
         if(!direction) {
-            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmMine + "</span><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmMine + "</button><br>", true);
         } else {
-            rightClicked(Lang.mining, true);
+            //rightClicked(Lang.mining, true);
             tile.mine(x, y, lowerTile);
         }
         break;
     case 'recycler':
         if(!direction) {
-            rightClicked("<br><span onclick='clicked(true)''>" + Lang.confirmRecycle + "</span><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmRecycle + "</button><br>", true);
         } else {
-            rightClicked(Lang.recycling, true);
+            //rightClicked(Lang.recycling, true);
             tile.recycle();
         }
         //TODO: add recycle code

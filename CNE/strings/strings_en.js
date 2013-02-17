@@ -18,11 +18,11 @@ function Lang(){
 	this.resources = "Resources:";
 
 	//Confirmations
-	this.confirmMine = "Are you sure you want to mine?";
-	this.confirmDoze = "Are you sure you want to prepare this zone?";
-	this.confirmDig = "Are you sure you want to dig an airshaft here?";
-	this.confirmDigCavern = "Are you sure you want to dig a cavern here?";
-	this.confirmRecycle = "Are you sure you want to recycle this construction?";
+	this.confirmMine = "Mine here";
+	this.confirmDoze = "Prepare this zone";
+	this.confirmDig = "Dig airshaft";
+	this.confirmDigCavern = "Dig cavern here";
+	this.confirmRecycle = "Recycle this construction?";
 
 	//Terrain types
 	this.smooth = "Smooth";

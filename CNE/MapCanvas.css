@@ -662,7 +662,7 @@ z-index: 2;
 .smoky_glass{
     background-color: #999999;
     background-color: rgba(100,100,100,0.6);
-    color: #8F8F8F;
+    color: #EFEFEF;
     text-shadow: -1px -1px 1px #303030;
 }
 
