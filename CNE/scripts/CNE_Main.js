@@ -53,7 +53,7 @@ function Terrain() {
                 this.build(6, 50, 2); //obviously building an airshaft here...
                 break;
             case 1100:
-                this.build(206, 80, 0); //obviously building a mine... TODO: cahnge this to the mine ;)
+                this.build(221, 80, 0); //obviously building a mine... TODO: cahnge this to the mine ;)
                 this.mining = true;
                 break;
             case 3:
