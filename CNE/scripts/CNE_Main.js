@@ -71,6 +71,21 @@ function bobTheBuilder(kind){
             o.storage = 2;
             o.air = 100;
             break;
+        case 204: //airshaft
+            o.health = 50;
+            o.energy = -5;
+            o.storage = 1;
+            break;
+        case 205: //barracks
+            o.health = 90;
+            o.energy = -15;
+            o.tossMorale = -5;
+            o.hipMorale = -10;
+            o.crime = -5;
+            o.food = -5;
+            o.waste = 5;
+            o.storage = 5;
+            break;
         default:
             console.log("Bob can't build it... :( " + kind);
             return false;
