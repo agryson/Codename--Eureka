@@ -5,6 +5,79 @@ var Lang;
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 
+function Construction() {
+    this.exists = true;
+    this.age = 0;
+    this.health = 0;
+    this.energy = 0;
+    this.tossMorale = 0;
+    this.hipMorale = 0;
+    this.artMorale = 0;
+    this.age = 0;
+    this.air = 0;
+    this.foodUse = 0;
+    this.crime = 0;
+    this.food = 0;
+    this.waste = 0;
+    this.storage = 0;
+    this.tossPop = 0;
+    this.hipPop = 0;
+    this.artPop = 0;
+    this.nextTurn = function(){
+        Game.age += 1;
+    };
+}
+
+function bobTheBuilder(kind){
+    var o = new Construction();
+    switch(kind){
+        case 200: //agridome
+            o.health = 70;
+            o.energy = -20;
+            o.tossMorale = 1;
+            o.hipMorale = 2;
+            o.crime = 2;
+            o.food = 15;
+            o.waste = 2;
+            o.storage = 15;
+            break;
+        case 201: //advanced agridome
+            o.health = 90;
+            o.energy = -25;
+            o.tossMorale = 2;
+            o.hipMorale = 4;
+            o.artMorale = 1;
+            o.crime = 1;
+            o.food = 30;
+            o.waste = 1;
+            o.storage = 20;
+            break;
+        case 202: //airport
+            o.health = 60;
+            o.energy = -15;
+            o.tossMorale = -1;
+            o.hipMorale = -2;
+            o.crime = 3;
+            o.waste = 1;
+            o.storage = 15;
+            o.air = -1;
+            break;
+        case 203: //arp
+            o.health = 80;
+            o.energy = -60;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.crime = 2;
+            o.storage = 2;
+            o.air = 100;
+            break;
+        default:
+            console.log("Bob can't build it... :( " + kind);
+            return false;
+    }
+    return o;
+}
+
 /**
  * The main object for a tile, tracking its kind, and state
  */
