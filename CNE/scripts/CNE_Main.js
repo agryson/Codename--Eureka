@@ -4,8 +4,9 @@ var Game; //Global so I can get at it from other scripts...
 var Lang;
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
-
 function Construction() {
+    this.kind = 3;
+    this.buildTime = 0;
     this.exists = true;
     this.age = 0;
     this.health = 0;
@@ -15,9 +16,7 @@ function Construction() {
     this.artMorale = 0;
     this.age = 0;
     this.air = 0;
-    this.foodUse = 0;
     this.crime = 0;
-    this.food = 0;
     this.waste = 0;
     this.storage = 0;
     this.tossPop = 0;
@@ -30,29 +29,31 @@ function Construction() {
 
 function bobTheBuilder(kind){
     var o = new Construction();
+    o.kind = kind;
     switch(kind){
         case 200: //agridome
+            o.buildTime = 2;
             o.health = 70;
             o.energy = -20;
             o.tossMorale = 1;
             o.hipMorale = 2;
             o.crime = 2;
-            o.food = 15;
             o.waste = 2;
             o.storage = 15;
             break;
         case 201: //advanced agridome
+            o.buildTime = 3;
             o.health = 90;
             o.energy = -25;
             o.tossMorale = 2;
             o.hipMorale = 4;
             o.artMorale = 1;
             o.crime = 1;
-            o.food = 30;
             o.waste = 1;
             o.storage = 20;
             break;
         case 202: //airport
+            o.buildTime = 3;
             o.health = 60;
             o.energy = -15;
             o.tossMorale = -1;
@@ -63,6 +64,7 @@ function bobTheBuilder(kind){
             o.air = -1;
             break;
         case 203: //arp
+            o.buildTime = 2;
             o.health = 80;
             o.energy = -60;
             o.tossMorale = 5;
@@ -72,18 +74,340 @@ function bobTheBuilder(kind){
             o.air = 100;
             break;
         case 204: //airshaft
+            o.buildTime = 2;
             o.health = 50;
             o.energy = -5;
             o.storage = 1;
             break;
         case 205: //barracks
+            o.buildTime = 2;
             o.health = 90;
             o.energy = -15;
             o.tossMorale = -5;
             o.hipMorale = -10;
             o.crime = -5;
-            o.food = -5;
             o.waste = 5;
+            o.storage = 5;
+            break;
+        case 206: //civil protection
+            o.buildTime = 2;
+            o.health = 70;
+            o.energy = -10;
+            o.tossMorale = 1;
+            o.hipMorale = 1;
+            o.artMorale = 1;
+            o.crime = -15;
+            o.waste = 2;
+            o.storage = 2;
+            break;
+        case 207: //civil protection 2
+            o.buildTime = 3;
+            o.health = 90;
+            o.energy = -15;
+            o.tossMorale = 2;
+            o.hipMorale = 2;
+            o.artMorale = 2;
+            o.crime = -30;
+            o.waste = 1;
+            o.storage = 3;
+            break;
+        case 208://comm array
+            o.buildTime = 1;
+            o.health = 60;
+            o.energy = -10;
+            o.hipMorale = -3;
+            o.crime = 1;
+            o.storage = 2;
+            break;
+        case 209://comm array 2
+            o.buildTime = 2;
+            o.health = 80;
+            o.energy = -15;
+            o.tossMorale = -1;
+            o.hipMorale = -5;
+            o.artMorale = 1;
+            o.artMorale = 2;
+            o.crime = 2;
+            o.storage = 2;
+            break;
+        case 210://command
+            o.buildTime = 2;
+            o.health = 100;
+            o.energy = -30;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.artMorale = 5;
+            o.crime = -3;
+            o.waste = 1;
+            o.storage = 10;
+            break;
+        case 211: // connector
+            o.buildTime = 1;
+            o.health = 20;
+            o.energy = -1;
+            o.storage = 1;
+            break;
+        case 212: // drone factory
+            o.buildTime = 4;
+            o.health = 80;
+            o.energy = -100;
+            o.tossMorale = -5;
+            o.hipMorale = -10;
+            o.artMorale = 5;
+            o.crime = 2;
+            o.waste = 5;
+            o.storage = 30;
+            break;
+        case 213: // fission
+            o.buildTime = 4;
+            o.health = 70;
+            o.energy = 1500;
+            o.tossMorale = -10;
+            o.hipMorale = -20;
+            o.artMorale = -5;
+            o.crime = 3;
+            o.waste = 8;
+            o.storage = 5;
+            break;
+        case 214: // fusion
+            o.buildTime = 5;
+            o.health = 90;
+            o.energy = 2500;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.artMorale = 5;
+            o.waste = 3;
+            o.storage = 5;
+            break;
+        case 215: // factory
+            o.buildTime = 3;
+            o.health = 70;
+            o.energy = -100;
+            o.tossMorale = -5;
+            o.hipMorale = -10;
+            o.artMorale = 0;
+            o.crime = 3;
+            o.waste = 5;
+            o.storage = 30;
+            break;
+        case 216: // geothermal
+            o.buildTime = 4;
+            o.health = 70;
+            o.energy = 200;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.artMorale = 5;
+            o.storage = 2;
+            break;
+        case 217: // habitat
+            o.buildTime = 2;
+            o.health = 70;
+            o.energy = -15;
+            o.tossMorale = 2;
+            o.hipMorale = 2;
+            o.artMorale = 2;
+            o.crime = 3;
+            o.waste = 3;
+            o.storage = 10;
+            break;
+        case 218: // habitat 2
+            o.buildTime = 3;
+            o.health = 80;
+            o.energy = -20;
+            o.tossMorale = 4;
+            o.hipMorale = 4;
+            o.artMorale = 4;
+            o.crime = 2;
+            o.waste = 2;
+            o.storage = 10;
+            break;
+        case 219: // habitat 3
+            o.buildTime = 4;
+            o.health = 90;
+            o.energy = -25;
+            o.tossMorale = 6;
+            o.hipMorale = 6;
+            o.artMorale = 6;
+            o.crime = 1;
+            o.waste = 1;
+            o.storage = 15;
+            break;
+        case 220: // hospital
+            o.buildTime = 3;
+            o.health = 80;
+            o.energy = -40;
+            o.tossMorale = 10;
+            o.hipMorale = 10;
+            o.artMorale = 0;
+            o.crime = 2;
+            o.waste = 5;
+            o.storage = 5;
+            break;
+        case 221: // mine
+            o.buildTime = 2;
+            o.health = 80;
+            o.energy = -40;
+            o.tossMorale = -2;
+            o.hipMorale = -2;
+            o.artMorale = -2;
+            o.crime = 5;
+            o.waste = 1;
+            o.storage = 20;
+            break;
+        case 222: // nursery
+            o.buildTime = 2;
+            o.health = 70;
+            o.energy = -30;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.artMorale = 0;
+            o.crime = 2;
+            o.waste = 3;
+            o.storage = 2;
+            break;
+        case 223: // ore processor
+            o.buildTime = 2;
+            o.health = 80;
+            o.energy = -120;
+            o.tossMorale = -15;
+            o.hipMorale = -15;
+            o.artMorale = -15;
+            o.crime = 5;
+            o.waste = 2;
+            o.storage = 50;
+            break;
+        case 224: // recreation center
+            o.buildTime = 3;
+            o.health = 60;
+            o.energy = -20;
+            o.tossMorale = 15;
+            o.hipMorale = 15;
+            o.artMorale = 5;
+            o.crime = 5;
+            o.waste = 2;
+            o.storage = 50;
+            break;
+        case 225: // recycler
+            o.buildTime = 2;
+            o.health = 70;
+            o.energy = -80;
+            o.tossMorale = 5;
+            o.hipMorale = 10;
+            o.artMorale = 5;
+            o.crime = 3;
+            o.waste = -25;
+            o.storage = 30;
+            break;
+        case 226: // red light district
+            o.buildTime = 2;
+            o.health = 30;
+            o.energy = -15;
+            o.tossMorale = 25;
+            o.hipMorale = 20;
+            o.artMorale = 10;
+            o.crime = 15;
+            o.waste = 10;
+            o.storage = 5;
+            break;
+        case 227: // research center
+            o.buildTime = 3;
+            o.health = 80;
+            o.energy = -15;
+            o.tossMorale = 2;
+            o.hipMorale = 1;
+            o.artMorale = 2;
+            o.crime = 2;
+            o.waste = 5;
+            o.storage = 2;
+            break;
+        case 228: // research 2
+            o.buildTime = 4;
+            o.health = 60;
+            o.energy = -20;
+            o.tossMorale = 3;
+            o.hipMorale = 2;
+            o.artMorale = 3;
+            o.crime = 1;
+            o.waste = 3;
+            o.storage = 3;
+            break;
+        case 229: // solar farm
+            o.buildTime = 2;
+            o.health = 30;
+            o.energy = 250;
+            o.tossMorale = 4;
+            o.hipMorale = 8;
+            o.artMorale = 4;
+            break;
+        case 230: // space port
+            o.buildTime = 5;
+            o.health = 80;
+            o.energy = -80;
+            o.tossMorale = 5;
+            o.hipMorale = -5;
+            o.artMorale = 0;
+            o.crime = 5;
+            o.waste = 2;
+            o.storage = 20;
+            break;
+        case 231: // stasis block
+            o.buildTime = 4;
+            o.health = 100;
+            o.energy = -40;
+            o.crime = 5;
+            o.waste = 1;
+            o.storage = 15;
+            break;
+        case 232: // Storage Tanks
+            o.buildTime = 1;
+            o.health = 40;
+            o.energy = -5;
+            o.tossMorale = -3;
+            o.hipMorale = -3;
+            o.artMorale = -3;
+            o.crime = 3;
+            o.waste = 1;
+            o.storage = 2000;
+            break;
+        case 233: // University
+            o.buildTime = 2;
+            o.health = 70;
+            o.energy = -15;
+            o.tossMorale = 10;
+            o.hipMorale = 5;
+            o.artMorale = 2;
+            o.crime = -2;
+            o.waste = 2;
+            o.storage = 3;
+            break;
+        case 234: // warehouse
+            o.buildTime = 1;
+            o.health = 40;
+            o.energy = -5;
+            o.tossMorale = -3;
+            o.hipMorale = -3;
+            o.artMorale = -3;
+            o.crime = 3;
+            o.waste = 1;
+            o.storage = 150;
+            break;
+        case 235: // windfarm
+            o.buildTime = 2;
+            o.health = 40;
+            o.energy = 200;
+            o.tossMorale = 2;
+            o.hipMorale = 4;
+            o.artMorale = 2;
+            break;
+        case 236: // workshop
+            o.buildTime = 3;
+            o.health = 70;
+            o.energy = -30;
+            o.tossMorale = 5;
+            o.hipMorale = -2;
+            o.artMorale = 10;
+            o.crime = 3;
+            o.waste = 2;
             o.storage = 5;
             break;
         default:
