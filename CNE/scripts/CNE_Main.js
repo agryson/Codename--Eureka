@@ -5,9 +5,14 @@ var Lang;
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 function Construction() {
+    /*
+    Notes: I got rid of food because why would one building use more than another?! So it should become a global variable.
+    Think about making tile[x][y][0] the terrain and tile[x][y][1] the construction
+     */
+    this.position = [150,150];
     this.kind = 3;
-    this.buildTime = 0;
-    this.exists = true;
+    this.exists = false;
+    this.buildTime = -1;
     this.age = 0;
     this.health = 0;
     this.energy = 0;
@@ -22,14 +27,31 @@ function Construction() {
     this.tossPop = 0;
     this.hipPop = 0;
     this.artPop = 0;
-    this.nextTurn = function(){
-        Game.age += 1;
-    };
+
+    this.future = 3;
 }
 
-function bobTheBuilder(kind){
+function nextTurn(x, y){
+    var tile = returnLevel(Game.level)[y][x][1];
+    if(tile.exists) {
+        tile.age += 1;
+    }
+    if(tile.buildTime > 0) {
+        tile.buildTime -= 1;
+    } else if (tile.buildTime === 0){
+        tile.buildTime = -1;
+        tile.kind = tile.future;
+        tile.exists = true;
+    }
+}
+
+function bobTheBuilder(kind, x, y){
     var o = new Construction();
-    o.kind = kind;
+    o.future = kind;
+    console.log(o.future);
+    o.kind = 100;
+    o.position = [x,y];
+
     switch(kind){
         case 200: //agridome
             o.buildTime = 2;
@@ -1067,7 +1089,13 @@ function eavesdrop() {
         for(y = 0; y < Game.radarRad * 2; y++) {
             for(x = 0; x < Game.radarRad * 2; x++) {
                 for(var l = 0; l < 5; l++) {
-                    returnLevel(l)[y][x][1].nextTurn();
+                    // TEST temp test code
+                    try{
+                        returnLevel(l)[y][x][0].nextTurn();
+                    }
+                    catch(e){
+                        nextTurn(x, y);
+                    }
                 }
             }
         }
@@ -1559,7 +1587,7 @@ function adjacent(x, y, index) {
 function wetTest(yxArrayIn, level) {
     var yxArray = yxArrayIn.slice(0);
     for(var i = 0; i < 6; i++) {
-        var tileToTest = returnLevel(level)[adjacent(yxArray[1], yxArray[0], i)[0]][adjacent(yxArray[1], yxArray[0], i)[1]][1];
+        var tileToTest = returnLevel(level)[adjacent(yxArray[1], yxArray[0], i)[0]][adjacent(yxArray[1], yxArray[0], i)[1]][0];
         if(tileToTest.kind === 4) {
             return true;
         }
@@ -1719,7 +1747,7 @@ function drawRadar() {
         for(var y = 0; y < radarPixels.height; y++) {
             // Index of the pixel in the array
             var idx = (x + y * radarPixels.width) * 4;
-            var kind = returnLevel(Game.level)[y][x][1].kind;
+            var kind = returnLevel(Game.level)[y][x][0].kind;
             for(var i = 0; i < 4; i++) {
                 if(kind < 4 && kind >= 0) {
                     radarPixels.data[idx + i] = surfaceColor[kind][i];
@@ -1789,7 +1817,7 @@ function drawZoomMap() {
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         while(x <= Game.xLimit) {
-            var tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind;
+            var tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][0].kind;
             if(tileKind < 100) {
                 drawTile(tileKind, x, y, Game.terrain, Game.mPanel);
             } else if(tileKind >= 200) {
@@ -1844,7 +1872,7 @@ function rightClicked(content, option) {
 function contextContent(content, option) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
-    var tile = returnLevel(Game.level)[y][x][1];
+    var tile = returnLevel(Game.level)[y][x][0];
     var resources = false;
     var htmlString = '';
     var resourceArray = [ //[ORENAME,PRODUCTNAME]
@@ -1931,27 +1959,28 @@ function clicked(direction) {
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     //var kind;
     console.log('x: ' + x + '  y: ' + y);
-    var tile = returnLevel(Game.level)[y][x][1];
+    var hex = returnLevel(Game.level)[y][x];
+    var tile = hex[0];
     var lowerTile, upperTile;
     if(Game.level < 5) {
-        lowerTile = returnLevel(Game.level + 1)[y][x][1];
+        lowerTile = returnLevel(Game.level + 1)[y][x][0];
     }
     if(Game.level > 0) {
-        upperTile = returnLevel(Game.level - 1)[y][x][1];
+        upperTile = returnLevel(Game.level - 1)[y][x][0];
     }
     switch(Game.clickedOn) {
     case 'lander':
         tile.kind = 3;
         tile.build(237, 70, 0); //change to lander, check for water etc.
         for(var j = 0; j < 6; j++) {
-            Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind = 3;
+            Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][0].kind = 3;
             if(j % 2 !== 0) {
-                Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].build(211, 20, 1);
+                Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][0].build(211, 20, 1);
             }
         }
-        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1].build(210, 100, 2);
-        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1].build(203, 80, 2);
-        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1].build(235, 70, 2);
+        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][0].build(210, 100, 2);
+        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][0].build(203, 80, 2);
+        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][0].build(235, 70, 2);
         // ...
         Game.buildings[37][1] = false;
         var buildable = [0, 3, 8, 10, 11, 15, 17, 23, 26, 27, 32, 34, 35, 36];
@@ -2001,10 +2030,10 @@ function clicked(direction) {
         //TODO: add recycle code
         break;
     case 'agri':
-        if(checkConnection(y, x)) {
-            tile.build(200, 70, 2);
+        if(checkConnection(y, x) && tile.kind === 3) {
+            hex[1] = bobTheBuilder(200, x, y);
         } else {
-            notify(Lang.noconnection);
+            tile.kind !== 3 ? notify(Lang.notPrepared) : notify(Lang.noConnection);
         }
         break;
     case 'agri2':
@@ -2256,7 +2285,7 @@ function clicked(direction) {
 function checkConnection(y, x) {
     var connected = false;
     for(var j = 0; j < 6; j++) {
-        if(returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind === 211 || returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1].kind === 204) {
+        if(returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][0].kind === 211 || returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][0].kind === 204) {
             connected = true;
         }
     }
