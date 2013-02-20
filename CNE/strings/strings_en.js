@@ -7,6 +7,7 @@ function Lang(){
 	this.noRecycle = "This can't be recycled.";
 	this.noConnection = "No adjacent connector node.";
 	this.notPrepared = "This terrain has not been prepared.";
+	this.onWater = "Are you nuts?!";
 
 	//Actions and references
 	this.preparing = "Preparing";
