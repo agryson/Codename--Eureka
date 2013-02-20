@@ -29,6 +29,7 @@ function Construction() {
     this.artPop = 0;
 
     this.future = [3, Lang.prepared];
+    this.robot = -1;
 }
 
 function nextTurn(x, y, level){
@@ -42,6 +43,10 @@ function nextTurn(x, y, level){
         } else if (tile.buildTime === 0){
             tile.buildTime = -1;
             tile.kind = tile.future[0];
+            if(tile.robot >= 0){
+                Game.robotsList[tile.robot][0] -= 1;
+                tile.robot = -1;
+            }
             level[y][x][0].ref = changeName(tile.future[1], level[y][x][0].ref);
             tile.exists = true;
         }
@@ -72,10 +77,20 @@ function bobTheBuilder(kind, x, y, level){
             case 100:
                 o.buildTime = eta(2);
                 o.future = [3, Lang.prepared];
-                returnLevel(level)[y][x][0].kind = 3;
                 returnLevel(level)[y][x][0].ref = changeName(Lang.preparing, returnLevel(level)[y][x][0].ref);
+                o.robot = 0;
+                Game.robotsList[0][0] += 1;
+                reCount('dozer');
                 break;
-    
+            case 101:
+                o.kind = kind;
+                o.buildTime = eta(2);
+                o.future = [204, Lang.airlift];
+                returnLevel(level)[y][x][0].ref = changeName(Lang.digging, returnLevel(level)[y][x][0].ref);
+                o.robot = 1;
+                Game.robotsList[1][0] += 1;
+                reCount('digger');
+                break;
             //Buildings
             case 200: //agridome
                 o.buildTime = eta(2);
@@ -2082,14 +2097,19 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
             //tile.prepare();
-            hex[1] = bobTheBuilder(100, x, y, Game.level);
+            if(hex[1] && (hex[1].kind <200 || hex[1].kind >= 100)){
+                notify(Lang.noDoze);
+            } else {
+                hex[1] = bobTheBuilder(100, x, y, Game.level);
+            }
         }
         break;
     case 'digger':
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>", true);
         } else {
-            tile.digDown(x, y, lowerTile);
+            //tile.digDown(x, y, lowerTile);
+            hex[1] = bobTheBuilder(101, x, y, Game.level);
         }
         break;
     case 'cavernDigger':
@@ -2115,10 +2135,10 @@ function clicked(direction) {
         //TODO: add recycle code
         break;
     case 'agri':
-        if(checkConnection(y, x) && hex[1].kind === 3) {
+        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(200, x, y, Game.level);
         } else {
-            !hex[1] || hex[1].kind !== 3 ? notify(Lang.notPrepared) : notify(Lang.noConnection);
+            !hex[1] || hex[1].kind === 3 ? notify(Lang.notPrepared) : notify(Lang.noConnection);
         }
         break;
     case 'agri2':
