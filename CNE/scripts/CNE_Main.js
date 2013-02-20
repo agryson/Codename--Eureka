@@ -2097,7 +2097,7 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
             //tile.prepare();
-            if(hex[1] && (hex[1].kind <200 || hex[1].kind >= 100)){
+            if(hex[1] && hex[1].kind <200 && hex[1].kind >= 100){
                 notify(Lang.noDoze);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
