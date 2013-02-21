@@ -43,7 +43,7 @@ function nextTurn(x, y, level){
         } else if (tile.buildTime === 0){
             tile.buildTime = -1;
             tile.kind = tile.future[0];
-            if(tile.robot >= 0){
+            if(tile.robot > 0){
                 Game.robotsList[tile.robot][0] -= 1;
                 tile.robot = -1;
             }
@@ -58,7 +58,7 @@ function bobTheBuilder(kind, x, y, level){
         var o = new Construction();
         o.kind = 100;
         o.position = [level,x,y];
-        if(kind >= 200){
+        if(kind >= 200 && kind <= 300){
             returnLevel(level)[y][x][0].ref = changeName(Lang.building + Game.buildings[kind - 200][3], returnLevel(level)[y][x][0].ref);
         }
     
@@ -90,6 +90,14 @@ function bobTheBuilder(kind, x, y, level){
                 o.robot = 1;
                 Game.robotsList[1][0] += 1;
                 reCount('digger');
+                break;
+            case 101101:
+                console.log('digging my cavern here...');
+                o.kind = 8;
+                o.buildTime = eta(3);
+                o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
+                returnLevel(level)[y][x][0].ref = changeName(Lang.diggingCavern, returnLevel(level)[y][x][0].ref);
+                reCount('cavernDigger');
                 break;
             //Buildings
             case 200: //agridome
@@ -139,7 +147,7 @@ function bobTheBuilder(kind, x, y, level){
                 o.future = [kind, Lang.arp];
                 break;
             case 204: //airshaft
-                o.buildTime = eta(2);
+                o.buildTime = 0;
                 o.health = 50;
                 o.energy = -5;
                 o.storage = 1;
@@ -326,7 +334,7 @@ function bobTheBuilder(kind, x, y, level){
                 o.future = [kind, Lang.er];
                 break;
             case 221: // mine
-                o.buildTime = eta(2);
+                o.buildTime = 0;
                 o.health = 80;
                 o.energy = -40;
                 o.tossMorale = -2;
@@ -619,7 +627,7 @@ function Terrain() {
 
     /**
      * The 'dozing' function does everything necessary when we're dozing that terrain
-     */
+     *//*   
     this.prepare = function() {
         if(!prepared && !this.wip && this.diggable && Game.robotsList[0][0] < Game.robotsList[0][1]) {
             this.turns = eta(2, this.kind);
@@ -950,6 +958,8 @@ function Param() {
     this.radar = document.getElementById('map').getContext('2d');
     this.radarLoc = document.getElementById('mapOverlay').getContext('2d');
 
+    //this.yShift;
+
     //Stats
     this.housing = 0;
     this.tossPop = 50;
@@ -1249,6 +1259,14 @@ function mapFit(bool) {
     }
     if(Game.yLimit % 2 === 0) {
         Game.yLimit += 1;
+    }
+    Game.yShift = Math.round(Game.yLimit / 2);
+    if(Game.yShift % 2 === 0) {
+        Game.yShift -= 1;
+        Game.yLimit += 2;
+    }
+    if(Game.retY % 2 !== 0) {
+        Game.retY -= 1;
     }
     drawRadar();
     drawLoc();
@@ -1884,7 +1902,7 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt) 
 
 function drawZoomMap() {
     //Game.mPanel.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-    var y, x, tileKind;
+    var y, x, tileKind, tileRef;
     var sourceTile = returnLevel(Game.level);
     mainLoop();
     webkitRequestAnimationFrame(drawZoomMap);
@@ -1892,24 +1910,11 @@ function drawZoomMap() {
     if(Game.highlight) {
         drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
     }
-    if(Game.retY % 2 !== 0) {
-        Game.retY -= 1;
-    }
-    //TODO : Maybe move all this yShift xShift stuff to Game?
-    var yShift = Math.round(Game.yLimit / 2);
-    if(yShift % 2 === 0) {
-        yShift -= 1;
-        Game.yLimit += 2;
-    }
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         while(x <= Game.xLimit) {
-            if(sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1]){
-                tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][1].kind;
-            } else {
-                tileKind = sourceTile[Game.retY - yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x][0].kind;
-            }
-
+            tileRef = sourceTile[Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x];
+            tileRef[1] ? tileKind = tileRef[1].kind : tileKind = tileRef[0].kind;
             if(tileKind < 100) {
                 drawTile(tileKind, x, y, Game.terrain, Game.mPanel);
             } else if(tileKind >= 200) {
@@ -2109,7 +2114,16 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>", true);
         } else {
             //tile.digDown(x, y, lowerTile);
-            hex[1] = bobTheBuilder(101, x, y, Game.level);
+            if((hex[1] && hex[1].kind >= 100) || Game.level === 4 || tile.kind === 4 || wetTest([y,x], Game.level + 1)){
+                notify(Lang.noDig);
+            } else {
+                hex[1] = bobTheBuilder(101, x, y, Game.level);
+                var below = returnLevel(Game.level + 1);
+                below[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1);
+                for(var k = 0; k < 6; k++){
+                    below[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]][1] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
+                }
+            }
         }
         break;
     case 'cavernDigger':

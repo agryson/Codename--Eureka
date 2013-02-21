@@ -32,6 +32,7 @@ function Lang(){
 	this.rough = "Rough";
 	this.mountaineous = "Mountaineous";
 	this.prepared = "Prepared";
+	this.cavern = "Cavern";
 	this.water = "Water";
 
 	//Buildings
