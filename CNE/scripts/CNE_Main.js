@@ -43,7 +43,7 @@ function nextTurn(x, y, level){
         } else if (tile.buildTime === 0){
             tile.buildTime = -1;
             tile.kind = tile.future[0];
-            if(tile.robot > 0){
+            if(tile.robot >= 0){
                 Game.robotsList[tile.robot][0] -= 1;
                 tile.robot = -1;
             }
@@ -58,7 +58,7 @@ function bobTheBuilder(kind, x, y, level){
         var o = new Construction();
         o.kind = 100;
         o.position = [level,x,y];
-        if(kind >= 200 && kind <= 300){
+        if(kind >= 200 && kind < 300){
             returnLevel(level)[y][x][0].ref = changeName(Lang.building + Game.buildings[kind - 200][3], returnLevel(level)[y][x][0].ref);
         }
     
@@ -648,7 +648,7 @@ function Terrain() {
      * @param  {int} x         X coordinate of tile to dig
      * @param  {int} y         Y coordinate of the tile to dig
      * @param  {Object} lowerTile The tile that is below this one
-     */
+     *//*
     this.digDown = function(x, y, lowerTile) {
 
         if(Game.level < 4 && !wetTest([y, x], Game.level + 1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable && Game.robotsList[1][0] < Game.robotsList[1][1] - 1) {
@@ -2102,7 +2102,7 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
             //tile.prepare();
-            if(hex[1] && hex[1].kind <200 && hex[1].kind >= 100){
+            if(hex[1] && hex[1].kind <200 && hex[1].kind >= 2){
                 notify(Lang.noDoze);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
@@ -2114,14 +2114,22 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>", true);
         } else {
             //tile.digDown(x, y, lowerTile);
-            if((hex[1] && hex[1].kind >= 100) || Game.level === 4 || tile.kind === 4 || wetTest([y,x], Game.level + 1)){
+            var below = returnLevel(Game.level + 1);
+            try{
+            console.log('below is ' + below[y][x][1].kind);
+        } catch(e){}
+            if((hex[1] && hex[1].kind >= 100) || (below[y][x][1] && below[y][x][1].kind >= 100) ||  Game.level === 4 || tile.kind === 4 || wetTest([y,x], Game.level + 1)){
                 notify(Lang.noDig);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level);
-                var below = returnLevel(Game.level + 1);
                 below[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1);
                 for(var k = 0; k < 6; k++){
-                    below[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]][1] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
+                    var belowAdj = below[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]];
+                    if((belowAdj[1] && (belowAdj[1].kind >= 100 || belowAdj[1].kind < 4)) || belowAdj[0].kind === 4 || wetTest([adjacent(x, y, k)[0],adjacent(x, y, k)[1]], Game.level + 1)){
+                        //do nothing
+                    } else {
+                        belowAdj[1] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
+                    }
                 }
             }
         }
