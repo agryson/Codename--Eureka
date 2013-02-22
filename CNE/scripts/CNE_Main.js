@@ -36,6 +36,17 @@ function Construction() {
 
 function nextTurn(x, y, level) {
     var tile = returnLevel(level)[y][x][1];
+
+    var checkMine = function(xIn, yIn, levelIn){
+        var checked = false;
+        for(var i = 0; i < 6; i++){
+            if(returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221){
+                checked = true;
+            }
+        }
+        return checked;
+    };
+
     if(tile) {
         if(tile.exists) {
             tile.age += 1;
@@ -51,11 +62,25 @@ function nextTurn(x, y, level) {
                 tile.robot = -1;
             }
             if((tile.kind === 101 && tile.future[0] === 204) || (tile.kind === 102 && tile.future[0] === 221)) {
-                console.log(tile);
-                returnLevel(level)[y][x][1] = bobTheBuilder(tile.future[0], x, y, level);
-                console.log(tile);
+                returnLevel(level)[y][x][1] = bobTheBuilder(tile.future[0], x, y, level, false);
             } else {
                 tile.kind = tile.future[0];
+            }
+        }
+
+        if(tile.mining && (tile.kind === 221 || checkMine(x, y, level))) {
+            var stillMining = false;
+            for(var ore in returnLevel(level)[y][x][0].resources) {
+                if(returnLevel(level)[y][x][0].resources[ore] && returnLevel(level)[y][x][0].resources[ore] > 0) {
+                    stillMining = true;
+                    var mined = Math.floor(Math.random() + 0.5);
+                    returnLevel(level)[y][x][0].resources[ore] -= mined;
+                    Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
+                }
+            }
+            if(!stillMining) {
+                tile.mining = false;
+                returnLevel(level)[y][x][0].ref = changeName(Lang.minedOut, returnLevel(level)[y][x][0].ref);
             }
         }
     }
@@ -90,6 +115,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             Game.robotsList[0][0] += 1;
             reCount('dozer');
             break;
+
         case 101:
             o.kind = kind;
             o.buildTime = eta(2);
@@ -109,6 +135,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             returnLevel(level)[y][x][0].ref = changeName(Lang.diggingCavern, returnLevel(level)[y][x][0].ref);
             reCount('cavernDigger');
             break;
+
         case 102:
             o.kind = kind;
             o.buildTime = eta(3);
@@ -116,15 +143,16 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
                 o.future = [221, Lang.building];
             }
             returnLevel(level)[y][x][0].ref = changeName(Lang.mining, returnLevel(level)[y][x][0].ref);
+            o.mining = true;
             o.robot = 3;
             Game.robotsList[3][0] += 1;
             reCount('miner');
             break;
         case 102102:
-            o.buildTime = 0;
+            o.buildTime = 2;
             o.kind = returnLevel(level)[y][x][0].kind;
             if(returnLevel(level)[y][x][0].kind === 8){
-                o.future = [returnLevel(level)[y][x][0].kind, Lang.mining];
+                o.future = [8, Lang.mining];
                 returnLevel(level)[y][x][0].ref = changeName(Lang.mining, returnLevel(level)[y][x][0].ref);
                 o.mining = true;
             } else if (level > 0) {
@@ -2121,10 +2149,10 @@ function clicked(direction) {
                     var mineY = adjacent(x, y, i)[0];
                     var mineX = adjacent(x, y, i)[1];
                     if(returnLevel(Game.level)[mineY][mineX][0].mineable){
-                        returnLevel(Game.level)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level);
+                        returnLevel(Game.level)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level, false);
                     }
                     if(returnLevel(Game.level + 1)[mineY][mineX][0].mineable){
-                        returnLevel(Game.level + 1)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level + 1);
+                        returnLevel(Game.level + 1)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level + 1, false);
                     }
                 }
             }

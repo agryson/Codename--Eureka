@@ -34,6 +34,7 @@ function Lang(){
 	this.prepared = "Prepared";
 	this.cavern = "Cavern";
 	this.water = "Water";
+	this.minedOut = "Mined Out";
 
 	//Buildings
 	this.lander = "Lander";
