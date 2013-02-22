@@ -4,12 +4,13 @@ var Game; //Global so I can get at it from other scripts...
 var Lang;
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
+
 function Construction() {
     /*
     Notes: I got rid of food because why would one building use more than another?! So it should become a global variable.
     Think about making tile[x][y][0] the terrain and tile[x][y][1] the construction
      */
-    this.position = [150,150];
+    this.position = [150, 150];
     this.kind = 3;
     this.exists = false;
     this.buildTime = -1;
@@ -30,25 +31,26 @@ function Construction() {
 
     this.future = [3, Lang.prepared];
     this.robot = -1;
+    this.mining = false;
 }
 
-function nextTurn(x, y, level){
+function nextTurn(x, y, level) {
     var tile = returnLevel(level)[y][x][1];
-    if(tile){
+    if(tile) {
         if(tile.exists) {
             tile.age += 1;
         }
         if(tile.buildTime > 0) {
             tile.buildTime -= 1;
-        } else if (tile.buildTime === 0){
+        } else if(tile.buildTime === 0) {
             tile.buildTime = -1;
             returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
             tile.exists = true;
-            if(tile.robot >= 0){
+            if(tile.robot >= 0) {
                 Game.robotsList[tile.robot][0] -= 1;
                 tile.robot = -1;
             }
-            if((tile.kind === 101 && tile.future[0] === 204) || (tile.kind === 102 && tile.future[0] === 221)){
+            if((tile.kind === 101 && tile.future[0] === 204) || (tile.kind === 102 && tile.future[0] === 221)) {
                 console.log(tile);
                 returnLevel(level)[y][x][1] = bobTheBuilder(tile.future[0], x, y, level);
                 console.log(tile);
@@ -59,490 +61,544 @@ function nextTurn(x, y, level){
     }
 }
 
-function bobTheBuilder(kind, x, y, level, builderBot){
-    if(returnLevel(level)[y][x][0].kind !== 4){
+function bobTheBuilder(kind, x, y, level, builderBot) {
+    if(returnLevel(level)[y][x][0].kind !== 4) {
         var o = new Construction();
         o.kind = 100;
-        o.position = [level,x,y];
-        if(kind >= 200 && kind < 300){
+        o.position = [level, x, y];
+        if(kind >= 200 && kind < 300) {
             returnLevel(level)[y][x][0].ref = changeName(Lang.building + Game.buildings[kind - 200][3], returnLevel(level)[y][x][0].ref);
         }
-    
-        var eta = function(turns){
-            if(returnLevel(level)[y][x][0].kind === 1 || returnLevel(level)[y][x][0].kind === 6) {
-            return Math.floor(turns * 1.5);
-        } else if(returnLevel(level)[y][x][0].kind === 2 || returnLevel(level)[y][x][0].kind === 7) {
-            return Math.floor(turns * 2.4);
-        } else {
-            return turns;
-        }
-        };
-    
-        switch(kind){
-            //Bots
-            case 100:
-                o.buildTime = eta(2);
-                o.future = [3, Lang.prepared];
-                returnLevel(level)[y][x][0].ref = changeName(Lang.preparing, returnLevel(level)[y][x][0].ref);
-                o.robot = 0;
-                Game.robotsList[0][0] += 1;
-                reCount('dozer');
-                break;
-            case 101:
-                o.kind = kind;
-                o.buildTime = eta(2);
-                if(builderBot){
-                    o.future = [204, Lang.building];
+
+        var eta = function(turns) {
+                if(returnLevel(level)[y][x][0].kind === 1 || returnLevel(level)[y][x][0].kind === 6) {
+                    return Math.floor(turns * 1.5);
+                } else if(returnLevel(level)[y][x][0].kind === 2 || returnLevel(level)[y][x][0].kind === 7) {
+                    return Math.floor(turns * 2.4);
+                } else {
+                    return turns;
                 }
-                returnLevel(level)[y][x][0].ref = changeName(Lang.digging, returnLevel(level)[y][x][0].ref);
-                o.robot = 1;
-                Game.robotsList[1][0] += 1;
-                reCount('digger');
-                break;
-            case 101101:
-                o.kind = 8;
-                o.buildTime = eta(3);
+            };
+
+        switch(kind) {
+            //Bots
+        case 100:
+            o.buildTime = eta(2);
+            o.future = [3, Lang.prepared];
+            returnLevel(level)[y][x][0].ref = changeName(Lang.preparing, returnLevel(level)[y][x][0].ref);
+            o.robot = 0;
+            Game.robotsList[0][0] += 1;
+            reCount('dozer');
+            break;
+        case 101:
+            o.kind = kind;
+            o.buildTime = eta(2);
+            if(builderBot) {
+                o.future = [204, Lang.building];
+            }
+            returnLevel(level)[y][x][0].ref = changeName(Lang.digging, returnLevel(level)[y][x][0].ref);
+            o.robot = 1;
+            Game.robotsList[1][0] += 1;
+            reCount('digger');
+            break;
+        case 101101:
+            o.kind = 8;
+            o.buildTime = eta(3);
+            o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
+            returnLevel(level)[y][x][0].kind -= 5;
+            returnLevel(level)[y][x][0].ref = changeName(Lang.diggingCavern, returnLevel(level)[y][x][0].ref);
+            reCount('cavernDigger');
+            break;
+        case 102:
+            o.kind = kind;
+            o.buildTime = eta(3);
+            if(builderBot) {
+                o.future = [221, Lang.building];
+            }
+            returnLevel(level)[y][x][0].ref = changeName(Lang.mining, returnLevel(level)[y][x][0].ref);
+            o.robot = 3;
+            Game.robotsList[3][0] += 1;
+            reCount('miner');
+            break;
+        case 102102:
+            o.buildTime = 0;
+            o.kind = returnLevel(level)[y][x][0].kind;
+            if(returnLevel(level)[y][x][0].kind === 8){
+                o.future = [returnLevel(level)[y][x][0].kind, Lang.mining];
+                returnLevel(level)[y][x][0].ref = changeName(Lang.mining, returnLevel(level)[y][x][0].ref);
+                o.mining = true;
+            } else if (level > 0) {
                 o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
                 returnLevel(level)[y][x][0].kind -= 5;
-                returnLevel(level)[y][x][0].ref = changeName(Lang.diggingCavern, returnLevel(level)[y][x][0].ref);
-                reCount('cavernDigger');
-                break;
-            case 102:
-                o.kind = kind;
-                o.buildTime = eta(3);
-                o.future = [221, Lang.building];
-                break;
+            }
+            break;
 
             //Buildings
-            case 200: //agridome
-                o.buildTime = eta(2);
-                o.health = 70;
-                o.energy = -20;
-                o.tossMorale = 1;
-                o.hipMorale = 2;
-                o.crime = 2;
-                o.waste = 2;
-                o.storage = 15;
-                o.future = [kind, Lang.agri];
-                break;
-            case 201: //advanced agridome
-                o.buildTime = eta(3);
-                o.health = 90;
-                o.energy = -25;
-                o.tossMorale = 2;
-                o.hipMorale = 4;
-                o.artMorale = 1;
-                o.crime = 1;
-                o.waste = 1;
-                o.storage = 20;
-                o.future = [kind, Lang.agri2];
-                break;
-            case 202: //airport
-                o.buildTime = eta(3);
-                o.health = 60;
-                o.energy = -15;
-                o.tossMorale = -1;
-                o.hipMorale = -2;
-                o.crime = 3;
-                o.waste = 1;
-                o.storage = 15;
-                o.air = -1;
-                o.future = [kind, Lang.airport];
-                break;
-            case 203: //arp
-                o.buildTime = eta(2);
-                o.health = 80;
-                o.energy = -60;
-                o.tossMorale = 5;
-                o.hipMorale = 5;
-                o.crime = 2;
-                o.storage = 2;
-                o.air = 100;
-                o.future = [kind, Lang.arp];
-                break;
-            case 204: //airshaft
-                o.buildTime = 2;
-                o.health = 50;
-                o.energy = -5;
-                o.storage = 1;
-                o.future = [kind, Lang.airlift];
-                break;
-            case 205: //barracks
-                o.buildTime = eta(2);
-                o.health = 90;
-                o.energy = -15;
-                o.tossMorale = -5;
-                o.hipMorale = -10;
-                o.crime = -5;
-                o.waste = 5;
-                o.storage = 5;
-                o.future = [kind, Lang.barracks];
-                break;
-            case 206: //civil protection
-                o.buildTime = eta(2);
-                o.health = 70;
-                o.energy = -10;
-                o.tossMorale = 1;
-                o.hipMorale = 1;
-                o.artMorale = 1;
-                o.crime = -15;
-                o.waste = 2;
-                o.storage = 2;
-                o.future = [kind, Lang.civprot];
-                break;
-            case 207: //civil protection 2
-                o.buildTime = eta(3);
-                o.health = 90;
-                o.energy = -15;
-                o.tossMorale = 2;
-                o.hipMorale = 2;
-                o.artMorale = 2;
-                o.crime = -30;
-                o.waste = 1;
-                o.storage = 3;
-                o.future = [kind, Lang.civprot2];
-                break;
-            case 208://comm array
-                o.buildTime = eta(1);
-                o.health = 60;
-                o.energy = -10;
-                o.hipMorale = -3;
-                o.crime = 1;
-                o.storage = 2;
-                o.future = [kind, Lang.commarray];
-                break;
-            case 209://comm array 2
-                o.buildTime = eta(2);
-                o.health = 80;
-                o.energy = -15;
-                o.tossMorale = -1;
-                o.hipMorale = -5;
-                o.artMorale = 1;
-                o.artMorale = 2;
-                o.crime = 2;
-                o.storage = 2;
-                o.future = [kind, Lang.commarray2];
-                break;
-            case 210://command
-                o.buildTime = eta(2);
-                o.health = 100;
-                o.energy = -30;
-                o.tossMorale = 5;
-                o.hipMorale = 5;
-                o.artMorale = 5;
-                o.crime = -3;
-                o.waste = 1;
-                o.storage = 10;
-                o.future = [kind, Lang.command];
-                break;
-            case 211: // connector
-                o.buildTime = eta(1);
-                o.health = 20;
-                o.energy = -1;
-                o.storage = 1;
-                o.future = [kind, Lang.connector];
-                break;
-            case 212: // drone factory
-                o.buildTime = eta(4);
-                o.health = 80;
-                o.energy = -100;
-                o.tossMorale = -5;
-                o.hipMorale = -10;
-                o.artMorale = 5;
-                o.crime = 2;
-                o.waste = 5;
-                o.storage = 30;
-                o.future = [kind, Lang.dronefab];
-                break;
-            case 213: // fission
-                o.buildTime = eta(4);
-                o.health = 70;
-                o.energy = 1500;
-                o.tossMorale = -10;
-                o.hipMorale = -20;
-                o.artMorale = -5;
-                o.crime = 3;
-                o.waste = 8;
-                o.storage = 5;
-                o.future = [kind, Lang.chernobyl];
-                break;
-            case 214: // fusion
-                o.buildTime = eta(5);
-                o.health = 90;
-                o.energy = 2500;
-                o.tossMorale = 5;
-                o.hipMorale = 5;
-                o.artMorale = 5;
-                o.waste = 3;
-                o.storage = 5;
-                o.future = [kind, Lang.tokamak];
-                break;
-            case 215: // factory
-                o.buildTime = eta(3);
-                o.health = 70;
-                o.energy = -100;
-                o.tossMorale = -5;
-                o.hipMorale = -10;
-                o.artMorale = 0;
-                o.crime = 3;
-                o.waste = 5;
-                o.storage = 30;
-                o.future = [kind, Lang.genfab];
-                break;
-            case 216: // geothermal
-                o.buildTime = eta(4);
-                o.health = 70;
-                o.energy = 200;
-                o.tossMorale = 5;
-                o.hipMorale = 5;
-                o.artMorale = 5;
-                o.storage = 2;
-                o.future = [kind, Lang.geotherm];
-                break;
-            case 217: // habitat
-                o.buildTime = eta(2);
-                o.health = 70;
-                o.energy = -15;
-                o.tossMorale = 2;
-                o.hipMorale = 2;
-                o.artMorale = 2;
-                o.crime = 3;
-                o.waste = 3;
-                o.storage = 10;
-                o.future = [kind, Lang.hab];
-                break;
-            case 218: // habitat 2
-                o.buildTime = eta(3);
-                o.health = 80;
-                o.energy = -20;
-                o.tossMorale = 4;
-                o.hipMorale = 4;
-                o.artMorale = 4;
-                o.crime = 2;
-                o.waste = 2;
-                o.storage = 10;
-                o.future = [kind, Lang.hab2];
-                break;
-            case 219: // habitat 3
-                o.buildTime = eta(4);
-                o.health = 90;
-                o.energy = -25;
-                o.tossMorale = 6;
-                o.hipMorale = 6;
-                o.artMorale = 6;
-                o.crime = 1;
-                o.waste = 1;
-                o.storage = 15;
-                o.future = [kind, Lang.hab3];
-                break;
-            case 220: // hospital
-                o.buildTime = eta(3);
-                o.health = 80;
-                o.energy = -40;
-                o.tossMorale = 10;
-                o.hipMorale = 10;
-                o.artMorale = 0;
-                o.crime = 2;
-                o.waste = 5;
-                o.storage = 5;
-                o.future = [kind, Lang.er];
-                break;
-            case 221: // mine
-                o.buildTime = 2;
-                o.health = 80;
-                o.energy = -40;
-                o.tossMorale = -2;
-                o.hipMorale = -2;
-                o.artMorale = -2;
-                o.crime = 5;
-                o.waste = 1;
-                o.storage = 20;
-                if(builderBot){
-                    o.future = [kind, Lang.mine];
-                }
-                break;
-            case 222: // nursery
-                o.buildTime = eta(2);
-                o.health = 70;
-                o.energy = -30;
-                o.tossMorale = 5;
-                o.hipMorale = 5;
-                o.artMorale = 0;
-                o.crime = 2;
-                o.waste = 3;
-                o.storage = 2;
-                o.future = [kind, Lang.nursery];
-                break;
-            case 223: // ore processor
-                o.buildTime = eta(2);
-                o.health = 80;
-                o.energy = -120;
-                o.tossMorale = -15;
-                o.hipMorale = -15;
-                o.artMorale = -15;
-                o.crime = 5;
-                o.waste = 2;
-                o.storage = 50;
-                o.future = [kind, Lang.oreproc];
-                break;
-            case 224: // recreation center
-                o.buildTime = eta(3);
-                o.health = 60;
-                o.energy = -20;
-                o.tossMorale = 15;
-                o.hipMorale = 15;
-                o.artMorale = 5;
-                o.crime = 5;
-                o.waste = 2;
-                o.storage = 50;
-                o.future = [kind, Lang.rec];
-                break;
-            case 225: // recycler
-                o.buildTime = eta(2);
-                o.health = 70;
-                o.energy = -80;
-                o.tossMorale = 5;
-                o.hipMorale = 10;
-                o.artMorale = 5;
-                o.crime = 3;
-                o.waste = -25;
-                o.storage = 30;
-                o.future = [kind, Lang.recycler];
-                break;
-            case 226: // red light district
-                o.buildTime = eta(2);
-                o.health = 30;
-                o.energy = -15;
-                o.tossMorale = 25;
-                o.hipMorale = 20;
-                o.artMorale = 10;
-                o.crime = 15;
-                o.waste = 10;
-                o.storage = 5;
-                o.future = [kind, Lang.clichy];
-                break;
-            case 227: // research center
-                o.buildTime = eta(3);
-                o.health = 80;
-                o.energy = -15;
-                o.tossMorale = 2;
-                o.hipMorale = 1;
-                o.artMorale = 2;
-                o.crime = 2;
-                o.waste = 5;
-                o.storage = 2;
-                o.future = [kind, Lang.research];
-                break;
-            case 228: // research 2
-                o.buildTime = eta(4);
-                o.health = 60;
-                o.energy = -20;
-                o.tossMorale = 3;
-                o.hipMorale = 2;
-                o.artMorale = 3;
-                o.crime = 1;
-                o.waste = 3;
-                o.storage = 3;
-                o.future = [kind, Lang.research2];
-                break;
-            case 229: // solar farm
-                o.buildTime = eta(2);
-                o.health = 30;
-                o.energy = 250;
-                o.tossMorale = 4;
-                o.hipMorale = 8;
-                o.artMorale = 4;
-                o.future = [kind, Lang.solar];
-                break;
-            case 230: // space port
-                o.buildTime = eta(5);
-                o.health = 80;
-                o.energy = -80;
-                o.tossMorale = 5;
-                o.hipMorale = -5;
-                o.artMorale = 0;
-                o.crime = 5;
-                o.waste = 2;
-                o.storage = 20;
-                o.future = [kind, Lang.space];
-                break;
-            case 231: // stasis block
-                o.buildTime = eta(4);
-                o.health = 100;
-                o.energy = -40;
-                o.crime = 5;
-                o.waste = 1;
-                o.storage = 15;
-                o.future = [kind, Lang.stasis];
-                break;
-            case 232: // Storage Tanks
-                o.buildTime = eta(1);
-                o.health = 40;
-                o.energy = -5;
-                o.tossMorale = -3;
-                o.hipMorale = -3;
-                o.artMorale = -3;
-                o.crime = 3;
-                o.waste = 1;
-                o.storage = 2000;
-                o.future = [kind, Lang.store];
-                break;
-            case 233: // University
-                o.buildTime = eta(2);
-                o.health = 70;
-                o.energy = -15;
-                o.tossMorale = 10;
-                o.hipMorale = 5;
-                o.artMorale = 2;
-                o.crime = -2;
-                o.waste = 2;
-                o.storage = 3;
-                o.future = [kind, Lang.uni];
-                break;
-            case 234: // warehouse
-                o.buildTime = eta(1);
-                o.health = 40;
-                o.energy = -5;
-                o.tossMorale = -3;
-                o.hipMorale = -3;
-                o.artMorale = -3;
-                o.crime = 3;
-                o.waste = 1;
-                o.storage = 150;
-                o.future = [kind, Lang.warehouse];
-                break;
-            case 235: // windfarm
-                o.buildTime = eta(3);
-                o.health = 40;
-                o.energy = 200;
-                o.tossMorale = 2;
-                o.hipMorale = 4;
-                o.artMorale = 2;
-                o.future = [kind, Lang.windfarm];
-                break;
-            case 236: // workshop
-                o.buildTime = eta(3);
-                o.health = 70;
-                o.energy = -30;
-                o.tossMorale = 5;
-                o.hipMorale = -2;
-                o.artMorale = 10;
-                o.crime = 3;
-                o.waste = 2;
-                o.storage = 5;
-                o.future = [kind, Lang.workshop];
-                break;
-            case 237: // lander
-                o.kind = 237;
-                o.buildTime = eta(0);
-                o.health = 70;
-                o.storage = 50;
-                o.future = [kind, Lang.lander];
-                returnLevel(level)[y][x][0].ref = changeName(Lang.lander, returnLevel(level)[y][x][0].ref);
-                break;
-            default:
-                console.log("Bob can't build it... :( " + kind);
-                return false;
+        case 200:
+            //agridome
+            o.buildTime = eta(2);
+            o.health = 70;
+            o.energy = -20;
+            o.tossMorale = 1;
+            o.hipMorale = 2;
+            o.crime = 2;
+            o.waste = 2;
+            o.storage = 15;
+            o.future = [kind, Lang.agri];
+            break;
+        case 201:
+            //advanced agridome
+            o.buildTime = eta(3);
+            o.health = 90;
+            o.energy = -25;
+            o.tossMorale = 2;
+            o.hipMorale = 4;
+            o.artMorale = 1;
+            o.crime = 1;
+            o.waste = 1;
+            o.storage = 20;
+            o.future = [kind, Lang.agri2];
+            break;
+        case 202:
+            //airport
+            o.buildTime = eta(3);
+            o.health = 60;
+            o.energy = -15;
+            o.tossMorale = -1;
+            o.hipMorale = -2;
+            o.crime = 3;
+            o.waste = 1;
+            o.storage = 15;
+            o.air = -1;
+            o.future = [kind, Lang.airport];
+            break;
+        case 203:
+            //arp
+            o.buildTime = eta(2);
+            o.health = 80;
+            o.energy = -60;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.crime = 2;
+            o.storage = 2;
+            o.air = 100;
+            o.future = [kind, Lang.arp];
+            break;
+        case 204:
+            //airshaft
+            o.buildTime = 2;
+            o.health = 50;
+            o.energy = -5;
+            o.storage = 1;
+            o.future = [kind, Lang.airlift];
+            break;
+        case 205:
+            //barracks
+            o.buildTime = eta(2);
+            o.health = 90;
+            o.energy = -15;
+            o.tossMorale = -5;
+            o.hipMorale = -10;
+            o.crime = -5;
+            o.waste = 5;
+            o.storage = 5;
+            o.future = [kind, Lang.barracks];
+            break;
+        case 206:
+            //civil protection
+            o.buildTime = eta(2);
+            o.health = 70;
+            o.energy = -10;
+            o.tossMorale = 1;
+            o.hipMorale = 1;
+            o.artMorale = 1;
+            o.crime = -15;
+            o.waste = 2;
+            o.storage = 2;
+            o.future = [kind, Lang.civprot];
+            break;
+        case 207:
+            //civil protection 2
+            o.buildTime = eta(3);
+            o.health = 90;
+            o.energy = -15;
+            o.tossMorale = 2;
+            o.hipMorale = 2;
+            o.artMorale = 2;
+            o.crime = -30;
+            o.waste = 1;
+            o.storage = 3;
+            o.future = [kind, Lang.civprot2];
+            break;
+        case 208:
+            //comm array
+            o.buildTime = eta(1);
+            o.health = 60;
+            o.energy = -10;
+            o.hipMorale = -3;
+            o.crime = 1;
+            o.storage = 2;
+            o.future = [kind, Lang.commarray];
+            break;
+        case 209:
+            //comm array 2
+            o.buildTime = eta(2);
+            o.health = 80;
+            o.energy = -15;
+            o.tossMorale = -1;
+            o.hipMorale = -5;
+            o.artMorale = 1;
+            o.artMorale = 2;
+            o.crime = 2;
+            o.storage = 2;
+            o.future = [kind, Lang.commarray2];
+            break;
+        case 210:
+            //command
+            o.buildTime = eta(2);
+            o.health = 100;
+            o.energy = -30;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.artMorale = 5;
+            o.crime = -3;
+            o.waste = 1;
+            o.storage = 10;
+            o.future = [kind, Lang.command];
+            break;
+        case 211:
+            // connector
+            o.buildTime = eta(1);
+            o.health = 20;
+            o.energy = -1;
+            o.storage = 1;
+            o.future = [kind, Lang.connector];
+            break;
+        case 212:
+            // drone factory
+            o.buildTime = eta(4);
+            o.health = 80;
+            o.energy = -100;
+            o.tossMorale = -5;
+            o.hipMorale = -10;
+            o.artMorale = 5;
+            o.crime = 2;
+            o.waste = 5;
+            o.storage = 30;
+            o.future = [kind, Lang.dronefab];
+            break;
+        case 213:
+            // fission
+            o.buildTime = eta(4);
+            o.health = 70;
+            o.energy = 1500;
+            o.tossMorale = -10;
+            o.hipMorale = -20;
+            o.artMorale = -5;
+            o.crime = 3;
+            o.waste = 8;
+            o.storage = 5;
+            o.future = [kind, Lang.chernobyl];
+            break;
+        case 214:
+            // fusion
+            o.buildTime = eta(5);
+            o.health = 90;
+            o.energy = 2500;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.artMorale = 5;
+            o.waste = 3;
+            o.storage = 5;
+            o.future = [kind, Lang.tokamak];
+            break;
+        case 215:
+            // factory
+            o.buildTime = eta(3);
+            o.health = 70;
+            o.energy = -100;
+            o.tossMorale = -5;
+            o.hipMorale = -10;
+            o.artMorale = 0;
+            o.crime = 3;
+            o.waste = 5;
+            o.storage = 30;
+            o.future = [kind, Lang.genfab];
+            break;
+        case 216:
+            // geothermal
+            o.buildTime = eta(4);
+            o.health = 70;
+            o.energy = 200;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.artMorale = 5;
+            o.storage = 2;
+            o.future = [kind, Lang.geotherm];
+            break;
+        case 217:
+            // habitat
+            o.buildTime = eta(2);
+            o.health = 70;
+            o.energy = -15;
+            o.tossMorale = 2;
+            o.hipMorale = 2;
+            o.artMorale = 2;
+            o.crime = 3;
+            o.waste = 3;
+            o.storage = 10;
+            o.future = [kind, Lang.hab];
+            break;
+        case 218:
+            // habitat 2
+            o.buildTime = eta(3);
+            o.health = 80;
+            o.energy = -20;
+            o.tossMorale = 4;
+            o.hipMorale = 4;
+            o.artMorale = 4;
+            o.crime = 2;
+            o.waste = 2;
+            o.storage = 10;
+            o.future = [kind, Lang.hab2];
+            break;
+        case 219:
+            // habitat 3
+            o.buildTime = eta(4);
+            o.health = 90;
+            o.energy = -25;
+            o.tossMorale = 6;
+            o.hipMorale = 6;
+            o.artMorale = 6;
+            o.crime = 1;
+            o.waste = 1;
+            o.storage = 15;
+            o.future = [kind, Lang.hab3];
+            break;
+        case 220:
+            // hospital
+            o.buildTime = eta(3);
+            o.health = 80;
+            o.energy = -40;
+            o.tossMorale = 10;
+            o.hipMorale = 10;
+            o.artMorale = 0;
+            o.crime = 2;
+            o.waste = 5;
+            o.storage = 5;
+            o.future = [kind, Lang.er];
+            break;
+        case 221:
+            // mine
+            o.buildTime = 2;
+            o.health = 80;
+            o.energy = -40;
+            o.tossMorale = -2;
+            o.hipMorale = -2;
+            o.artMorale = -2;
+            o.crime = 5;
+            o.waste = 1;
+            o.storage = 20;
+            o.future = [kind, Lang.mine];
+            break;
+        case 222:
+            // nursery
+            o.buildTime = eta(2);
+            o.health = 70;
+            o.energy = -30;
+            o.tossMorale = 5;
+            o.hipMorale = 5;
+            o.artMorale = 0;
+            o.crime = 2;
+            o.waste = 3;
+            o.storage = 2;
+            o.future = [kind, Lang.nursery];
+            break;
+        case 223:
+            // ore processor
+            o.buildTime = eta(2);
+            o.health = 80;
+            o.energy = -120;
+            o.tossMorale = -15;
+            o.hipMorale = -15;
+            o.artMorale = -15;
+            o.crime = 5;
+            o.waste = 2;
+            o.storage = 50;
+            o.future = [kind, Lang.oreproc];
+            break;
+        case 224:
+            // recreation center
+            o.buildTime = eta(3);
+            o.health = 60;
+            o.energy = -20;
+            o.tossMorale = 15;
+            o.hipMorale = 15;
+            o.artMorale = 5;
+            o.crime = 5;
+            o.waste = 2;
+            o.storage = 50;
+            o.future = [kind, Lang.rec];
+            break;
+        case 225:
+            // recycler
+            o.buildTime = eta(2);
+            o.health = 70;
+            o.energy = -80;
+            o.tossMorale = 5;
+            o.hipMorale = 10;
+            o.artMorale = 5;
+            o.crime = 3;
+            o.waste = -25;
+            o.storage = 30;
+            o.future = [kind, Lang.recycler];
+            break;
+        case 226:
+            // red light district
+            o.buildTime = eta(2);
+            o.health = 30;
+            o.energy = -15;
+            o.tossMorale = 25;
+            o.hipMorale = 20;
+            o.artMorale = 10;
+            o.crime = 15;
+            o.waste = 10;
+            o.storage = 5;
+            o.future = [kind, Lang.clichy];
+            break;
+        case 227:
+            // research center
+            o.buildTime = eta(3);
+            o.health = 80;
+            o.energy = -15;
+            o.tossMorale = 2;
+            o.hipMorale = 1;
+            o.artMorale = 2;
+            o.crime = 2;
+            o.waste = 5;
+            o.storage = 2;
+            o.future = [kind, Lang.research];
+            break;
+        case 228:
+            // research 2
+            o.buildTime = eta(4);
+            o.health = 60;
+            o.energy = -20;
+            o.tossMorale = 3;
+            o.hipMorale = 2;
+            o.artMorale = 3;
+            o.crime = 1;
+            o.waste = 3;
+            o.storage = 3;
+            o.future = [kind, Lang.research2];
+            break;
+        case 229:
+            // solar farm
+            o.buildTime = eta(2);
+            o.health = 30;
+            o.energy = 250;
+            o.tossMorale = 4;
+            o.hipMorale = 8;
+            o.artMorale = 4;
+            o.future = [kind, Lang.solar];
+            break;
+        case 230:
+            // space port
+            o.buildTime = eta(5);
+            o.health = 80;
+            o.energy = -80;
+            o.tossMorale = 5;
+            o.hipMorale = -5;
+            o.artMorale = 0;
+            o.crime = 5;
+            o.waste = 2;
+            o.storage = 20;
+            o.future = [kind, Lang.space];
+            break;
+        case 231:
+            // stasis block
+            o.buildTime = eta(4);
+            o.health = 100;
+            o.energy = -40;
+            o.crime = 5;
+            o.waste = 1;
+            o.storage = 15;
+            o.future = [kind, Lang.stasis];
+            break;
+        case 232:
+            // Storage Tanks
+            o.buildTime = eta(1);
+            o.health = 40;
+            o.energy = -5;
+            o.tossMorale = -3;
+            o.hipMorale = -3;
+            o.artMorale = -3;
+            o.crime = 3;
+            o.waste = 1;
+            o.storage = 2000;
+            o.future = [kind, Lang.store];
+            break;
+        case 233:
+            // University
+            o.buildTime = eta(2);
+            o.health = 70;
+            o.energy = -15;
+            o.tossMorale = 10;
+            o.hipMorale = 5;
+            o.artMorale = 2;
+            o.crime = -2;
+            o.waste = 2;
+            o.storage = 3;
+            o.future = [kind, Lang.uni];
+            break;
+        case 234:
+            // warehouse
+            o.buildTime = eta(1);
+            o.health = 40;
+            o.energy = -5;
+            o.tossMorale = -3;
+            o.hipMorale = -3;
+            o.artMorale = -3;
+            o.crime = 3;
+            o.waste = 1;
+            o.storage = 150;
+            o.future = [kind, Lang.warehouse];
+            break;
+        case 235:
+            // windfarm
+            o.buildTime = eta(3);
+            o.health = 40;
+            o.energy = 200;
+            o.tossMorale = 2;
+            o.hipMorale = 4;
+            o.artMorale = 2;
+            o.future = [kind, Lang.windfarm];
+            break;
+        case 236:
+            // workshop
+            o.buildTime = eta(3);
+            o.health = 70;
+            o.energy = -30;
+            o.tossMorale = 5;
+            o.hipMorale = -2;
+            o.artMorale = 10;
+            o.crime = 3;
+            o.waste = 2;
+            o.storage = 5;
+            o.future = [kind, Lang.workshop];
+            break;
+        case 237:
+            // lander
+            o.kind = 237;
+            o.buildTime = eta(0);
+            o.health = 70;
+            o.storage = 50;
+            o.future = [kind, Lang.lander];
+            returnLevel(level)[y][x][0].ref = changeName(Lang.lander, returnLevel(level)[y][x][0].ref);
+            break;
+        default:
+            console.log("Bob can't build it... :( " + kind);
+            return false;
         }
         return o;
     } else {
@@ -845,7 +901,6 @@ function Param() {
     this.radarLoc = document.getElementById('mapOverlay').getContext('2d');
 
     //this.yShift;
-
     //Stats
     this.housing = 0;
     this.tossPop = 50;
@@ -1074,10 +1129,10 @@ function eavesdrop() {
                 for(var l = 0; l < 5; l++) {
                     // TEST temp test code
                     //try{
-                      //  returnLevel(l)[y][x][0].nextTurn();
-                   // }
+                    //  returnLevel(l)[y][x][0].nextTurn();
+                    // }
                     //catch(e){
-                        nextTurn(x, y, l);
+                    nextTurn(x, y, l);
                     //}
                 }
             }
@@ -1967,27 +2022,27 @@ function clicked(direction) {
             var tempY = adjacent(x, y, j)[0];
             var tempX = adjacent(x, y, j)[1];
             switch(j) {
-                case 1:
-                case 3:
-                case 5:
-                    Game.map[tempY][tempX][1] = bobTheBuilder(211, tempX, tempY, Game.level);
+            case 1:
+            case 3:
+            case 5:
+                Game.map[tempY][tempX][1] = bobTheBuilder(211, tempX, tempY, Game.level);
                 break;
-                case 0:
-                    Game.map[tempY][tempX][1] = bobTheBuilder(210, tempX, tempY, Game.level);
-                    break;
-                case 2:
-                    Game.map[tempY][tempX][1] =  bobTheBuilder(203, tempX, tempY, Game.level);
-                    break;
-                case 4:
-                    Game.map[tempY][tempX][1] = bobTheBuilder(235, tempX, tempY, Game.level);
-                    break;
-                default:
-                    console.log("The eagle most definitely has *not* landed");
+            case 0:
+                Game.map[tempY][tempX][1] = bobTheBuilder(210, tempX, tempY, Game.level);
+                break;
+            case 2:
+                Game.map[tempY][tempX][1] = bobTheBuilder(203, tempX, tempY, Game.level);
+                break;
+            case 4:
+                Game.map[tempY][tempX][1] = bobTheBuilder(235, tempX, tempY, Game.level);
+                break;
+            default:
+                console.log("The eagle most definitely has *not* landed");
             }
         }
-        
+
         // ...
-        setTimeout(function(){
+        setTimeout(function() {
             Game.buildings[37][1] = false;
             var buildable = [0, 3, 8, 10, 11, 15, 17, 23, 26, 27, 32, 34, 35, 36];
             for(var ref in buildable) {
@@ -2004,7 +2059,7 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
             //tile.prepare();
-            if((hex[1] && hex[1].kind <200 && hex[1].kind >= 2) || tile.kind > 2){
+            if((hex[1] && hex[1].kind < 200 && hex[1].kind >= 2) || tile.kind > 2) {
                 notify(Lang.noDoze);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
@@ -2016,15 +2071,15 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>", true);
         } else {
             //tile.digDown(x, y, lowerTile);
-            var below = returnLevel(Game.level + 1);
-            if((hex[1] && hex[1].kind >= 100) || (below[y][x][1] && below[y][x][1].kind >= 100) || tile.kind > 3 || Game.level === 4 || wetTest([y,x], Game.level + 1)){
+            var DBelow = returnLevel(Game.level + 1);
+            if((hex[1] && hex[1].kind >= 100) || (DBelow[y][x][1] && DBelow[y][x][1].kind >= 100) || tile.kind > 3 || Game.level === 4 || wetTest([y, x], Game.level + 1)) {
                 notify(Lang.noDig);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level, true);
-                below[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1, true);
-                for(var k = 0; k < 6; k++){
-                    var belowAdj = below[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]];
-                    if((belowAdj[1] && (belowAdj[1].kind >= 100 || belowAdj[1].kind < 4)) || belowAdj[0].kind === 4 || wetTest([adjacent(x, y, k)[0],adjacent(x, y, k)[1]], Game.level + 1)){
+                DBelow[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1, true);
+                for(var k = 0; k < 6; k++) {
+                    var belowAdj = DBelow[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]];
+                    if((belowAdj[1] && (belowAdj[1].kind >= 100 || belowAdj[1].kind < 4)) || belowAdj[0].kind === 4 || wetTest([adjacent(x, y, k)[0], adjacent(x, y, k)[1]], Game.level + 1)) {
                         //do nothing
                     } else {
                         belowAdj[1] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
@@ -2037,13 +2092,13 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>", true);
         } else {
-            if((hex[1] && hex[1].kind >= 3) ||  Game.level === 0 || wetTest([y,x], Game.level) || tile.kind > 2){
+            if((hex[1] && hex[1].kind >= 3) || Game.level === 0 || wetTest([y, x], Game.level) || tile.kind > 2) {
                 notify(Lang.noCavern);
             } else {
-                hex[1] = bobTheBuilder(101, x, y, Game.level, false);
-                for(var z = 0; z < 6; z++){
+                hex[1] = bobTheBuilder(101, x, y, Game.level);
+                for(var z = 0; z < 6; z++) {
                     var around = returnLevel(Game.level)[adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
-                    if((around[1] && (around[1].kind >= 100 || around[1].kind < 4)) || around[0].kind < 4 || wetTest([adjacent(x, y, z)[0],adjacent(x, y, z)[1]], Game.level + 1)){
+                    if((around[1] && (around[1].kind >= 100 || around[1].kind < 4)) || around[0].kind < 4 || wetTest([adjacent(x, y, z)[0], adjacent(x, y, z)[1]], Game.level + 1)) {
                         //do nothing
                     } else {
                         around[1] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level + 1);
@@ -2056,19 +2111,22 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmMine + "</button><br>", true);
         } else {
-            if((hex[1] && hex[1].kind >= 2)  || wetTest([y,x], Game.level) || tile.kind > 2){
+            if((hex[1] && hex[1].kind !== 221 && hex[1].kind >= 100) || wetTest([y, x], Game.level + 1) || Game.level === 4) {
                 notify(Lang.noMine);
             } else {
-                hex[1] = bobTheBuilder(102, x, y, Game.level);
-                /*
-                for(var z = 0; z < 6; z++){
-                    var around = returnLevel(Game.level)[adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
-                    if((around[1] && (around[1].kind >= 100 || around[1].kind < 4)) || around[0].kind < 4 || wetTest([adjacent(x, y, z)[0],adjacent(x, y, z)[1]], Game.level + 1)){
-                        //do nothing
-                    } else {
-                        around[1] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level + 1);
+                var MBelow = returnLevel(Game.level + 1);
+                hex[1] = bobTheBuilder(102, x, y, Game.level, true);
+                MBelow[y][x][1] = bobTheBuilder(102, x, y, Game.level + 1, true);
+                for(var i = 0; i < 6; i++) {
+                    var mineY = adjacent(x, y, i)[0];
+                    var mineX = adjacent(x, y, i)[1];
+                    if(returnLevel(Game.level)[mineY][mineX][0].mineable){
+                        returnLevel(Game.level)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level);
                     }
-                }*/
+                    if(returnLevel(Game.level + 1)[mineY][mineX][0].mineable){
+                        returnLevel(Game.level + 1)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level + 1);
+                    }
+                }
             }
             //tile.mine(x, y, lowerTile);
         }
