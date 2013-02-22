@@ -96,6 +96,7 @@ function bobTheBuilder(kind, x, y, level){
                 o.kind = 8;
                 o.buildTime = eta(3);
                 o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
+                returnLevel(level)[y][x][0].kind -= 5;
                 returnLevel(level)[y][x][0].ref = changeName(Lang.diggingCavern, returnLevel(level)[y][x][0].ref);
                 reCount('cavernDigger');
                 break;
@@ -2115,10 +2116,7 @@ function clicked(direction) {
         } else {
             //tile.digDown(x, y, lowerTile);
             var below = returnLevel(Game.level + 1);
-            try{
-            console.log('below is ' + below[y][x][1].kind);
-        } catch(e){}
-            if((hex[1] && hex[1].kind >= 100) || (below[y][x][1] && below[y][x][1].kind >= 100) ||  Game.level === 4 || tile.kind === 4 || wetTest([y,x], Game.level + 1)){
+            if((hex[1] && hex[1].kind >= 100) || (below[y][x][1] && below[y][x][1].kind >= 100) ||  Game.level === 4 || wetTest([y,x], Game.level + 1)){
                 notify(Lang.noDig);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level);
@@ -2138,7 +2136,19 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>", true);
         } else {
-            tile.digCavern(x, y, tile, Game.level, false, tile.kind - 5);
+            if((hex[1] && hex[1].kind >= 3) ||  Game.level === 0 || wetTest([y,x], Game.level) || tile.kind > 2){
+                notify(Lang.noCavern);
+            } else {
+                hex[1] = bobTheBuilder(101, x, y, Game.level);
+                for(var z = 0; z < 6; z++){
+                    var around = returnLevel(Game.level)[adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
+                    if((around[1] && (around[1].kind >= 100 || around[1].kind < 4)) || around[0].kind < 4 || wetTest([adjacent(x, y, z)[0],adjacent(x, y, z)[1]], Game.level + 1)){
+                        //do nothing
+                    } else {
+                        around[1] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level + 1);
+                    }
+                }
+            }
         }
         break;
     case 'miner':
