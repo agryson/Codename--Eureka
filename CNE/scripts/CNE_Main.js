@@ -33,7 +33,7 @@ function Construction() {
 }
 
 function nextTurn(x, y, level){
-    var tile = level[y][x][1];
+    var tile = returnLevel(level)[y][x][1];
     if(tile){
         if(tile.exists) {
             tile.age += 1;
@@ -42,18 +42,24 @@ function nextTurn(x, y, level){
             tile.buildTime -= 1;
         } else if (tile.buildTime === 0){
             tile.buildTime = -1;
-            tile.kind = tile.future[0];
+            returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
+            tile.exists = true;
             if(tile.robot >= 0){
                 Game.robotsList[tile.robot][0] -= 1;
                 tile.robot = -1;
             }
-            level[y][x][0].ref = changeName(tile.future[1], level[y][x][0].ref);
-            tile.exists = true;
+            if((tile.kind === 101 && tile.future[0] === 204) || (tile.kind === 102 && tile.future[0] === 221)){
+                console.log(tile);
+                returnLevel(level)[y][x][1] = bobTheBuilder(tile.future[0], x, y, level);
+                console.log(tile);
+            } else {
+                tile.kind = tile.future[0];
+            }
         }
     }
 }
 
-function bobTheBuilder(kind, x, y, level){
+function bobTheBuilder(kind, x, y, level, builderBot){
     if(returnLevel(level)[y][x][0].kind !== 4){
         var o = new Construction();
         o.kind = 100;
@@ -85,14 +91,15 @@ function bobTheBuilder(kind, x, y, level){
             case 101:
                 o.kind = kind;
                 o.buildTime = eta(2);
-                o.future = [204, Lang.airlift];
+                if(builderBot){
+                    o.future = [204, Lang.building];
+                }
                 returnLevel(level)[y][x][0].ref = changeName(Lang.digging, returnLevel(level)[y][x][0].ref);
                 o.robot = 1;
                 Game.robotsList[1][0] += 1;
                 reCount('digger');
                 break;
             case 101101:
-                console.log('digging my cavern here...');
                 o.kind = 8;
                 o.buildTime = eta(3);
                 o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
@@ -100,6 +107,12 @@ function bobTheBuilder(kind, x, y, level){
                 returnLevel(level)[y][x][0].ref = changeName(Lang.diggingCavern, returnLevel(level)[y][x][0].ref);
                 reCount('cavernDigger');
                 break;
+            case 102:
+                o.kind = kind;
+                o.buildTime = eta(3);
+                o.future = [221, Lang.building];
+                break;
+
             //Buildings
             case 200: //agridome
                 o.buildTime = eta(2);
@@ -148,7 +161,7 @@ function bobTheBuilder(kind, x, y, level){
                 o.future = [kind, Lang.arp];
                 break;
             case 204: //airshaft
-                o.buildTime = 0;
+                o.buildTime = 2;
                 o.health = 50;
                 o.energy = -5;
                 o.storage = 1;
@@ -335,7 +348,7 @@ function bobTheBuilder(kind, x, y, level){
                 o.future = [kind, Lang.er];
                 break;
             case 221: // mine
-                o.buildTime = 0;
+                o.buildTime = 2;
                 o.health = 80;
                 o.energy = -40;
                 o.tossMorale = -2;
@@ -344,7 +357,9 @@ function bobTheBuilder(kind, x, y, level){
                 o.crime = 5;
                 o.waste = 1;
                 o.storage = 20;
-                o.future = [kind, Lang.mine];
+                if(builderBot){
+                    o.future = [kind, Lang.mine];
+                }
                 break;
             case 222: // nursery
                 o.buildTime = eta(2);
@@ -548,24 +563,25 @@ function Terrain() {
     this.diggable;
     */
     this.resources = [];
-    this.mining = false;
-    var wip = false; //Work in Progress?
-    var prepared = false;
+    //this.mining = false;
+    //var wip = false; //Work in Progress?
+    //var prepared = false;
     //this.ref;
-    this.willBe = 3;
-    this.willBeDiggable = false;
+    //this.willBe = 3;
+    //this.willBeDiggable = false;
     //robots
     /*
     this.robotInUse;
     */
     //buildings
-    this.health = 0;
-    this.air = false;
-    this.age = 0;
-    this.exists = false; //does the building exist?
+    //this.health = 0;
+    //this.air = false;
+    //this.age = 0;
+    //this.exists = false; //does the building exist?
     /**
      * Calculates the next turn for the tile
      */
+    /*
     this.nextTurn = function() {
         if(this.turns > 0) {
             this.turns -= 1;
@@ -627,98 +643,12 @@ function Terrain() {
     };
 
     /**
-     * The 'dozing' function does everything necessary when we're dozing that terrain
-     *//*   
-    this.prepare = function() {
-        if(!prepared && !this.wip && this.diggable && Game.robotsList[0][0] < Game.robotsList[0][1]) {
-            this.turns = eta(2, this.kind);
-            this.kind = 100;
-            this.wip = true; //tells us that work is in progress
-            this.willBe = 3;
-            this.robotInUse = 0;
-            Game.robotsList[0][0] += 1;
-            reCount('dozer');
-            this.ref = changeName(Lang.preparing, this.ref);
-        } else {
-            notify(Lang.noDoze);
-        }
-    };
-
-    /**
-     * The 'dozing' function does everything necessary when we're dozing that terrain
-     * @param  {int} x         X coordinate of tile to dig
-     * @param  {int} y         Y coordinate of the tile to dig
-     * @param  {Object} lowerTile The tile that is below this one
-     *//*
-    this.digDown = function(x, y, lowerTile) {
-
-        if(Game.level < 4 && !wetTest([y, x], Game.level + 1) && lowerTile.kind !== 4 && !lowerTile.wip && this.diggable && Game.robotsList[1][0] < Game.robotsList[1][1] - 1) {
-            this.willBe = 1000; //TODO: fix to be a real airlift...
-            this.turns = eta(2, this.kind);
-            this.kind = 101;
-            this.ref = changeName(Lang.digging, this.ref);
-            Game.robotsList[1][0] += 1;
-            this.robotInUse = 1;
-            this.digCavern(x, y, lowerTile, Game.level + 1, true, 1000);
-            reCount('digger');
-        } else {
-            notify(Lang.noDig);
-        }
-    };
-
-    /*digCavern takes the x & y coordinates of the clicked upon tile, the level (0-4) you want the cavern built on (to allow for digging down)
-    a boolean 'nearWallKnown' (true if digging down, false otherwise) and a willBe tile type so that we can place a building (airshaft) if necessary*/
-    /**
-     * Digs a cavern at the given coordinates
-     * @param  {int} x             X coordinate
-     * @param  {int} y             Y coordinate
-     * @param  {Object} tile          The tile to dig cavern at
-     * @param  {int} level         What level we are on
-     * @param  {boolean} nearWallKnown Do we know if we're near a wall/water or not?
-     * @param  {int} willBe        The eventual type of this tile
-     */
-    this.digCavern = function(x, y, tile, level, nearWallKnown, willBe) {
-        var nearWall = nearWallKnown;
-        var adj;
-        var free;
-        for(var i = 0; i < 6; i++) {
-            adj = returnLevel(level)[adjacent(x, y, i)[0]][adjacent(x, y, i)[1]][1];
-            if(adj.diggable) {
-                nearWall = true;
-            }
-        }
-        if(!wetTest([y, x], level) && nearWall && !tile.wip && Game.robotsList[1][0] < Game.robotsList[1][1] && !this.exists) {
-            Game.robotsList[1][0] += 1;
-            tile.robotInUse = 1;
-            reCount('digger');
-            willBe >= 0 ? tile.willBe = willBe : tile.willBe = willBe + 5; //this is for if we try to do it on prepared terrain
-            tile.wip = true;
-            tile.turns = eta(2, this.kind);
-            tile.kind = 101;
-            tile.willBeDiggable = true;
-            tile.ref = changeName(Lang.diggingCavern, tile.ref);
-            for(var j = 0; j < 6; j++) {
-                adj = returnLevel(level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
-                if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), level) && !adj.diggable && !adj.wip && adj.kind > 4 && !adj.exists) {
-                    adj.turns = eta(2, adj.kind);
-                    adj.willBe = adj.kind - 5;
-                    adj.kind = 8;
-                    adj.ref = changeName(Lang.diggingCavern, adj.ref);
-                    adj.wip = true;
-                    adj.willBeDiggable = true;
-                }
-            }
-        } else {
-            notify(Lang.noCavern);
-        }
-    };
-
-    /**
      * The 'mining' function does everything necessary when we're mining that terrain
      * @param  {int} x         X coordinate
      * @param  {int} y         Y coordinate
      * @param  {Object} lowerTile The tile below this one
      */
+    /*
     this.mine = function(x, y, lowerTile) {
         var wet = false;
         for(var i = 0; i < 6; i++) {
@@ -773,6 +703,7 @@ function Terrain() {
     /**
      * The 'recycling' function does everything necessary when we're recycling that terrain
      */
+    /*
     this.recycle = function() {
         if(!wip && this.kind !== 4 && Game.robotsList[3][0] < Game.robotsList[3][1]) {
             this.turns = eta(3, this.kind);
@@ -787,56 +718,10 @@ function Terrain() {
             notify(Lang.noRecycle);
         }
         //TODO: get the resources from the recycled building if I can...
-    };
-
-    /**
-     * The 'building' function does everything necessary when we're building on that terrain
-     * @param  {int} building The building type we want to build
-     * @param  {int} health   the health of that building
-     * @param  {int} turns    The turns it takes to build that building
-     */
-    this.build = function(building, health, turns) {
-        console.log(building);
-        if(this.kind === 3) {
-            this.kind = 100; //TODO: replace with a construction animation
-            /*
-            if(this.UG) {
-                this.willBe = building + 1; //TODO: if underground add 1 and have a different tile for underground ones...
-            } else {
-                this.willBe = building;
-            }*/
-            this.willBe = building;
-            this.ref = changeName(Lang.building + Game.buildings[building - 200][3], this.ref);
-            this.wip = true;
-            this.health = health; //health of building
-            this.turns = turns;
-            this.exists = true;
-            this.age = 0;
-            if(turns === 0) {
-                this.nextTurn();
-            }
-        }
-    };
+    }*/
 
 }
 
-/**
- * Gives the number of turns necessary to build on a given terrain type
- * @param  {int} baseTurns The base number of turns taken to do something on that terrain
- * @param  {int} kind      The kind of tile we're dealing with
- * @return {int}
- */
-/*
-function eta(baseTurns, kind) {
-    //calculates the turns necessary to do something on this terrain
-    if(kind === 1 || kind === 6) {
-        return Math.floor(baseTurns * 1.5);
-    } else if(kind === 2 || kind === 7) {
-        return Math.floor(baseTurns * 2.4);
-    } else {
-        return baseTurns;
-    }
-}
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 /**
  * The main game object
@@ -935,7 +820,7 @@ function Param() {
     this.robotsList = [
         [0, 5, "dozer", false, 2], //
         [0, 3, "digger", false, 2], //
-        [0, 1, "cavernDigger", false, 1], //
+        [0, 3, "cavernDigger", false, 1], //
         [0, 3, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
@@ -1192,7 +1077,7 @@ function eavesdrop() {
                       //  returnLevel(l)[y][x][0].nextTurn();
                    // }
                     //catch(e){
-                        nextTurn(x, y, returnLevel(l));
+                        nextTurn(x, y, l);
                     //}
                 }
             }
@@ -2079,31 +1964,47 @@ function clicked(direction) {
     case 'lander':
         hex[1] = bobTheBuilder(237, x, y, Game.level);
         for(var j = 0; j < 6; j++) {
-            if(j % 2 !== 0) {
-                Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1] = bobTheBuilder(211, adjacent(x, y, j)[1], adjacent(x, y, j)[0], Game.level);
+            var tempY = adjacent(x, y, j)[0];
+            var tempX = adjacent(x, y, j)[1];
+            switch(j) {
+                case 1:
+                case 3:
+                case 5:
+                    Game.map[tempY][tempX][1] = bobTheBuilder(211, tempX, tempY, Game.level);
+                break;
+                case 0:
+                    Game.map[tempY][tempX][1] = bobTheBuilder(210, tempX, tempY, Game.level);
+                    break;
+                case 2:
+                    Game.map[tempY][tempX][1] =  bobTheBuilder(203, tempX, tempY, Game.level);
+                    break;
+                case 4:
+                    Game.map[tempY][tempX][1] = bobTheBuilder(235, tempX, tempY, Game.level);
+                    break;
+                default:
+                    console.log("The eagle most definitely has *not* landed");
             }
         }
-        Game.map[adjacent(x, y, 0)[0]][adjacent(x, y, 0)[1]][1] = bobTheBuilder(210, adjacent(x, y, 0)[1], adjacent(x, y, 0)[0], Game.level);
-        Game.map[adjacent(x, y, 2)[0]][adjacent(x, y, 2)[1]][1] =  bobTheBuilder(203, adjacent(x, y, 2)[1], adjacent(x, y, 2)[0], Game.level);
-        Game.map[adjacent(x, y, 4)[0]][adjacent(x, y, 4)[1]][1] = bobTheBuilder(235, adjacent(x, y, 4)[1], adjacent(x, y, 4)[0], Game.level);
+        
         // ...
-        Game.buildings[37][1] = false;
-        var buildable = [0, 3, 8, 10, 11, 15, 17, 23, 26, 27, 32, 34, 35, 36];
-        for(var ref in buildable) {
-            Game.buildings[buildable[ref]][1] = true;
-        }
-        for(var i = 0; i < Game.robotsList.length; i++) {
-            Game.robotsList[i][3] = true;
-        }
-        //Game.clickedOn = null;
-        checkBuildings();
+        setTimeout(function(){
+            Game.buildings[37][1] = false;
+            var buildable = [0, 3, 8, 10, 11, 15, 17, 23, 26, 27, 32, 34, 35, 36];
+            for(var ref in buildable) {
+                Game.buildings[buildable[ref]][1] = true;
+            }
+            for(var i = 0; i < Game.robotsList.length; i++) {
+                Game.robotsList[i][3] = true;
+            }
+            checkBuildings();
+        }, 300);
         break;
     case 'dozer':
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
             //tile.prepare();
-            if(hex[1] && hex[1].kind <200 && hex[1].kind >= 2){
+            if((hex[1] && hex[1].kind <200 && hex[1].kind >= 2) || tile.kind > 2){
                 notify(Lang.noDoze);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
@@ -2116,11 +2017,11 @@ function clicked(direction) {
         } else {
             //tile.digDown(x, y, lowerTile);
             var below = returnLevel(Game.level + 1);
-            if((hex[1] && hex[1].kind >= 100) || (below[y][x][1] && below[y][x][1].kind >= 100) ||  Game.level === 4 || wetTest([y,x], Game.level + 1)){
+            if((hex[1] && hex[1].kind >= 100) || (below[y][x][1] && below[y][x][1].kind >= 100) || tile.kind > 3 || Game.level === 4 || wetTest([y,x], Game.level + 1)){
                 notify(Lang.noDig);
             } else {
-                hex[1] = bobTheBuilder(101, x, y, Game.level);
-                below[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1);
+                hex[1] = bobTheBuilder(101, x, y, Game.level, true);
+                below[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1, true);
                 for(var k = 0; k < 6; k++){
                     var belowAdj = below[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]];
                     if((belowAdj[1] && (belowAdj[1].kind >= 100 || belowAdj[1].kind < 4)) || belowAdj[0].kind === 4 || wetTest([adjacent(x, y, k)[0],adjacent(x, y, k)[1]], Game.level + 1)){
@@ -2139,7 +2040,7 @@ function clicked(direction) {
             if((hex[1] && hex[1].kind >= 3) ||  Game.level === 0 || wetTest([y,x], Game.level) || tile.kind > 2){
                 notify(Lang.noCavern);
             } else {
-                hex[1] = bobTheBuilder(101, x, y, Game.level);
+                hex[1] = bobTheBuilder(101, x, y, Game.level, false);
                 for(var z = 0; z < 6; z++){
                     var around = returnLevel(Game.level)[adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
                     if((around[1] && (around[1].kind >= 100 || around[1].kind < 4)) || around[0].kind < 4 || wetTest([adjacent(x, y, z)[0],adjacent(x, y, z)[1]], Game.level + 1)){
@@ -2155,7 +2056,21 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmMine + "</button><br>", true);
         } else {
-            tile.mine(x, y, lowerTile);
+            if((hex[1] && hex[1].kind >= 2)  || wetTest([y,x], Game.level) || tile.kind > 2){
+                notify(Lang.noMine);
+            } else {
+                hex[1] = bobTheBuilder(102, x, y, Game.level);
+                /*
+                for(var z = 0; z < 6; z++){
+                    var around = returnLevel(Game.level)[adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
+                    if((around[1] && (around[1].kind >= 100 || around[1].kind < 4)) || around[0].kind < 4 || wetTest([adjacent(x, y, z)[0],adjacent(x, y, z)[1]], Game.level + 1)){
+                        //do nothing
+                    } else {
+                        around[1] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level + 1);
+                    }
+                }*/
+            }
+            //tile.mine(x, y, lowerTile);
         }
         break;
     case 'recycler':
