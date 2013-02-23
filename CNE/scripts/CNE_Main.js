@@ -148,7 +148,9 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.kind = 8;
             o.buildTime = eta(3);
             o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
-            returnLevel(level)[y][x][0].kind -= 5;
+            console.log(returnLevel(level)[y][x][0].kind);
+            returnLevel(level)[y][x][0].kind = returnLevel(level)[y][x][0].kind - 5;
+            console.log(returnLevel(level)[y][x][0].kind);
             returnLevel(level)[y][x][0].ref = changeName(Lang.diggingCavern, returnLevel(level)[y][x][0].ref);
             reCount('cavernDigger');
             break;
@@ -2031,7 +2033,7 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
             //tile.prepare();
-            if((hex[1] && hex[1].kind < 200 && hex[1].kind > 2) || tile.kind > 2) {
+            if((hex[1] && (hex[1].kind < 200 && hex[1].kind > 2)) || tile.kind > 2) {
                 notify(Lang.noDoze);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
@@ -2073,7 +2075,7 @@ function clicked(direction) {
                     if((around[1] && (around[1].kind >= 100 || around[1].kind < 4)) || around[0].kind < 4 || wetTest([adjacent(x, y, z)[0], adjacent(x, y, z)[1]], Game.level + 1)) {
                         //do nothing
                     } else {
-                        around[1] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level + 1);
+                        around[1] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level);
                     }
                 }
             }
