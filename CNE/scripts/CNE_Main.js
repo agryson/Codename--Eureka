@@ -727,64 +727,6 @@ function Terrain() {
     };
 
     /**
-     * The 'mining' function does everything necessary when we're mining that terrain
-     * @param  {int} x         X coordinate
-     * @param  {int} y         Y coordinate
-     * @param  {Object} lowerTile The tile below this one
-     */
-    /*
-    this.mine = function(x, y, lowerTile) {
-        var wet = false;
-        for(var i = 0; i < 6; i++) {
-            if(wetTest(adjacent(x, y, i), Game.level)) {
-                wet = true;
-            }
-        }
-        if(Game.level < 4 && lowerTile.kind !== 4 && lowerTile.kind < 100 && !this.wip && this.diggable && !lowerTile.diggable && Game.robotsList[3][0] < Game.robotsList[3][1] && (this.mineable || lowerTile.mineable)) {
-            Game.robotsList[3][0] += 1;
-            this.robotInUse = 3;
-            reCount('miner');
-            this.turns = eta(5, this.kind);
-            this.kind = 102;
-            this.ref = changeName(Lang.mining, this.ref);
-            this.wip = true;
-            this.willBe = 1100;
-            for(var j = 0; j < 6; j++) {
-                var adj = returnLevel(Game.level)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
-                if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level) && !adj.wip && !adj.exists && adj.mineable) {
-                    adj.turns = eta(5, this.kind);
-                    adj.ref = changeName(Lang.mining, adj.ref);
-                    adj.wip = true;
-                    adj.willBeDiggable = true;
-                    adj.willBe = 1100;
-                    console.log("digging underground");
-                }
-                if(Game.level + 1 !== 4) {
-                    adj = returnLevel(Game.level + 1)[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][1];
-                    if(adj.kind !== 4 && !wetTest(adjacent(x, y, j), Game.level + 1) && !adj.diggable && !adj.wip && !adj.exists && adj.mineable) {
-                        adj.turns = eta(5, this.kind);
-                        adj.ref = changeName(Lang.mining, adj.ref);
-                        adj.wip = true;
-                        adj.willBeDiggable = true;
-                        adj.willBe = 1100;
-                    }
-                }
-            }
-            if(lowerTile.mineable) {
-                lowerTile.turns = eta(5, lowerTile.kind);
-                lowerTile.wip = true;
-                lowerTile.willBe = 1100;
-                lowerTile.ref = changeName(Lang.mining, lowerTile.ref);
-                lowerTile.willBeDiggable = true;
-                lowerTile.kind = 102;
-            }
-        } else {
-            notify(Lang.noMine);
-        }
-        //TODO: get the resources from this and adjacent tiles...
-    };
-
-    /**
      * The 'recycling' function does everything necessary when we're recycling that terrain
      */
     /*
@@ -2087,7 +2029,7 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
         } else {
             //tile.prepare();
-            if((hex[1] && hex[1].kind < 200 && hex[1].kind >= 2) || tile.kind > 2) {
+            if((hex[1] && hex[1].kind < 200 && hex[1].kind > 2) || tile.kind > 2) {
                 notify(Lang.noDoze);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
