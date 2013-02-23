@@ -17,6 +17,7 @@ function Construction() {
     this.age = 0;
     this.health = 0;
     this.energy = 0;
+    this.food = 0;
     this.tossMorale = 0;
     this.hipMorale = 0;
     this.artMorale = 0;
@@ -62,6 +63,7 @@ function nextTurn(x, y, level) {
             Game.crime[Game.crime.length - 1] += tile.crime;
             Game.storage[Game.storage.length - 1] += tile.storage;
             Game.energy[Game.energy.length - 1] += tile.energy;
+            Game.food[Game.food.length - 1] += tile.food;
         }
 
         //BUILDING
@@ -184,6 +186,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.energy = -20;
             o.tossMorale = 1;
             o.hipMorale = 2;
+            o.food = 15;
             o.crime = 2;
             o.waste = 2;
             o.storage = 15;
@@ -197,6 +200,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 2;
             o.hipMorale = 4;
             o.artMorale = 1;
+            o.food = 30;
             o.crime = 1;
             o.waste = 1;
             o.storage = 20;
@@ -325,6 +329,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = -5;
             o.hipMorale = -10;
             o.artMorale = 5;
+            o.artPop = 0.5;
             o.crime = 2;
             o.waste = 5;
             o.storage = 30;
@@ -363,6 +368,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = -5;
             o.hipMorale = -10;
             o.artMorale = 0;
+            o.artPop = 0.2;
             o.crime = 3;
             o.waste = 5;
             o.storage = 30;
@@ -387,6 +393,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 2;
             o.hipMorale = 2;
             o.artMorale = 2;
+            o.hipPop = 0.1;
+            o.tossPop = 0.1;
             o.crime = 3;
             o.waste = 3;
             o.storage = 10;
@@ -401,6 +409,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 4;
             o.hipMorale = 4;
             o.artMorale = 4;
+            o.hipPop = 0.2;
+            o.tossPop = 0.2;
             o.crime = 2;
             o.waste = 2;
             o.storage = 10;
@@ -415,6 +425,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 6;
             o.hipMorale = 6;
             o.artMorale = 6;
+            o.hipPop = 0.3;
+            o.tossPop = 0.3;
             o.crime = 1;
             o.waste = 1;
             o.storage = 15;
@@ -455,6 +467,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 5;
             o.hipMorale = 5;
             o.artMorale = 0;
+            o.hipPop = 0.2;
+            o.tossPop = 0.2;
             o.crime = 2;
             o.waste = 3;
             o.storage = 2;
@@ -507,6 +521,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 25;
             o.hipMorale = 20;
             o.artMorale = 10;
+            o.hipPop = 0.1;
+            o.tossPop = 0.1;
             o.crime = 15;
             o.waste = 10;
             o.storage = 5;
@@ -628,6 +644,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 5;
             o.hipMorale = -2;
             o.artMorale = 10;
+            o.artPop = 0.2;
             o.crime = 3;
             o.waste = 2;
             o.storage = 5;
@@ -828,10 +845,8 @@ function Param() {
     this.artMorale = [500];
     this.crime = [0];
     this.storage = [0];
+    this.food = [50];
     this.energy = [50];
-    this.tossBabies = [0];
-    this.hipBabies = [0];
-    this.artBabies = [0];
 
     this.resetStats = function(){
         this.housing.push(0);
@@ -841,24 +856,15 @@ function Param() {
         this.crime.push(0);
         this.storage.push(0);
         this.energy.push(50);
+        this.tossPop.push(this.tossPop[this.tossPop.length - 1]);
+        this.hipPop.push(this.hipPop[this.hipPop.length - 1]);
+        this.artPop.push(this.artPop[this.artPop.length - 1]);
+        this.food.push(this.food[this.food.length - 1] - Math.floor((this.tossPop[this.tossPop.length - 1] + this.hipPop[this.hipPop.length - 1] + this.artPop[this.artPop.length - 1])/15));
     };
 
     this.setStats = function(){
-        var popCount = function(pop, birth){
-            pop.push(pop.slice(-1) + Math.floor(birth.sice(-1)));
-            birth.push(birth.slice(-1) - Math.floor(birth.slice(-1)));
-        };
         this.turn += 1;
-        if(Math.floor(this.tossBabies.slice(-1)) > 0){
-            popCount(this.tossPop, this.tossBabies);
-        }
-        if(Math.floor(this.hipBabies.slice(-1)) > 0){
-            popCount(this.hipPop, this.hipBabies);
-        }
-        if(Math.floor(this.artBabies.slice(-1)) > 0){
-            popCount(this.artPop, this.artBabies);
-        }
-        this.sdf.push(this.tossPop.slice(-1) + this.hipPop.slice(-1) + this.artPop.slice(-1) - this.housing.slice(-1));
+        this.sdf.push(Math.floor(this.tossPop[this.tossPop.length - 1]) + Math.floor(this.hipPop[this.hipPop.length - 1]) + Math.floor(this.artPop[this.artPop.length - 1]) - Math.floor(this.housing[this.housing.length - 1]));
     };
 }
 
@@ -1042,6 +1048,9 @@ function eavesdrop() {
         }
     };
     document.getElementById('globalReport').onclick = function() {
+        if(!Game.buildings[37][1]){
+            document.getElementById('execDropDownContainer').innerHTML = execReview();
+        }
         menu(exec, execButton, 'exec_hidden');
     };
     //!Executive Drop Down
@@ -1074,27 +1083,31 @@ function eavesdrop() {
 
         };
     document.getElementById('turn').onclick = function() {
-        var x;
-        var y;
-
-        Game.resetStats();
-        for(y = 0; y < Game.radarRad * 2; y++) {
-            for(x = 0; x < Game.radarRad * 2; x++) {
-                for(var l = 0; l < 5; l++) {
-                    nextTurn(x, y, l);
+        if(!Game.buildings[37][1]){
+            var x;
+            var y;
+            
+            Game.resetStats();
+            for(y = 0; y < Game.radarRad * 2; y++) {
+                for(x = 0; x < Game.radarRad * 2; x++) {
+                    for(var l = 0; l < 5; l++) {
+                        nextTurn(x, y, l);
+                    }
                 }
             }
+            Game.setStats();
+    
+            drawRadar();
+            Game.turnNum.innerHTML = "Week: " + Game.turn;
+            reCount('all');
+            //The following hold code just prevents accidentally skipping two turns with accidental clicks...
+            document.getElementById('turn').disabled = true;
+            setTimeout(function() {
+                document.getElementById('turn').disabled = false;
+            }, 300);
+        } else {
+            notify(Lang.setDown);
         }
-        Game.setStats();
-
-        drawRadar();
-        Game.turnNum.innerHTML = "Week: " + Game.turn;
-        reCount('all');
-        //The following hold code just prevents accidentally skipping two turns with accidental clicks...
-        document.getElementById('turn').disabled = true;
-        setTimeout(function() {
-            document.getElementById('turn').disabled = false;
-        }, 300);
     };
     document.getElementById('zoom').onchange = function() {
         var zoomLevel = document.getElementById('zoom').value;
@@ -1112,7 +1125,17 @@ function zoom(zoomLevel) {
     mapFit();
 }
 
-//TODO: Clean this up! :-S
+function execReview(){
+    var content = "<br>";
+    content += "<span>TOSSer Population: " + Game.tossPop + " </span><br>";
+    content += "<span>Hipstie Population: " + Game.hipPop + " </span><br>";
+    content += "<span>ArtIe Population: " + Game.artPop + " </span><br>";
+    content += "<span>Total Population: " + (Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1] + Game.artPop[Game.artPop.length - 1]) + " </span><br>";
+    content += "<span>Homelessness: " + Game.sdf + " </span><br>";
+    content += "<span>Energy: " + Game.energy + " </span><br>";
+    content += "<span>Food: " + Game.food + " </span><br>";
+    return content;
+}
 
 function mapFit(bool) {
     console.log('I\'m refitting!');
@@ -2041,7 +2064,7 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>", true);
         } else {
-            if((hex[1] && hex[1].kind >= 3) || Game.level === 0 || wetTest([y, x], Game.level) || tile.kind > 2) {
+            if((hex[1] && hex[1].kind > 3) || Game.level === 0 || wetTest([y, x], Game.level) || tile.kind > 2) {
                 notify(Lang.noCavern);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level);

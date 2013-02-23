@@ -8,6 +8,7 @@ function Lang(){
 	this.noConnection = "No adjacent connector node.";
 	this.notPrepared = "This terrain has not been prepared.";
 	this.onWater = "Are you nuts?!";
+	this.setDown = "Please choose your landing zone first...";
 
 	//Actions and references
 	this.preparing = "Preparing";
