@@ -33,37 +33,44 @@ function Construction() {
     this.future = [3, Lang.prepared];
     this.robot = -1;
     this.mining = false;
+    this.vital = false;
+    this.shutdown = false;
 }
 
 function nextTurn(x, y, level) {
     var tile = returnLevel(level)[y][x][1];
 
-    var checkMine = function(xIn, yIn, levelIn){
-        var checked = false;
-        for(var i = 0; i < 6; i++){
-            if(returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221){
-                checked = true;
+    var checkMine = function(xIn, yIn, levelIn) {
+            var checked = false;
+            for(var i = 0; i < 6; i++) {
+                if(returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221) {
+                    checked = true;
+                }
             }
-        }
-        return checked;
-    };
+            return checked;
+        };
 
     if(tile) {
-        
+
         //GENERAL ADVANCEMENT OF THE GAME
         if(tile.exists) {
             tile.age += 1;
-            Game.tossPop[Game.tossPop.length - 1] += tile.tossPop;
-            Game.hipPop[Game.hipPop.length - 1] += tile.hipPop;
-            Game.artPop[Game.artPop.length - 1] += tile.artPop;
-            Game.housing[Game.housing.length - 1] += tile.housing;
-            Game.tossMorale[Game.tossMorale.length - 1] += tile.tossMorale;
-            Game.hipMorale[Game.hipMorale.length - 1] += tile.hipMorale;
-            Game.artMorale[Game.artMorale.length - 1] += tile.artMorale;
-            Game.crime[Game.crime.length - 1] += tile.crime;
-            Game.storage[Game.storage.length - 1] += tile.storage;
-            Game.energy[Game.energy.length - 1] += tile.energy;
-            Game.food[Game.food.length - 1] += tile.food;
+            tile.shutdown = false;
+            if((Game.energy[Game.energy.length - 1] <= 10 && tile.vital) || Game.energy[Game.energy.length - 1] > 10) {
+                Game.tossPop[Game.tossPop.length - 1] += tile.tossPop;
+                Game.hipPop[Game.hipPop.length - 1] += tile.hipPop;
+                Game.artPop[Game.artPop.length - 1] += tile.artPop;
+                Game.housing[Game.housing.length - 1] += tile.housing;
+                Game.tossMorale[Game.tossMorale.length - 1] += tile.tossMorale;
+                Game.hipMorale[Game.hipMorale.length - 1] += tile.hipMorale;
+                Game.artMorale[Game.artMorale.length - 1] += tile.artMorale;
+                Game.crime[Game.crime.length - 1] += tile.crime;
+                Game.storage[Game.storage.length - 1] += tile.storage;
+                Game.energy[Game.energy.length - 1] += tile.energy;
+                Game.food[Game.food.length - 1] += tile.food;
+            } else if(Game.energy[Game.energy.length - 1] <= 10 && !tile.vital) {
+                this.shutdown = true;
+            }
         }
 
         //BUILDING
@@ -81,6 +88,7 @@ function nextTurn(x, y, level) {
                 returnLevel(level)[y][x][1] = bobTheBuilder(tile.future[0], x, y, level, false);
             } else {
                 tile.kind = tile.future[0];
+                nextTurn(x, y, level);
             }
         }
 
@@ -125,6 +133,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
         switch(kind) {
             //Bots
         case 100:
+            o.vital = true;
             o.buildTime = eta(2);
             o.future = [3, Lang.prepared];
             returnLevel(level)[y][x][0].ref = changeName(Lang.preparing, returnLevel(level)[y][x][0].ref);
@@ -134,6 +143,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
 
         case 101:
+            o.vital = true;
             o.kind = kind;
             o.buildTime = eta(2);
             if(builderBot) {
@@ -145,17 +155,22 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             reCount('digger');
             break;
         case 101101:
+            o.vital = true;
             o.kind = 8;
             o.buildTime = eta(3);
             o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
-            console.log(returnLevel(level)[y][x][0].kind);
-            returnLevel(level)[y][x][0].kind = returnLevel(level)[y][x][0].kind - 5;
-            console.log(returnLevel(level)[y][x][0].kind);
+            if(returnLevel(level)[y][x][0].kind === 8) {
+                returnLevel(level)[y][x][0].kind = -6;
+            } else {
+                returnLevel(level)[y][x][0].kind = -5;
+            }
+            returnLevel(level)[y][x][0].kind = -5;
             returnLevel(level)[y][x][0].ref = changeName(Lang.diggingCavern, returnLevel(level)[y][x][0].ref);
             reCount('cavernDigger');
             break;
 
         case 102:
+            o.vital = true;
             o.kind = kind;
             o.buildTime = eta(3);
             if(builderBot) {
@@ -168,13 +183,14 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             reCount('miner');
             break;
         case 102102:
+            o.vital = true;
             o.buildTime = 2;
             o.kind = returnLevel(level)[y][x][0].kind;
-            if(returnLevel(level)[y][x][0].kind === 8){
+            if(returnLevel(level)[y][x][0].kind === 8) {
                 o.future = [8, Lang.mining];
                 returnLevel(level)[y][x][0].ref = changeName(Lang.mining, returnLevel(level)[y][x][0].ref);
                 o.mining = true;
-            } else if (level > 0) {
+            } else if(level > 0) {
                 o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
                 returnLevel(level)[y][x][0].kind -= 5;
             }
@@ -183,6 +199,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             //Buildings
         case 200:
             //agridome
+            o.vital = true;
             o.buildTime = eta(2);
             o.health = 70;
             o.energy = -20;
@@ -223,7 +240,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 203:
             //arp
-            o.buildTime = eta(2);
+            o.vital = true;
+            o.buildTime = eta(3);
             o.health = 80;
             o.energy = -60;
             o.tossMorale = 5;
@@ -235,6 +253,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 204:
             //airshaft
+            o.vital = true;
             o.buildTime = 2;
             o.health = 50;
             o.energy = -5;
@@ -304,6 +323,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 210:
             //command
+            o.vital = true;
             o.buildTime = eta(2);
             o.health = 100;
             o.energy = -30;
@@ -317,6 +337,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 211:
             // connector
+            o.vital = true;
             o.buildTime = eta(1);
             o.health = 20;
             o.energy = -1;
@@ -339,6 +360,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 213:
             // fission
+            o.vital = true;
             o.buildTime = eta(4);
             o.health = 70;
             o.energy = 1500;
@@ -352,6 +374,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 214:
             // fusion
+            o.vital = true;
             o.buildTime = eta(5);
             o.health = 90;
             o.energy = 2500;
@@ -378,6 +401,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 216:
             // geothermal
+            o.vital = true;
             o.buildTime = eta(4);
             o.health = 70;
             o.energy = 200;
@@ -558,6 +582,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 229:
             // solar farm
+            o.vital = true;
             o.buildTime = eta(2);
             o.health = 30;
             o.energy = 250;
@@ -630,6 +655,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 235:
             // windfarm
+            o.vital = true;
             o.buildTime = eta(3);
             o.health = 40;
             o.energy = 200;
@@ -654,10 +680,12 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             break;
         case 237:
             // lander
+            o.vital = true;
             o.kind = 237;
             o.buildTime = eta(0);
             o.health = 70;
             o.storage = 50;
+            o.energy = 60;
             o.future = [kind, Lang.lander];
             returnLevel(level)[y][x][0].ref = changeName(Lang.lander, returnLevel(level)[y][x][0].ref);
             break;
@@ -690,7 +718,6 @@ function Terrain() {
     //this.ref;
     //this.willBe = 3;
     //this.willBeDiggable = false;
-
     /**
      * The 'recycling' function does everything necessary when we're recycling that terrain
      */
@@ -848,26 +875,86 @@ function Param() {
     this.crime = [0];
     this.storage = [0];
     this.food = [50];
-    this.energy = [50];
+    this.energy = [60];
 
-    this.resetStats = function(){
-        this.housing.push(0);
-        this.tossMorale.push(500);
-        this.hipMorale.push(500);
-        this.artMorale.push(500);
-        this.crime.push(0);
-        this.storage.push(0);
-        this.energy.push(50);
-        this.tossPop.push(this.tossPop[this.tossPop.length - 1]);
-        this.hipPop.push(this.hipPop[this.hipPop.length - 1]);
-        this.artPop.push(this.artPop[this.artPop.length - 1]);
-        this.food.push(this.food[this.food.length - 1] - Math.floor((this.tossPop[this.tossPop.length - 1] + this.hipPop[this.hipPop.length - 1] + this.artPop[this.artPop.length - 1])/15));
-    };
+    //modifiers
+    this.blackout = 0;
+}
 
-    this.setStats = function(){
-        this.turn += 1;
-        this.sdf.push(Math.floor(this.tossPop[this.tossPop.length - 1]) + Math.floor(this.hipPop[this.hipPop.length - 1]) + Math.floor(this.artPop[this.artPop.length - 1]) - Math.floor(this.housing[this.housing.length - 1]));
-    };
+function setStats() {
+    Game.housing.push(0);
+    Game.crime.push(0);
+    Game.storage.push(0);
+    Game.tossPop.push(Game.tossPop[Game.tossPop.length - 1]);
+    Game.hipPop.push(Game.hipPop[Game.hipPop.length - 1]);
+    Game.artPop.push(Game.artPop[Game.artPop.length - 1]);
+    Game.sdf.push(Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1]) - Math.floor(Game.housing[Game.housing.length - 1]));
+    Game.food.push(Game.food[Game.food.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15));
+    Game.energy.push(-Math.floor((Game.artPop[Game.artPop.length - 1] / 15)));
+    Game.turn += 1;
+    //Morale
+    Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout);
+    Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout);
+    Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 2);
+
+    //reset modifiers
+    Game.blackout = 0;
+}
+
+function drawGraph(outputId, sourceData, colour, maxi, mini) {
+    var can = document.getElementById(outputId);
+    var con = document.getElementById(outputId).getContext('2d');
+    var canW = parseInt(can.width, 10);
+    var canH = parseInt(can.height, 10);
+
+    //returns our highest data point so we can scale the axes
+    var max = function(arr) {
+            var mem = 0;
+            for(var i = 0; i < arr.length; i++) {
+                if(arr[i] > arr[mem]) {
+                    mem = i;
+                }
+            }
+            return mem;
+        };
+
+    var min = function(arr) {
+            var mem = 0;
+            for(var i = 0; i < arr.length; i++) {
+                if(arr[i] < arr[mem]) {
+                    mem = i;
+                }
+            }
+            return mem;
+        };
+
+    var normal = function(val, arr) {
+            var out = (arr[val] - mini) / (maxi - mini);
+            return out*canH;
+        };
+
+
+    var sepX = Math.round(canW / sourceData.length);
+    var sepY = Math.round(canH / sourceData[max(sourceData)]);
+
+    //Lines
+    con.beginPath();
+    con.strokeStyle = colour;
+    con.moveTo(0, canH - normal(0, sourceData));
+    for(var k = 1; k < sourceData.length; k++) {
+        con.lineTo(k * sepX, canH - normal(k, sourceData));
+    }
+    con.stroke();
+    //Our marks
+    con.strokeStyle = 'rgba(255,255,255,0.02)';
+    con.moveTo(5, Math.floor(canH - normal(0, [0])));
+    con.lineTo(canW - 5, Math.floor(canH - normal(0, [0])));
+    con.strokeStyle = 'rgba(255,255,255,0.08)';
+    for(var grad = 0; grad <= 10; grad++) {
+        con.moveTo(5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
+        con.lineTo(canW - 5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
+    }
+    con.stroke();
 }
 
 /**
@@ -1007,7 +1094,9 @@ function eavesdrop() {
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        rightClicked();
+        if(Game.highlight) {
+            rightClicked();
+        }
         return false;
     };
 
@@ -1048,13 +1137,36 @@ function eavesdrop() {
             exec.classList.add('menu_visible');
             exec.classList.remove('menu_hidden');
         }
+        Game.highlight = false;
     };
+
+    var populationTab = document.getElementById('populationTab');
+    var systemsTab = document.getElementById('systemsTab');
+    populationTab.onclick = function() {
+        populationTab.classList.toggle('stat_hidden');
+        systemsTab.classList.add('stat_hidden');
+    };
+    /*
+    systemsTab.onclick = function(){
+        if(systemsTab.classList.contains('stat_hidden')){
+            systemsTab.classList.remove('stat_hidden');
+            populationTab.classList.remove('stat_hidden');
+        } else {
+            systemsTab.classList.add('stat_hidden');
+            populationTab.classList.add('stat_hidden');
+        }
+        
+    };*/
+
+
     document.getElementById('globalReport').onclick = function() {
-        if(!Game.buildings[37][1]){
-            document.getElementById('execDropDownContainer').innerHTML = execReview();
+        if(!Game.buildings[37][1]) {
+            execReview();
         }
         menu(exec, execButton, 'exec_hidden');
     };
+
+
     //!Executive Drop Down
     //
     //Global Menu
@@ -1085,11 +1197,11 @@ function eavesdrop() {
 
         };
     document.getElementById('turn').onclick = function() {
-        if(!Game.buildings[37][1]){
+        if(!Game.buildings[37][1]) {
             var x;
             var y;
-            
-            Game.resetStats();
+
+            setStats();
             for(y = 0; y < Game.radarRad * 2; y++) {
                 for(x = 0; x < Game.radarRad * 2; x++) {
                     for(var l = 0; l < 5; l++) {
@@ -1097,8 +1209,11 @@ function eavesdrop() {
                     }
                 }
             }
-            Game.setStats();
-    
+            if(Game.energy[Game.energy.length - 1] <= 10) {
+                notify(Lang.noPower);
+                Game.blackout = 30;
+            }
+
             drawRadar();
             Game.turnNum.innerHTML = "Week: " + Game.turn;
             reCount('all');
@@ -1127,7 +1242,26 @@ function zoom(zoomLevel) {
     mapFit();
 }
 
-function execReview(){
+function execReview() {
+
+    document.getElementById('morale').getContext('2d').clearRect(0, 0, 325, 220);
+    drawGraph('morale', Game.tossMorale, '#4444DD', 1000, 0);
+    drawGraph('morale', Game.hipMorale, '#44DD44', 1000, 0);
+    drawGraph('morale', Game.artMorale, '#DD4444', 1000, 0);
+
+    document.getElementById('population').getContext('2d').clearRect(0, 0, 325, 220);
+    drawGraph('population', Game.tossPop, '#4444DD', 1000, 0);
+    drawGraph('population', Game.hipPop, '#44DD44', 1000, 0);
+    drawGraph('population', Game.artPop, '#DD4444', 1000, 0);
+
+    document.getElementById('homeless').getContext('2d').clearRect(0, 0, 325, 220);
+    drawGraph('homeless', Game.sdf, '#FF4500', 1000, 0);
+
+    document.getElementById('crime').getContext('2d').clearRect(0, 0, 325, 220);
+    drawGraph('crime', Game.crime, '#FFF', 1000, 0);
+
+
+    /*
     var content = "<br>";
     content += "<span>TOSSer Population: " + Game.tossPop + " </span><br>";
     content += "<span>Hipstie Population: " + Game.hipPop + " </span><br>";
@@ -1136,7 +1270,11 @@ function execReview(){
     content += "<span>Homelessness: " + Game.sdf + " </span><br>";
     content += "<span>Energy: " + Game.energy + " </span><br>";
     content += "<span>Food: " + Game.food + " </span><br>";
+    content += "<span>TOSSer Morale: " + Game.tossMorale + " </span><br>";
+    content += "<span>Hipstie Morale: " + Game.hipMorale + " </span><br>";
+    content += "<span>ArtIe Morale: " + Game.artMorale + " </span><br>";
     return content;
+    */
 }
 
 function mapFit(bool) {
@@ -1161,7 +1299,7 @@ function mapFit(bool) {
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
 
-    //Messy stuff...
+    //Messy stuff to handle if I try to zoom out of the map...
     if(Game.retY - Game.yLimit / 2 < 0) {
         Game.retY = Math.ceil(Game.retY - (Game.retY - Game.yLimit / 2));
     } else if(Game.retY + Game.yLimit / 2 > Game.radarRad * 2) {
@@ -1175,13 +1313,16 @@ function mapFit(bool) {
     if(Game.yLimit % 2 === 0) {
         Game.yLimit += 1;
     }
+
     Game.yShift = Math.round(Game.yLimit / 2);
+
     if(Game.yShift % 2 === 0) {
-        Game.yShift -= 1;
+        Game.yShift += 1;
         Game.yLimit += 2;
     }
+
     if(Game.retY % 2 !== 0) {
-        Game.retY -= 1;
+        Game.retY += 1;
     }
     drawRadar();
     drawLoc();
@@ -1304,19 +1445,8 @@ function checkRobots() {
 
 function notify(notif) {
     var notification = document.getElementById('notifications');
-    //var test = new JSON;
-    //test.src = "../strings/strings.jsonp";
-    //var notifString = JSON.parse(warnings);
     notification.innerHTML = notif;
     notification.style.width = 700 + 'px';
-
-
-    /*
-    var notification = document.getElementById('notifications');
-    notification.innerHTML = '';
-    notification.innerHTML = notif;
-    notification.style.width = 700 + 'px';
-    */
     setTimeout(
 
     function() {
@@ -1885,6 +2015,7 @@ function contextContent(content, option) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     var tile = returnLevel(Game.level)[y][x][0];
+    var construct = returnLevel(Game.level)[y][x][1];
     var resources = false;
     var htmlString = '';
     var resourceArray = [ //[ORENAME,PRODUCTNAME]
@@ -1936,6 +2067,10 @@ function contextContent(content, option) {
     }
     if(content) {
         htmlString += content;
+    }
+    if(construct && construct.shutdown) {
+        htmlString += '<span>' + Lang.noPower + '</span><br>';
+        htmlString += '<span>' + Lang.shutdown + '</span><br>';
     }
     //resources?
     for(var i = 0; i < tile.resources.length; i++) {
@@ -2094,10 +2229,10 @@ function clicked(direction) {
                 for(var i = 0; i < 6; i++) {
                     var mineY = adjacent(x, y, i)[0];
                     var mineX = adjacent(x, y, i)[1];
-                    if(returnLevel(Game.level)[mineY][mineX][0].mineable){
+                    if(returnLevel(Game.level)[mineY][mineX][0].mineable) {
                         returnLevel(Game.level)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level, false);
                     }
-                    if(returnLevel(Game.level + 1)[mineY][mineX][0].mineable){
+                    if(returnLevel(Game.level + 1)[mineY][mineX][0].mineable) {
                         returnLevel(Game.level + 1)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level + 1, false);
                     }
                 }

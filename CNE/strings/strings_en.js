@@ -20,6 +20,8 @@ function Lang(){
 	this.building = "Building: ";
 	this.week = " week";
 	this.resources = "Resources:";
+	this.noPower = "WARNING: Power Shortage!";
+	this.shutdown = "Building shut down";
 
 	//Confirmations
 	this.confirmMine = "Mine here";

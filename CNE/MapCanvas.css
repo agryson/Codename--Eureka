@@ -501,9 +501,74 @@ button:active {
 }
 
 .exec_panel_screen{
+    position: relative;
     width: 100%;
     height: 600px;
     overflow-y: scroll; 
+}
+
+.stat_container{
+    float: left;
+    width: 372.5px;
+    text-align: center;
+    color: #D9F7FF;
+}
+
+.stat_canvas{
+    border-radius: 5px;
+}
+
+.stat_button{
+    float: right;
+}
+.population_bar{
+    bottom: -50px;
+    width: 80%;
+    margin-left: 20%;
+    height: 50px;
+    border-radius: 0 0 0 5px;
+    overflow: hidden;
+    box-shadow: inset 1px -1px 2px #9C9C9C;
+}
+.systems_bar{
+    width: 60%;
+    margin-left: 40%;
+    height: 50px;
+    border-radius: 0 0 0 5px;
+    overflow: hidden;
+    box-shadow: inset 1px -1px 2px #9C9C9C;
+}
+
+.stat_tab{
+    position: absolute;
+    height: 550px;
+    z-index: 4;
+    -webkit-transition: all 0.5s ease;
+}
+
+.ovw{
+    position: absolute;
+    z-index: 3;
+    height: 600px;
+}
+
+.ovw_title{
+    position: absolute;
+    bottom: 15px;
+    left: 40px;
+    color: #D9F7FF;
+}
+
+.stat_title{
+    position: relative;
+    top: 15px;
+    left: 5px;
+    color: #D9F7FF;
+}
+
+.stat_panel{
+    height: 500px;
+    padding-top: 50px;
 }
     /*!Executive Panel*/
     /*Left Menu*/
@@ -598,6 +663,10 @@ z-index: 2;
 
 .exec_hidden{
     -webkit-transform: translate(0, -600px);
+}
+
+.stat_hidden{
+    -webkit-transform: translate(0, -550px);
 }
 
 .arrow_down{
