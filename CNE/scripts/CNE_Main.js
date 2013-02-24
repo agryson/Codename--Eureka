@@ -80,10 +80,12 @@ function nextTurn(x, y, level) {
             tile.buildTime = -1;
             returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
             tile.exists = true;
+
             if(tile.robot >= 0) {
                 Game.robotsList[tile.robot][0] -= 1;
                 tile.robot = -1;
             }
+
             if((tile.kind === 101 && tile.future[0] === 204) || (tile.kind === 102 && tile.future[0] === 221)) {
                 returnLevel(level)[y][x][1] = bobTheBuilder(tile.future[0], x, y, level, false);
             } else {
@@ -882,26 +884,26 @@ function Param() {
 }
 
 function setStats() {
-    Game.housing.push(0);
     Game.crime.push(0);
     Game.storage.push(0);
     Game.tossPop.push(Game.tossPop[Game.tossPop.length - 1]);
     Game.hipPop.push(Game.hipPop[Game.hipPop.length - 1]);
     Game.artPop.push(Game.artPop[Game.artPop.length - 1]);
-    Game.sdf.push(Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1]) - Math.floor(Game.housing[Game.housing.length - 1]));
+    Game.sdf.push((Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1])) - Math.floor(Game.housing[Game.housing.length - 1]));
+    Game.housing.push(0);
     Game.food.push(Game.food[Game.food.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15));
     Game.energy.push(-Math.floor((Game.artPop[Game.artPop.length - 1] / 15)));
     Game.turn += 1;
     //Morale
     Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout);
     Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout);
-    Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 2);
+    Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) - Game.blackout * 2);
 
     //reset modifiers
     Game.blackout = 0;
 }
 
-function drawGraph(outputId, sourceData, colour, maxi, mini) {
+function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
     var can = document.getElementById(outputId);
     var con = document.getElementById(outputId).getContext('2d');
     var canW = parseInt(can.width, 10);
@@ -938,23 +940,31 @@ function drawGraph(outputId, sourceData, colour, maxi, mini) {
     var sepY = Math.round(canH / sourceData[max(sourceData)]);
 
     //Lines
-    con.beginPath();
-    con.strokeStyle = colour;
-    con.moveTo(0, canH - normal(0, sourceData));
-    for(var k = 1; k < sourceData.length; k++) {
-        con.lineTo(k * sepX, canH - normal(k, sourceData));
+        con.beginPath();
+        con.strokeStyle = colour;
+        con.moveTo(0, canH - normal(0, sourceData));
+        for(var k = 1; k < sourceData.length; k++) {
+            con.lineTo(k * sepX, canH - normal(k, sourceData));
+        }
+        con.stroke();
+    if(gradation){
+        //Our marks
+        con.strokeStyle = 'rgba(255,255,255,0.02)';
+        con.moveTo(5, Math.floor(canH - normal(0, [0])));
+        con.lineTo(canW - 5, Math.floor(canH - normal(0, [0])));
+        con.strokeStyle = 'rgba(255,255,255,0.08)';
+        for(var grad = 0; grad <= 10; grad++) {
+            con.moveTo(5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
+            con.lineTo(canW - 5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
+        }
+        con.stroke();
+        //Our Scale
+        con.fillStyle = '#D9F7FF';
+        con.font = "14px Arial";
+        con.fillText(maxi, 5, 12);
+        con.fillText(maxi/2, 5, 110);
+        con.fillText(mini, 5, 215);
     }
-    con.stroke();
-    //Our marks
-    con.strokeStyle = 'rgba(255,255,255,0.02)';
-    con.moveTo(5, Math.floor(canH - normal(0, [0])));
-    con.lineTo(canW - 5, Math.floor(canH - normal(0, [0])));
-    con.strokeStyle = 'rgba(255,255,255,0.08)';
-    for(var grad = 0; grad <= 10; grad++) {
-        con.moveTo(5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
-        con.lineTo(canW - 5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
-    }
-    con.stroke();
 }
 
 /**
@@ -1121,6 +1131,7 @@ function eavesdrop() {
     var execBtnContainer = document.getElementById('execBtnContainer');
     var execButton = document.getElementById('execButton');
     execBtnContainer.onclick = function() {
+        execReview();
         menu(exec, execButton, 'exec_hidden');
     };
     exec.onmouseout = function() {
@@ -1140,23 +1151,35 @@ function eavesdrop() {
         Game.highlight = false;
     };
 
+    var ovwTab = document.getElementById('overview');
     var populationTab = document.getElementById('populationTab');
     var systemsTab = document.getElementById('systemsTab');
+    var resourcesTab = document.getElementById('resourcesTab');
     populationTab.onclick = function() {
-        populationTab.classList.toggle('stat_hidden');
-        systemsTab.classList.add('stat_hidden');
+        if(populationTab.classList.contains('stat_hidden')){
+            populationTab.classList.remove('stat_hidden');
+        } else if(!systemsTab.classList.contains('stat_hidden')){
+           systemsTab.classList.add('stat_hidden');
+           resourcesTab.classList.add('stat_hidden');
+        } else {
+            populationTab.classList.add('stat_hidden');
+        }
     };
-    /*
+
+    ovwTab.onclick = function(){
+        systemsTab.classList.add('stat_hidden');
+        populationTab.classList.add('stat_hidden');
+    };
+
     systemsTab.onclick = function(){
         if(systemsTab.classList.contains('stat_hidden')){
             systemsTab.classList.remove('stat_hidden');
             populationTab.classList.remove('stat_hidden');
         } else {
             systemsTab.classList.add('stat_hidden');
-            populationTab.classList.add('stat_hidden');
         }
         
-    };*/
+    };
 
 
     document.getElementById('globalReport').onclick = function() {
@@ -1243,23 +1266,42 @@ function zoom(zoomLevel) {
 }
 
 function execReview() {
-
-    document.getElementById('morale').getContext('2d').clearRect(0, 0, 325, 220);
-    drawGraph('morale', Game.tossMorale, '#4444DD', 1000, 0);
-    drawGraph('morale', Game.hipMorale, '#44DD44', 1000, 0);
-    drawGraph('morale', Game.artMorale, '#DD4444', 1000, 0);
-
-    document.getElementById('population').getContext('2d').clearRect(0, 0, 325, 220);
-    drawGraph('population', Game.tossPop, '#4444DD', 1000, 0);
-    drawGraph('population', Game.hipPop, '#44DD44', 1000, 0);
-    drawGraph('population', Game.artPop, '#DD4444', 1000, 0);
-
-    document.getElementById('homeless').getContext('2d').clearRect(0, 0, 325, 220);
-    drawGraph('homeless', Game.sdf, '#FF4500', 1000, 0);
-
-    document.getElementById('crime').getContext('2d').clearRect(0, 0, 325, 220);
-    drawGraph('crime', Game.crime, '#FFF', 1000, 0);
-
+    if(!Game.buildings[37][1]){
+        document.getElementById('morale').getContext('2d').clearRect(0, 0, 325, 220);
+        drawGraph('morale', Game.tossMorale, '#4444DD', 1000, 0, false);
+        drawGraph('morale', Game.hipMorale, '#44DD44', 1000, 0, false);
+        drawGraph('morale', Game.artMorale, '#DD4444', 1000, 0, true);
+        document.getElementById('tossMorale').innerHTML = Game.tossMorale[Game.tossMorale.length - 1];
+        document.getElementById('hipMorale').innerHTML = Game.hipMorale[Game.hipMorale.length - 1];
+        document.getElementById('artMorale').innerHTML = Game.tossMorale[Game.artMorale.length - 1];
+        document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1])/3);
+    
+        document.getElementById('population').getContext('2d').clearRect(0, 0, 325, 220);
+        drawGraph('population', Game.tossPop, '#4444DD', 500, 0, false);
+        drawGraph('population', Game.hipPop, '#44DD44', 500, 0, false);
+        drawGraph('population', Game.artPop, '#DD4444', 500, 0, true);
+        document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
+        document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
+        document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
+        document.getElementById('popExecTotal').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.tossPop[Game.artPop.length - 1]);
+    
+        document.getElementById('homeless').getContext('2d').clearRect(0, 0, 325, 220);
+        drawGraph('homeless', Game.sdf, '#FF4500', 500, 0, true);
+        document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
+        document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
+    
+        document.getElementById('crime').getContext('2d').clearRect(0, 0, 325, 220);
+        drawGraph('crime', Game.crime, '#FF4500', 100, 0, true);
+        document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
+    
+        document.getElementById('energy').getContext('2d').clearRect(0, 0, 325, 220);
+        drawGraph('energy', Game.energy, '#0045FF', 1000, 0, true);
+        document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
+    
+        document.getElementById('food').getContext('2d').clearRect(0, 0, 325, 220);
+        drawGraph('food', Game.food, '#0045FF', 100, 0,true);
+        document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
+    }
 
     /*
     var content = "<br>";

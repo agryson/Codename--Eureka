@@ -501,7 +501,6 @@ button:active {
 }
 
 .exec_panel_screen{
-    position: relative;
     width: 100%;
     height: 600px;
     overflow-y: scroll; 
@@ -539,10 +538,18 @@ button:active {
     box-shadow: inset 1px -1px 2px #9C9C9C;
 }
 
+.resources_bar{
+    width: 40%;
+    margin-left: 60%;
+    height: 50px;
+    border-radius: 0 0 0 5px;
+    overflow: hidden;
+    box-shadow: inset 1px -1px 2px #9C9C9C;
+}
+
 .stat_tab{
     position: absolute;
     height: 550px;
-    z-index: 4;
     -webkit-transition: all 0.5s ease;
 }
 
@@ -552,11 +559,50 @@ button:active {
     height: 600px;
 }
 
+.ovw_panel{
+    position: absolute;
+    color: #D9F7FF;
+    width: 100%;
+    margin-right: 5px;
+}
+
+.ovw_panel_left{
+    width: 45%;
+    float: left;
+    padding-left: 25px;
+}
+
+.ovw_panel_right{
+    width: 45%;
+    float: right;
+    padding-right: 25px;
+}
+
+.ovw_val{
+    float: right;
+    margin-right: 80px;
+}
+
+.total{
+    border: 1px solid #9C9C9C;
+    margin-right: 75px;
+    padding: 0 5px 0 5px;
+}
+
+.population_exec{
+
+}
+
 .ovw_title{
     position: absolute;
-    bottom: 15px;
-    left: 40px;
+    bottom: 40px;
+    left: 5px;
+    padding: 15px 40px 15px 40px;
     color: #D9F7FF;
+}
+
+.population_exec{
+    width: 100%;
 }
 
 .stat_title{
