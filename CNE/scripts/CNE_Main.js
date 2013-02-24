@@ -69,7 +69,8 @@ function nextTurn(x, y, level) {
                 Game.energy[Game.energy.length - 1] += tile.energy;
                 Game.food[Game.food.length - 1] += tile.food;
             } else if(Game.energy[Game.energy.length - 1] <= 10 && !tile.vital) {
-                this.shutdown = true;
+                tile.shutdown = true;
+                Game.blackout = 1;
             }
         }
 
@@ -870,6 +871,7 @@ function Param() {
     this.tossPop = [50];
     this.hipPop = [50];
     this.artPop = [50];
+    this.pop = [150];
     this.sdf = [150];
     this.tossMorale = [500];
     this.hipMorale = [500];
@@ -889,15 +891,16 @@ function setStats() {
     Game.tossPop.push(Game.tossPop[Game.tossPop.length - 1]);
     Game.hipPop.push(Game.hipPop[Game.hipPop.length - 1]);
     Game.artPop.push(Game.artPop[Game.artPop.length - 1]);
-    Game.sdf.push((Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1])) - Math.floor(Game.housing[Game.housing.length - 1]));
+    Game.pop.push((Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1])));
+    Game.sdf.push(Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]));
     Game.housing.push(0);
     Game.food.push(Game.food[Game.food.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15));
     Game.energy.push(-Math.floor((Game.artPop[Game.artPop.length - 1] / 15)));
     Game.turn += 1;
     //Morale
-    Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout);
-    Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout);
-    Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) - Game.blackout * 2);
+    Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout*10);
+    Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout*10);
+    Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 5) - Game.blackout * 20);
 
     //reset modifiers
     Game.blackout = 0;
@@ -1273,17 +1276,18 @@ function execReview() {
         drawGraph('morale', Game.artMorale, '#DD4444', 1000, 0, true);
         document.getElementById('tossMorale').innerHTML = Game.tossMorale[Game.tossMorale.length - 1];
         document.getElementById('hipMorale').innerHTML = Game.hipMorale[Game.hipMorale.length - 1];
-        document.getElementById('artMorale').innerHTML = Game.tossMorale[Game.artMorale.length - 1];
+        document.getElementById('artMorale').innerHTML = Game.artMorale[Game.artMorale.length - 1];
         document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1])/3);
     
         document.getElementById('population').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('population', Game.tossPop, '#4444DD', 500, 0, false);
-        drawGraph('population', Game.hipPop, '#44DD44', 500, 0, false);
-        drawGraph('population', Game.artPop, '#DD4444', 500, 0, true);
+        drawGraph('population', Game.tossPop, '#4444DD', 300, 0, false);
+        drawGraph('population', Game.hipPop, '#44DD44', 300, 0, false);
+        drawGraph('population', Game.artPop, '#DD4444', 300, 0, false);
+        drawGraph('population', Game.pop, '#9C9C9C', 300, 0, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
-        document.getElementById('popExecTotal').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.tossPop[Game.artPop.length - 1]);
+        document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
     
         document.getElementById('homeless').getContext('2d').clearRect(0, 0, 325, 220);
         drawGraph('homeless', Game.sdf, '#FF4500', 500, 0, true);
@@ -2168,7 +2172,7 @@ function clicked(direction) {
     }
     switch(Game.clickedOn) {
     case 'lander':
-        hex[1] = bobTheBuilder(237, x, y, Game.level);
+        hex[1] = bobTheBuilder(210, x, y, Game.level);
         for(var j = 0; j < 6; j++) {
             var tempY = adjacent(x, y, j)[0];
             var tempX = adjacent(x, y, j)[1];
@@ -2179,13 +2183,13 @@ function clicked(direction) {
                 Game.map[tempY][tempX][1] = bobTheBuilder(211, tempX, tempY, Game.level);
                 break;
             case 0:
-                Game.map[tempY][tempX][1] = bobTheBuilder(210, tempX, tempY, Game.level);
+                Game.map[tempY][tempX][1] = bobTheBuilder(235, tempX, tempY, Game.level);
                 break;
             case 2:
                 Game.map[tempY][tempX][1] = bobTheBuilder(203, tempX, tempY, Game.level);
                 break;
             case 4:
-                Game.map[tempY][tempX][1] = bobTheBuilder(235, tempX, tempY, Game.level);
+                Game.map[tempY][tempX][1] = bobTheBuilder(237, tempX, tempY, Game.level);
                 break;
             default:
                 console.log("The eagle most definitely has *not* landed");
@@ -2223,7 +2227,7 @@ function clicked(direction) {
         } else {
             //tile.digDown(x, y, lowerTile);
             var DBelow = returnLevel(Game.level + 1);
-            if((hex[1] && hex[1].kind >= 100) || (DBelow[y][x][1] && DBelow[y][x][1].kind >= 100) || tile.kind > 3 || Game.level === 4 || wetTest([y, x], Game.level + 1)) {
+            if((hex[1] && hex[1].kind >= 100) || (DBelow[y][x][1] && DBelow[y][x][1].kind >= 100) || tile.kind > 3 || Game.level === 4 || wetTest([y, x], Game.level + 1) || !checkConnection(y, x)) {
                 notify(Lang.noDig);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level, true);
