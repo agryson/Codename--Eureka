@@ -43,7 +43,7 @@ function nextTurn(x, y, level) {
     var checkMine = function(xIn, yIn, levelIn) {
             var checked = false;
             for(var i = 0; i < 6; i++) {
-                if(returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221) {
+                if(returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221 && !returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].shutdown) {
                     checked = true;
                 }
             }
@@ -55,7 +55,12 @@ function nextTurn(x, y, level) {
         //GENERAL ADVANCEMENT OF THE GAME
         if(tile.exists) {
             tile.age += 1;
-            tile.shutdown = false;
+            //If power is back, FLAME ON!
+            if(Game.energy[Game.energy.length - 1] > 10 && tile.shutdown){
+                Game.energy[Game.energy.length - 1] += tile.energy;
+                tile.shutdown = false;
+            }
+            //Provided everything is good, rock and roll
             if((Game.energy[Game.energy.length - 1] <= 10 && tile.vital) || Game.energy[Game.energy.length - 1] > 10) {
                 Game.tossPop[Game.tossPop.length - 1] += tile.tossPop;
                 Game.hipPop[Game.hipPop.length - 1] += tile.hipPop;
@@ -66,9 +71,11 @@ function nextTurn(x, y, level) {
                 Game.artMorale[Game.artMorale.length - 1] += tile.artMorale;
                 Game.crime[Game.crime.length - 1] += tile.crime;
                 //Game.storage[Game.storage.length - 1] += tile.storage;
-                Game.energy[Game.energy.length - 1] += tile.energy;
+                //Game.energy[Game.energy.length - 1] += tile.energy;
                 Game.food[Game.food.length - 1] += tile.food;
             } else if(Game.energy[Game.energy.length - 1] <= 10 && !tile.vital) {
+                //Otherwise shutdown for a turn
+                Game.energy[Game.energy.length - 1] -= tile.energy;
                 tile.shutdown = true;
                 Game.blackout = 1;
             }
@@ -82,6 +89,7 @@ function nextTurn(x, y, level) {
             returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
             tile.exists = true;
             Game.storage[Game.storage.length - 1] += tile.storage;
+            Game.energy[Game.energy.length - 1] += tile.energy;
 
             if(tile.robot >= 0) {
                 Game.robotsList[tile.robot][0] -= 1;
@@ -913,7 +921,7 @@ function Param() {
     this.ores = [];
 
     //Aluminium, Calcium, Copper, Gold, Iron, Lead, Magnesium, Mercury, Phosphorous, Potassium, Silver, Sodium, Tin, Zinc
-    this.procOres = [10, 2, 4, 1, 15, 2, 1, 1, 5, 1, 1, 4, 4, 5];
+    this.procOres = [10, 2, 4, 1, 18, 2, 1, 1, 5, 1, 1, 4, 5, 5]; //Total of 55
 
     //Map generation vars
     this.seeder = '';
@@ -944,7 +952,7 @@ function Param() {
     this.hipMorale = [500];
     this.artMorale = [500];
     this.crime = [0];
-    this.storage = [50];
+    this.storage = [0];
     this.food = [50];
     this.energy = [60];
 
@@ -962,7 +970,7 @@ function setStats() {
     Game.sdf.push(Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]));
     Game.housing.push(0);
     Game.food.push(Game.food[Game.food.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15));
-    Game.energy.push(-Math.floor((Game.artPop[Game.artPop.length - 1] / 15)));
+    Game.energy.push(Game.energy[Game.energy.length - 1]);
     Game.turn += 1;
     //Morale
     Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout*10);
