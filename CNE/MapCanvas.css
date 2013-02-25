@@ -550,8 +550,11 @@ button:active {
 .stat_tab{
     position: absolute;
     height: 550px;
+    right: 5px;
+    margin-left: 5px;
     -webkit-transition: all 0.5s ease;
 }
+
 
 .ovw{
     position: absolute;
@@ -563,7 +566,6 @@ button:active {
     position: absolute;
     color: #D9F7FF;
     width: 100%;
-    margin-right: 5px;
 }
 
 .ovw_panel_left{
@@ -589,10 +591,6 @@ button:active {
     padding: 0 5px 0 5px;
 }
 
-.population_exec{
-
-}
-
 .ovw_title{
     position: absolute;
     bottom: 40px;
@@ -600,11 +598,11 @@ button:active {
     padding: 15px 40px 15px 40px;
     color: #D9F7FF;
 }
-
+/*
 .population_exec{
     width: 100%;
 }
-
+*/
 .stat_title{
     position: relative;
     top: 15px;

@@ -1019,6 +1019,9 @@ function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
 
     //Lines
         con.beginPath();
+        con.lineWidth = 2;
+        con.lineCap = 'round';
+        con.lineJoin = 'round';
         con.strokeStyle = colour;
         con.moveTo(0, canH - normal(0, sourceData));
         for(var k = 1; k < sourceData.length; k++) {
@@ -1028,6 +1031,8 @@ function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
     if(gradation){
         //Our marks
         con.strokeStyle = 'rgba(255,255,255,0.02)';
+        con.lineWidth = 1;
+        con.lineCap = 'butt';
         con.moveTo(5, Math.floor(canH - normal(0, [0])));
         con.lineTo(canW - 5, Math.floor(canH - normal(0, [0])));
         con.strokeStyle = 'rgba(255,255,255,0.08)';
@@ -1346,39 +1351,39 @@ function zoom(zoomLevel) {
 function execReview() {
     if(!Game.buildings[37][1]){
         document.getElementById('morale').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('morale', Game.tossMorale, '#4444DD', 1000, 0, false);
-        drawGraph('morale', Game.hipMorale, '#44DD44', 1000, 0, false);
-        drawGraph('morale', Game.artMorale, '#DD4444', 1000, 0, true);
+        drawGraph('morale', Game.tossMorale, '#1E90FF', 1000, 0, false);
+        drawGraph('morale', Game.hipMorale, '#00FA9A', 1000, 0, false);
+        drawGraph('morale', Game.artMorale, '#FF4500', 1000, 0, true);
         document.getElementById('tossMorale').innerHTML = Game.tossMorale[Game.tossMorale.length - 1];
         document.getElementById('hipMorale').innerHTML = Game.hipMorale[Game.hipMorale.length - 1];
         document.getElementById('artMorale').innerHTML = Game.artMorale[Game.artMorale.length - 1];
         document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1])/3);
     
         document.getElementById('population').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('population', Game.tossPop, '#4444DD', 300, 0, false);
-        drawGraph('population', Game.hipPop, '#44DD44', 300, 0, false);
-        drawGraph('population', Game.artPop, '#DD4444', 300, 0, false);
-        drawGraph('population', Game.pop, '#9C9C9C', 300, 0, true);
+        drawGraph('population', Game.tossPop, '#1E90FF', 300, 0, false);
+        drawGraph('population', Game.hipPop, '#00FA9A', 300, 0, false);
+        drawGraph('population', Game.artPop, '#FF4500', 300, 0, false);
+        drawGraph('population', Game.pop, '#DCDCDC', 300, 0, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
     
         document.getElementById('homeless').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('homeless', Game.sdf, '#FF4500', 500, 0, true);
+        drawGraph('homeless', Game.sdf, '#A0522D', 500, 0, true);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
     
         document.getElementById('crime').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('crime', Game.crime, '#FF4500', 100, 0, true);
+        drawGraph('crime', Game.crime, '#FF0000', 100, 0, true);
         document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
     
         document.getElementById('energy').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('energy', Game.energy, '#0045FF', 1000, 0, true);
+        drawGraph('energy', Game.energy, '#00BFFF', 1000, 0, true);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
     
         document.getElementById('food').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('food', Game.food, '#0045FF', 100, 0,true);
+        drawGraph('food', Game.food, '#00FF7F', 100, 0,true);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
     }
 
