@@ -65,7 +65,7 @@ function nextTurn(x, y, level) {
                 Game.hipMorale[Game.hipMorale.length - 1] += tile.hipMorale;
                 Game.artMorale[Game.artMorale.length - 1] += tile.artMorale;
                 Game.crime[Game.crime.length - 1] += tile.crime;
-                Game.storage[Game.storage.length - 1] += tile.storage;
+                //Game.storage[Game.storage.length - 1] += tile.storage;
                 Game.energy[Game.energy.length - 1] += tile.energy;
                 Game.food[Game.food.length - 1] += tile.food;
             } else if(Game.energy[Game.energy.length - 1] <= 10 && !tile.vital) {
@@ -81,6 +81,7 @@ function nextTurn(x, y, level) {
             tile.buildTime = -1;
             returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
             tile.exists = true;
+            Game.storage[Game.storage.length - 1] += tile.storage;
 
             if(tile.robot >= 0) {
                 Game.robotsList[tile.robot][0] -= 1;
@@ -98,17 +99,105 @@ function nextTurn(x, y, level) {
         //MINING
         if(tile.mining && (tile.kind === 221 || checkMine(x, y, level))) {
             var stillMining = false;
-            for(var ore in returnLevel(level)[y][x][0].resources) {
+            for(var ore = 0; ore < returnLevel(level)[y][x][0].resources.length; ore++) {
                 if(returnLevel(level)[y][x][0].resources[ore] && returnLevel(level)[y][x][0].resources[ore] > 0) {
                     stillMining = true;
                     var mined = Math.floor(Math.random() + 0.5);
-                    returnLevel(level)[y][x][0].resources[ore] -= mined;
-                    Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
+                    if(Game.storage[Game.storage.length - 1] >= mined){
+                        returnLevel(level)[y][x][0].resources[ore] -= mined;
+                        Game.storage[Game.storage.length - 1] -= mined;
+                        Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
+                    }
                 }
             }
             if(!stillMining) {
                 tile.mining = false;
                 returnLevel(level)[y][x][0].ref = changeName(Lang.minedOut, returnLevel(level)[y][x][0].ref);
+            }
+        }
+
+        //Processing
+        if(tile.kind === 223 && !tile.shutdown){
+            //create a list of ores ready for processing
+            var available = [];
+            var count = 0;
+            for(var check = 0; check < Game.ores.length; check++){
+                if(Game.ores[check] && Game.ores[check] > 0){
+                    available.push(check);
+                    count += Game.ores[check];
+                }
+            }
+            //go thrugh it, moving a tonne from ore to processed
+            if(count > 3){count = 3;}
+            while(count > 0){
+                var pick = randGen(available.length, 0);
+                if(Game.ores[available[pick]] > 0){
+                    Game.ores[available[pick]] -=1;
+                    switch(available[pick]){
+                        //direct ores to the right index of the processed array
+                        case 0:
+                        case 1:
+                        case 2:
+                            Game.procOres[0] += 1;
+                            break;
+                        case 3:
+                            Game.procOres[1] += 1;
+                            break;
+                        case 4:
+                        case 5:
+                        case 6:
+                            Game.procOres[2] += 1;
+                            break;
+                        case 7:
+                        case 8:
+                            Game.procOres[3] += 1;
+                            break;
+                        case 9:
+                        case 10:
+                        case 11:
+                        case 12:
+                            Game.procOres[4] += 1;
+                            break;
+                        case 13:
+                        case 14:
+                            Game.procOres[5] += 1;
+                            break;
+                        case 15:
+                        case 16:
+                            Game.procOres[6] += 1;
+                            break;
+                        case 17:
+                        case 18:
+                            Game.procOres[7] += 1;
+                            break;
+                        case 19:
+                        case 20:
+                            Game.procOres[8] += 1;
+                            break;
+                        case 21:
+                        case 22:
+                            Game.procOres[9] += 1;
+                            break;
+                        case 23:
+                            Game.procOres[10] += 1;
+                            break;
+                        case 24:
+                        case 25:
+                            Game.procOres[11] += 1;
+                            break;
+                        case 26:
+                        case 27:
+                            Game.procOres[12] += 1;
+                            break;
+                        case 28:
+                        case 29:
+                            Game.procOres[13] += 1;
+                            break;
+                        default:
+                            console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + available[pick]);
+                    }
+                    count -= 1;
+                }
             }
         }
     }
@@ -715,32 +804,7 @@ function Terrain() {
     this.diggable;
     */
     this.resources = [];
-    //this.mining = false;
-    //var wip = false; //Work in Progress?
-    //var prepared = false;
     //this.ref;
-    //this.willBe = 3;
-    //this.willBeDiggable = false;
-    /**
-     * The 'recycling' function does everything necessary when we're recycling that terrain
-     */
-    /*
-    this.recycle = function() {
-        if(!wip && this.kind !== 4 && Game.robotsList[3][0] < Game.robotsList[3][1]) {
-            this.turns = eta(3, this.kind);
-            this.kind = 103;
-            this.ref = changeName(Lang.recycling, this.ref);
-            this.wip = true;
-            this.willBe = 3;
-            Game.robotsList[3][0] += 1;
-            this.robotInUse = 3;
-            reCount('recycler');
-        } else {
-            notify(Lang.noRecycle);
-        }
-        //TODO: get the resources from the recycled building if I can...
-    }*/
-
 }
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
@@ -848,6 +912,9 @@ function Param() {
 
     this.ores = [];
 
+    //Aluminium, Calcium, Copper, Gold, Iron, Lead, Magnesium, Mercury, Phosphorous, Potassium, Silver, Sodium, Tin, Zinc
+    this.procOres = [10, 2, 4, 1, 15, 2, 1, 1, 5, 1, 1, 4, 4, 5];
+
     //Map generation vars
     this.seeder = '';
     /*
@@ -877,7 +944,7 @@ function Param() {
     this.hipMorale = [500];
     this.artMorale = [500];
     this.crime = [0];
-    this.storage = [0];
+    this.storage = [50];
     this.food = [50];
     this.energy = [60];
 
@@ -887,7 +954,7 @@ function Param() {
 
 function setStats() {
     Game.crime.push(0);
-    Game.storage.push(0);
+    Game.storage.push(Game.storage[Game.storage.length - 1]);
     Game.tossPop.push(Game.tossPop[Game.tossPop.length - 1]);
     Game.hipPop.push(Game.hipPop[Game.hipPop.length - 1]);
     Game.artPop.push(Game.artPop[Game.artPop.length - 1]);
@@ -1501,7 +1568,7 @@ function notify(notif) {
 }
 
 /**
- * Generates a random number, from a base value
+ * Generates a random number, from a base value from 0 to num-1
  * @param  {int} num is the modifier
  * @param  {int} min is the base value
  * @return {int}
