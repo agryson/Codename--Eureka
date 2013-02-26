@@ -1238,6 +1238,12 @@ function eavesdrop() {
     var populationTab = document.getElementById('populationTab');
     var systemsTab = document.getElementById('systemsTab');
     var resourcesTab = document.getElementById('resourcesTab');
+
+    ovwTab.onclick = function(){
+        systemsTab.classList.add('stat_hidden');
+        populationTab.classList.add('stat_hidden');
+    };
+
     populationTab.onclick = function() {
         if(populationTab.classList.contains('stat_hidden')){
             populationTab.classList.remove('stat_hidden');
@@ -1249,11 +1255,6 @@ function eavesdrop() {
         }
     };
 
-    ovwTab.onclick = function(){
-        systemsTab.classList.add('stat_hidden');
-        populationTab.classList.add('stat_hidden');
-    };
-
     systemsTab.onclick = function(){
         if(systemsTab.classList.contains('stat_hidden')){
             systemsTab.classList.remove('stat_hidden');
@@ -1261,9 +1262,17 @@ function eavesdrop() {
         } else {
             systemsTab.classList.add('stat_hidden');
         }
-        
     };
 
+    resourcesTab.onclick = function(){
+        if(resourcesTab.classList.contains('stat_hidden')){
+            resourcesTab.classList.remove('stat_hidden');
+            systemsTab.classList.remove('stat_hidden');
+            populationTab.classList.remove('stat_hidden');
+        } else {
+            resourcesTab.classList.add('stat_hidden');
+        }
+    };
 
     document.getElementById('globalReport').onclick = function() {
         if(!Game.buildings[37][1]) {
@@ -1349,6 +1358,12 @@ function zoom(zoomLevel) {
 }
 
 function execReview() {
+    var sanity = function(val){
+        var test;
+        val >= 0 ? test = val : test =  0;
+        return test;
+    };
+
     if(!Game.buildings[37][1]){
         document.getElementById('morale').getContext('2d').clearRect(0, 0, 325, 220);
         drawGraph('morale', Game.tossMorale, '#1E90FF', 1000, 0, false);
@@ -1385,22 +1400,39 @@ function execReview() {
         document.getElementById('food').getContext('2d').clearRect(0, 0, 325, 220);
         drawGraph('food', Game.food, '#00FF7F', 100, 0,true);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
+
+        //he resources Table...
+        document.getElementById('aluminiumProcList').innerHTML = sanity(Game.procOres[0]);
+        document.getElementById('calciumProcList').innerHTML = sanity(Game.procOres[1]);
+        document.getElementById('copperProcList').innerHTML = sanity(Game.procOres[2]);
+        document.getElementById('goldProcList').innerHTML = sanity(Game.procOres[3]);
+        document.getElementById('ironProcList').innerHTML = sanity(Game.procOres[4]);
+        document.getElementById('leadProcList').innerHTML = sanity(Game.procOres[5]);
+        document.getElementById('magnesiumProcList').innerHTML = sanity(Game.procOres[6]);
+        document.getElementById('mercuryProcList').innerHTML = sanity(Game.procOres[7]);
+        document.getElementById('phosphorousProcList').innerHTML = sanity(Game.procOres[8]);
+        document.getElementById('potassiumProcList').innerHTML = sanity(Game.procOres[9]);
+        document.getElementById('silverProcList').innerHTML = sanity(Game.procOres[10]);
+        document.getElementById('sodiumProcList').innerHTML = sanity(Game.procOres[11]);
+        document.getElementById('tinProcList').innerHTML = sanity(Game.procOres[12]);
+        document.getElementById('zincProcList').innerHTML = sanity(Game.procOres[13]);
+
+        document.getElementById('aluminiumOreList').innerHTML = sanity(Game.ores[0]) + sanity(Game.ores[1]) + sanity(Game.ores[2]);
+        document.getElementById('calciumOreList').innerHTML = sanity(Game.ores[3]);
+        document.getElementById('copperOreList').innerHTML = sanity(Game.ores[4]) + sanity(Game.ores[5]) + sanity(Game.ores[6]);
+        document.getElementById('goldOreList').innerHTML = sanity(Game.ores[7]) + sanity(Game.ores[8]);
+        document.getElementById('ironOreList').innerHTML = sanity(Game.ores[9]) + sanity(Game.ores[10]) + sanity(Game.ores[11]) + sanity(Game.ores[12]);
+        document.getElementById('leadOreList').innerHTML = sanity(Game.ores[13]) + sanity(Game.ores[14]);
+        document.getElementById('magnesiumOreList').innerHTML = sanity(Game.ores[15]) + sanity(Game.ores[16]);
+        document.getElementById('mercuryOreList').innerHTML = sanity(Game.ores[17]) + sanity(Game.ores[18]);
+        document.getElementById('phosphorousOreList').innerHTML = sanity(Game.ores[19]) + sanity(Game.ores[20]);
+        document.getElementById('potassiumOreList').innerHTML = sanity(Game.ores[21]) + sanity(Game.ores[22]);
+        document.getElementById('silverOreList').innerHTML = sanity(Game.ores[23]);
+        document.getElementById('sodiumOreList').innerHTML = sanity(Game.ores[24]) + sanity(Game.ores[25]);
+        document.getElementById('tinOreList').innerHTML = sanity(Game.ores[26]) + sanity(Game.ores[27]);
+        document.getElementById('zincOreList').innerHTML = sanity(Game.ores[28]) + sanity(Game.ores[29]);
     }
 
-    /*
-    var content = "<br>";
-    content += "<span>TOSSer Population: " + Game.tossPop + " </span><br>";
-    content += "<span>Hipstie Population: " + Game.hipPop + " </span><br>";
-    content += "<span>ArtIe Population: " + Game.artPop + " </span><br>";
-    content += "<span>Total Population: " + (Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1] + Game.artPop[Game.artPop.length - 1]) + " </span><br>";
-    content += "<span>Homelessness: " + Game.sdf + " </span><br>";
-    content += "<span>Energy: " + Game.energy + " </span><br>";
-    content += "<span>Food: " + Game.food + " </span><br>";
-    content += "<span>TOSSer Morale: " + Game.tossMorale + " </span><br>";
-    content += "<span>Hipstie Morale: " + Game.hipMorale + " </span><br>";
-    content += "<span>ArtIe Morale: " + Game.artMorale + " </span><br>";
-    return content;
-    */
 }
 
 function mapFit(bool) {

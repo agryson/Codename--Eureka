@@ -551,7 +551,8 @@ button:active {
     position: absolute;
     height: 550px;
     right: 5px;
-    margin-left: 5px;
+    left: 5px;
+    color: #9C9C9C;
     -webkit-transition: all 0.5s ease;
 }
 
@@ -598,11 +599,7 @@ button:active {
     padding: 15px 40px 15px 40px;
     color: #D9F7FF;
 }
-/*
-.population_exec{
-    width: 100%;
-}
-*/
+
 .stat_title{
     position: relative;
     top: 15px;
@@ -613,6 +610,11 @@ button:active {
 .stat_panel{
     height: 500px;
     padding-top: 50px;
+}
+
+.resource_table{
+    width: 50%;
+    float: left;
 }
     /*!Executive Panel*/
     /*Left Menu*/
