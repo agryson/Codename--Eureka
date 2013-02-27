@@ -35,20 +35,37 @@ function Construction() {
     this.mining = false;
     this.vital = false;
     this.shutdown = false;
+    this.resourcesNeeded = [false]; //[[resource needed, amount needed]]
 }
 
 function nextTurn(x, y, level) {
     var tile = returnLevel(level)[y][x][1];
 
     var checkMine = function(xIn, yIn, levelIn) {
-            var checked = false;
-            for(var i = 0; i < 6; i++) {
-                if(returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221 && !returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].shutdown) {
-                    checked = true;
-                }
+        var checked = false;
+        for(var i = 0; i < 6; i++) {
+            if(returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221 && !returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].shutdown) {
+                checked = true;
             }
-            return checked;
-        };
+        }
+        return checked;
+    };
+    var requisition = function(){
+        var resourceCheck = false;
+        console.log(tile.resourcesNeeded);
+        for(var j = 1; j < tile.resourcesNeeded.length; j++){
+            if(tile.resourcesNeeded[0] && Game.procOres[tile.resourcesNeeded[j][0]] >= tile.resourcesNeeded[j][1]){
+                tile.resourcesNeeded[0] = false;
+                resourceCheck = true;
+            }
+        }
+        for(var k = 1; k < tile.resourcesNeeded.length; k++){
+            if(resourceCheck){
+                Game.procOres[tile.resourcesNeeded[k][0]] -= tile.resourcesNeeded[k][1];
+            }
+        }
+        return resourceCheck;
+    };
 
     if(tile) {
 
@@ -84,12 +101,14 @@ function nextTurn(x, y, level) {
         //BUILDING
         if(tile.buildTime > 0) {
             tile.buildTime -= 1;
+            requisition();
         } else if(tile.buildTime === 0) {
             tile.buildTime = -1;
             returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
             tile.exists = true;
             Game.storage[Game.storage.length - 1] += tile.storage;
             Game.energy[Game.energy.length - 1] += tile.energy;
+
 
             if(tile.robot >= 0) {
                 Game.robotsList[tile.robot][0] -= 1;
@@ -136,7 +155,7 @@ function nextTurn(x, y, level) {
                     count += Game.ores[check];
                 }
             }
-            //go thrugh it, moving a tonne from ore to processed
+            //go through it, moving a tonne from ore to processed
             if(count > 3) {
                 count = 3;
             }
@@ -313,6 +332,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 15;
             o.future = [kind, Lang.agri];
+            o.resourcesNeeded = [true,[0,1],[9, 1]];
+            //TODO: implement resource consumption
             break;
         case 201:
             //advanced agridome
@@ -921,10 +942,11 @@ function Param() {
         [0, 1, "recycler", false, 2]
     ];
 
-    this.ores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.ores = [];
 
-    //Aluminium, Calcium, Copper, Gold, Iron, Lead, Magnesium, Mercury, Phosphorous, Potassium, Silver, Sodium, Tin, Zinc
-    this.procOres = [10, 2, 4, 1, 18, 2, 1, 1, 5, 1, 1, 4, 5, 5]; //Total of 55
+    //0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
+    //8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
+    this.procOres = [10, 2, 4, 1, 18, 2, 1, 1, 1, 5, 1, 4, 5, 5]; //Total of 55
     //Map generation vars
     this.seeder = '';
     /*
@@ -2320,6 +2342,7 @@ function clicked(direction) {
                 Game.robotsList[i][3] = true;
             }
             checkBuildings();
+            execReview();
         }, 300);
         break;
     case 'dozer':
