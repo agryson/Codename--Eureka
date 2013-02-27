@@ -56,7 +56,7 @@ function nextTurn(x, y, level) {
         if(tile.exists) {
             tile.age += 1;
             //If power is back, FLAME ON!
-            if(Game.energy[Game.energy.length - 1] > 10 && tile.shutdown){
+            if(Game.energy[Game.energy.length - 1] > 10 && tile.shutdown) {
                 Game.energy[Game.energy.length - 1] += tile.energy;
                 tile.shutdown = false;
             }
@@ -111,8 +111,9 @@ function nextTurn(x, y, level) {
                 if(returnLevel(level)[y][x][0].resources[ore] && returnLevel(level)[y][x][0].resources[ore] > 0) {
                     stillMining = true;
                     var mined = Math.floor(Math.random() + 0.5);
-                    if(Game.storage[Game.storage.length - 1] >= mined){
+                    if(Game.storage[Game.storage.length - 1] >= mined) {
                         returnLevel(level)[y][x][0].resources[ore] -= mined;
+                        console.log('on ore ' + ore);
                         Game.storage[Game.storage.length - 1] -= mined;
                         Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
                     }
@@ -125,84 +126,86 @@ function nextTurn(x, y, level) {
         }
 
         //Processing
-        if(tile.kind === 223 && !tile.shutdown){
+        if(tile.kind === 223 && !tile.shutdown) {
             //create a list of ores ready for processing
             var available = [];
             var count = 0;
-            for(var check = 0; check < Game.ores.length; check++){
-                if(Game.ores[check] && Game.ores[check] > 0){
+            for(var check = 0; check < Game.ores.length; check++) {
+                if(Game.ores[check] && Game.ores[check] > 0) {
                     available.push(check);
                     count += Game.ores[check];
                 }
             }
             //go thrugh it, moving a tonne from ore to processed
-            if(count > 3){count = 3;}
-            while(count > 0){
+            if(count > 3) {
+                count = 3;
+            }
+            while(count > 0) {
                 var pick = randGen(available.length, 0);
-                if(Game.ores[available[pick]] > 0){
-                    Game.ores[available[pick]] -=1;
-                    switch(available[pick]){
+                if(Game.ores[available[pick]] > 0) {
+                    Game.ores[available[pick]] -= 1;
+                    switch(available[pick]) {
                         //direct ores to the right index of the processed array
-                        case 0:
-                        case 1:
-                        case 2:
-                            Game.procOres[0] += 1;
-                            break;
-                        case 3:
-                            Game.procOres[1] += 1;
-                            break;
-                        case 4:
-                        case 5:
-                        case 6:
-                            Game.procOres[2] += 1;
-                            break;
-                        case 7:
-                        case 8:
-                            Game.procOres[3] += 1;
-                            break;
-                        case 9:
-                        case 10:
-                        case 11:
-                        case 12:
-                            Game.procOres[4] += 1;
-                            break;
-                        case 13:
-                        case 14:
-                            Game.procOres[5] += 1;
-                            break;
-                        case 15:
-                        case 16:
-                            Game.procOres[6] += 1;
-                            break;
-                        case 17:
-                        case 18:
-                            Game.procOres[7] += 1;
-                            break;
-                        case 19:
-                        case 20:
-                            Game.procOres[8] += 1;
-                            break;
-                        case 21:
-                        case 22:
-                            Game.procOres[9] += 1;
-                            break;
-                        case 23:
-                            Game.procOres[10] += 1;
-                            break;
-                        case 24:
-                        case 25:
-                            Game.procOres[11] += 1;
-                            break;
-                        case 26:
-                        case 27:
-                            Game.procOres[12] += 1;
-                            break;
-                        case 28:
-                        case 29:
-                            Game.procOres[13] += 1;
-                            break;
-                        default:
-                            console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + available[pick]);
+                    case 0:
+                    case 1:
+                    case 2:
+                        Game.procOres[0] += 1;
+                        break;
+                    case 3:
+                        Game.procOres[1] += 1;
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                        Game.procOres[2] += 1;
+                        break;
+                    case 7:
+                    case 8:
+                        Game.procOres[3] += 1;
+                        break;
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                        Game.procOres[4] += 1;
+                        break;
+                    case 13:
+                    case 14:
+                        Game.procOres[5] += 1;
+                        break;
+                    case 15:
+                    case 16:
+                        Game.procOres[6] += 1;
+                        break;
+                    case 17:
+                    case 18:
+                        Game.procOres[7] += 1;
+                        break;
+                    case 19:
+                    case 20:
+                        Game.procOres[8] += 1;
+                        break;
+                    case 21:
+                    case 22:
+                        Game.procOres[9] += 1;
+                        break;
+                    case 23:
+                        Game.procOres[10] += 1;
+                        break;
+                    case 24:
+                    case 25:
+                        Game.procOres[11] += 1;
+                        break;
+                    case 26:
+                    case 27:
+                        Game.procOres[12] += 1;
+                        break;
+                    case 28:
+                    case 29:
+                        Game.procOres[13] += 1;
+                        break;
+                    default:
+                        console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + available[pick]);
                     }
                     count -= 1;
                 }
@@ -811,7 +814,7 @@ function Terrain() {
     this.turns; //remembers how many turns are left to become a tile of the desired kind
     this.diggable;
     */
-    this.resources = [];
+    this.resources = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     //this.ref;
 }
 
@@ -918,11 +921,10 @@ function Param() {
         [0, 1, "recycler", false, 2]
     ];
 
-    this.ores = [];
+    this.ores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     //Aluminium, Calcium, Copper, Gold, Iron, Lead, Magnesium, Mercury, Phosphorous, Potassium, Silver, Sodium, Tin, Zinc
     this.procOres = [10, 2, 4, 1, 18, 2, 1, 1, 5, 1, 1, 4, 5, 5]; //Total of 55
-
     //Map generation vars
     this.seeder = '';
     /*
@@ -973,8 +975,8 @@ function setStats() {
     Game.energy.push(Game.energy[Game.energy.length - 1]);
     Game.turn += 1;
     //Morale
-    Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout*10);
-    Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout*10);
+    Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 10);
+    Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 10);
     Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 5) - Game.blackout * 20);
 
     //reset modifiers
@@ -1010,7 +1012,7 @@ function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
 
     var normal = function(val, arr) {
             var out = (arr[val] - mini) / (maxi - mini);
-            return out*canH;
+            return out * canH;
         };
 
 
@@ -1018,17 +1020,17 @@ function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
     var sepY = Math.round(canH / sourceData[max(sourceData)]);
 
     //Lines
-        con.beginPath();
-        con.lineWidth = 2;
-        con.lineCap = 'round';
-        con.lineJoin = 'round';
-        con.strokeStyle = colour;
-        con.moveTo(0, canH - normal(0, sourceData));
-        for(var k = 1; k < sourceData.length; k++) {
-            con.lineTo(k * sepX, canH - normal(k, sourceData));
-        }
-        con.stroke();
-    if(gradation){
+    con.beginPath();
+    con.lineWidth = 2;
+    con.lineCap = 'round';
+    con.lineJoin = 'round';
+    con.strokeStyle = colour;
+    con.moveTo(0, canH - normal(0, sourceData));
+    for(var k = 1; k < sourceData.length; k++) {
+        con.lineTo(k * sepX, canH - normal(k, sourceData));
+    }
+    con.stroke();
+    if(gradation) {
         //Our marks
         con.strokeStyle = 'rgba(255,255,255,0.02)';
         con.lineWidth = 1;
@@ -1045,7 +1047,7 @@ function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
         con.fillStyle = '#D9F7FF';
         con.font = "14px Arial";
         con.fillText(maxi, 5, 12);
-        con.fillText(maxi/2, 5, 110);
+        con.fillText(maxi / 2, 5, 110);
         con.fillText(mini, 5, 215);
     }
 }
@@ -1239,36 +1241,39 @@ function eavesdrop() {
     var systemsTab = document.getElementById('systemsTab');
     var resourcesTab = document.getElementById('resourcesTab');
 
-    ovwTab.onclick = function(){
-        systemsTab.classList.add('stat_hidden');
+    ovwTab.onclick = function() {
         populationTab.classList.add('stat_hidden');
+        systemsTab.classList.add('stat_hidden');
+        resourcesTab.classList.add('stat_hidden');
     };
 
     populationTab.onclick = function() {
-        if(populationTab.classList.contains('stat_hidden')){
+        if(populationTab.classList.contains('stat_hidden')) { //itself and everything to the left
             populationTab.classList.remove('stat_hidden');
-        } else if(!systemsTab.classList.contains('stat_hidden')){
-           systemsTab.classList.add('stat_hidden');
-           resourcesTab.classList.add('stat_hidden');
-        } else {
+        } else if(!systemsTab.classList.contains('stat_hidden')) { //the one on the right and right of that
+            systemsTab.classList.add('stat_hidden');
+            resourcesTab.classList.add('stat_hidden');
+        } else { //just itself
             populationTab.classList.add('stat_hidden');
         }
     };
 
-    systemsTab.onclick = function(){
-        if(systemsTab.classList.contains('stat_hidden')){
-            systemsTab.classList.remove('stat_hidden');
+    systemsTab.onclick = function() {
+        if(systemsTab.classList.contains('stat_hidden')) {
             populationTab.classList.remove('stat_hidden');
+            systemsTab.classList.remove('stat_hidden');
+        } else if(!resourcesTab.classList.contains('stat_hidden')) {
+            resourcesTab.classList.add('stat_hidden');
         } else {
             systemsTab.classList.add('stat_hidden');
         }
     };
 
-    resourcesTab.onclick = function(){
-        if(resourcesTab.classList.contains('stat_hidden')){
-            resourcesTab.classList.remove('stat_hidden');
-            systemsTab.classList.remove('stat_hidden');
+    resourcesTab.onclick = function() {
+        if(resourcesTab.classList.contains('stat_hidden')) {
             populationTab.classList.remove('stat_hidden');
+            systemsTab.classList.remove('stat_hidden');
+            resourcesTab.classList.remove('stat_hidden');
         } else {
             resourcesTab.classList.add('stat_hidden');
         }
@@ -1358,13 +1363,13 @@ function zoom(zoomLevel) {
 }
 
 function execReview() {
-    var sanity = function(val){
-        var test;
-        val >= 0 ? test = val : test =  0;
-        return test;
-    };
+    var sanity = function(val) {
+            var test;
+            val >= 0 ? test = val : test = 0;
+            return test;
+        };
 
-    if(!Game.buildings[37][1]){
+    if(!Game.buildings[37][1]) {
         document.getElementById('morale').getContext('2d').clearRect(0, 0, 325, 220);
         drawGraph('morale', Game.tossMorale, '#1E90FF', 1000, 0, false);
         drawGraph('morale', Game.hipMorale, '#00FA9A', 1000, 0, false);
@@ -1372,8 +1377,8 @@ function execReview() {
         document.getElementById('tossMorale').innerHTML = Game.tossMorale[Game.tossMorale.length - 1];
         document.getElementById('hipMorale').innerHTML = Game.hipMorale[Game.hipMorale.length - 1];
         document.getElementById('artMorale').innerHTML = Game.artMorale[Game.artMorale.length - 1];
-        document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1])/3);
-    
+        document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1]) / 3);
+
         document.getElementById('population').getContext('2d').clearRect(0, 0, 325, 220);
         drawGraph('population', Game.tossPop, '#1E90FF', 300, 0, false);
         drawGraph('population', Game.hipPop, '#00FA9A', 300, 0, false);
@@ -1383,40 +1388,25 @@ function execReview() {
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
-    
+
         document.getElementById('homeless').getContext('2d').clearRect(0, 0, 325, 220);
         drawGraph('homeless', Game.sdf, '#A0522D', 500, 0, true);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
-    
+
         document.getElementById('crime').getContext('2d').clearRect(0, 0, 325, 220);
         drawGraph('crime', Game.crime, '#FF0000', 100, 0, true);
         document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
-    
+
         document.getElementById('energy').getContext('2d').clearRect(0, 0, 325, 220);
         drawGraph('energy', Game.energy, '#00BFFF', 1000, 0, true);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
-    
+
         document.getElementById('food').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('food', Game.food, '#00FF7F', 100, 0,true);
+        drawGraph('food', Game.food, '#00FF7F', 100, 0, true);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
 
-        //he resources Table...
-        document.getElementById('aluminiumProcList').innerHTML = sanity(Game.procOres[0]);
-        document.getElementById('calciumProcList').innerHTML = sanity(Game.procOres[1]);
-        document.getElementById('copperProcList').innerHTML = sanity(Game.procOres[2]);
-        document.getElementById('goldProcList').innerHTML = sanity(Game.procOres[3]);
-        document.getElementById('ironProcList').innerHTML = sanity(Game.procOres[4]);
-        document.getElementById('leadProcList').innerHTML = sanity(Game.procOres[5]);
-        document.getElementById('magnesiumProcList').innerHTML = sanity(Game.procOres[6]);
-        document.getElementById('mercuryProcList').innerHTML = sanity(Game.procOres[7]);
-        document.getElementById('phosphorousProcList').innerHTML = sanity(Game.procOres[8]);
-        document.getElementById('potassiumProcList').innerHTML = sanity(Game.procOres[9]);
-        document.getElementById('silverProcList').innerHTML = sanity(Game.procOres[10]);
-        document.getElementById('sodiumProcList').innerHTML = sanity(Game.procOres[11]);
-        document.getElementById('tinProcList').innerHTML = sanity(Game.procOres[12]);
-        document.getElementById('zincProcList').innerHTML = sanity(Game.procOres[13]);
-
+        //The resources Table...
         document.getElementById('aluminiumOreList').innerHTML = sanity(Game.ores[0]) + sanity(Game.ores[1]) + sanity(Game.ores[2]);
         document.getElementById('calciumOreList').innerHTML = sanity(Game.ores[3]);
         document.getElementById('copperOreList').innerHTML = sanity(Game.ores[4]) + sanity(Game.ores[5]) + sanity(Game.ores[6]);
@@ -1431,6 +1421,21 @@ function execReview() {
         document.getElementById('sodiumOreList').innerHTML = sanity(Game.ores[24]) + sanity(Game.ores[25]);
         document.getElementById('tinOreList').innerHTML = sanity(Game.ores[26]) + sanity(Game.ores[27]);
         document.getElementById('zincOreList').innerHTML = sanity(Game.ores[28]) + sanity(Game.ores[29]);
+
+        document.getElementById('aluminiumProcList').innerHTML = sanity(Game.procOres[0]);
+        document.getElementById('calciumProcList').innerHTML = sanity(Game.procOres[1]);
+        document.getElementById('copperProcList').innerHTML = sanity(Game.procOres[2]);
+        document.getElementById('goldProcList').innerHTML = sanity(Game.procOres[3]);
+        document.getElementById('ironProcList').innerHTML = sanity(Game.procOres[4]);
+        document.getElementById('leadProcList').innerHTML = sanity(Game.procOres[5]);
+        document.getElementById('magnesiumProcList').innerHTML = sanity(Game.procOres[6]);
+        document.getElementById('mercuryProcList').innerHTML = sanity(Game.procOres[7]);
+        document.getElementById('phosphorousProcList').innerHTML = sanity(Game.procOres[8]);
+        document.getElementById('potassiumProcList').innerHTML = sanity(Game.procOres[9]);
+        document.getElementById('silverProcList').innerHTML = sanity(Game.procOres[10]);
+        document.getElementById('sodiumProcList').innerHTML = sanity(Game.procOres[11]);
+        document.getElementById('tinProcList').innerHTML = sanity(Game.procOres[12]);
+        document.getElementById('zincProcList').innerHTML = sanity(Game.procOres[13]);
     }
 
 }
@@ -2179,36 +2184,35 @@ function contextContent(content, option) {
     var resourceArray = [ //[ORENAME,PRODUCTNAME]
     //Will need to look into this for internationalisation
     ["Bauxite", "Aluminium (Al)"],
-        ["Corundum", "Aluminium (Al)"],
-        ["Kryolite", "Aluminium (Al)"],
-        ["Haematite", "Iron (Fe)"],
-        ["Magnetite", "Iron (Fe)"],
-        ["Iron Pyrite", "Iron (Fe)"],
-        ["Siderite", "Iron (Fe)"],
-        ["Copper Pyrite", "Copper (Cu)"],
-        ["Copper Glance", "Copper (Cu)"],
-        ["Malachite", "Copper (Cu)"],
-        ["Zinc Blende", "Zinc (Zn)"],
-        ["Calamine", "Zinc (Zn)"],
-        ["Rock Salt", "Sodium (Na)"],
-        ["Sodium Carbonate", "Sodium (Na)"],
-        ["Karnalite", "Potassium (K)"],
-        ["Salt Petre", "Potassium (K)"],
-        ["Galena", "Lead (Pb)"],
-        ["Anglesite", "Lead (Pb)"],
-        ["Tin Pyrites", "Tin (Sn)"],
-        ["Cassiterite", "Tin (Sn)"],
-        ["Silver Glance", "Silver (Ag)"],
-        ["Calverite", "Gold (Au)"],
-        ["Syvanite", "Gold (Au)"],
-        ["Cinnabar", "Mercury (Hg)"],
-        ["Calomel", "Mercury (Hg)"],
-        ["Dolomite", "Magnesium (Mg)"],
-        ["Karnalite", "Magnesium (Mg)"],
-        ["Lime Stone", "Calcium (Ca)"],
-        ["Dolomite", "Calcium (Ca)"],
-        ["Phosphorite", "Phosphorous (P)"],
-        ["Floreapetite", "Phosphorous (P)"]
+    ["Corundum", "Aluminium (Al)"],
+    ["Kryolite", "Aluminium (Al)"],
+    ["Limestone", "Calcium (Ca)"],
+    ["Copper Pyrite", "Copper (Cu)"],
+    ["Copper Glance", "Copper (Cu)"],
+    ["Malachite", "Copper (Cu)"],
+    ["Calverite", "Gold (Au)"],
+    ["Syvanite", "Gold (Au)"],
+    ["Haematite", "Iron (Fe)"],
+    ["Magnetite", "Iron (Fe)"],
+    ["Iron Pyrite", "Iron (Fe)"],
+    ["Siderite", "Iron (Fe)"],
+    ["Galena", "Lead (Pb)"],
+    ["Anglesite", "Lead (Pb)"],
+    ["Dolomite", "Magnesium (Mg)"],
+    ["Karnalite", "Magnesium (Mg)"],
+    ["Cinnabar", "Mercury (Hg)"],
+    ["Calomel", "Mercury (Hg)"],
+    ["Phosphorite", "Phosphorous (P)"],
+    ["Floreapetite", "Phosphorous (P)"],
+    ["Salt Petre", "Potassium (K)"],
+    ["Karnalite", "Potassium (K)"],
+    ["Silver Glance", "Silver"],
+    ["Sodium Carbonate", "Sodium (Na)"],
+    ["Rock Salt", "Sodium (Na)"],
+    ["Tin Pyrites", "Tin (Sn)"],
+    ["Cassiterite", "Tin (Sn)"],
+    ["Zinc Blende", "Zinc (Zn)"],
+    ["Calamine", "Zinc (Zn)"]
     ];
     if(!option) {
         htmlString += '<span>' + tile.ref + '</span><br>';
