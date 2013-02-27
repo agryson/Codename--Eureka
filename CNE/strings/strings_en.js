@@ -4,7 +4,7 @@ function Lang(){
 	this.noCavern = "You can\'t dig a cavern here.";
 	this.noDoze = "You can\'t prepare this terrain.";
 	this.noMine = "You can\'t mine here. Ensure a mine is in place.";
-	this.noRecycle = "This can't be recycled.";
+	this.noRecycle = "This can\'t be recycled.";
 	this.noConnection = "No adjacent connector node.";
 	this.notPrepared = "This terrain has not been prepared.";
 	this.onWater = "Are you nuts?!";
@@ -78,4 +78,51 @@ function Lang(){
 	this.warehouse = "Warehouse";
 	this.windfarm = "Wind Farm";
 	this.workshop = "Workshop";
+
+	//Resources
+	this.bauxite = "Bauxite";
+	this.corundum = "Corundum";
+	this.kryolite = "Kryolite";
+	this.limestone = "Limestone";
+	this.copperPyrite = "Copper Pyrite";
+	this.copperGlance = "Copper Glance";
+	this.malachite = "Malachite";
+	this.calverite = "Calverite";
+	this.sylvanite = "Sylvanite";
+	this.haematite = "Haematite";
+	this.magnetite = "Magnetite";
+	this.ironPyrite = "Iron Pyrite";
+	this.siderite = "Siderite";
+	this.galena = "Galena";
+	this.anglesite = "Anglesite";
+	this.dolomite = "Dolomite";
+	this.karnalite = "Karnalite";
+	this.cinnabar = "Cinnabar";
+	this.calomel = "Calomel";
+	this.phosphorite = "Phosphorite";
+	this.floreapetite = "Floreapetite";
+	this.saltPeter = "Salt Petre";
+	this.silverGlance = "Silver Glance";
+	this.sodiumCarbonate = "Sodium Carbonate";
+	this.rockSalt = "Rock Salt";
+	this.tinPyrites = "Tin Pyrites";
+	this.cassiterite = "Cassiterite";
+	this.zincBlende = "Zinc Blende";
+	this.calamine = "Calamine";
+
+	//Processed resources
+	this.aluminium = "Aluminium (Al)";
+	this.calcium = "Calcium (Ca)";
+	this.copper = "Copper (Cu)";
+	this.gold = "Gold (Au)";
+	this.iron = "Iron (Fe)";
+	this.lead = "Lead (Pb)";
+	this.magnesium = "Magnesium (Mg)";
+	this.mercury = "Mercury (Hg)";
+	this.phosphorous = "Phosphorous (P)";
+	this.potassium = "Potassium (K)";
+	this.silver = "Silver (Ag)";
+	this.sodium = "Sodium (Na)";
+	this.tin = "Tin (Sn)";
+	this.zinc = "Zinc (Zn)";
 }

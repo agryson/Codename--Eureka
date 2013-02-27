@@ -1216,7 +1216,6 @@ function eavesdrop() {
     var execBtnContainer = document.getElementById('execBtnContainer');
     var execButton = document.getElementById('execButton');
     execBtnContainer.onclick = function() {
-        execReview();
         menu(exec, execButton, 'exec_hidden');
     };
     exec.onmouseout = function() {
@@ -1280,9 +1279,6 @@ function eavesdrop() {
     };
 
     document.getElementById('globalReport').onclick = function() {
-        if(!Game.buildings[37][1]) {
-            execReview();
-        }
         menu(exec, execButton, 'exec_hidden');
     };
 
@@ -1333,6 +1329,7 @@ function eavesdrop() {
                 notify(Lang.noPower);
                 Game.blackout = 30;
             }
+            execReview();
 
             drawRadar();
             Game.turnNum.innerHTML = "Week: " + Game.turn;
@@ -2183,36 +2180,36 @@ function contextContent(content, option) {
     var htmlString = '';
     var resourceArray = [ //[ORENAME,PRODUCTNAME]
     //Will need to look into this for internationalisation
-    ["Bauxite", "Aluminium (Al)"],
-    ["Corundum", "Aluminium (Al)"],
-    ["Kryolite", "Aluminium (Al)"],
-    ["Limestone", "Calcium (Ca)"],
-    ["Copper Pyrite", "Copper (Cu)"],
-    ["Copper Glance", "Copper (Cu)"],
-    ["Malachite", "Copper (Cu)"],
-    ["Calverite", "Gold (Au)"],
-    ["Syvanite", "Gold (Au)"],
-    ["Haematite", "Iron (Fe)"],
-    ["Magnetite", "Iron (Fe)"],
-    ["Iron Pyrite", "Iron (Fe)"],
-    ["Siderite", "Iron (Fe)"],
-    ["Galena", "Lead (Pb)"],
-    ["Anglesite", "Lead (Pb)"],
-    ["Dolomite", "Magnesium (Mg)"],
-    ["Karnalite", "Magnesium (Mg)"],
-    ["Cinnabar", "Mercury (Hg)"],
-    ["Calomel", "Mercury (Hg)"],
-    ["Phosphorite", "Phosphorous (P)"],
-    ["Floreapetite", "Phosphorous (P)"],
-    ["Salt Petre", "Potassium (K)"],
-    ["Karnalite", "Potassium (K)"],
-    ["Silver Glance", "Silver"],
-    ["Sodium Carbonate", "Sodium (Na)"],
-    ["Rock Salt", "Sodium (Na)"],
-    ["Tin Pyrites", "Tin (Sn)"],
-    ["Cassiterite", "Tin (Sn)"],
-    ["Zinc Blende", "Zinc (Zn)"],
-    ["Calamine", "Zinc (Zn)"]
+    [Lang.bauxite, Lang.aluminium],
+    [Lang.corundum, Lang.aluminium],
+    [Lang.kryolite, Lang.aluminium],
+    [Lang.limestone, Lang.calcium],
+    [Lang.copperPyrite, Lang.copper],
+    [Lang.copperGlance, Lang.copper],
+    [Lang.malachite, Lang.copper],
+    [Lang.calverite, Lang.gold],
+    [Lang.sylvanite, Lang.gold],
+    [Lang.haematite, Lang.iron],
+    [Lang.magnetite, Lang.iron],
+    [Lang.ironPyrite, Lang.iron],
+    [Lang.siderite, Lang.iron],
+    [Lang.galena, Lang.lead],
+    [Lang.anglesite, Lang.lead],
+    [Lang.dolomite, Lang.magnesium],
+    [Lang.karnalite, Lang.magnesium],
+    [Lang.cinnabar, Lang.mercury],
+    [Lang.calomel, Lang.mercury],
+    [Lang.phosphorite, Lang.phosphorous],
+    [Lang.floreapetite, Lang.phosphorous],
+    [Lang.saltPeter, Lang.potassium],
+    [Lang.karnalite, Lang.potassium],
+    [Lang.silverGlance, Lang.silver],
+    [Lang.sodiumCarbonate, Lang.sodium],
+    [Lang.rockSalt, Lang.sodium],
+    [Lang.tinPyrites, Lang.tin],
+    [Lang.cassiterite, Lang.tin],
+    [Lang.zincBlende, Lang.zinc],
+    [Lang.calamine, Lang.zinc]
     ];
     if(!option) {
         htmlString += '<span>' + tile.ref + '</span><br>';
