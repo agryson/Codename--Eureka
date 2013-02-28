@@ -309,7 +309,11 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.buildTime = 2;
             o.kind = returnLevel(level)[y][x][0].kind;
             if(returnLevel(level)[y][x][0].kind === 8) {
-                o.future = [8, Lang.mining];
+                if(builderBot) {
+                    o.future = [221, Lang.building];
+                } else {
+                    o.future = [8, Lang.mining];
+                }
                 returnLevel(level)[y][x][0].ref = changeName(Lang.mining, returnLevel(level)[y][x][0].ref);
                 o.mining = true;
             } else if(level > 0) {
@@ -2407,7 +2411,7 @@ function clicked(direction) {
             } else {
                 var MBelow = returnLevel(Game.level + 1);
                 hex[1] = bobTheBuilder(102, x, y, Game.level, true);
-                MBelow[y][x][1] = bobTheBuilder(102, x, y, Game.level + 1, true);
+                MBelow[y][x][1] = bobTheBuilder(102102, x, y, Game.level + 1, true);
                 for(var i = 0; i < 6; i++) {
                     var mineY = adjacent(x, y, i)[0];
                     var mineX = adjacent(x, y, i)[1];
