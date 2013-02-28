@@ -7,7 +7,9 @@ function Lang(){
 	this.noRecycle = "This can\'t be recycled.";
 	this.noConnection = "No adjacent connector node.";
 	this.notPrepared = "This terrain has not been prepared.";
-	this.onWater = "Are you nuts?!";
+	this.buildingPresent = "You can\'t dig here, buildings or drones are present.";
+	this.onWater = "FLOOD WARNING!";
+	this.lastLevel = "You can't go any deeper than this.";
 	this.setDown = "Please choose your landing zone first...";
 
 	//Actions and references
