@@ -1713,7 +1713,7 @@ function leftMenuResize(bool) {
  */
 
 function resize(e) {
-    var current = e.clientY - 10;
+    var current = e.clientY - 30;
     var total = window.innerHeight;
     var percentage = Math.round((current / total) * 100);
     if(percentage < 10) {
@@ -1724,8 +1724,8 @@ function resize(e) {
         leftMenuResize(false);
     }
     document.getElementById('buildingContainer').style.height = percentage + '%';
-    document.getElementById('droneContainer').style.height = 100 - percentage + '%';
-    document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
+    document.getElementById('droneContainer').style.height = 96 - percentage + '%';
+    //document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
 }
 
 /**

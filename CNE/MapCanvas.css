@@ -262,27 +262,19 @@ button:active {
 
 .building_container {
     top: 0;
-    margin-bottom: 5px; 
 }
 
 .left_menu_container{
     height: 50%;
     width: 100%;
-    position: absolute;
     background: #191919;
     overflow-x: hidden;
     overflow-y: scroll;
     z-index: 1;
 }
 
-.nasty_spacer {
-    height: 20px;
-    width: 100%;
-}
-
 .drone_container {
     bottom: 0;
-    margin-top: 20px;
 }
 
 .menuItem {
@@ -618,6 +610,7 @@ button:active {
 }
     /*!Executive Panel*/
     /*Left Menu*/
+/*
 .left_menu_slider {
 position: absolute;
 height: 20px;
@@ -629,10 +622,20 @@ border-radius: 5px;
 box-shadow: inset -1px -1px 0 2px #000;
 z-index: 2;
 }
+*/
+.left_menu_slider {
+height: 4%;
+width: 100%;
+border-radius: 5px;
+-webkit-box-shadow: inset -1px -1px 0 2px #000;
+-moz-box-shadow: inset -1px -1px 0 2px #000;
+box-shadow: inset -1px -1px 0 2px #000;
+z-index: 1;
+}
     /*!Left Menu*/
     /*Radar*/
 .radar{
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 0;
     width: 350px;
