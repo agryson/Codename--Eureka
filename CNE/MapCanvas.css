@@ -498,11 +498,85 @@ button:active {
     overflow-y: scroll; 
 }
 
+.exec_menu{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    bottom: 40px;
+}
+
+.stat_back{
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    width: 18%;
+    z-index: 10;
+}
+
+.see_stats{
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    bottom: 300px;
+    left: 100px;
+}
+
+.see_messages{
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    bottom: 300px;
+    right: 100px;
+}
+.see_research{
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    bottom: 30px;
+    left: 100px;
+}
+.see_guide{
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    bottom: 30px;
+    right: 100px;
+}
+
 .stat_container{
     float: left;
-    width: 372.5px;
+    width: 370px;
     text-align: center;
     color: #D9F7FF;
+}
+
+.stats_container{
+    position: absolute;
+    z-index: 4;
+    width: 750px;
+    height: 600px;
+}
+.message_container{
+    position: absolute;
+    z-index: 5;
+    width: 750px;
+    height: 600px;
+    color: white;
+}
+.research_container{
+    position: absolute;
+    z-index: 6;
+    width: 750px;
+    height: 600px;
+    color: white;
+}
+.guide_container{
+    position: absolute;
+    z-index: 7;
+    width: 750px;
+    height: 600px;
+    color: white;
 }
 
 .stat_canvas{
@@ -523,6 +597,7 @@ button:active {
 }
 .systems_bar{
     width: 60%;
+    bottom: -50px;
     margin-left: 40%;
     height: 50px;
     border-radius: 0 0 0 5px;
@@ -532,6 +607,7 @@ button:active {
 
 .resources_bar{
     width: 40%;
+    bottom: -50px;
     margin-left: 60%;
     height: 50px;
     border-radius: 0 0 0 5px;
@@ -542,10 +618,10 @@ button:active {
 .stat_tab{
     position: absolute;
     height: 550px;
-    right: 5px;
-    left: 5px;
+    width: 100%;
     color: #9C9C9C;
-    -webkit-transition: all 0.5s ease;
+    -webkit-transition: all 0.2s ease;
+    box-shadow: 1px 0 2px 1px #9C9C9C;
 }
 
 
@@ -586,7 +662,7 @@ button:active {
 
 .ovw_title{
     position: absolute;
-    bottom: 40px;
+    bottom: 0;
     left: 5px;
     padding: 15px 40px 15px 40px;
     color: #D9F7FF;
@@ -610,19 +686,6 @@ button:active {
 }
     /*!Executive Panel*/
     /*Left Menu*/
-/*
-.left_menu_slider {
-position: absolute;
-height: 20px;
-width: 100%;
-margin-top: 50%;
-border-radius: 5px;
--webkit-box-shadow: inset -1px -1px 0 2px #000;
--moz-box-shadow: inset -1px -1px 0 2px #000;
-box-shadow: inset -1px -1px 0 2px #000;
-z-index: 2;
-}
-*/
 .left_menu_slider {
 height: 4%;
 width: 100%;

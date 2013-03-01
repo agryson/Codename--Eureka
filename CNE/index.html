@@ -238,257 +238,287 @@
         </div>
         <div id="execDropDown" class='menu_hidden green_rubber exec_panel exec_hidden'>
             <div id="execDropDownContainer" class='slide_out black_felt exec_panel_screen'>
-                <div id="overview">
-                    <div class="ovw_panel stat_panel">
-                        <div class="ovw_panel_left">
-                            <div class="population_exec">
-                                <h2>Population</h2>
-                                <span>TOSSer</span><span id="tossPop" class="ovw_val"></span>
-                                <br>
-                                <span>Hipstie</span><span id="hipPop" class="ovw_val"></span>
-                                <br>
-                                <span>ArtIe</span><span id="artPop" class="ovw_val"></span>
-                                <br>
-                                <span>Total:</span><span id="popExecTotal" class="ovw_val total"></span>
-                            </div>
-                            <br>
-                            <div class="gen_demographics_exec">
-                                <span>Housing</span><span id="housingVal" class="ovw_val"></span>
-                                <br>
-                                <span>Homeless</span><span id="homelessVal" class="ovw_val"></span>
-                                <br>
-                                <span>Crime</span><span id="crimeVal" class="ovw_val"></span>
-                            </div>
-                            <br>
-                            <div class="morale_exec">
-                                <h2>Morale</h2>
-                                <span>TOSSer</span><span id="tossMorale" class="ovw_val"></span>
-                                <br>
-                                <span>Hipstie</span><span id="hipMorale" class="ovw_val"></span>
-                                <br>
-                                <span>ArtIe</span><span id="artMorale" class="ovw_val"></span>
-                                <br>
-                                <span>Average:</span><span id="moraleAverage" class="ovw_val total"></span>
-                            </div>
-                        </div>
-
-                        <div class="ovw_panel_right">
-                            <div class="systems_exec">
-                                <h2>Systems</h2>
-                                <br>
-                                <span>Energy Surplus</span><span id="energyVal" class="ovw_val"></span>
-                                <br>
-                                <span>Food Stores</span><span id="foodVal" class="ovw_val"></span>
-                            </div>
-                                <br>
-                        </div>
-                    </div>
-                    <span class="ovw_title">Overview<span>
+                <div id="execMenu" class='exec_menu'>
+                    <button id="seeStats" class="main_pointer see_stats smoky_glass">See stats</button>
+                    <button id="seeMessages" class="main_pointer see_messages smoky_glass">See messages</button>
+                    <button id="seeResearch" class="main_pointer see_research smoky_glass">See research</button>
+                    <button id="seeGuide" class="main_pointer see_guide smoky_glass">See guide</button>
                 </div>
-                <div id='populationTab' class='stat_tab stat_hidden'>
-                    <div id="population_panel" class="stat_panel grey_rubber">
-                        <div class="stat_container">
-                            <span>Populations</span><br>
-                            <canvas id="population" class="stat_canvas smoky_glass" width="325px" height="220px">
-                                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
-                            </canvas>
+                <div id="statsContainer" class="stats_container slide_out exec_hidden grey_rubber">
+                    <div id="overview">
+                        <div class="ovw_panel stat_panel">
+                            <button id='statBack' class="stat_back main_pointer blue_glass">Go Back</button>
+                            <div class="ovw_panel_left">
+                                <div class="population_exec">
+                                    <h2>Population</h2>
+                                    <span>TOSSer</span><span id="tossPop" class="ovw_val"></span>
+                                    <br>
+                                    <span>Hipstie</span><span id="hipPop" class="ovw_val"></span>
+                                    <br>
+                                    <span>ArtIe</span><span id="artPop" class="ovw_val"></span>
+                                    <br>
+                                    <span>Total:</span><span id="popExecTotal" class="ovw_val total"></span>
+                                </div>
+                                <br>
+                                <div class="gen_demographics_exec">
+                                    <span>Housing</span><span id="housingVal" class="ovw_val"></span>
+                                    <br>
+                                    <span>Homeless</span><span id="homelessVal" class="ovw_val"></span>
+                                    <br>
+                                    <span>Crime</span><span id="crimeVal" class="ovw_val"></span>
+                                </div>
+                                <br>
+                                <div class="morale_exec">
+                                    <h2>Morale</h2>
+                                    <span>TOSSer</span><span id="tossMorale" class="ovw_val"></span>
+                                    <br>
+                                    <span>Hipstie</span><span id="hipMorale" class="ovw_val"></span>
+                                    <br>
+                                    <span>ArtIe</span><span id="artMorale" class="ovw_val"></span>
+                                    <br>
+                                    <span>Average:</span><span id="moraleAverage" class="ovw_val total"></span>
+                                </div>
+                            </div>
+
+                            <div class="ovw_panel_right">
+                                <div class="systems_exec">
+                                    <h2>Systems</h2>
+                                    <br>
+                                    <span>Energy Surplus</span><span id="energyVal" class="ovw_val"></span>
+                                    <br>
+                                    <span>Food Stores</span><span id="foodVal" class="ovw_val"></span>
+                                </div>
+                                    <br>
+                            </div>
                         </div>
-                        <div class="stat_container">
-                            <span>Morale</span><br>
-                            <canvas id="morale" class="stat_canvas smoky_glass" width="325px" height="220px">
-                                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
-                            </canvas>
+                        <span class="ovw_title">Overview<span>
+                    </div>
+                    <div id='populationTab' class='stat_tab stat_hidden'>
+                        <div id="population_panel" class="stat_panel grey_rubber">
+                            <div class="stat_container">
+                                <span>Populations</span><br>
+                                <canvas id="population" class="stat_canvas smoky_glass" width="325px" height="220px">
+                                    Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+                                </canvas>
+                            </div>
+                            <div class="stat_container">
+                                <span>Morale</span><br>
+                                <canvas id="morale" class="stat_canvas smoky_glass" width="325px" height="220px">
+                                    Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+                                </canvas>
+                            </div>
+                            <div class="stat_container">
+                                <span>Homelessness</span><br>
+                                <canvas id="homeless" class="stat_canvas smoky_glass" width="325px" height="220px">
+                                    Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+                                </canvas>
+                                <br>
+                            </div>
+                            <div class="stat_container">
+                                <span>Crime</span><br>
+                                <canvas id="crime" class="stat_canvas smoky_glass" width="325px" height="220px">
+                                    Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+                                </canvas>
+                                <br>
+                            </div>
                         </div>
-                        <div class="stat_container">
-                            <span>Homelessness</span><br>
-                            <canvas id="homeless" class="stat_canvas smoky_glass" width="325px" height="220px">
-                                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
-                            </canvas>
-                            <br>
-                        </div>
-                        <div class="stat_container">
-                            <span>Crime</span><br>
-                            <canvas id="crime" class="stat_canvas smoky_glass" width="325px" height="220px">
-                                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
-                            </canvas>
-                            <br>
+                        <div class="population_bar grey_rubber">
+                            <span class="stat_title">Population</span>
                         </div>
                     </div>
-                    <div class="population_bar grey_rubber">
-                        <span class="stat_title">Population</span>
+
+                    <div id='systemsTab' class='stat_tab stat_hidden'>
+                        <div id="systems_panel" class="stat_panel grey_rubber">
+                            <div class="stat_container">
+                                <span>Energy Surplus</span><br>
+                                <canvas id="energy" class="stat_canvas smoky_glass" width="325px" height="220px">
+                                    Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+                                </canvas>
+                            </div>
+                            <div class="stat_container">
+                                <span>Food Surplus</span><br>
+                                <canvas id="food" class="stat_canvas smoky_glass" width="325px" height="220px">
+                                    Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
+                                </canvas>
+                            </div>
+                        </div>
+                        <div class="systems_bar grey_rubber">
+                            <span class="stat_title">Systems</span>
+                        </div>
+                    </div>
+
+                    <div id='resourcesTab' class='stat_tab stat_hidden'>
+                        <div id="resources_panel" class="stat_panel grey_rubber">
+                            <!--<div class="ovw_panel_left">-->
+                                <table class="resource_table">
+                                        <tbody>
+                                            
+                                        <tr>
+                                            <td>
+                                                <h3>Resource in storage</h3>
+                                            </td>
+                                            <td>
+                                                <h3>Ore</h3>
+                                            </td>
+                                            <td>
+                                                <h3>Processed</h3>
+                                            </td>
+                                        </tr>
+                                            
+                                        <tr>
+                                            <td>
+                                                Aluminium
+                                            </td>
+                                            <td id="aluminiumOreList">
+                                            </td>
+                                            <td id="aluminiumProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Calcium
+                                            </td>
+                                            <td id="calciumOreList">
+                                            </td>
+                                            <td id="calciumProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Copper
+                                            </td>
+                                            <td id="copperOreList">
+                                            </td>
+                                            <td id="copperProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Gold
+                                            </td>
+                                            <td id="goldOreList">
+                                            </td>
+                                            <td id="goldProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Iron
+                                            </td>
+                                            <td id="ironOreList">
+                                            </td>
+                                            <td id="ironProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Lead
+                                            </td>
+                                            <td id="leadOreList">
+                                            </td>
+                                            <td id="leadProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Magnesium
+                                            </td>
+                                            <td id="magnesiumOreList">
+                                            </td>
+                                            <td id="magnesiumProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Mercury
+                                            </td>
+                                            <td id="mercuryOreList">
+                                            </td>
+                                            <td id="mercuryProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Phosphorous
+                                            </td>
+                                            <td id="phosphorousOreList">
+                                            </td>
+                                            <td id="phosphorousProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Potassium
+                                            </td>
+                                            <td id="potassiumOreList">
+                                            </td>
+                                            <td id="potassiumProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Silver
+                                            </td>
+                                            <td id="silverOreList">
+                                            </td>
+                                            <td id="silverProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Sodium
+                                            </td>
+                                            <td id="sodiumOreList">
+                                            </td>
+                                            <td id="sodiumProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Tin
+                                            </td>
+                                            <td id="tinOreList">
+                                            </td>
+                                            <td id="tinProcList">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Zinc
+                                            </td>
+                                            <td id="zincOreList">
+                                            </td>
+                                            <td id="zincProcList">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </div>
+                        <div class="resources_bar grey_rubber">
+                            <span class="stat_title">Resources</span>
+                        </div>
                     </div>
                 </div>
-
-                <div id='systemsTab' class='stat_tab stat_hidden'>
-                    <div id="systems_panel" class="stat_panel grey_rubber">
-                        <div class="stat_container">
-                            <span>Energy Surplus</span><br>
-                            <canvas id="energy" class="stat_canvas smoky_glass" width="325px" height="220px">
-                                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
-                            </canvas>
-                        </div>
-                        <div class="stat_container">
-                            <span>Food Surplus</span><br>
-                            <canvas id="food" class="stat_canvas smoky_glass" width="325px" height="220px">
-                                Please use a supported browser. My suggestion? <a href='https://www.google.com/chrome'>Google Chrome</a>!
-                            </canvas>
-                        </div>
-                    </div>
-                    <div class="systems_bar grey_rubber">
-                        <span class="stat_title">Systems</span>
-                    </div>
+                <div id="messageContainer" class="message_container slide_out exec_hidden grey_rubber">
+                    <button id='messagesBack' class="stat_back main_pointer blue_glass">Go Back</button>
+                    <br>
+                    <br>
+                    <br>
+                    This is where you'll read your messages
                 </div>
-
-                <div id='resourcesTab' class='stat_tab stat_hidden'>
-                    <div id="resources_panel" class="stat_panel grey_rubber">
-                        <!--<div class="ovw_panel_left">-->
-                            <table class="resource_table">
-                                    <tbody>
-                                        
-                                    <tr>
-                                        <td>
-                                            <h3>Resource in storage</h3>
-                                        </td>
-                                        <td>
-                                            <h3>Ore</h3>
-                                        </td>
-                                        <td>
-                                            <h3>Processed</h3>
-                                        </td>
-                                    </tr>
-                                        
-                                    <tr>
-                                        <td>
-                                            Aluminium
-                                        </td>
-                                        <td id="aluminiumOreList">
-                                        </td>
-                                        <td id="aluminiumProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Calcium
-                                        </td>
-                                        <td id="calciumOreList">
-                                        </td>
-                                        <td id="calciumProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Copper
-                                        </td>
-                                        <td id="copperOreList">
-                                        </td>
-                                        <td id="copperProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Gold
-                                        </td>
-                                        <td id="goldOreList">
-                                        </td>
-                                        <td id="goldProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Iron
-                                        </td>
-                                        <td id="ironOreList">
-                                        </td>
-                                        <td id="ironProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Lead
-                                        </td>
-                                        <td id="leadOreList">
-                                        </td>
-                                        <td id="leadProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Magnesium
-                                        </td>
-                                        <td id="magnesiumOreList">
-                                        </td>
-                                        <td id="magnesiumProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Mercury
-                                        </td>
-                                        <td id="mercuryOreList">
-                                        </td>
-                                        <td id="mercuryProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Phosphorous
-                                        </td>
-                                        <td id="phosphorousOreList">
-                                        </td>
-                                        <td id="phosphorousProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Potassium
-                                        </td>
-                                        <td id="potassiumOreList">
-                                        </td>
-                                        <td id="potassiumProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Silver
-                                        </td>
-                                        <td id="silverOreList">
-                                        </td>
-                                        <td id="silverProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Sodium
-                                        </td>
-                                        <td id="sodiumOreList">
-                                        </td>
-                                        <td id="sodiumProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Tin
-                                        </td>
-                                        <td id="tinOreList">
-                                        </td>
-                                        <td id="tinProcList">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Zinc
-                                        </td>
-                                        <td id="zincOreList">
-                                        </td>
-                                        <td id="zincProcList">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                    </div>
-                    <div class="resources_bar grey_rubber">
-                        <span class="stat_title">Resources</span>
-                    </div>
+                <div id="researchContainer" class="research_container slide_out exec_hidden grey_rubber">
+                    <button id='researchBack' class="stat_back main_pointer blue_glass">Go Back</button>
+                    <br>
+                    <br>
+                    <br>
+                    This is where you'll manage the various research projects
+                </div>
+                <div id="guideContainer" class="guide_container slide_out exec_hidden grey_rubber">
+                    <button id='guideBack' class="stat_back main_pointer blue_glass">Go Back</button>
+                    <br>
+                    <br>
+                    <br>
+                    This is where the player will be able to explore the story, and get help on playing the game.
                 </div>
             </div>
             <div id='execBtnContainer' class='menu_button_container'>

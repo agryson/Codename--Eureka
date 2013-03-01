@@ -1260,11 +1260,45 @@ function eavesdrop() {
         }
         Game.highlight = false;
     };
+    var seeStats = document.getElementById('seeStats');
+    var seeMessages = document.getElementById('seeMessages');
+    var seeResearch = document.getElementById('seeResearch');
+    var seeGuide = document.getElementById('seeGuide');
+
+    var statBack = document.getElementById('statBack');
+    var messagesBack = document.getElementById('messagesBack');
+    var researchBack = document.getElementById('researchBack');
+    var guideBack = document.getElementById('guideBack');
 
     var ovwTab = document.getElementById('overview');
     var populationTab = document.getElementById('populationTab');
     var systemsTab = document.getElementById('systemsTab');
     var resourcesTab = document.getElementById('resourcesTab');
+
+    seeStats.onclick = function(){
+        document.getElementById('statsContainer').classList.remove('exec_hidden');
+    };
+    statBack.onclick = function(){
+        document.getElementById('statsContainer').classList.add('exec_hidden');
+    };
+    seeMessages.onclick = function(){
+        document.getElementById('messageContainer').classList.remove('exec_hidden');
+    };
+    messagesBack.onclick = function(){
+        document.getElementById('messageContainer').classList.add('exec_hidden');
+    };
+    seeResearch.onclick = function(){
+        document.getElementById('researchContainer').classList.remove('exec_hidden');
+    };
+    researchBack.onclick = function(){
+        document.getElementById('researchContainer').classList.add('exec_hidden');
+    };
+    seeGuide.onclick = function(){
+        document.getElementById('guideContainer').classList.remove('exec_hidden');
+    };
+    guideBack.onclick = function(){
+        document.getElementById('guideContainer').classList.add('exec_hidden');
+    };
 
     ovwTab.onclick = function() {
         populationTab.classList.add('stat_hidden');
