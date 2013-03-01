@@ -1557,8 +1557,8 @@ function mapFit(bool) {
         mainMap.style.top = -quarterHeight + 'px';
         mainMap.style.left = -Game.destinationWidth / 2 + 'px';
     }
-    Game.xLimit = Math.floor(Game.mPanCanvas.width / Game.destinationWidth);
-    Game.yLimit = Math.floor(Game.mPanCanvas.height / (quarterHeight * 3));
+    Game.xLimit = Math.ceil(Game.mPanCanvas.width / Game.destinationWidth);
+    Game.yLimit = Math.ceil(Game.mPanCanvas.height / (quarterHeight * 3));
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
 
