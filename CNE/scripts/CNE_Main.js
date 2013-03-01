@@ -1550,11 +1550,11 @@ function mapFit(bool) {
         //Nasty stuff... hence we use the if to touch this as little as possible
         overlay.width = window.innerWidth + Game.destinationWidth;
         overlay.height = window.innerHeight + quarterHeight * 2;
-        overlay.style.top = -quarterHeight + 'px';
+        overlay.style.top = -quarterHeight*2 + 'px';
         overlay.style.left = -Game.destinationWidth / 2 + 'px';
         mainMap.width = window.innerWidth + Game.destinationWidth; //Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
         mainMap.height = window.innerHeight + quarterHeight * 2;
-        mainMap.style.top = -quarterHeight + 'px';
+        mainMap.style.top = -quarterHeight*2 + 'px';
         mainMap.style.left = -Game.destinationWidth / 2 + 'px';
     }
     Game.xLimit = Math.ceil(Game.mPanCanvas.width / Game.destinationWidth);
@@ -1564,12 +1564,12 @@ function mapFit(bool) {
 
     //Messy stuff to handle if I try to zoom out of the map...
     if(Game.retY - Game.yLimit / 2 < 0) {
-        Game.retY = Math.ceil(Game.retY - (Game.retY - Game.yLimit / 2));
+        Game.retY = Math.floor(Game.retY - (Game.retY - Game.yLimit / 2));
     } else if(Game.retY + Game.yLimit / 2 > Game.radarRad * 2) {
         Game.retY = Math.floor(Game.retY - Game.yLimit / 2);
     }
     if(Game.retX - Game.xLimit / 2 < 0) {
-        Game.retX = Math.ceil(Game.retX - (Game.retX - Game.xLimit / 2));
+        Game.retX = Math.floor(Game.retX - (Game.retX - Game.xLimit / 2));
     } else if(Game.retX + Game.xLimit / 2 > Game.radarRad * 2) {
         Game.retX = Math.floor(Game.retX - Game.xLimit / 2);
     }
