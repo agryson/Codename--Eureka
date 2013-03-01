@@ -1009,6 +1009,24 @@ function setStats() {
     Game.blackout = 0;
 }
 
+function saneStats(){
+    if(Game.crime[Game.crime.length - 1] < 0){
+        Game.crime[Game.crime.length - 1] = 0;
+    }
+    if(Game.tossMorale[Game.tossMorale.length - 1] < 0){
+        Game.tossMorale[Game.tossMorale.length - 1] = 0;
+    }
+    if(Game.hipMorale[Game.hipMorale.length - 1] < 0){
+        Game.hipMorale[Game.hipMorale.length - 1] = 0;
+    }
+    if(Game.artMorale[Game.artMorale.length - 1] < 0){
+        Game.artMorale[Game.artMorale.length - 1] = 0;
+    }
+    if(Game.food[Game.food.length - 1] < 0){
+        Game.food[Game.food.length - 1] = 0;
+    }
+}
+
 function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
     var can = document.getElementById(outputId);
     var con = document.getElementById(outputId).getContext('2d');
@@ -1073,7 +1091,7 @@ function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
         con.fillStyle = '#D9F7FF';
         con.font = "14px Arial";
         con.fillText(maxi, 5, 12);
-        con.fillText(maxi / 2, 5, 110);
+        con.fillText(mini + (maxi - mini)/2, 5, 110);
         con.fillText(mini, 5, 215);
     }
 }
@@ -1389,6 +1407,7 @@ function eavesdrop() {
                 notify(Lang.noPower);
                 Game.blackout = 30;
             }
+            saneStats();
             execReview();
 
             drawRadar();
@@ -1419,6 +1438,24 @@ function zoom(zoomLevel) {
     mapFit();
 }
 
+function getMaxMin(arrayIn){
+    var max = 0;
+    var min = 1000;
+    for(var i = 0; i < arrayIn.length; i++){
+        for(var j = 0; j < arrayIn[i].length; j++){
+            if(arrayIn[i][j] > max){
+                max = arrayIn[i][j];
+            }
+            if(arrayIn[i][j] < min){
+                min = arrayIn[i][j];
+            }
+        }
+    }
+    max = Math.ceil(1 + max/50) * 50;
+    min = Math.floor(min/50) * 50;
+    return [max, min];
+}
+
 function execReview() {
     var sanity = function(val) {
             var test;
@@ -1428,39 +1465,45 @@ function execReview() {
 
     if(!Game.buildings[37][1]) {
         document.getElementById('morale').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('morale', Game.tossMorale, '#1E90FF', 1000, 0, false);
-        drawGraph('morale', Game.hipMorale, '#00FA9A', 1000, 0, false);
-        drawGraph('morale', Game.artMorale, '#FF4500', 1000, 0, true);
+        var moraleLimits = getMaxMin([Game.tossMorale, Game.hipMorale, Game.artMorale]);
+        drawGraph('morale', Game.tossMorale, '#1E90FF', moraleLimits[0], moraleLimits[1], false);
+        drawGraph('morale', Game.hipMorale, '#00FA9A', moraleLimits[0], moraleLimits[1], false);
+        drawGraph('morale', Game.artMorale, '#FF4500', moraleLimits[0], moraleLimits[1], true);
         document.getElementById('tossMorale').innerHTML = Game.tossMorale[Game.tossMorale.length - 1];
         document.getElementById('hipMorale').innerHTML = Game.hipMorale[Game.hipMorale.length - 1];
         document.getElementById('artMorale').innerHTML = Game.artMorale[Game.artMorale.length - 1];
         document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1]) / 3);
 
         document.getElementById('population').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('population', Game.tossPop, '#1E90FF', 300, 0, false);
-        drawGraph('population', Game.hipPop, '#00FA9A', 300, 0, false);
-        drawGraph('population', Game.artPop, '#FF4500', 300, 0, false);
-        drawGraph('population', Game.pop, '#DCDCDC', 300, 0, true);
+        var popLimits = getMaxMin([Game.tossPop, Game.hipPop, Game.artPop, Game.pop]);
+        drawGraph('population', Game.tossPop, '#1E90FF', popLimits[0], 0, false);
+        drawGraph('population', Game.hipPop, '#00FA9A', popLimits[0], 0, false);
+        drawGraph('population', Game.artPop, '#FF4500', popLimits[0], 0, false);
+        drawGraph('population', Game.pop, '#DCDCDC', popLimits[0], 0, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
 
         document.getElementById('homeless').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('homeless', Game.sdf, '#A0522D', 500, 0, true);
+        var sdfLimits = getMaxMin([Game.sdf]);
+        drawGraph('homeless', Game.sdf, '#A0522D', sdfLimits[0], 0, true);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
 
         document.getElementById('crime').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('crime', Game.crime, '#FF0000', 100, 0, true);
+        var crimeLimits = getMaxMin([Game.crime]);
+        drawGraph('crime', Game.crime, '#FF0000', crimeLimits[0], 0, true);
         document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
 
         document.getElementById('energy').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('energy', Game.energy, '#00BFFF', 1000, 0, true);
+        var energyLimits = getMaxMin([Game.energy]);
+        drawGraph('energy', Game.energy, '#00BFFF', energyLimits[0], 0, true);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
 
         document.getElementById('food').getContext('2d').clearRect(0, 0, 325, 220);
-        drawGraph('food', Game.food, '#00FF7F', 100, 0, true);
+        var foodLimits = getMaxMin([Game.food]);
+        drawGraph('food', Game.food, '#00FF7F', foodLimits[0], 0, true);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
 
         //The resources Table...

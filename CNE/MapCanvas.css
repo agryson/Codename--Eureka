@@ -556,6 +556,7 @@ button:active {
     z-index: 4;
     width: 750px;
     height: 600px;
+    -webkit-transition: all 0.2s ease-in-out;
 }
 .message_container{
     position: absolute;
