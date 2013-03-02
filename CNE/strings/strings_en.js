@@ -31,6 +31,7 @@ function Lang(){
 	this.confirmDig = "Dig airshaft";
 	this.confirmDigCavern = "Dig cavern here";
 	this.confirmRecycle = "Recycle this construction?";
+	this.undo = "Cancel order";
 
 	//Terrain types
 	this.smooth = "Smooth";
