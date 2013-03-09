@@ -36,7 +36,6 @@ function Construction() {
     this.vital = false;
     this.shutdown = false;
     this.resourcesNeeded = [false]; //[[resource needed, amount needed]]
-    this.ctrlz = false;
 }
 
 function nextTurn(x, y, level) {
@@ -109,13 +108,10 @@ function nextTurn(x, y, level) {
             tile.exists = true;
             Game.storage[Game.storage.length - 1] += tile.storage;
             Game.energy[Game.energy.length - 1] += tile.energy;
-
-
             if(tile.robot >= 0) {
                 Game.robotsList[tile.robot][0] -= 1;
                 tile.robot = -1;
             }
-
             if((tile.kind === 101 && tile.future[0] === 204) || (tile.kind === 102 && tile.future[0] === 221)) {
                 returnLevel(level)[y][x][1] = bobTheBuilder(tile.future[0], x, y, level, false);
             } else {
@@ -237,13 +233,6 @@ function nextTurn(x, y, level) {
 function bobTheBuilder(kind, x, y, level, builderBot) {
     if(returnLevel(level)[y][x][0].kind !== 4) {
         var o = new Construction();
-        if(returnLevel(level)[y][x][1]){
-            returnLevel(level)[y][x][1].ctrlz = false;
-            o.ctrlz = returnLevel(level)[y][x][1];
-        }
-        returnLevel(level)[y][x][0].ctrlz = returnLevel(level)[y][x][0];
-        console.log("orig " + returnLevel(level)[y][x][0].ctrlz);
-
         o.kind = 100;
         o.position = [level, x, y];
         if(kind >= 200 && kind < 300) {
@@ -271,7 +260,6 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             Game.robotsList[0][0] += 1;
             reCount('dozer');
             break;
-
         case 101:
             o.vital = true;
             o.kind = kind;
@@ -843,7 +831,6 @@ function Terrain() {
     this.diggable;
     */
     this.resources = [];
-    this.ctrlz = false;
     //this.ref;
 }
 
@@ -2336,9 +2323,6 @@ function contextContent(content, option) {
             htmlString += content;
         }
     }
-    if(construct && construct.buildTime > 0){
-        htmlString += "<br><button class='smoky_glass main_pointer' onclick='undo(" + x + ", " + y  + ", " + Game.level + ")'>" + Lang.undo + "</button><br>";
-    }
     if(construct && construct.shutdown) {
         htmlString += '<span>' + Lang.noPower + '</span><br>';
         htmlString += '<span>' + Lang.shutdown + '</span><br>';
@@ -2357,43 +2341,6 @@ function contextContent(content, option) {
     htmlString += '</ul>';
     //!resources
     return htmlString;
-}
-
-function undo(x, y, level){
-    var tile = returnLevel(level)[y][x][1];
-    var tileBelow = returnLevel(level + 1)[y][x][1];
-    var goAgain = false;
-    if(tile){
-        console.log("the tile is " + tile.kind);
-        switch(tile.kind){
-            case 100:
-                Game.robotsList[0][0] -= 1;
-                reCount('dozer');
-                break;
-            case 101:
-                if(tileBelow && tileBelow.kind === 101){
-                    returnLevel(level + 1)[y][x][1] = returnLevel(level + 1)[y][x][1].ctrlz;
-                    for(var i =0; i < 6; i++){
-                        console.log(returnLevel(level + 1)[adjacent(x, y, i)[0]][adjacent(x, y, i)[1]][0].ctrlz);
-                        returnLevel(level + 1)[adjacent(x, y, i)[0]][adjacent(x, y, i)[1]][1] = returnLevel(level + 1)[adjacent(x, y, i)[0]][adjacent(x, y, i)[1]][1].ctrlz;
-                        //the following line is doing what I think it is, but seems to be coming from the future??? 
-                        returnLevel(level + 1)[adjacent(x, y, i)[0]][adjacent(x, y, i)[1]][0] = returnLevel(level + 1)[adjacent(x, y, i)[0]][adjacent(x, y, i)[1]][0].ctrlz;
-                    }
-                    Game.robotsList[1][0] -= 1;
-                }
-                Game.robotsList[1][0] -= 1;
-                reCount('digger');
-                break;
-            case 102:
-                Game.robotsList[3][0] -= 1;
-                reCount('miner');
-                break;
-            default:
-                console.log("What exactly are you trying to undo here? " + x + " " + y + " " + tile);
-        }
-        
-        returnLevel(Game.level)[y][x][1] = tile.ctrlz;
-    }
 }
 
 String.prototype.insert = function(index, string) {
