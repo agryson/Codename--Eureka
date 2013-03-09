@@ -536,6 +536,35 @@ button:active {
     bottom: 30px;
     left: 100px;
 }
+
+.research_left_menu{
+    width: 30%;
+    height: 550px;
+    margin-top: 50px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.research_item{
+    height: 50px;
+    padding: 5px;
+    background: #3C3C3C;
+    border: solid 1px green;
+    overflow: hidden;
+}
+
+.top_tier{
+    margin-left: 0;
+}
+
+.middle_tier{
+    margin-left: 10px;
+}
+
+.bottom_tier{
+    margin-left: 20px;
+}
+
 .see_guide{
     position: absolute;
     width: 250px;
