@@ -551,6 +551,11 @@ button:active {
     background: #3C3C3C;
     border: solid 1px green;
     overflow: hidden;
+    display: none;
+}
+
+.research_active{
+    display: block;
 }
 
 .top_tier{

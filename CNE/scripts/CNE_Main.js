@@ -937,102 +937,102 @@ function Param() {
         [0, 1, "recycler", false, 2]
     ];
 
-    //[idString, availableBool, preReqsArray, subTopicsArray];
+    //[idString, langString, availableBool, preReqsArray, subTopicsArray];
     this.researchTopics = [
-        ["engineering", true, [], [
-            ["agriculturalEngineering", false, [], [
-                ["hydroponics", false, [], []],
-                ["noSoilFarming", false, [], []],
-                ["xtremeTempAgriculture", false, [], []]
+        ["engineering", Lang.engineering, true, [], [
+            ["agriculturalEngineering", Lang.agriculturalEngineering, false, [], [
+                ["hydroponics", Lang.hydroponics, false, [], []],
+                ["noSoilFarming", Lang.noSoilFarming, false, [], []],
+                ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], []]
             ]],
-            ["electricalEngineering", false, [], [
-                ["commTech", false, [], []],
-                ["pcbDesign", false, [], []],
-                ["processors", false, [], []],
-                ["robotics", false, [], []]
+            ["electricalEngineering", Lang.electricalEngineering, false, [], [
+                ["commTech", Lang.commTech, false, [], []],
+                ["pcbDesign", Lang.pcbDesign, false, [], []],
+                ["processors", Lang.processors, false, [], []],
+                ["robotics", Lang.robotics, false, [], []]
             ]],
-            ["geneticEngineering", false, [], [
-                ["animalGenetics", false, [], []],
-                ["horticulturalGenetics", false, [], []],
-                ["humanGenetics", false, [], []],
-                ["longevityResearch", false, [], []]
+            ["geneticEngineering", Lang.geneticEngineering, false, [], [
+                ["animalGenetics", Lang.animalGenetics, false, [], []],
+                ["horticulturalGenetics", Lang.horticulturalGenetics, false, [], []],
+                ["humanGenetics", Lang.humanGenetics, false, [], []],
+                ["longevityResearch", Lang.longevityResearch, false, [], []]
             ]],
-            ["mechanicalEngineering", false, [], [
-                ["massProduction", false, [], []],
-                ["mechatronics", false, [], []],
-                ["plm", false, [], []]
+            ["mechanicalEngineering", Lang.mechanicalEngineering, false, [], [
+                ["massProduction", Lang.massProduction, false, [], []],
+                ["mechatronics", Lang.mechatronics, false, [], []],
+                ["plm", Lang.plm, false, [], []]
             ]],
-            ["softwareEngineering", false, [], [
-                ["ai", false, [], [
-                    ["culturalSensitivity", false, [], []],
-                    ["imageProcessing", false, [], []],
-                    ["naturalLanguage", false, [], []],
-                    ["neuralNetworks", false, [], []]
+            ["softwareEngineering", Lang.softwareEngineering, false, [], [
+                ["ai", Lang.ai, false, [], [
+                    ["culturalSensitivity", Lang.culturalSensitivity, false, [], []],
+                    ["imageProcessing", Lang.imageProcessing, false, [], []],
+                    ["naturalLanguage", Lang.naturalLanguage, false, [], []],
+                    ["neuralNetworks", Lang.neuralNetworks, false, [], []]
                 ]]
             ]],
-            ["geoEngineering", false, [], [
-                ["terraforming", false, [], []],
-                ["weatherControl", false, [], []]
+            ["geoEngineering", Lang.geoEngineering, false, [], [
+                ["terraforming", Lang.terraforming, false, [], []],
+                ["weatherControl", Lang.weatherControl, false, [], []]
             ]]
         ]],
-        ["science", true, [], [
-            ["physics", false, [], [
-                ["experimentalPhysics", false, [], []],
-                ["advancedMaterials", false, [], [
-                    ["compositieMaterials", false, [], []],
-                    ["selfHealingMaterials", false, [], []],
-                    ["conductivePolymers", false, [], []],
-                    ["opticalMaterials", false, [], []]
+        ["science", Lang.science, true, [], [
+            ["physics", Lang.physics, false, [], [
+                ["experimentalPhysics", Lang.experimentalPhysics, false, [], []],
+                ["advancedMaterials", Lang.advancedMaterials, false, [], [
+                    ["compositieMaterials", Lang.compositieMaterials, false, [], []],
+                    ["selfHealingMaterials", Lang.selfHealingMaterials, false, [], []],
+                    ["conductivePolymers", Lang.conductivePolymers, false, [], []],
+                    ["opticalMaterials", Lang.opticalMaterials, false, [], []]
                 ]],
-                ["nanotech", false, [], [
-                    ["bioNeutralNano", false, [], []],
-                    ["ggam", false, [], []],
-                    ["nanoFab", false, [], []]
+                ["nanotech", Lang.nanotech, false, [], [
+                    ["bioNeutralNano", Lang.bioNeutralNano, false, [], []],
+                    ["ggam", Lang.ggam, false, [], []],
+                    ["nanoFab", Lang.nanoFab, false, [], []]
                 ]],
-                ["theoreticalPhysics", false, [], []],
-                ["astronomy", false, [], []],
-                ["meteorology", false, [], []],
-                ["nuclearPhysics", false, [], []]
+                ["theoreticalPhysics", Lang.theoreticalPhysics, false, [], []],
+                ["astronomy", Lang.astronomy, false, [], []],
+                ["meteorology", Lang.meteorology, false, [], []],
+                ["nuclearPhysics", Lang.nuclearPhysics, false, [], []]
             ]],
-            ["chemistry", false, [], [
-                ["organicChemistry", false, [], [
-                    ["polymers", false, [], []]
+            ["chemistry", Lang.chemistry, false, [], [
+                ["organicChemistry", Lang.organicChemistry, false, [], [
+                    ["polymers", Lang.polymers, false, [], []]
                 ]],
-                ["physicalChemistry", false, [], [
-                    ["oreProcessing", false, [], []],
-                    ["metallurgy", false, [], []]
+                ["physicalChemistry", Lang.physicalChemistry, false, [], [
+                    ["oreProcessing", Lang.oreProcessing, false, [], []],
+                    ["metallurgy", Lang.metallurgy, false, [], []]
                 ]],
-                ["pharmaceuticalChemistry", false, [], [
-                    ["herbicides", false, [], []],
-                    ["medicines", false, [], []]
+                ["pharmaceuticalChemistry", Lang.pharmaceuticalChemistry, false, [], [
+                    ["herbicides", Lang.herbicides, false, [], []],
+                    ["medicines", Lang.medicines, false, [], []]
                 ]]
             ]],
-            ["biology", false, [], [
-                ["anatomy", false, [], []],
-                ["horticulture", false, [], []],
-                ["physiology", false, [], [
-                    ["radiationEffects", false, [], []],
-                    ["lowGravEffects", false, [], []]
+            ["biology", Lang.biology, false, [], [
+                ["anatomy", Lang.anatomy, false, [], []],
+                ["horticulture", Lang.horticulture, false, [], []],
+                ["physiology", Lang.physiology, false, [], [
+                    ["radiationEffects", Lang.radiationEffects, false, [], []],
+                    ["lowGravEffects", Lang.lowGravEffects, false, [], []]
                 ]],
-                ["medicine", false, [], [
-                    ["oncology", false, [], []],
-                    ["orthopaedics", false, [], []],
-                    ["paedeatrics", false, [], []],
-                    ["placebos", false, [], []],
-                    ["traditional", false, [], []]
+                ["medicine", Lang.medicine, false, [], [
+                    ["oncology", Lang.oncology, false, [], []],
+                    ["orthopaedics", Lang.orthopaedics, false, [], []],
+                    ["paedeatrics", Lang.paedeatrics, false, [], []],
+                    ["placebos", Lang.placebos, false, [], []],
+                    ["traditional", Lang.traditional, false, [], []]
                 ]]
             ]]
         ]],
-        ["arts", true, [], [
-            ["sociology", false, [], [
-                ["socialPolicy", false, [], []],
-                ["politicalScience", false, [], []],
-                ["culturalRelations", false, [], []]
+        ["arts", Lang.arts, true, [], [
+            ["sociology", Lang.sociology, false, [], [
+                ["socialPolicy", Lang.socialPolicy, false, [], []],
+                ["politicalScience", Lang.politicalScience, false, [], []],
+                ["culturalRelations", Lang.culturalRelations, false, [], []]
             ]],
-            ["philosophy", false, [], [
-                ["ethics", false, [], []],
-                ["scientificTheory", false, [], []],
-                ["classicalPhilosophy", false, [], []]
+            ["philosophy", Lang.philosophy, false, [], [
+                ["ethics", Lang.ethics, false, [], []],
+                ["scientificTheory", Lang.scientificTheory, false, [], []],
+                ["classicalPhilosophy", Lang.classicalPhilosophy, false, [], []]
             ]]
         ]]
     ];
@@ -1397,6 +1397,7 @@ function eavesdrop() {
         document.getElementById('messageContainer').classList.add('exec_hidden');
     };
     seeResearch.onclick = function(){
+        document.getElementById('researchLeft').innerHTML = fillResearchMenu();
         document.getElementById('researchContainer').classList.remove('exec_hidden');
     };
     researchBack.onclick = function(){
@@ -1545,6 +1546,17 @@ function getMaxMin(arrayIn){
     max = Math.ceil(1 + max/50) * 50;
     min = Math.floor(min/50) * 50;
     return [max, min];
+}
+
+function fillResearchMenu(){
+    var htmlString = '';
+    //Tier 0
+    for(var i = 0; i < Game.researchTopics.length; i++){
+        if(Game.researchTopics[i][2]){
+            htmlString += '<div id="' + Game.researchTopics[i][0] + '" class="research_item research_active">' + Game.researchTopics[i][1] + '</div>';
+        }
+    }
+    return htmlString;
 }
 
 function execReview() {
