@@ -569,15 +569,15 @@ button:active {
     display: block;
 }
 
-.top_tier{
+.tier0{
     margin-left: 0;
 }
 
-.middle_tier{
+.tier1{
     margin-left: 10px;
 }
 
-.bottom_tier{
+.tier2{
     margin-left: 20px;
 }
 

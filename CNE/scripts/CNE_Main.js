@@ -940,9 +940,9 @@ function Param() {
     //[idString, langString, availableBool, preReqsArray, subTopicsArray];
     this.researchTopics = [
         ["engineering", Lang.engineering, true, [], [
-            ["agriculturalEngineering", Lang.agriculturalEngineering, false, [], [
+            ["agriculturalEngineering", Lang.agriculturalEngineering, true, [], [
                 ["hydroponics", Lang.hydroponics, false, [], []],
-                ["noSoilFarming", Lang.noSoilFarming, false, [], []],
+                ["noSoilFarming", Lang.noSoilFarming, true, [], []],
                 ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], []]
             ]],
             ["electricalEngineering", Lang.electricalEngineering, false, [], [
@@ -976,7 +976,7 @@ function Param() {
             ]]
         ]],
         ["science", Lang.science, true, [], [
-            ["physics", Lang.physics, false, [], [
+            ["physics", Lang.physics, true, [], [
                 ["experimentalPhysics", Lang.experimentalPhysics, false, [], []],
                 ["advancedMaterials", Lang.advancedMaterials, false, [], [
                     ["compositieMaterials", Lang.compositieMaterials, false, [], []],
@@ -994,7 +994,7 @@ function Param() {
                 ["meteorology", Lang.meteorology, false, [], []],
                 ["nuclearPhysics", Lang.nuclearPhysics, false, [], []]
             ]],
-            ["chemistry", Lang.chemistry, false, [], [
+            ["chemistry", Lang.chemistry, true, [], [
                 ["organicChemistry", Lang.organicChemistry, false, [], [
                     ["polymers", Lang.polymers, false, [], []]
                 ]],
@@ -1397,7 +1397,7 @@ function eavesdrop() {
         document.getElementById('messageContainer').classList.add('exec_hidden');
     };
     seeResearch.onclick = function(){
-        document.getElementById('researchLeft').innerHTML = fillResearchMenu();
+        fillResearchMenu();
         document.getElementById('researchContainer').classList.remove('exec_hidden');
     };
     researchBack.onclick = function(){
@@ -1549,19 +1549,34 @@ function getMaxMin(arrayIn){
 }
 
 function fillResearchMenu(){
-    var htmlString = '';
-    //Tier 0
+    //Tier0
     for(var i = 0; i < Game.researchTopics.length; i++){
         if(Game.researchTopics[i][2]){
-            htmlString += '<div id="' + Game.researchTopics[i][0] + '" class="research_item research_active" onclick="fillResearchPanel(' + '\'' +  Game.researchTopics[i][1] + '\'' + ')">' + Game.researchTopics[i][1] + '</div>';
+            document.getElementById(Game.researchTopics[i][0]).classList.add('research_active');
+            document.getElementById(Game.researchTopics[i][0]).innerHTML = Game.researchTopics[i][1];
+            //Tier1
+            for(var j = 0; j < Game.researchTopics[i][4].length; j++){
+                if(Game.researchTopics[i][4][j][2]){
+                    document.getElementById(Game.researchTopics[i][4][j][0]).classList.add('research_active');
+                    document.getElementById(Game.researchTopics[i][4][j][0]).innerHTML = Game.researchTopics[i][4][j][1];
+                    //Tier2
+                    for(var k = 0; k < Game.researchTopics[i][4][j][4].length; k++){
+                        if(Game.researchTopics[i][4][j][4][k][2]){
+                            document.getElementById(Game.researchTopics[i][4][j][4][k][0]).classList.add('research_active');
+                            document.getElementById(Game.researchTopics[i][4][j][4][k][0]).innerHTML = Game.researchTopics[i][4][j][4][k][1];
+                            //Tier3
+                            for(var l = 0; l < Game.researchTopics[i][4][j][4][k][4].length; l++){
+                                if(Game.researchTopics[i][4][j][4][k][4][l][2]){
+                                    document.getElementById(Game.researchTopics[i][4][j][4][k][4][l][0]).classList.add('research_active');
+                                    document.getElementById(Game.researchTopics[i][4][j][4][k][4][l][0]).innerHTML = Game.researchTopics[i][4][j][4][k][4][l][1];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
-    return htmlString;
-}
-
-function fillResearchPanel(thing){
-    document.getElementById('researchPanel').innerHTML = thing;
-    console.log(thing);
 }
 
 function execReview() {
