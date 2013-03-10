@@ -937,6 +937,106 @@ function Param() {
         [0, 1, "recycler", false, 2]
     ];
 
+    //[idString, availableBool, preReqsArray, subTopicsArray];
+    this.researchTopics = [
+        ["engineering", true, [], [
+            ["agriculturalEngineering", false, [], [
+                ["hydroponics", false, [], []],
+                ["noSoilFarming", false, [], []],
+                ["xtremeTempAgriculture", false, [], []]
+            ]],
+            ["electricalEngineering", false, [], [
+                ["commTech", false, [], []],
+                ["pcbDesign", false, [], []],
+                ["processors", false, [], []],
+                ["robotics", false, [], []]
+            ]],
+            ["geneticEngineering", false, [], [
+                ["animalGenetics", false, [], []],
+                ["horticulturalGenetics", false, [], []],
+                ["humanGenetics", false, [], []],
+                ["longevityResearch", false, [], []]
+            ]],
+            ["mechanicalEngineering", false, [], [
+                ["massProduction", false, [], []],
+                ["mechatronics", false, [], []],
+                ["plm", false, [], []]
+            ]],
+            ["softwareEngineering", false, [], [
+                ["ai", false, [], [
+                    ["culturalSensitivity", false, [], []],
+                    ["imageProcessing", false, [], []],
+                    ["naturalLanguage", false, [], []],
+                    ["neuralNetworks", false, [], []]
+                ]]
+            ]],
+            ["geoEngineering", false, [], [
+                ["terraforming", false, [], []],
+                ["weatherControl", false, [], []]
+            ]]
+        ]],
+        ["science", true, [], [
+            ["physics", false, [], [
+                ["experimentalPhysics", false, [], []],
+                ["advancedMaterials", false, [], [
+                    ["compositieMaterials", false, [], []],
+                    ["selfHealingMaterials", false, [], []],
+                    ["conductivePolymers", false, [], []],
+                    ["opticalMaterials", false, [], []]
+                ]],
+                ["nanotech", false, [], [
+                    ["bioNeutralNano", false, [], []],
+                    ["ggam", false, [], []],
+                    ["nanoFab", false, [], []]
+                ]],
+                ["theoreticalPhysics", false, [], []],
+                ["astronomy", false, [], []],
+                ["meteorology", false, [], []],
+                ["nuclearPhysics", false, [], []]
+            ]],
+            ["chemistry", false, [], [
+                ["organicChemistry", false, [], [
+                    ["polymers", false, [], []]
+                ]],
+                ["physicalChemistry", false, [], [
+                    ["oreProcessing", false, [], []],
+                    ["metallurgy", false, [], []]
+                ]],
+                ["pharmaceuticalChemistry", false, [], [
+                    ["herbicides", false, [], []],
+                    ["medicines", false, [], []]
+                ]]
+            ]],
+            ["biology", false, [], [
+                ["anatomy", false, [], []],
+                ["horticulture", false, [], []],
+                ["physiology", false, [], [
+                    ["radiationEffects", false, [], []],
+                    ["lowGravEffects", false, [], []]
+                ]],
+                ["medicine", false, [], [
+                    ["oncology", false, [], []],
+                    ["orthopaedics", false, [], []],
+                    ["paedeatrics", false, [], []],
+                    ["placebos", false, [], []],
+                    ["traditional", false, [], []]
+                ]]
+            ]]
+        ]],
+        ["arts", true, [], [
+            ["sociology", false, [], [
+                ["socialPolicy", false, [], []],
+                ["politicalScience", false, [], []],
+                ["culturalRelations", false, [], []]
+            ]],
+            ["philosophy", false, [], [
+                ["ethics", false, [], []],
+                ["scientificTheory", false, [], []],
+                ["classicalPhilosophy", false, [], []]
+            ]]
+        ]]
+    ];
+
     this.ores = [];
 
     //0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
