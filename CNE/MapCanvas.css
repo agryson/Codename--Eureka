@@ -538,6 +538,9 @@ button:active {
 }
 
 .research_left_menu{
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 30%;
     height: 550px;
     margin-top: 50px;
@@ -552,6 +555,14 @@ button:active {
     border: solid 1px green;
     overflow: hidden;
     display: none;
+}
+
+.research_panel{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 70%;
+    height: 550px;
 }
 
 .research_active{

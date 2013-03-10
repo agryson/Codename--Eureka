@@ -1553,10 +1553,15 @@ function fillResearchMenu(){
     //Tier 0
     for(var i = 0; i < Game.researchTopics.length; i++){
         if(Game.researchTopics[i][2]){
-            htmlString += '<div id="' + Game.researchTopics[i][0] + '" class="research_item research_active">' + Game.researchTopics[i][1] + '</div>';
+            htmlString += '<div id="' + Game.researchTopics[i][0] + '" class="research_item research_active" onclick="fillResearchPanel(' + '\'' +  Game.researchTopics[i][1] + '\'' + ')">' + Game.researchTopics[i][1] + '</div>';
         }
     }
     return htmlString;
+}
+
+function fillResearchPanel(thing){
+    document.getElementById('researchPanel').innerHTML = thing;
+    console.log(thing);
 }
 
 function execReview() {
