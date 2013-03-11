@@ -155,7 +155,7 @@ function Lang(){
 	this.imageProcessing = "Image Processing";
 	this.naturalLanguage = "Natural Language Processing";
 	this.neuralNetworks = "Neural Networks";
-	this.science = "Science";
+	this.science = "General Science";
 	this.physics = "Physics";
 	this.experimentalPhysics = "Experimental Physics";
 	this.advancedMaterials = "Advanced Materials";

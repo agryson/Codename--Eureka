@@ -2,6 +2,8 @@
 "use strict"; //this will break everything if there's any errors... that's a good thing
 var Game; //Global so I can get at it from other scripts...
 var Lang;
+
+//Nice map: 1363032002367
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 
@@ -941,100 +943,100 @@ function Param() {
     this.researchTopics = [
         ["engineering", Lang.engineering, true, [], [
             ["agriculturalEngineering", Lang.agriculturalEngineering, true, [], [
-                ["hydroponics", Lang.hydroponics, false, [], []],
-                ["noSoilFarming", Lang.noSoilFarming, true, [], []],
-                ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], []]
-            ]],
+                ["hydroponics", Lang.hydroponics, false, [], [], false],
+                ["noSoilFarming", Lang.noSoilFarming, true, [], [], false],
+                ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], [], false]
+            ], false],
             ["electricalEngineering", Lang.electricalEngineering, false, [], [
-                ["commTech", Lang.commTech, false, [], []],
-                ["pcbDesign", Lang.pcbDesign, false, [], []],
-                ["processors", Lang.processors, false, [], []],
-                ["robotics", Lang.robotics, false, [], []]
-            ]],
-            ["geneticEngineering", Lang.geneticEngineering, false, [], [
-                ["animalGenetics", Lang.animalGenetics, false, [], []],
-                ["horticulturalGenetics", Lang.horticulturalGenetics, false, [], []],
-                ["humanGenetics", Lang.humanGenetics, false, [], []],
-                ["longevityResearch", Lang.longevityResearch, false, [], []]
-            ]],
+                ["commTech", Lang.commTech, false, [], [], false],
+                ["pcbDesign", Lang.pcbDesign, false, [], [], false],
+                ["processors", Lang.processors, false, [], [], false],
+                ["robotics", Lang.robotics, false, [], [], false]
+            ], false],
+            ["geneticEngineering", Lang.geneticEngineering, true, [], [
+                ["animalGenetics", Lang.animalGenetics, false, [], [], false],
+                ["horticulturalGenetics", Lang.horticulturalGenetics, true, [], [], false],
+                ["humanGenetics", Lang.humanGenetics, false, [], [], false],
+                ["longevityResearch", Lang.longevityResearch, false, [], [], false]
+            ], false],
             ["mechanicalEngineering", Lang.mechanicalEngineering, false, [], [
-                ["massProduction", Lang.massProduction, false, [], []],
-                ["mechatronics", Lang.mechatronics, false, [], []],
-                ["plm", Lang.plm, false, [], []]
-            ]],
+                ["massProduction", Lang.massProduction, false, [], [], false],
+                ["mechatronics", Lang.mechatronics, false, [], [], false],
+                ["plm", Lang.plm, false, [], [], false]
+            ], false],
             ["softwareEngineering", Lang.softwareEngineering, false, [], [
                 ["ai", Lang.ai, false, [], [
-                    ["culturalSensitivity", Lang.culturalSensitivity, false, [], []],
-                    ["imageProcessing", Lang.imageProcessing, false, [], []],
-                    ["naturalLanguage", Lang.naturalLanguage, false, [], []],
-                    ["neuralNetworks", Lang.neuralNetworks, false, [], []]
-                ]]
-            ]],
+                    ["culturalSensitivity", Lang.culturalSensitivity, false, [], [], false],
+                    ["imageProcessing", Lang.imageProcessing, false, [], [], false],
+                    ["naturalLanguage", Lang.naturalLanguage, false, [], [], false],
+                    ["neuralNetworks", Lang.neuralNetworks, false, [], [], false]
+                ], false]
+            ], false],
             ["geoEngineering", Lang.geoEngineering, false, [], [
-                ["terraforming", Lang.terraforming, false, [], []],
-                ["weatherControl", Lang.weatherControl, false, [], []]
-            ]]
-        ]],
+                ["terraforming", Lang.terraforming, false, [], [], false],
+                ["weatherControl", Lang.weatherControl, false, [], [], false]
+            ], false]
+        ], true],
         ["science", Lang.science, true, [], [
             ["physics", Lang.physics, true, [], [
-                ["experimentalPhysics", Lang.experimentalPhysics, false, [], []],
-                ["advancedMaterials", Lang.advancedMaterials, false, [], [
-                    ["compositieMaterials", Lang.compositieMaterials, false, [], []],
-                    ["selfHealingMaterials", Lang.selfHealingMaterials, false, [], []],
-                    ["conductivePolymers", Lang.conductivePolymers, false, [], []],
-                    ["opticalMaterials", Lang.opticalMaterials, false, [], []]
-                ]],
+                ["experimentalPhysics", Lang.experimentalPhysics, false, [], [], false],
+                ["advancedMaterials", Lang.advancedMaterials, true, [], [
+                    ["compositieMaterials", Lang.compositieMaterials, false, [], [], false],
+                    ["selfHealingMaterials", Lang.selfHealingMaterials, true, [], [], false],
+                    ["conductivePolymers", Lang.conductivePolymers, false, [], [], false],
+                    ["opticalMaterials", Lang.opticalMaterials, false, [], [], false]
+                ], false],
                 ["nanotech", Lang.nanotech, false, [], [
-                    ["bioNeutralNano", Lang.bioNeutralNano, false, [], []],
-                    ["ggam", Lang.ggam, false, [], []],
-                    ["nanoFab", Lang.nanoFab, false, [], []]
-                ]],
-                ["theoreticalPhysics", Lang.theoreticalPhysics, false, [], []],
-                ["astronomy", Lang.astronomy, false, [], []],
-                ["meteorology", Lang.meteorology, false, [], []],
-                ["nuclearPhysics", Lang.nuclearPhysics, false, [], []]
-            ]],
+                    ["bioNeutralNano", Lang.bioNeutralNano, false, [], [], false],
+                    ["ggam", Lang.ggam, false, [], [], false],
+                    ["nanoFab", Lang.nanoFab, false, [], [], false]
+                ], false],
+                ["theoreticalPhysics", Lang.theoreticalPhysics, false, [], [], false],
+                ["astronomy", Lang.astronomy, false, [], [], false],
+                ["meteorology", Lang.meteorology, false, [], [], false],
+                ["nuclearPhysics", Lang.nuclearPhysics, false, [], [], false]
+            ], false],
             ["chemistry", Lang.chemistry, true, [], [
                 ["organicChemistry", Lang.organicChemistry, false, [], [
-                    ["polymers", Lang.polymers, false, [], []]
-                ]],
+                    ["polymers", Lang.polymers, false, [], [], false]
+                ], false],
                 ["physicalChemistry", Lang.physicalChemistry, false, [], [
-                    ["oreProcessing", Lang.oreProcessing, false, [], []],
-                    ["metallurgy", Lang.metallurgy, false, [], []]
-                ]],
+                    ["oreProcessing", Lang.oreProcessing, false, [], [], false],
+                    ["metallurgy", Lang.metallurgy, false, [], [], false]
+                ], false],
                 ["pharmaceuticalChemistry", Lang.pharmaceuticalChemistry, false, [], [
-                    ["herbicides", Lang.herbicides, false, [], []],
-                    ["medicines", Lang.medicines, false, [], []]
-                ]]
-            ]],
+                    ["herbicides", Lang.herbicides, false, [], [], false],
+                    ["medicines", Lang.medicines, false, [], [], false]
+                ], false]
+            ], false],
             ["biology", Lang.biology, false, [], [
-                ["anatomy", Lang.anatomy, false, [], []],
-                ["horticulture", Lang.horticulture, false, [], []],
+                ["anatomy", Lang.anatomy, false, [], [], false],
+                ["horticulture", Lang.horticulture, false, [], [], false],
                 ["physiology", Lang.physiology, false, [], [
-                    ["radiationEffects", Lang.radiationEffects, false, [], []],
-                    ["lowGravEffects", Lang.lowGravEffects, false, [], []]
-                ]],
+                    ["radiationEffects", Lang.radiationEffects, false, [], [], false],
+                    ["lowGravEffects", Lang.lowGravEffects, false, [], [], false]
+                ], false],
                 ["medicine", Lang.medicine, false, [], [
-                    ["oncology", Lang.oncology, false, [], []],
-                    ["orthopaedics", Lang.orthopaedics, false, [], []],
-                    ["paedeatrics", Lang.paedeatrics, false, [], []],
-                    ["placebos", Lang.placebos, false, [], []],
-                    ["traditional", Lang.traditional, false, [], []]
-                ]]
-            ]]
-        ]],
+                    ["oncology", Lang.oncology, false, [], [], false],
+                    ["orthopaedics", Lang.orthopaedics, false, [], [], false],
+                    ["paedeatrics", Lang.paedeatrics, false, [], [], false],
+                    ["placebos", Lang.placebos, false, [], [], false],
+                    ["traditional", Lang.traditional, false, [], [], false]
+                ], false]
+            ], false]
+        ], true],
         ["arts", Lang.arts, true, [], [
-            ["sociology", Lang.sociology, false, [], [
-                ["socialPolicy", Lang.socialPolicy, false, [], []],
-                ["politicalScience", Lang.politicalScience, false, [], []],
-                ["culturalRelations", Lang.culturalRelations, false, [], []]
-            ]],
+            ["sociology", Lang.sociology, true, [], [
+                ["socialPolicy", Lang.socialPolicy, false, [], [], false],
+                ["politicalScience", Lang.politicalScience, true, [], [], false],
+                ["culturalRelations", Lang.culturalRelations, false, [], [], false]
+            ], false],
             ["philosophy", Lang.philosophy, false, [], [
-                ["ethics", Lang.ethics, false, [], []],
-                ["scientificTheory", Lang.scientificTheory, false, [], []],
-                ["classicalPhilosophy", Lang.classicalPhilosophy, false, [], []]
-            ]]
-        ]]
+                ["ethics", Lang.ethics, false, [], [], false],
+                ["scientificTheory", Lang.scientificTheory, false, [], [], false],
+                ["classicalPhilosophy", Lang.classicalPhilosophy, false, [], [], false]
+            ], false]
+        ], true]
     ];
 
     this.ores = [];
@@ -1552,23 +1554,39 @@ function fillResearchMenu(){
     //Tier0
     for(var i = 0; i < Game.researchTopics.length; i++){
         if(Game.researchTopics[i][2]){
-            document.getElementById(Game.researchTopics[i][0]).classList.add('research_active');
-            document.getElementById(Game.researchTopics[i][0]).innerHTML = Game.researchTopics[i][1];
+            var tier0 = document.getElementById(Game.researchTopics[i][0]);
+            if(!tier0.classList.contains('research_active')){
+                tier0.classList.add('research_active');
+                tier0.innerHTML = Game.researchTopics[i][1];
+                tier0.onclick = clickedResearch;
+            }
             //Tier1
             for(var j = 0; j < Game.researchTopics[i][4].length; j++){
                 if(Game.researchTopics[i][4][j][2]){
-                    document.getElementById(Game.researchTopics[i][4][j][0]).classList.add('research_active');
-                    document.getElementById(Game.researchTopics[i][4][j][0]).innerHTML = Game.researchTopics[i][4][j][1];
+                    var tier1 = document.getElementById(Game.researchTopics[i][4][j][0]);
+                    if(!tier1.classList.contains('research_active')){
+                        tier1.classList.add('research_active');
+                        tier1.innerHTML = Game.researchTopics[i][4][j][1];
+                        tier1.onclick = clickedResearch;
+                    }
                     //Tier2
                     for(var k = 0; k < Game.researchTopics[i][4][j][4].length; k++){
                         if(Game.researchTopics[i][4][j][4][k][2]){
-                            document.getElementById(Game.researchTopics[i][4][j][4][k][0]).classList.add('research_active');
-                            document.getElementById(Game.researchTopics[i][4][j][4][k][0]).innerHTML = Game.researchTopics[i][4][j][4][k][1];
+                            var tier2 = document.getElementById(Game.researchTopics[i][4][j][4][k][0]);
+                            if(!tier2.classList.contains('research_active')){
+                                tier2.classList.add('research_active');
+                                tier2.innerHTML = Game.researchTopics[i][4][j][4][k][1];
+                                tier2.onclick = clickedResearch;
+                            }
                             //Tier3
                             for(var l = 0; l < Game.researchTopics[i][4][j][4][k][4].length; l++){
                                 if(Game.researchTopics[i][4][j][4][k][4][l][2]){
-                                    document.getElementById(Game.researchTopics[i][4][j][4][k][4][l][0]).classList.add('research_active');
-                                    document.getElementById(Game.researchTopics[i][4][j][4][k][4][l][0]).innerHTML = Game.researchTopics[i][4][j][4][k][4][l][1];
+                                    var tier3 = document.getElementById(Game.researchTopics[i][4][j][4][k][4][l][0]);
+                                    if(!tier3.classList.contains('research_active')){
+                                        //tier3.classList.add('research_active');
+                                        tier3.innerHTML = Game.researchTopics[i][4][j][4][k][4][l][1];
+                                        tier3.onclick = clickedResearch;
+                                    }
                                 }
                             }
                         }
@@ -1577,6 +1595,14 @@ function fillResearchMenu(){
             }
         }
     }
+}
+
+function clickedResearch(){
+    var ident = this.id;
+    if(document.getElementById(ident + 'Cont')){
+        document.getElementById(ident + 'Cont').classList.toggle('research_cont_hidden');
+    }
+    fillResearchMenu();
 }
 
 function execReview() {
@@ -1720,7 +1746,7 @@ function mapFit(bool) {
  */
 
 function checkBuildings() {
-    for(var thing in Game.buildings) {
+    for(var thing = 0; thing < Game.buildings.length; thing++) {
         var idString = Game.buildings[thing][0];
         var elem = document.getElementById(idString);
         if(Game.buildings[thing][1]) {

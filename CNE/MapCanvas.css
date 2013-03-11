@@ -549,12 +549,8 @@ button:active {
 }
 
 .research_item{
-    height: 50px;
-    padding: 5px;
-    background: #3C3C3C;
-    border: solid 1px green;
+    height: 0;
     overflow: hidden;
-    display: none;
 }
 
 .research_panel{
@@ -565,8 +561,22 @@ button:active {
     height: 550px;
 }
 
+.research_cont_slide{
+    max-height: 1000px;
+    overflow: hidden;
+    -webkit-transition: all 0.2s ease;
+}
+
+.research_cont_hidden{
+    max-height: 0;
+    overflow: hidden;
+}
+
 .research_active{
-    display: block;
+    height: 50px;
+    padding: 5px;
+    background: #3C3C3C;
+    border: solid 1px green;
 }
 
 .tier0{
@@ -579,6 +589,10 @@ button:active {
 
 .tier2{
     margin-left: 20px;
+}
+
+.tier3{
+    margin-left: 30px;
 }
 
 .see_guide{
@@ -744,7 +758,7 @@ z-index: 1;
     /*!Left Menu*/
     /*Radar*/
 .radar{
-    position: fixed;
+    position: absolute;
     right: 0;
     top: 0;
     width: 350px;
