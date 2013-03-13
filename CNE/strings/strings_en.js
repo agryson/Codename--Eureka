@@ -1,4 +1,6 @@
 function Lang(){
+	//Custom names etc.
+	this.planet = "Gliese 581d";
 	//Notifications
 	this.noDig = "You can\'t dig here.";
 	this.noCavern = "You can\'t dig a cavern here.";
@@ -212,8 +214,8 @@ function Lang(){
 	this.classicalPhilosophy = "Classical Philosophy";
 
 	//Research Content!
-	this.engineeringContent = "<h1>Engineering</h1><p>While the ship's library contains a plethora of information on engineering, research is required that pertains specifically to the limitations on Gliese 581d. These include how to optimize resource use in construction and ... </p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p>";
-	this.agriculturalEngineeringContent = "Agricultural Engineering Content goes here....";
+	this.engineeringContent = "<h1>Engineering</h1><p>While the ship's library contains a plethora of information on engineering, research is required that pertains specifically to the limitations on " + this.planet + ". These include how to optimize resource use in construction, fabrication and other processes. Studying Engineering is an important first step in improving overall efficiency and production.</p>";
+	this.agriculturalEngineeringContent = "<h1>Agricultural Engineering</h1> Content goes here....";
 	this.hydroponicsContent = "Hydroponics Content goes here....";
 	this.noSoilFarmingContent = "Soilless Farming Content goes here....";
 	this.xtremeTempAgricultureContent = "Extreme Temperature Agriculture Content goes here....";
@@ -237,7 +239,7 @@ function Lang(){
 	this.imageProcessingContent = "Image Processing Content goes here....";
 	this.naturalLanguageContent = "Natural Language Processing Content goes here....";
 	this.neuralNetworksContent = "Neural Networks Content goes here....";
-	this.scienceContent = "General Science Content goes here....";
+	this.scienceContent = "<h1>General Science</h1><p>Science is more than just facts and figures, it's a process that until now has only been undertaken in the Sol system. We need to perform basic measurements and calibrations here on " + this.planet + " to ensure that future research can be trusted and that there are no unexpected surprises down the road.</p>";
 	this.physicsContent = "Physics Content goes here....";
 	this.experimentalPhysicsContent = "Experimental Physics Content goes here....";
 	this.advancedMaterialsContent = "Advanced Materials Content goes here....";
@@ -273,11 +275,11 @@ function Lang(){
 	this.lowGravEffectsContent = "Low-gravity Effects Content goes here....";
 	this.medicineContent = "Medicine Content goes here....";
 	this.oncologyContent = "Oncology Content goes here....";
-	this.orthopaedicsContent = "Orthopaedics Content goes here....";
+	this.orthopaedicsContent = "<h1>Orthopaedics</h1>While our local gravity and diets are relatively similar to what we were used to back on Sol 3 (apart from the dramatic increase in pineapple consumption), there are several factors we need to look into to improve skeletal health over the long-term.</p><p>Through the study of orthopaedics, we believe that we will be able to improve longevity and functional lifespan as well as overall health. This pertains not only to the elderly, but also to the colony members native to " + this.planet + ", who are also in a high risk group for bone density problems. </p>";
 	this.paedeatricsContent = "Paedeatrics Content goes here....";
 	this.placebosContent = "Placebos Content goes here....";
 	this.traditionalContent = "Traditional Medicine Content goes here....";
-	this.artsContent = "Arts Content goes here....";
+	this.artsContent = "<h1>Arts</h1><p>The mix of TOSSer, Hipstie and ArtIe populations brings with it deep metaphysical and sociological questions that need to be answered. By studying these questions and opening up a structured debate on these topics, we can improve the quality of life for all members of the colony.</p>";
 	this.sociologyContent = "Sociology Content goes here....";
 	this.socialPolicyContent = "Social Policy Content goes here....";
 	this.politicalScienceContent = "Political Science Content goes here....";
