@@ -22,7 +22,8 @@ function Lang(){
 	this.recycling = "Recycling";
 	this.buildTime = "Build time remaining: ";
 	this.building = "Building: ";
-	this.week = " week";
+	this.week = "week";
+	this.weeks = "weeks";
 	this.resources = "Resources:";
 	this.noPower = "WARNING: Power Shortage!";
 	this.shutdown = "Building shut down";

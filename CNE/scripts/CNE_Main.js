@@ -2508,11 +2508,12 @@ function contextContent(content, option) {
     }
     //build time left
     if(returnLevel(Game.level)[y][x][1] && returnLevel(Game.level)[y][x][1].kind === 100) {
-        htmlString += '<span>' + Lang.buildTime + (returnLevel(Game.level)[y][x][1].buildTime + 1) + Lang.week;
+        htmlString += '<span>' + Lang.buildTime + (returnLevel(Game.level)[y][x][1].buildTime + 1) + " ";
 
-        //This next part is language specific, should have some means of checking...
         if(returnLevel(Game.level)[y][x][1].buildTime >= 1) {
-            htmlString += 's';
+            htmlString += Lang.weeks;
+        }else{
+            htmlString += Lang.week;
         }
         htmlString += '</span><br>';
     }
