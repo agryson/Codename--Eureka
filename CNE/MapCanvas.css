@@ -277,10 +277,9 @@ button:active {
     bottom: 0;
 }
 
-.menuItem {
+.menu_item {
     position: relative;
     display: none;
-    width: 100%;
     padding: 15px;
     background: #000;
     -webkit-filter: grayscale(80%) blur(1px);
