@@ -129,6 +129,12 @@ function Lang(){
 	this.tin = "Tin (Sn)";
 	this.zinc = "Zinc (Zn)";
 
+	//Research
+	this.availableLabs = "Available Laboratories:";
+	this.currentResearch = "Current research topic:";
+	this.noResearch = "None";
+	this.chooseLab = "Choose a laboratory to study";
+
 	//Research Topics
 	this.engineering = "Engineering";
 	this.agriculturalEngineering = "Agricultural Engineering";
@@ -206,7 +212,7 @@ function Lang(){
 	this.classicalPhilosophy = "Classical Philosophy";
 
 	//Research Content!
-	this.engineeringContent = "Engineering Content goes here....";
+	this.engineeringContent = "<h1>Engineering</h1><p>While the ship's library contains a plethora of information on engineering, research is required that pertains specifically to the limitations on Gliese 581d. These include how to optimize resource use in construction and ... </p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p><p>Lorem Ipsum dolor sit amet</p>";
 	this.agriculturalEngineeringContent = "Agricultural Engineering Content goes here....";
 	this.hydroponicsContent = "Hydroponics Content goes here....";
 	this.noSoilFarmingContent = "Soilless Farming Content goes here....";

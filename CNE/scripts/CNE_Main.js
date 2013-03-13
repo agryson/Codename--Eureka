@@ -120,6 +120,9 @@ function nextTurn(x, y, level) {
                 tile.kind = tile.future[0];
                 nextTurn(x, y, level);
             }
+            if(tile.kind === 227 || tile.kind === 228){
+                Game.researchLabs.push([x, y, level, false]);
+            }
         }
 
         //MINING
@@ -938,104 +941,105 @@ function Param() {
         [0, 3, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
-
+    //[[x,y,topic]]
+    this.researchLabs = [];
     //[idString, langString, availableBool, preReqsArray, subTopicsArray];
     this.researchTopics = [
         ["engineering", Lang.engineering, true, [], [
-            ["agriculturalEngineering", Lang.agriculturalEngineering, true, [], [
-                ["hydroponics", Lang.hydroponics, false, [], [], false],
-                ["noSoilFarming", Lang.noSoilFarming, true, [], [], false],
-                ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], [], false]
-            ], false],
+            ["agriculturalEngineering", Lang.agriculturalEngineering, false, [], [
+                ["hydroponics", Lang.hydroponics, false, [], []],
+                ["noSoilFarming", Lang.noSoilFarming, false, [], []],
+                ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], []]
+            ]],
             ["electricalEngineering", Lang.electricalEngineering, false, [], [
-                ["commTech", Lang.commTech, false, [], [], false],
-                ["pcbDesign", Lang.pcbDesign, false, [], [], false],
-                ["processors", Lang.processors, false, [], [], false],
-                ["robotics", Lang.robotics, false, [], [], false]
-            ], false],
-            ["geneticEngineering", Lang.geneticEngineering, true, [], [
-                ["animalGenetics", Lang.animalGenetics, false, [], [], false],
-                ["horticulturalGenetics", Lang.horticulturalGenetics, true, [], [], false],
-                ["humanGenetics", Lang.humanGenetics, false, [], [], false],
-                ["longevityResearch", Lang.longevityResearch, false, [], [], false]
-            ], false],
+                ["commTech", Lang.commTech, false, [], []],
+                ["pcbDesign", Lang.pcbDesign, false, [], []],
+                ["processors", Lang.processors, false, [], []],
+                ["robotics", Lang.robotics, false, [], []]
+            ]],
+            ["geneticEngineering", Lang.geneticEngineering, false, [], [
+                ["animalGenetics", Lang.animalGenetics, false, [], []],
+                ["horticulturalGenetics", Lang.horticulturalGenetics, false, [], []],
+                ["humanGenetics", Lang.humanGenetics, false, [], []],
+                ["longevityResearch", Lang.longevityResearch, false, [], []]
+            ]],
             ["mechanicalEngineering", Lang.mechanicalEngineering, false, [], [
-                ["massProduction", Lang.massProduction, false, [], [], false],
-                ["mechatronics", Lang.mechatronics, false, [], [], false],
-                ["plm", Lang.plm, false, [], [], false]
-            ], false],
+                ["massProduction", Lang.massProduction, false, [], []],
+                ["mechatronics", Lang.mechatronics, false, [], []],
+                ["plm", Lang.plm, false, [], []]
+            ]],
             ["softwareEngineering", Lang.softwareEngineering, false, [], [
                 ["ai", Lang.ai, false, [], [
-                    ["culturalSensitivity", Lang.culturalSensitivity, false, [], [], false],
-                    ["imageProcessing", Lang.imageProcessing, false, [], [], false],
-                    ["naturalLanguage", Lang.naturalLanguage, false, [], [], false],
-                    ["neuralNetworks", Lang.neuralNetworks, false, [], [], false]
-                ], false]
-            ], false],
+                    ["culturalSensitivity", Lang.culturalSensitivity, false, [], []],
+                    ["imageProcessing", Lang.imageProcessing, false, [], []],
+                    ["naturalLanguage", Lang.naturalLanguage, false, [], []],
+                    ["neuralNetworks", Lang.neuralNetworks, false, [], []]
+                ]]
+            ]],
             ["geoEngineering", Lang.geoEngineering, false, [], [
-                ["terraforming", Lang.terraforming, false, [], [], false],
-                ["weatherControl", Lang.weatherControl, false, [], [], false]
-            ], false]
+                ["terraforming", Lang.terraforming, false, [], []],
+                ["weatherControl", Lang.weatherControl, false, [], []]
+            ]]
         ], true],
         ["science", Lang.science, true, [], [
-            ["physics", Lang.physics, true, [], [
-                ["experimentalPhysics", Lang.experimentalPhysics, false, [], [], false],
-                ["advancedMaterials", Lang.advancedMaterials, true, [], [
-                    ["compositieMaterials", Lang.compositieMaterials, false, [], [], false],
-                    ["selfHealingMaterials", Lang.selfHealingMaterials, true, [], [], false],
-                    ["conductivePolymers", Lang.conductivePolymers, false, [], [], false],
-                    ["opticalMaterials", Lang.opticalMaterials, false, [], [], false]
-                ], false],
+            ["physics", Lang.physics, false, [], [
+                ["experimentalPhysics", Lang.experimentalPhysics, false, [], []],
+                ["advancedMaterials", Lang.advancedMaterials, false, [], [
+                    ["compositieMaterials", Lang.compositieMaterials, false, [], []],
+                    ["selfHealingMaterials", Lang.selfHealingMaterials, false, [], []],
+                    ["conductivePolymers", Lang.conductivePolymers, false, [], []],
+                    ["opticalMaterials", Lang.opticalMaterials, false, [], []]
+                ]],
                 ["nanotech", Lang.nanotech, false, [], [
-                    ["bioNeutralNano", Lang.bioNeutralNano, false, [], [], false],
-                    ["ggam", Lang.ggam, false, [], [], false],
-                    ["nanoFab", Lang.nanoFab, false, [], [], false]
-                ], false],
-                ["theoreticalPhysics", Lang.theoreticalPhysics, false, [], [], false],
-                ["astronomy", Lang.astronomy, false, [], [], false],
-                ["meteorology", Lang.meteorology, false, [], [], false],
-                ["nuclearPhysics", Lang.nuclearPhysics, false, [], [], false]
-            ], false],
-            ["chemistry", Lang.chemistry, true, [], [
+                    ["bioNeutralNano", Lang.bioNeutralNano, false, [], []],
+                    ["ggam", Lang.ggam, false, [], []],
+                    ["nanoFab", Lang.nanoFab, false, [], []]
+                ]],
+                ["theoreticalPhysics", Lang.theoreticalPhysics, false, [], []],
+                ["astronomy", Lang.astronomy, false, [], []],
+                ["meteorology", Lang.meteorology, false, [], []],
+                ["nuclearPhysics", Lang.nuclearPhysics, false, [], []]
+            ]],
+            ["chemistry", Lang.chemistry, false, [], [
                 ["organicChemistry", Lang.organicChemistry, false, [], [
-                    ["polymers", Lang.polymers, false, [], [], false]
-                ], false],
+                    ["polymers", Lang.polymers, false, [], []]
+                ]],
                 ["physicalChemistry", Lang.physicalChemistry, false, [], [
-                    ["oreProcessing", Lang.oreProcessing, false, [], [], false],
-                    ["metallurgy", Lang.metallurgy, false, [], [], false]
-                ], false],
+                    ["oreProcessing", Lang.oreProcessing, false, [], []],
+                    ["metallurgy", Lang.metallurgy, false, [], []]
+                ]],
                 ["pharmaceuticalChemistry", Lang.pharmaceuticalChemistry, false, [], [
-                    ["herbicides", Lang.herbicides, false, [], [], false],
-                    ["medicines", Lang.medicines, false, [], [], false]
-                ], false]
-            ], false],
+                    ["herbicides", Lang.herbicides, false, [], []],
+                    ["medicines", Lang.medicines, false, [], []]
+                ]]
+            ]],
             ["biology", Lang.biology, false, [], [
-                ["anatomy", Lang.anatomy, false, [], [], false],
-                ["horticulture", Lang.horticulture, false, [], [], false],
+                ["anatomy", Lang.anatomy, false, [], []],
+                ["horticulture", Lang.horticulture, false, [], []],
                 ["physiology", Lang.physiology, false, [], [
-                    ["radiationEffects", Lang.radiationEffects, false, [], [], false],
-                    ["lowGravEffects", Lang.lowGravEffects, false, [], [], false]
-                ], false],
+                    ["radiationEffects", Lang.radiationEffects, false, [], []],
+                    ["lowGravEffects", Lang.lowGravEffects, false, [], []]
+                ]],
                 ["medicine", Lang.medicine, false, [], [
-                    ["oncology", Lang.oncology, false, [], [], false],
-                    ["orthopaedics", Lang.orthopaedics, false, [], [], false],
-                    ["paedeatrics", Lang.paedeatrics, false, [], [], false],
-                    ["placebos", Lang.placebos, false, [], [], false],
-                    ["traditional", Lang.traditional, false, [], [], false]
-                ], false]
-            ], false]
+                    ["oncology", Lang.oncology, false, [], []],
+                    ["orthopaedics", Lang.orthopaedics, false, [], []],
+                    ["paedeatrics", Lang.paedeatrics, false, [], []],
+                    ["placebos", Lang.placebos, false, [], []],
+                    ["traditional", Lang.traditional, false, [], []]
+                ]]
+            ]]
         ], true],
         ["arts", Lang.arts, true, [], [
-            ["sociology", Lang.sociology, true, [], [
-                ["socialPolicy", Lang.socialPolicy, false, [], [], false],
-                ["politicalScience", Lang.politicalScience, true, [], [], false],
-                ["culturalRelations", Lang.culturalRelations, false, [], [], false]
-            ], false],
+            ["sociology", Lang.sociology, false, [], [
+                ["socialPolicy", Lang.socialPolicy, false, [], []],
+                ["politicalScience", Lang.politicalScience, false, [], []],
+                ["culturalRelations", Lang.culturalRelations, false, [], []]
+            ]],
             ["philosophy", Lang.philosophy, false, [], [
-                ["ethics", Lang.ethics, false, [], [], false],
-                ["scientificTheory", Lang.scientificTheory, false, [], [], false],
-                ["classicalPhilosophy", Lang.classicalPhilosophy, false, [], [], false]
-            ], false]
+                ["ethics", Lang.ethics, false, [], []],
+                ["scientificTheory", Lang.scientificTheory, false, [], []],
+                ["classicalPhilosophy", Lang.classicalPhilosophy, false, [], []]
+            ]]
         ], true]
     ];
 
@@ -1609,239 +1613,36 @@ function clickedResearch(){
 function fillResearchPanel(ident){
     var htmlString = '';
     htmlString += '<img src="images/researchIllustrations/' + ident + '.png" />';
-    switch(ident){
-        case 'engineering':
-            htmlString += Lang.engineeringContent;
-            break;
-        case 'agriculturalEngineering':
-            htmlString += Lang.agriculturalEngineeringContent;
-            break;
-        case 'hydroponics':
-            htmlString += Lang.hydroponicsContent;
-            break;
-        case 'noSoilFarming':
-            htmlString += Lang.noSoilFarmingContent;
-            break;
-        case 'xtremeTempAgriculture':
-            htmlString += Lang.xtremeTempAgricultureContent;
-            break;
-        case 'electricalEngineering':
-            htmlString += Lang.electricalEngineeringContent;
-            break;
-        case 'commTech':
-            htmlString += Lang.commTechContent;
-            break;
-        case 'pcbDesign':
-            htmlString += Lang.pcbDesignContent;
-            break;
-        case 'processors':
-            htmlString += Lang.processorsContent;
-            break;
-        case 'robotics':
-            htmlString += Lang.roboticsContent;
-            break;
-        case 'geneticEngineering':
-            htmlString += Lang.geneticEngineeringContent;
-            break;
-        case 'animalGenetics':
-            htmlString += Lang.animalGeneticsContent;
-            break;
-        case 'horticulturalGenetics':
-            htmlString += Lang.horticulturalGeneticsContent;
-            break;
-        case 'humanGenetics':
-            htmlString += Lang.humanGeneticsContent;
-            break;
-        case 'longevityResearch':
-            htmlString += Lang.longevityResearchContent;
-            break;
-        case 'mechanicalEngineering':
-            htmlString += Lang.mechanicalEngineeringContent;
-            break;
-        case 'massProduction':
-            htmlString += Lang.massProductionContent;
-            break;
-        case 'mechatronics':
-            htmlString += Lang.mechatronicsContent;
-            break;
-        case 'plm':
-            htmlString += Lang.plmContent;
-            break;
-        case 'softwareEngineering':
-            htmlString += Lang.softwareEngineeringContent;
-            break;
-        case 'ai':
-            htmlString += Lang.aiContent;
-            break;
-        case 'culturalSensitivity':
-            htmlString += Lang.culturalSensitivityContent;
-            break;
-        case 'imageProcessing':
-            htmlString += Lang.imageProcessingContent;
-            break;
-        case 'naturalLanguage':
-            htmlString += Lang.naturalLanguageContent;
-            break;
-        case 'neuralNetworks':
-            htmlString += Lang.neuralNetworksContent;
-            break;
-        case 'science':
-            htmlString += Lang.scienceContent;
-            break;
-        case 'physics':
-            htmlString += Lang.physicsContent;
-            break;
-        case 'experimentalPhysics':
-            htmlString += Lang.experimentalPhysicsContent;
-            break;
-        case 'advancedMaterials':
-            htmlString += Lang.advancedMaterialsContent;
-            break;
-        case 'compositieMaterials':
-            htmlString += Lang.compositieMaterialsContent;
-            break;
-        case 'selfHealingMaterials':
-            htmlString += Lang.selfHealingMaterialsContent;
-            break;
-        case 'conductivePolymers':
-            htmlString += Lang.conductivePolymersContent;
-            break;
-        case 'opticalMaterials':
-            htmlString += Lang.opticalMaterialsContent;
-            break;
-        case 'nanotech':
-            htmlString += Lang.nanotechContent;
-            break;
-        case 'bioNeutralNano':
-            htmlString += Lang.bioNeutralNanoContent;
-            break;
-        case 'ggam':
-            htmlString += Lang.ggamContent;
-            break;
-        case 'nanoFab':
-            htmlString += Lang.nanoFabContent;
-            break;
-        case 'theoreticalPhysics':
-            htmlString += Lang.theoreticalPhysicsContent;
-            break;
-        case 'astronomy':
-            htmlString += Lang.astronomyContent;
-            break;
-        case 'meteorology':
-            htmlString += Lang.meteorologyContent;
-            break;
-        case 'nuclearPhysics':
-            htmlString += Lang.nuclearPhysicsContent;
-            break;
-        case 'geoEngineering':
-            htmlString += Lang.geoEngineeringContent;
-            break;
-        case 'terraforming':
-            htmlString += Lang.terraformingContent;
-            break;
-        case 'weatherControl':
-            htmlString += Lang.weatherControlContent;
-            break;
-        case 'chemistry':
-            htmlString += Lang.chemistryContent;
-            break;
-        case 'organicChemistry':
-            htmlString += Lang.organicChemistryContent;
-            break;
-        case 'polymers':
-            htmlString += Lang.polymersContent;
-            break;
-        case 'physicalChemistry':
-            htmlString += Lang.physicalChemistryContent;
-            break;
-        case 'oreProcessing':
-            htmlString += Lang.oreProcessingContent;
-            break;
-        case 'metallurgy':
-            htmlString += Lang.metallurgyContent;
-            break;
-        case 'pharmaceuticalChemistry':
-            htmlString += Lang.pharmaceuticalChemistryContent;
-            break;
-        case 'herbicides':
-            htmlString += Lang.herbicidesContent;
-            break;
-        case 'medicines':
-            htmlString += Lang.medicinesContent;
-            break;
-        case 'biology':
-            htmlString += Lang.biologyContent;
-            break;
-        case 'anatomy':
-            htmlString += Lang.anatomyContent;
-            break;
-        case 'horticulture':
-            htmlString += Lang.horticultureContent;
-            break;
-        case 'physiology':
-            htmlString += Lang.physiologyContent;
-            break;
-        case 'radiationEffects':
-            htmlString += Lang.radiationEffectsContent;
-            break;
-        case 'lowGravEffects':
-            htmlString += Lang.lowGravEffectsContent;
-            break;
-        case 'medicine':
-            htmlString += Lang.medicineContent;
-            break;
-        case 'oncology':
-            htmlString += Lang.oncologyContent;
-            break;
-        case 'orthopaedics':
-            htmlString += Lang.orthopaedicsContent;
-            break;
-        case 'paedeatrics':
-            htmlString += Lang.paedeatricsContent;
-            break;
-        case 'placebos':
-            htmlString += Lang.placebosContent;
-            break;
-        case 'traditional':
-            htmlString += Lang.traditionalContent;
-            break;
-        case 'arts':
-            htmlString += Lang.artsContent;
-            break;
-        case 'sociology':
-            htmlString += Lang.sociologyContent;
-            break;
-        case 'socialPolicy':
-            htmlString += Lang.socialPolicyContent;
-            break;
-        case 'politicalScience':
-            htmlString += Lang.politicalScienceContent;
-            break;
-        case 'culturalRelations':
-            htmlString += Lang.culturalRelationsContent;
-            break;
-        case 'philosophy':
-            htmlString += Lang.philosophyContent;
-            break;
-        case 'ethics':
-            htmlString += Lang.ethicsContent;
-            break;
-        case 'scientificTheory':
-            htmlString += Lang.scientificTheoryContent;
-            break;
-        case 'classicalPhilosophy':
-            htmlString += Lang.classicalPhilosophyContent;
-            break;
-        default:
-            console.log('I couldn\'t fill the research panel doctor...');
+    htmlString += eval("Lang." + ident + "Content");
+    if(Game.researchLabs.length > 0){
+        htmlString += '<button id="' + ident + 'Button" class="main_pointer smoky_glass" onclick="startResearch(' + ident + ')">Research</button>';
     }
-    htmlString += '<button id="' + ident + 'Button" class="main_pointer smoky_glass" onclick="startResearch(' + ident + ')">Research</button>';
     return htmlString;
 }
 
 //start research function
 function startResearch(ident){
-    
+    var htmlString = '';
+    htmlString += "<h1>" + Lang.availableLabs + "</h1>";
+    htmlString += Lang.chooseLab + " " + eval("Lang." + ident.id);
+    htmlString += "<ul>";
+    for (var i = 0; i < Game.researchLabs.length; i++){
+        var lab = Game.researchLabs[i];
+        htmlString += "<li onclick='setResearchTopic(" + ident.id + "," + i + ")'>" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "<br>" + Lang.currentResearch;
+        if(!lab[3]){
+            htmlString += " " + Lang.noResearch;
+        } else {
+            htmlString += " " + eval("Lang." + ident.id);
+        }
+        htmlString += "</li>";
+    }
+    htmlString += "</ul>";
+    document.getElementById('researchPanel').innerHTML = htmlString;
+}
+
+function setResearchTopic(ident, i){
+    Game.researchLabs[i][3] = ident;
+    startResearch(ident);
 }
 
 function execReview() {
@@ -3189,9 +2990,6 @@ function construct() {
         document.getElementById(identity).style.background = '#393939';
         Game.clickedOn = identity; /**TODO : Update this to be the primary key listener*/
         switch(identity) {
-        case 'lander':
-            document.body.style.cursor = "url('images/pointers/build.png'), default";
-            break;
         case 'dozer':
             document.body.style.cursor = "url('images/pointers/dozer.png'), default";
             break;
@@ -3208,6 +3006,9 @@ function construct() {
             document.body.style.cursor = "url('images/pointers/recycle.png'), default";
             break;
             //TODO: Change the pointers below to appropriate icons for the relevant building...
+        case 'lander':
+            document.body.style.cursor = "url('images/pointers/build.png'), default";
+            break;
         case 'agri':
             document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
