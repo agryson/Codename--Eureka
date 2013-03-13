@@ -1613,7 +1613,7 @@ function clickedResearch(){
 function fillResearchPanel(ident){
     var htmlString = '';
     htmlString += '<img src="images/researchIllustrations/' + ident + '.png" />';
-    htmlString += eval("Lang." + ident + "Content");
+    htmlString += Lang[ident + "Content"];
     if(Game.researchLabs.length > 0){
         htmlString += '<button id="' + ident + 'Button" class="main_pointer smoky_glass" onclick="startResearch(' + ident + ')">Research</button>';
     }
@@ -1624,7 +1624,7 @@ function fillResearchPanel(ident){
 function startResearch(ident){
     var htmlString = '';
     htmlString += "<h1>" + Lang.availableLabs + "</h1>";
-    htmlString += Lang.chooseLab + " " + eval("Lang." + ident.id);
+    htmlString += Lang.chooseLab + " " + Lang[ident.id];
     htmlString += "<ul>";
     for (var i = 0; i < Game.researchLabs.length; i++){
         var lab = Game.researchLabs[i];
@@ -1632,7 +1632,7 @@ function startResearch(ident){
         if(!lab[3]){
             htmlString += " " + Lang.noResearch;
         } else {
-            htmlString += " " + eval("Lang." + ident.id);
+            htmlString += " " + Lang[ident.id];
         }
         htmlString += "</li>";
     }
