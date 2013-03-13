@@ -1602,7 +1602,246 @@ function clickedResearch(){
     if(document.getElementById(ident + 'Cont')){
         document.getElementById(ident + 'Cont').classList.toggle('research_cont_hidden');
     }
+    document.getElementById('researchPanel').innerHTML = fillResearchPanel(ident);
     fillResearchMenu();
+}
+
+function fillResearchPanel(ident){
+    var htmlString = '';
+    htmlString += '<img src="images/researchIllustrations/' + ident + '.png" />';
+    switch(ident){
+        case 'engineering':
+            htmlString += Lang.engineeringContent;
+            break;
+        case 'agriculturalEngineering':
+            htmlString += Lang.agriculturalEngineeringContent;
+            break;
+        case 'hydroponics':
+            htmlString += Lang.hydroponicsContent;
+            break;
+        case 'noSoilFarming':
+            htmlString += Lang.noSoilFarmingContent;
+            break;
+        case 'xtremeTempAgriculture':
+            htmlString += Lang.xtremeTempAgricultureContent;
+            break;
+        case 'electricalEngineering':
+            htmlString += Lang.electricalEngineeringContent;
+            break;
+        case 'commTech':
+            htmlString += Lang.commTechContent;
+            break;
+        case 'pcbDesign':
+            htmlString += Lang.pcbDesignContent;
+            break;
+        case 'processors':
+            htmlString += Lang.processorsContent;
+            break;
+        case 'robotics':
+            htmlString += Lang.roboticsContent;
+            break;
+        case 'geneticEngineering':
+            htmlString += Lang.geneticEngineeringContent;
+            break;
+        case 'animalGenetics':
+            htmlString += Lang.animalGeneticsContent;
+            break;
+        case 'horticulturalGenetics':
+            htmlString += Lang.horticulturalGeneticsContent;
+            break;
+        case 'humanGenetics':
+            htmlString += Lang.humanGeneticsContent;
+            break;
+        case 'longevityResearch':
+            htmlString += Lang.longevityResearchContent;
+            break;
+        case 'mechanicalEngineering':
+            htmlString += Lang.mechanicalEngineeringContent;
+            break;
+        case 'massProduction':
+            htmlString += Lang.massProductionContent;
+            break;
+        case 'mechatronics':
+            htmlString += Lang.mechatronicsContent;
+            break;
+        case 'plm':
+            htmlString += Lang.plmContent;
+            break;
+        case 'softwareEngineering':
+            htmlString += Lang.softwareEngineeringContent;
+            break;
+        case 'ai':
+            htmlString += Lang.aiContent;
+            break;
+        case 'culturalSensitivity':
+            htmlString += Lang.culturalSensitivityContent;
+            break;
+        case 'imageProcessing':
+            htmlString += Lang.imageProcessingContent;
+            break;
+        case 'naturalLanguage':
+            htmlString += Lang.naturalLanguageContent;
+            break;
+        case 'neuralNetworks':
+            htmlString += Lang.neuralNetworksContent;
+            break;
+        case 'science':
+            htmlString += Lang.scienceContent;
+            break;
+        case 'physics':
+            htmlString += Lang.physicsContent;
+            break;
+        case 'experimentalPhysics':
+            htmlString += Lang.experimentalPhysicsContent;
+            break;
+        case 'advancedMaterials':
+            htmlString += Lang.advancedMaterialsContent;
+            break;
+        case 'compositieMaterials':
+            htmlString += Lang.compositieMaterialsContent;
+            break;
+        case 'selfHealingMaterials':
+            htmlString += Lang.selfHealingMaterialsContent;
+            break;
+        case 'conductivePolymers':
+            htmlString += Lang.conductivePolymersContent;
+            break;
+        case 'opticalMaterials':
+            htmlString += Lang.opticalMaterialsContent;
+            break;
+        case 'nanotech':
+            htmlString += Lang.nanotechContent;
+            break;
+        case 'bioNeutralNano':
+            htmlString += Lang.bioNeutralNanoContent;
+            break;
+        case 'ggam':
+            htmlString += Lang.ggamContent;
+            break;
+        case 'nanoFab':
+            htmlString += Lang.nanoFabContent;
+            break;
+        case 'theoreticalPhysics':
+            htmlString += Lang.theoreticalPhysicsContent;
+            break;
+        case 'astronomy':
+            htmlString += Lang.astronomyContent;
+            break;
+        case 'meteorology':
+            htmlString += Lang.meteorologyContent;
+            break;
+        case 'nuclearPhysics':
+            htmlString += Lang.nuclearPhysicsContent;
+            break;
+        case 'geoEngineering':
+            htmlString += Lang.geoEngineeringContent;
+            break;
+        case 'terraforming':
+            htmlString += Lang.terraformingContent;
+            break;
+        case 'weatherControl':
+            htmlString += Lang.weatherControlContent;
+            break;
+        case 'chemistry':
+            htmlString += Lang.chemistryContent;
+            break;
+        case 'organicChemistry':
+            htmlString += Lang.organicChemistryContent;
+            break;
+        case 'polymers':
+            htmlString += Lang.polymersContent;
+            break;
+        case 'physicalChemistry':
+            htmlString += Lang.physicalChemistryContent;
+            break;
+        case 'oreProcessing':
+            htmlString += Lang.oreProcessingContent;
+            break;
+        case 'metallurgy':
+            htmlString += Lang.metallurgyContent;
+            break;
+        case 'pharmaceuticalChemistry':
+            htmlString += Lang.pharmaceuticalChemistryContent;
+            break;
+        case 'herbicides':
+            htmlString += Lang.herbicidesContent;
+            break;
+        case 'medicines':
+            htmlString += Lang.medicinesContent;
+            break;
+        case 'biology':
+            htmlString += Lang.biologyContent;
+            break;
+        case 'anatomy':
+            htmlString += Lang.anatomyContent;
+            break;
+        case 'horticulture':
+            htmlString += Lang.horticultureContent;
+            break;
+        case 'physiology':
+            htmlString += Lang.physiologyContent;
+            break;
+        case 'radiationEffects':
+            htmlString += Lang.radiationEffectsContent;
+            break;
+        case 'lowGravEffects':
+            htmlString += Lang.lowGravEffectsContent;
+            break;
+        case 'medicine':
+            htmlString += Lang.medicineContent;
+            break;
+        case 'oncology':
+            htmlString += Lang.oncologyContent;
+            break;
+        case 'orthopaedics':
+            htmlString += Lang.orthopaedicsContent;
+            break;
+        case 'paedeatrics':
+            htmlString += Lang.paedeatricsContent;
+            break;
+        case 'placebos':
+            htmlString += Lang.placebosContent;
+            break;
+        case 'traditional':
+            htmlString += Lang.traditionalContent;
+            break;
+        case 'arts':
+            htmlString += Lang.artsContent;
+            break;
+        case 'sociology':
+            htmlString += Lang.sociologyContent;
+            break;
+        case 'socialPolicy':
+            htmlString += Lang.socialPolicyContent;
+            break;
+        case 'politicalScience':
+            htmlString += Lang.politicalScienceContent;
+            break;
+        case 'culturalRelations':
+            htmlString += Lang.culturalRelationsContent;
+            break;
+        case 'philosophy':
+            htmlString += Lang.philosophyContent;
+            break;
+        case 'ethics':
+            htmlString += Lang.ethicsContent;
+            break;
+        case 'scientificTheory':
+            htmlString += Lang.scientificTheoryContent;
+            break;
+        case 'classicalPhilosophy':
+            htmlString += Lang.classicalPhilosophyContent;
+            break;
+        default:
+            console.log('I couldn\'t fill the research panel doctor...');
+    }
+    htmlString += '<button id="' + ident + 'Button" class="main_pointer smoky_glass" onclick="startResearch(' + ident + ')">Research</button>';
+    return htmlString;
+}
+
+//start research function
+function startResearch(ident){
+    
 }
 
 function execReview() {

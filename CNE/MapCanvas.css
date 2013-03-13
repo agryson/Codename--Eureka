@@ -559,6 +559,17 @@ button:active {
     right: 0;
     width: 70%;
     height: 550px;
+    border: none;
+    background: #3C3C3C;
+    overflow-y: scroll;
+}
+
+.research_panel > img {
+    max-width: 100%;
+}
+
+.research_content{
+    color: white;
 }
 
 .research_cont_slide{
