@@ -121,7 +121,7 @@ function nextTurn(x, y, level) {
                 nextTurn(x, y, level);
             }
             if(tile.kind === 227 || tile.kind === 228){
-                Game.researchLabs.push([x, y, level, false]);
+                Game.researchLabs.push([x, y, level, 'noResearch']);
             }
         }
 
@@ -941,7 +941,7 @@ function Param() {
         [0, 3, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
-    //[[x,y,topic]]
+    //[[x,y,level,topic]]
     this.researchLabs = [];
     //[idString, langString, availableBool, preReqsArray, subTopicsArray];
     this.researchTopics = [
@@ -1614,7 +1614,22 @@ function fillResearchPanel(ident){
     var htmlString = '';
     htmlString += '<img src="images/researchIllustrations/' + ident + '.png" />';
     htmlString += Lang[ident + "Content"];
+    var inProgress = true;
     if(Game.researchLabs.length > 0){
+        for(var i = 0; i < Game.researchLabs.length; i++){
+            var lab = Game.researchLabs[i];
+            //TODO make this appear onyl once...
+            if(lab[3] === ident){
+                if(inProgress){
+                    htmlString += "<br><p>" + Lang.studyingThis + " " + Lang[lab[3]] + ":</p><br>";
+                    inProgress = false;
+                }
+                console.log( + lab[0] + "," + lab[1] + "," + lab[2]);
+                htmlString += "<div class='research_panel_item' onclick='jump(true," + lab[0] + "," + lab[1] + "," + lab[2] + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />";
+                htmlString += "<p>" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "</p>";
+                htmlString += "</div>";
+            }
+        }
         htmlString += '<button id="' + ident + 'Button" class="main_pointer smoky_glass" onclick="startResearch(' + ident + ')">Research</button>';
     }
     return htmlString;
@@ -1622,26 +1637,21 @@ function fillResearchPanel(ident){
 
 //start research function
 function startResearch(ident){
+    ident = ident.id;
     var htmlString = '';
     htmlString += "<h1>" + Lang.availableLabs + "</h1>";
-    htmlString += Lang.chooseLab + " " + Lang[ident.id];
-    htmlString += "<ul>";
+    htmlString += Lang.chooseLab + " " + Lang[ident];
     for (var i = 0; i < Game.researchLabs.length; i++){
         var lab = Game.researchLabs[i];
-        htmlString += "<li onclick='setResearchTopic(" + ident.id + "," + i + ")'>" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "<br>" + Lang.currentResearch;
-        if(!lab[3]){
-            htmlString += " " + Lang.noResearch;
-        } else {
-            htmlString += " " + Lang[ident.id];
-        }
-        htmlString += "</li>";
+        htmlString += "<div class='research_panel_item' onclick='setResearchTopic(" + ident + "," + i + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "<br>" + Lang.currentResearch;
+        htmlString += " " + Lang[lab[3]];
+        htmlString += "</div>";
     }
-    htmlString += "</ul>";
     document.getElementById('researchPanel').innerHTML = htmlString;
 }
 
 function setResearchTopic(ident, i){
-    Game.researchLabs[i][3] = ident;
+    Game.researchLabs[i][3] = ident.id;
     startResearch(ident);
 }
 
@@ -2292,9 +2302,15 @@ function getTile(axis) {
  * When the radar is clicked, moves the map to that location
  */
 
-function jump(bool) {
-    Game.retX = Math.floor(Game.mouseX - Game.destinationWidth / 2);
-    Game.retY = Game.mouseY - 20;
+function jump(bool, x, y, level) {
+    if(bool){
+        Game.retX = x + 1;
+        Game.retY = y + 2;
+        Game.level = level;
+    } else {
+        Game.retX = Math.floor(Game.mouseX - Game.destinationWidth / 2);
+        Game.retY = Game.mouseY - 20;
+    }
     mapFit();
     drawLoc();
 }
