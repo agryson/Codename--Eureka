@@ -580,6 +580,17 @@ button:active {
     text-align: justify;
 }
 
+.research_bar_frame{
+    width: 95%;
+    height: 8px;
+    border: solid 1px white;
+}
+
+.research_bar{
+    height: 100%;
+    background: green;
+}
+
 .research_panel > button {
     float: right;
     margin: 10px 5px;

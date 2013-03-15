@@ -966,100 +966,100 @@ function Param() {
     this.researchTopics = [
         ["engineering", Lang.engineering, true, [], [
             ["agriculturalEngineering", Lang.agriculturalEngineering, false, [], [
-                ["hydroponics", Lang.hydroponics, false, [], [], 5],
-                ["noSoilFarming", Lang.noSoilFarming, false, [], [], 5],
-                ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], [], 5]
-            ], 5],
+                ["hydroponics", Lang.hydroponics, false, [], [], 5, 5],
+                ["noSoilFarming", Lang.noSoilFarming, false, [], [], 5, 5],
+                ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], [], 5, 5]
+            ], 5, 5],
             ["electricalEngineering", Lang.electricalEngineering, false, [], [
-                ["commTech", Lang.commTech, false, [], [], 5],
-                ["pcbDesign", Lang.pcbDesign, false, [], [], 5],
-                ["processors", Lang.processors, false, [], [], 5],
-                ["robotics", Lang.robotics, false, [], [], 5]
-            ], 5],
+                ["commTech", Lang.commTech, false, [], [], 5, 5],
+                ["pcbDesign", Lang.pcbDesign, false, [], [], 5, 5],
+                ["processors", Lang.processors, false, [], [], 5, 5],
+                ["robotics", Lang.robotics, false, [], [], 5, 5]
+            ], 5, 5],
             ["geneticEngineering", Lang.geneticEngineering, false, [], [
-                ["animalGenetics", Lang.animalGenetics, false, [], [], 5],
-                ["horticulturalGenetics", Lang.horticulturalGenetics, false, [], [], 5],
-                ["humanGenetics", Lang.humanGenetics, false, [], [], 5],
-                ["longevityResearch", Lang.longevityResearch, false, [], [], 5]
-            ], 5],
+                ["animalGenetics", Lang.animalGenetics, false, [], [], 5, 5],
+                ["horticulturalGenetics", Lang.horticulturalGenetics, false, [], [], 5, 5],
+                ["humanGenetics", Lang.humanGenetics, false, [], [], 5, 5],
+                ["longevityResearch", Lang.longevityResearch, false, [], [], 5, 5]
+            ], 5, 5],
             ["mechanicalEngineering", Lang.mechanicalEngineering, false, [], [
-                ["massProduction", Lang.massProduction, false, [], [], 5],
-                ["mechatronics", Lang.mechatronics, false, [], [], 5],
-                ["plm", Lang.plm, false, [], [], 5]
-            ], 5],
+                ["massProduction", Lang.massProduction, false, [], [], 5, 5],
+                ["mechatronics", Lang.mechatronics, false, [], [], 5, 5],
+                ["plm", Lang.plm, false, [], [], 5, 5]
+            ], 5, 5],
             ["softwareEngineering", Lang.softwareEngineering, false, [], [
                 ["ai", Lang.ai, false, [], [
-                    ["culturalSensitivity", Lang.culturalSensitivity, false, [], [], 5],
-                    ["imageProcessing", Lang.imageProcessing, false, [], [], 5],
-                    ["naturalLanguage", Lang.naturalLanguage, false, [], [], 5],
-                    ["neuralNetworks", Lang.neuralNetworks, false, [], [], 5]
-                ], 5]
-            ], 5],
+                    ["culturalSensitivity", Lang.culturalSensitivity, false, [], [], 5, 5],
+                    ["imageProcessing", Lang.imageProcessing, false, [], [], 5, 5],
+                    ["naturalLanguage", Lang.naturalLanguage, false, [], [], 5, 5],
+                    ["neuralNetworks", Lang.neuralNetworks, false, [], [], 5, 5]
+                ], 5, 5]
+            ], 5, 5],
             ["geoEngineering", Lang.geoEngineering, false, [], [
-                ["terraforming", Lang.terraforming, false, [], [], 5],
-                ["weatherControl", Lang.weatherControl, false, [], [], 5]
-            ], 5]
-        ], 5],
+                ["terraforming", Lang.terraforming, false, [], [], 5, 5],
+                ["weatherControl", Lang.weatherControl, false, [], [], 5, 5]
+            ], 5, 5]
+        ], 5, 5],
         ["science", Lang.science, true, [], [
             ["physics", Lang.physics, false, [], [
-                ["experimentalPhysics", Lang.experimentalPhysics, false, [], [], 5],
+                ["experimentalPhysics", Lang.experimentalPhysics, false, [], [], 5, 5],
                 ["advancedMaterials", Lang.advancedMaterials, false, [], [
-                    ["compositieMaterials", Lang.compositieMaterials, false, [], [], 5],
-                    ["selfHealingMaterials", Lang.selfHealingMaterials, false, [], [], 5],
-                    ["conductivePolymers", Lang.conductivePolymers, false, [], [], 5],
-                    ["opticalMaterials", Lang.opticalMaterials, false, [], [], 5]
-                ], 5],
+                    ["compositieMaterials", Lang.compositieMaterials, false, [], [], 5, 5],
+                    ["selfHealingMaterials", Lang.selfHealingMaterials, false, [], [], 5, 5],
+                    ["conductivePolymers", Lang.conductivePolymers, false, [], [], 5, 5],
+                    ["opticalMaterials", Lang.opticalMaterials, false, [], [], 5, 5]
+                ], 5, 5],
                 ["nanotech", Lang.nanotech, false, [], [
-                    ["bioNeutralNano", Lang.bioNeutralNano, false, [], [], 5],
-                    ["ggam", Lang.ggam, false, [], [], 5],
-                    ["nanoFab", Lang.nanoFab, false, [], [], 5]
-                ], 5],
-                ["theoreticalPhysics", Lang.theoreticalPhysics, false, [], [], 5],
-                ["astronomy", Lang.astronomy, false, [], [], 5],
-                ["meteorology", Lang.meteorology, false, [], [], 5],
-                ["nuclearPhysics", Lang.nuclearPhysics, false, [], [], 5]
-            ], 5],
+                    ["bioNeutralNano", Lang.bioNeutralNano, false, [], [], 5, 5],
+                    ["ggam", Lang.ggam, false, [], [], 5, 5],
+                    ["nanoFab", Lang.nanoFab, false, [], [], 5, 5]
+                ], 5, 5],
+                ["theoreticalPhysics", Lang.theoreticalPhysics, false, [], [], 5, 5],
+                ["astronomy", Lang.astronomy, false, [], [], 5, 5],
+                ["meteorology", Lang.meteorology, false, [], [], 5, 5],
+                ["nuclearPhysics", Lang.nuclearPhysics, false, [], [], 5, 5]
+            ], 5, 5],
             ["chemistry", Lang.chemistry, false, [], [
                 ["organicChemistry", Lang.organicChemistry, false, [], [
-                    ["polymers", Lang.polymers, false, [], [], 5]
-                ], 5],
+                    ["polymers", Lang.polymers, false, [], [], 5, 5]
+                ], 5, 5],
                 ["physicalChemistry", Lang.physicalChemistry, false, [], [
-                    ["oreProcessing", Lang.oreProcessing, false, [], [], 5],
-                    ["metallurgy", Lang.metallurgy, false, [], [], 5]
-                ], 5],
+                    ["oreProcessing", Lang.oreProcessing, false, [], [], 5, 5],
+                    ["metallurgy", Lang.metallurgy, false, [], [], 5, 5]
+                ], 5, 5],
                 ["pharmaceuticalChemistry", Lang.pharmaceuticalChemistry, false, [], [
-                    ["herbicides", Lang.herbicides, false, [], [], 5],
-                    ["medicines", Lang.medicines, false, [], [], 5]
-                ], 5]
-            ], 5],
+                    ["herbicides", Lang.herbicides, false, [], [], 5, 5],
+                    ["medicines", Lang.medicines, false, [], [], 5, 5]
+                ], 5, 5]
+            ], 5, 5],
             ["biology", Lang.biology, false, [], [
-                ["anatomy", Lang.anatomy, false, [], [], 5],
-                ["horticulture", Lang.horticulture, false, [], [], 5],
+                ["anatomy", Lang.anatomy, false, [], [], 5, 5],
+                ["horticulture", Lang.horticulture, false, [], [], 5, 5],
                 ["physiology", Lang.physiology, false, [], [
-                    ["radiationEffects", Lang.radiationEffects, false, [], [], 5],
-                    ["lowGravEffects", Lang.lowGravEffects, false, [], [], 5]
-                ], 5],
+                    ["radiationEffects", Lang.radiationEffects, false, [], [], 5, 5],
+                    ["lowGravEffects", Lang.lowGravEffects, false, [], [], 5, 5]
+                ], 5, 5],
                 ["medicine", Lang.medicine, false, [], [
-                    ["oncology", Lang.oncology, false, [], [], 5],
-                    ["orthopaedics", Lang.orthopaedics, false, [], [], 5],
-                    ["paedeatrics", Lang.paedeatrics, false, [], [], 5],
-                    ["placebos", Lang.placebos, false, [], [], 5],
-                    ["traditional", Lang.traditional, false, [], [], 5]
-                ], 5]
-            ], 5]
-        ], 5],
+                    ["oncology", Lang.oncology, false, [], [], 5, 5],
+                    ["orthopaedics", Lang.orthopaedics, false, [], [], 5, 5],
+                    ["paedeatrics", Lang.paedeatrics, false, [], [], 5, 5],
+                    ["placebos", Lang.placebos, false, [], [], 5, 5],
+                    ["traditional", Lang.traditional, false, [], [], 5, 5]
+                ], 5, 5]
+            ], 5, 5]
+        ], 5, 5],
         ["arts", Lang.arts, true, [], [
             ["sociology", Lang.sociology, false, [], [
-                ["socialPolicy", Lang.socialPolicy, false, [], [], 5],
-                ["politicalScience", Lang.politicalScience, false, [], [], 5],
-                ["culturalRelations", Lang.culturalRelations, false, [], [], 5]
-            ], 5],
+                ["socialPolicy", Lang.socialPolicy, false, [], [], 5, 5],
+                ["politicalScience", Lang.politicalScience, false, [], [], 5, 5],
+                ["culturalRelations", Lang.culturalRelations, false, [], [], 5, 5]
+            ], 5, 5],
             ["philosophy", Lang.philosophy, false, [], [
-                ["ethics", Lang.ethics, false, [], [], 5],
-                ["scientificTheory", Lang.scientificTheory, false, [], [], 5],
-                ["classicalPhilosophy", Lang.classicalPhilosophy, false, [], [], 5]
-            ], 5]
-        ], 5]
+                ["ethics", Lang.ethics, false, [], [], 5, 5],
+                ["scientificTheory", Lang.scientificTheory, false, [], [], 5, 5],
+                ["classicalPhilosophy", Lang.classicalPhilosophy, false, [], [], 5, 5]
+            ], 5, 5]
+        ], 5, 5]
     ];
 
     this.ores = [];
@@ -1631,13 +1631,13 @@ function clickedResearch(){
 
 function fillResearchPanel(ident){
     var htmlString = '';
+    htmlString += "<div class='research_bar_frame'><div class='research_bar' style='width: " + researchProgress(ident) + "%'></div></div>";
     htmlString += '<img src="images/researchIllustrations/' + ident + '.png" />';
     htmlString += Lang[ident + "Content"];
     var inProgress = true;
     if(Game.researchLabs.length > 0){
         for(var i = 0; i < Game.researchLabs.length; i++){
             var lab = Game.researchLabs[i];
-            //TODO make this appear onyl once...
             if(lab[3] === ident){
                 if(inProgress){
                     htmlString += "<br><p>" + Lang.studyingThis + " " + Lang[lab[3]] + ":</p><br>";
@@ -1656,7 +1656,19 @@ function fillResearchPanel(ident){
     return htmlString;
 }
 
-//start research function
+function researchProgress(ident){
+    var ref = researchTopicRef(ident);
+    var progress = ref[6] - ref[5];
+    if(progress !== 0){
+        progress = progress / ref[6];
+    } else {
+        return 0;
+    }
+    progress = progress * 100;
+    progress -= progress%10;
+    return progress;
+}
+
 function startResearch(ident){
     ident = ident.id;
     var htmlString = '';
