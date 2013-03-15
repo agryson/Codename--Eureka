@@ -162,6 +162,10 @@ function nextTurn(x, y, level) {
                         lab[3] = 'noResearch';
                     }
                 }
+                var unlock = researchTopicRef(topic);
+                for(var u = 0; u < unlock[4].length; u++){
+                    unlock[4][u][2] = true;
+                }
             }
         }
 
@@ -1676,10 +1680,7 @@ function startResearch(ident){
     htmlString += Lang.chooseLab + " " + Lang[ident];
     for (var i = 0; i < Game.researchLabs.length; i++){
         var lab = Game.researchLabs[i];
-        if(lab[3] !== 'noResearch'){
-            console.log(ident);
-            returnLevel(lab[2])[lab[1]][lab[0]][1].researchTopic = ident;
-        }
+        returnLevel(lab[2])[lab[1]][lab[0]][1].researchTopic = lab[3];
         htmlString += "<div class='research_panel_item' onclick='setResearchTopic(" + ident + "," + i + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "<br>" + Lang.currentResearch;
         htmlString += " " + Lang[lab[3]];
         htmlString += "</div>";

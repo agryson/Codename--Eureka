@@ -581,7 +581,7 @@ button:active {
 }
 
 .research_bar_frame{
-    width: 95%;
+    width: 98%;
     height: 8px;
     border: solid 1px white;
 }
@@ -597,7 +597,7 @@ button:active {
 }
 
 .research_panel_item{
-    width: 95%;
+    width: 98%;
     height: 100px;
     border: 1px solid green;
 }
