@@ -894,7 +894,7 @@ function Param() {
     this.level = 0;
 
     this.music = new Audio('sound/spacial_winds_ambient_electronic.mp3');
-    this.musicOn = true;
+    this.musicOn = false;
     /*
     this.mouseX;
     this.mouseY;
@@ -966,6 +966,7 @@ function Param() {
     ];
     //[[x,y,level,topic]]
     this.researchLabs = [];
+    this.currentResearch = 'engineering';
     //[idString, langString, availableBool, preReqsArray, subTopicsArray, turnsToComplete];
     this.researchTopics = [
         ["engineering", Lang.engineering, true, [], [
@@ -1530,6 +1531,7 @@ function eavesdrop() {
             }
             saneStats();
             execReview();
+            document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
 
             drawRadar();
             Game.turnNum.innerHTML = "Week: " + Game.turn;
@@ -1634,6 +1636,7 @@ function clickedResearch(){
 }
 
 function fillResearchPanel(ident){
+    Game.currentResearch = ident;
     var htmlString = '';
     htmlString += "<div class='research_bar_frame'><div class='research_bar' style='width: " + researchProgress(ident) + "%'></div></div>";
     htmlString += '<img src="images/researchIllustrations/' + ident + '.png" />';
@@ -1650,6 +1653,7 @@ function fillResearchPanel(ident){
                 console.log( + lab[0] + "," + lab[1] + "," + lab[2]);
                 htmlString += "<div class='research_panel_item' onclick='jump(true," + lab[0] + "," + lab[1] + "," + lab[2] + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />";
                 htmlString += "<p>" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "</p>";
+                htmlString += "<div class='research_bar_frame' style='width: 400px; margin-left: 100px'><div class='research_bar' style='width: " + researchProgress(ident) + "%''></div></div>";
                 htmlString += "</div>";
             }
         }
@@ -1681,8 +1685,9 @@ function startResearch(ident){
     for (var i = 0; i < Game.researchLabs.length; i++){
         var lab = Game.researchLabs[i];
         returnLevel(lab[2])[lab[1]][lab[0]][1].researchTopic = lab[3];
-        htmlString += "<div class='research_panel_item' onclick='setResearchTopic(" + ident + "," + i + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "<br>" + Lang.currentResearch;
-        htmlString += " " + Lang[lab[3]];
+        htmlString += "<div class='research_panel_item' onclick='setResearchTopic(" + ident + "," + i + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "<br>";
+        htmlString += Lang.currentResearch + " " + Lang[lab[3]];
+        htmlString += "<div class='research_bar_frame' style='width: 400px; margin-left: 100px'><div class='research_bar' style='width: " + researchProgress(ident) + "%''></div></div>";
         htmlString += "</div>";
     }
     document.getElementById('researchPanel').innerHTML = htmlString;
