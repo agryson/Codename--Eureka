@@ -889,7 +889,7 @@ function Param() {
     this.constructions.src = 'images/buildings.png';
     this.terrain = new Image();
     this.terrain.src = 'images/terrain.png';
-
+    
     this.clickedOn = 'none';
     this.level = 0;
 
@@ -1638,7 +1638,12 @@ function clickedResearch(){
 function fillResearchPanel(ident){
     Game.currentResearch = ident;
     var htmlString = '';
-    htmlString += "<div class='research_bar_frame'><div class='research_bar' style='width: " + researchProgress(ident) + "%'></div></div>";
+    if(researchTopicRef(ident)[5] !== 0){
+        htmlString += "<div class='research_bar_frame'><div class='research_bar' style='width: " + researchProgress(ident) + "%'></div></div>";
+        htmlString += researchProgress(ident) + "% " + Lang.researched + "<br>";
+    } else {
+        htmlString += "100% " + Lang.researched + "<br>";
+    }
     htmlString += '<img src="images/researchIllustrations/' + ident + '.png" />';
     htmlString += Lang[ident + "Content"];
     var inProgress = true;
@@ -1699,22 +1704,29 @@ function setResearchTopic(ident, i){
 }
 
 function researchTopicRef(topic){
-    var ref;
-    switch(topic){
-        case 'noResearch':
-            break;
-        case 'engineering':
-            ref = Game.researchTopics[0];
-            break;
-        case 'science':
-            ref = Game.researchTopics[1];
-            break;
-        case 'arts':
-            ref = Game.researchTopics[2];
-            break;
-
+    for(var i = 0; i < Game.researchTopics.length; i++){
+        if(Game.researchTopics[i][0] === topic){
+            return Game.researchTopics[i];
+        } else {
+            for(var j = 0; j < Game.researchTopics[i][4].length; j++){
+                if(Game.researchTopics[i][4][j][0] === topic){
+                    return Game.researchTopics[i][4][j];
+                } else {
+                    for(var k = 0; k < Game.researchTopics[i][4][j][4].length; k++){
+                        if(Game.researchTopics[i][4][j][4][k][0] === topic){
+                            return Game.researchTopics[i][4][j][4][k];
+                        } else {
+                            for(var l = 0; l < Game.researchTopics[i][4][j][4][k][4].length; l++){
+                                if(Game.researchTopics[i][4][j][4][k][4][l][0] === topic){
+                                    return Game.researchTopics[i][4][j][4][k][4][l];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-    return ref;
 }
 
 function execReview() {

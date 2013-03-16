@@ -138,6 +138,7 @@ function Lang(){
 	this.noResearch = "None";
 	this.chooseLab = "Choose a laboratory to study";
 	this.studyingThis = "Labs currently studying";
+	this.researched = "Researched";
 
 	//Research Topics
 	this.engineering = "Engineering";
@@ -216,7 +217,7 @@ function Lang(){
 	this.classicalPhilosophy = "Classical Philosophy";
 
 	//Research Content!
-	this.engineeringContent = "<h1>Engineering</h1><p>While the ship's library contains a plethora of information on engineering, research is required that pertains specifically to the limitations on " + this.planet + ".</p><p>These include how to optimize resource use in construction, fabrication and other processes. Studying Engineering is an important first step in improving overall efficiency and production.</p>";
+	this.engineeringContent = "<h1>Engineering</h1><p>While the ship's library contains a plethora of information on engineering, researching Engineering aids the colony in overcoming the limitations specific to " + this.planet + ".</p><p>These include how to optimize resource use in construction, fabrication and other processes. Studying Engineering is an important first step in improving overall efficiency and production.</p>";
 	this.agriculturalEngineeringContent = "<h1>Agricultural Engineering</h1> Content goes here....";
 	this.hydroponicsContent = "Hydroponics Content goes here....";
 	this.noSoilFarmingContent = "Soilless Farming Content goes here....";
