@@ -13,6 +13,7 @@ function Lang(){
 	this.onWater = "FLOOD WARNING!";
 	this.lastLevel = "You can't go any deeper than this.";
 	this.setDown = "Please choose your landing zone first...";
+	this.resourceShortage = "Resources missing: ";
 
 	//Actions and references
 	this.preparing = "Preparing";

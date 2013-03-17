@@ -55,17 +55,24 @@ function nextTurn(x, y, level) {
     };
     var requisition = function(){
         var resourceCheck = false;
-        console.log(tile.resourcesNeeded);
+        var count = 1;
+        //console.log('resource length is ' + tile.resourcesNeeded.length + 'while the array is ' + tile.resourcesNeeded);
         for(var j = 1; j < tile.resourcesNeeded.length; j++){
             if(tile.resourcesNeeded[0] && Game.procOres[tile.resourcesNeeded[j][0]] >= tile.resourcesNeeded[j][1]){
-                tile.resourcesNeeded[0] = false;
-                resourceCheck = true;
+                count += 1;
             }
+        }
+        if(count === tile.resourcesNeeded.length){
+            resourceCheck = true;
         }
         for(var k = 1; k < tile.resourcesNeeded.length; k++){
             if(resourceCheck){
+                tile.resourcesNeeded[0] = false;
                 Game.procOres[tile.resourcesNeeded[k][0]] -= tile.resourcesNeeded[k][1];
             }
+        }
+        if(!tile.resourcesNeeded[0]){
+            resourceCheck = true;
         }
         return resourceCheck;
     };
@@ -103,8 +110,18 @@ function nextTurn(x, y, level) {
 
         //BUILDING
         if(tile.buildTime > 0) {
-            tile.buildTime -= 1;
-            requisition();
+            if(requisition()){
+                tile.buildTime -= 1;
+            } else {
+                var shortage = Lang.resourceShortage;
+                var rec = [Lang.aluminium, Lang.calcium, Lang.copper, Lang.gold, Lang.iron, Lang.lead, Lang.magnesium, Lang.mercury, Lang.phosphorous, Lang.potassium, Lang.silver, Lang.sodium, Lang.tin, Lang.zinc];
+                for(var s = 1; s < tile.resourcesNeeded.length; s++){
+                    if(Game.procOres[tile.resourcesNeeded[s][0]] < tile.resourcesNeeded[s][1]){
+                        shortage += rec[tile.resourcesNeeded[s][0]] + ", ";
+                    }
+                }
+                notify(shortage.substring(0,shortage.length - 2));
+            }
         } else if(tile.buildTime === 0) {
             tile.buildTime = -1;
             returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
@@ -355,8 +372,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 15;
             o.future = [kind, Lang.agri];
-            o.resourcesNeeded = [true,[0,1],[9, 1]];
-            //TODO: implement resource consumption
+            o.resourcesNeeded = [true,[0,2], [4,1],[9, 1],[12,2],[13,2]];
             break;
         case 201:
             //advanced agridome
@@ -371,6 +387,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.storage = 20;
             o.future = [kind, Lang.agri2];
+            o.resourcesNeeded = [true,[0,1],[8,1],[9, 1]];
             break;
         case 202:
             //airport
@@ -384,6 +401,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 15;
             o.air = -1;
             o.future = [kind, Lang.airport];
+            o.resourcesNeeded = [true,[2,1],[4,2],[12, 1]];
             break;
         case 203:
             //arp
@@ -397,6 +415,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 2;
             o.air = 100;
             o.future = [kind, Lang.arp];
+            o.resourcesNeeded = [true,[0,2],[4,1],[12, 1],[13,1]];
             break;
         case 204:
             //airshaft
@@ -406,6 +425,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.energy = -5;
             o.storage = 1;
             o.future = [kind, Lang.airlift];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 205:
             //barracks
@@ -418,6 +438,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 5;
             o.storage = 5;
             o.future = [kind, Lang.barracks];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 206:
             //civil protection
@@ -431,6 +452,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 2;
             o.future = [kind, Lang.civprot];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 207:
             //civil protection 2
@@ -444,6 +466,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.storage = 3;
             o.future = [kind, Lang.civprot2];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 208:
             //comm array
@@ -454,6 +477,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 1;
             o.storage = 2;
             o.future = [kind, Lang.commarray];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 209:
             //comm array 2
@@ -467,6 +491,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 2;
             o.storage = 2;
             o.future = [kind, Lang.commarray2];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 210:
             //command
@@ -481,6 +506,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.storage = 10;
             o.future = [kind, Lang.command];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 211:
             // connector
@@ -490,6 +516,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.energy = -1;
             o.storage = 1;
             o.future = [kind, Lang.connector];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 212:
             // drone factory
@@ -504,6 +531,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 5;
             o.storage = 30;
             o.future = [kind, Lang.dronefab];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 213:
             // fission
@@ -518,6 +546,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 8;
             o.storage = 5;
             o.future = [kind, Lang.chernobyl];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 214:
             // fusion
@@ -531,6 +560,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 3;
             o.storage = 5;
             o.future = [kind, Lang.tokamak];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 215:
             // factory
@@ -545,6 +575,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 5;
             o.storage = 30;
             o.future = [kind, Lang.genfab];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 216:
             // geothermal
@@ -557,6 +588,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.artMorale = 5;
             o.storage = 2;
             o.future = [kind, Lang.geotherm];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 217:
             // habitat
@@ -573,6 +605,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 10;
             o.housing = 30;
             o.future = [kind, Lang.hab];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 218:
             // habitat 2
@@ -589,6 +622,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 10;
             o.housing = 40;
             o.future = [kind, Lang.hab2];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 219:
             // habitat 3
@@ -605,6 +639,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 15;
             o.housing = 50;
             o.future = [kind, Lang.hab3];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 220:
             // hospital
@@ -618,6 +653,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 5;
             o.storage = 5;
             o.future = [kind, Lang.er];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 221:
             // mine
@@ -631,6 +667,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.storage = 20;
             o.future = [kind, Lang.mine];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 222:
             // nursery
@@ -646,6 +683,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 3;
             o.storage = 2;
             o.future = [kind, Lang.nursery];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 223:
             // ore processor
@@ -659,6 +697,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 50;
             o.future = [kind, Lang.oreproc];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 224:
             // recreation center
@@ -672,6 +711,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 50;
             o.future = [kind, Lang.rec];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 225:
             // recycler
@@ -685,6 +725,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = -25;
             o.storage = 30;
             o.future = [kind, Lang.recycler];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 226:
             // red light district
@@ -700,6 +741,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 10;
             o.storage = 5;
             o.future = [kind, Lang.clichy];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 227:
             // research center
@@ -713,6 +755,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 5;
             o.storage = 2;
             o.future = [kind, Lang.research];
+            o.resourcesNeeded = [true,[0,1],[1, 1],[2,2],[3,1],[4,1],[5,1],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
             break;
         case 228:
             // research 2
@@ -726,6 +769,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 3;
             o.storage = 3;
             o.future = [kind, Lang.research2];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 229:
             // solar farm
@@ -737,6 +781,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.hipMorale = 8;
             o.artMorale = 4;
             o.future = [kind, Lang.solar];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 230:
             // space port
@@ -750,6 +795,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 20;
             o.future = [kind, Lang.space];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 231:
             // stasis block
@@ -760,6 +806,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.storage = 15;
             o.future = [kind, Lang.stasis];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 232:
             // Storage Tanks
@@ -773,6 +820,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.storage = 2000;
             o.future = [kind, Lang.store];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 233:
             // University
@@ -786,6 +834,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 3;
             o.future = [kind, Lang.uni];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 234:
             // warehouse
@@ -799,6 +848,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.storage = 150;
             o.future = [kind, Lang.warehouse];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 235:
             // windfarm
@@ -810,6 +860,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.hipMorale = 4;
             o.artMorale = 2;
             o.future = [kind, Lang.windfarm];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 236:
             // workshop
@@ -824,6 +875,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 5;
             o.future = [kind, Lang.workshop];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             break;
         case 237:
             // lander
@@ -834,6 +886,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 50;
             o.energy = 60;
             o.future = [kind, Lang.lander];
+            o.resourcesNeeded[true,[0,0]]; //TEST
             returnLevel(level)[y][x][0].ref = changeName(Lang.lander, returnLevel(level)[y][x][0].ref);
             break;
         default:
@@ -889,7 +942,6 @@ function Param() {
     this.constructions.src = 'images/buildings.png';
     this.terrain = new Image();
     this.terrain.src = 'images/terrain.png';
-    
     this.clickedOn = 'none';
     this.level = 0;
 
