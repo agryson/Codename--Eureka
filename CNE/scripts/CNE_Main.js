@@ -2534,9 +2534,8 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, 
         destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
     }
     animateIt ? sourceX = Game.animate * sourceWidth : sourceX = 0;
-    sourceY = tileType * sourceHeight;
-    sourceY += sourceHeight * modY;
     sourceX += sourceWidth * modX;
+    sourceY = (tileType * sourceHeight) + (sourceHeight * modY);
     destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
 }
 
@@ -2552,7 +2551,7 @@ function drawZoomMap() {
     webkitRequestAnimationFrame(drawZoomMap);
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     if(Game.highlight) {
-        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
+        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc, false, 0, 0);
     }
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;

@@ -11,7 +11,6 @@ function getSeed(newGame) {
   var seedString = '';
   document.getElementById('login').disabled = true;
   document.getElementById('newSession').disabled = true;
-  console.log('called getSeed');
   if(!newGame && input !== '') { //If I've entered a seed
     console.log('called');
     input = input.split(' ').join('');
@@ -30,7 +29,7 @@ function getSeed(newGame) {
   }
 
   if(Game.seeder !== '') {
-    increment();
+    increment(0);
     document.onkeydown = keypressed; //keyboard listener
     setTimeout(function() {
       Game.rng = new MersenneTwister(Game.seeder);
@@ -60,26 +59,18 @@ function altitude(x, y, level) {
     return Game.map[y][x][0].altitude + level * 5;
   }
 }
-/**
- * A global var for the incrementer function to keep track of where it is
- * @type {Number}
- */
-var incrementer = 1;
 
 /**
  * Increments the loader bar
  * @return {nothing}
  */
 
-function increment() {
-  if(incrementer < 6) {
-    document.getElementById('thumb').style.WebkitTransform = 'translate(' + (-220 + incrementer * 44) + 'px, 0)';
-    incrementer += 1;
-  }
+function increment(incrementer) {
+  document.getElementById('thumb').style.WebkitTransform = 'translate(' + (-220 + incrementer * 44) + 'px, 0)';
   var message = document.getElementById('loadMessage');
   switch(incrementer) {
   case 1:
-    message.innerHTML = 'Engage!   ';
+    message.innerHTML = 'Engage!';
     break;
   case 2:
     message.innerHTML = 'Going to Warp 11';
@@ -91,7 +82,7 @@ function increment() {
     message.innerHTML = 'Dropping probes';
     break;
   case 5:
-    message.innerHTML = 'Calling Houston';
+    message.innerHTML = 'Calling Houston... <br>This could take a while, we\'re 26 light years away!';
     break;
   default:
     //Do nothing
@@ -111,7 +102,7 @@ function createMap() {
     map[y] = new Array(Game.radarRad * 2); //create an array to hold the x cell, we now have a 200x200 2d array
     for(var x = 0; x < Game.radarRad * 2; x++) {
       map[y][x] = new Array(2); //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-      map[y][x][0] = true; //invert axes because referencing the array is not like referencing a graph
+      //map[y][x][0] = true; //invert axes because referencing the array is not like referencing a graph
       map[y][x][0] = new Terrain(); //if we're in the circle, assign a tile value
       map[y][x][0].ref = '#' + Game.level + ':' + ((x - 150)) + ':' + ((y - 150) * (-1));
       map[y][x][0].altitude = altitude(x, y, Game.level);
@@ -125,16 +116,16 @@ function createMap() {
   generateResources(map);
   Game.level += 1;
   if(Game.level < 5) {
-    increment();
+    increment(Game.level + 1);
     console.log(Game.level);
-    setTimeout(createMap, 450);
+    setTimeout(createMap, 30);
   } else {
     Game.level = 0; /*draw the radar background & map once on load*/
-    drawRadar();
-    drawLoc();
+    //start mainloop
     mapFit(true);
     drawZoomMap();
-    //start mainloop
+    drawRadar();
+    drawLoc();
     popup.style.opacity = '0';
     document.getElementById('login').onclick = null;
     document.getElementById('newSession').onclick = null;
