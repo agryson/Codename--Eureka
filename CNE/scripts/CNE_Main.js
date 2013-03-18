@@ -937,12 +937,16 @@ function Param() {
     this.level = 0;
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
+    this.spritesheet = new Image();
+    this.spritesheet.src = 'images/spritesheet.png';
+    /*
     this.drones = new Image();
     this.drones.src = 'images/drones.png';
     this.constructions = new Image();
     this.constructions.src = 'images/buildings.png';
     this.terrain = new Image();
     this.terrain.src = 'images/terrain.png';
+    */
 
     this.music = new Audio('sound/spacial_winds_ambient_electronic.mp3');
     this.musicOn = false;
@@ -2519,7 +2523,7 @@ function drawRadar() {
  * @param  {boolean} darkness  Whether or not we should darken this tile
  */
 
-function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt) {
+function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, modX, modY) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
     sourceWidth = 216; //original tile width
     sourceHeight = 252; //original tile height
@@ -2531,6 +2535,8 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt) 
     }
     animateIt ? sourceX = Game.animate * sourceWidth : sourceX = 0;
     sourceY = tileType * sourceHeight;
+    sourceY += sourceHeight * modY;
+    sourceX += sourceWidth * modX;
     destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
 }
 
@@ -2554,11 +2560,11 @@ function drawZoomMap() {
             tileRef = sourceTile[Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x];
             tileRef[1] ? tileKind = tileRef[1].kind : tileKind = tileRef[0].kind;
             if(tileKind < 100) {
-                drawTile(tileKind, x, y, Game.terrain, Game.mPanel);
+                drawTile(tileKind, x, y, Game.spritesheet, Game.mPanel, false, 10, 3);
             } else if(tileKind >= 200) {
-                drawTile(tileKind - 200, x, y, Game.constructions, Game.mPanel);
+                drawTile(tileKind - 200, x, y, Game.spritesheet, Game.mPanel, false, 0, 4);
             } else {
-                drawTile(tileKind - 100, x, y, Game.drones, Game.mPanel, true);
+                drawTile(tileKind - 100, x, y, Game.spritesheet, Game.mPanel, true, 0, 0);
             }
             x++;
         }
