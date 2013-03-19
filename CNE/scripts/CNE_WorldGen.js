@@ -6,13 +6,14 @@
  */
 
 function getSeed(newGame) {
+  increment(0);
   var input = document.getElementById('seed').value;
   var popup = document.getElementById("popupContainer");
   var seedString = '';
   document.getElementById('login').disabled = true;
   document.getElementById('newSession').disabled = true;
   if(!newGame && input !== '') { //If I've entered a seed
-    console.log('called');
+    console.log('called |' + input +'|');
     input = input.split(' ').join('');
     for(var i = 0; i < input.length; i++) {
       seedString += input.charCodeAt(i);
@@ -29,7 +30,6 @@ function getSeed(newGame) {
   }
 
   if(Game.seeder !== '') {
-    increment(0);
     document.onkeydown = keypressed; //keyboard listener
     setTimeout(function() {
       Game.rng = new MersenneTwister(Game.seeder);
