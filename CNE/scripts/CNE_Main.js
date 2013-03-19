@@ -2617,7 +2617,6 @@ function contextContent(content, option) {
     var resources = false;
     var htmlString = '';
     var resourceArray = [ //[ORENAME,PRODUCTNAME]
-    //Will need to look into this for internationalisation
     [Lang.bauxite, Lang.aluminium],
     [Lang.corundum, Lang.aluminium],
     [Lang.kryolite, Lang.aluminium],
@@ -2839,12 +2838,14 @@ function clicked(direction) {
                 notify(Lang.onWater);
             } else if(hex[1] && hex[1].kind !== 221 && hex[1].kind >= 100) {
                 notify(Lang.noMine);
+            } else if(Game.level !== 0 && (!hex[1] || hex[1] && hex[1].kind !== 221)){
+                notify(Lang.noMine);
             } else if(Game.level === 4) {
                 notify(Lang.lastLevel);
             } else {
-                var MBelow = returnLevel(Game.level + 1);
+                var MBelow = returnLevel(Game.level + 1)[y][x];
                 hex[1] = bobTheBuilder(102, x, y, Game.level, true);
-                MBelow[y][x][1] = bobTheBuilder(102102, x, y, Game.level + 1, true);
+                MBelow[1] = bobTheBuilder(102102, x, y, Game.level + 1, true);
                 for(var i = 0; i < 6; i++) {
                     var mineY = adjacent(x, y, i)[0];
                     var mineX = adjacent(x, y, i)[1];
@@ -2856,7 +2857,6 @@ function clicked(direction) {
                     }
                 }
             }
-            //tile.mine(x, y, lowerTile);
         }
         break;
     case 'recycler':

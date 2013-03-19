@@ -5,7 +5,7 @@ function Lang(){
 	this.noDig = "You can\'t dig here.";
 	this.noCavern = "You can\'t dig a cavern here.";
 	this.noDoze = "You can\'t prepare this terrain.";
-	this.noMine = "You can\'t mine here. Ensure a mine is in place.";
+	this.noMine = "You can\'t mine here. Ensure a mine is in place or that no buildings or drones are present.";
 	this.noRecycle = "This can\'t be recycled.";
 	this.noConnection = "No adjacent connector node.";
 	this.notPrepared = "This terrain has not been prepared.";
