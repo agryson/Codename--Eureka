@@ -141,6 +141,9 @@ function nextTurn(x, y, level) {
             if(tile.kind === 227 || tile.kind === 228){
                 Game.researchLabs.push([x, y, level, tile.researchTopic]);
             }
+            if(tile.kind >= 208 && tile.kind <= 210){
+                Game.commTowers.push([x, y]);
+            }
         }
 
         //MINING
@@ -476,7 +479,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 1;
             o.storage = 2;
             o.future = [kind, Lang.commarray];
-            o.resourcesNeeded = [true,[0,2],[2,2],[4,1],[12, 1],[13,1]];
+            o.resourcesNeeded = [true,[0,2],[2,2],[4,1]];
             break;
         case 209:
             //comm array 2
@@ -1015,6 +1018,7 @@ function Param() {
         [0, 3, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
+    this.commTowers = [];
     //[[x,y,level,topic]]
     this.researchLabs = [];
     this.currentResearch = 'engineering';
@@ -2463,12 +2467,27 @@ function returnLevel(level) {
     }
 }
 
+function inRange(x, y){
+    for(var tower = 0; tower < Game.commTowers.length; tower++){
+        var radius = 75 - Game.level*10;
+        var thisTower = Game.map[Game.commTowers[tower][1]][Game.commTowers[tower][0]][1].kind;
+        if(thisTower === 210 || thisTower === 237){
+            radius -= 25;
+        }
+        if(distance(Game.commTowers[tower][0], Game.commTowers[tower][1], x, y) <= radius){
+            return true;
+        }
+    }
+    return false;
+}
+
 //MAPS**********************************************************************************
 /**
  * Draws the radar properly
  */
 
 function drawRadar() {
+    Game.radar.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
     var surfaceColor = [
         [212, 197, 174, 255],
@@ -2505,6 +2524,20 @@ function drawRadar() {
         }
     }
     Game.radar.putImageData(radarPixels, 0, 0);
+    for(var tower = 0; tower < Game.commTowers.length; tower++){
+        var radius = 75 - Game.level*10;
+        var thisTower = Game.map[Game.commTowers[tower][1]][Game.commTowers[tower][0]][1].kind;
+        if(thisTower === 210 || thisTower === 237){
+            radius -= 25;
+        }
+        console.log('drawing');
+        Game.radar.beginPath();
+        Game.radar.strokeStyle = '#FF0000';
+        Game.radar.lineWidth = 0.3;
+        Game.radar.arc(Game.commTowers[tower][0], Game.commTowers[tower][1], radius, 0, Math.PI*2, true);
+        Game.radar.stroke();
+        Game.radar.closePath();
+    }
     Game.level === 0 ? Game.radar.fillStyle = "#000000" : Game.radar.fillStyle = "#ffffff";
     Game.radar.font = "14px Arial";
     Game.radar.fillText('Depth: ' + Game.level * 50 + 'm', 215, 298);
@@ -2742,25 +2775,23 @@ function clicked(direction) {
                     break;
                 case 4:
                     Game.map[tempY][tempX][1] = bobTheBuilder(237, tempX, tempY, Game.level);
+                    Game.commTowers.push([tempX, tempY]);
                     break;
                 default:
                     console.log("The eagle most definitely has *not* landed");
                 }
             }
-
-            // ...
-            setTimeout(function() {
-                Game.buildings[37][1] = false;
-                var buildable = [0, 3, 11, 17, 27, 32, 34, 35, 36];
-                for(var ref in buildable) {
-                    Game.buildings[buildable[ref]][1] = true;
-                }
-                for(var i = 0; i < Game.robotsList.length; i++) {
-                    Game.robotsList[i][3] = true;
-                }
-                checkBuildings();
-                execReview();
-            }, 300);
+            Game.buildings[37][1] = false;
+            var buildable = [0, 3, 8, 11, 17, 27, 32, 34, 35, 36];
+            for(var ref in buildable) {
+                Game.buildings[buildable[ref]][1] = true;
+            }
+            for(var i = 0; i < Game.robotsList.length; i++) {
+                Game.robotsList[i][3] = true;
+            }
+            checkBuildings();
+            execReview();
+            drawRadar();
         }
         break;
     case 'dozer':
@@ -2770,6 +2801,8 @@ function clicked(direction) {
             //tile.prepare();
             if((hex[1] && (hex[1].kind < 200 && hex[1].kind > 2)) || tile.kind > 2) {
                 notify(Lang.noDoze);
+            } else if(!inRange(x, y)){
+                notify(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
             }
@@ -2791,6 +2824,8 @@ function clicked(direction) {
                 notify(Lang.noDig);
             } else if(Game.level === 4){
                 notify(Lang.lastLevel);
+            } else if(!inRange(x, y)){
+                notify(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level, true);
                 DBelow[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1, true);
@@ -2813,6 +2848,8 @@ function clicked(direction) {
                 notify(Lang.onWater);
             } else if((hex[1] && hex[1].kind > 3) || Game.level === 0 || tile.kind > 2) {
                 notify(Lang.noCavern);
+            } else if(!inRange(x, y)){
+                notify(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level);
                 for(var z = 0; z < 6; z++) {
@@ -2836,13 +2873,15 @@ function clicked(direction) {
                 notify(Lang.noMine);
             } else if(Game.level === 4) {
                 notify(Lang.lastLevel);
+            } else if(!inRange(x, y)){
+                notify(Lang.outOfRange);
             } else {
                 var MBelow = returnLevel(Game.level + 1);
                 hex[1] = bobTheBuilder(102, x, y, Game.level, true);
                 MBelow[y][x][1] = bobTheBuilder(102102, x, y, Game.level + 1, true);
-                for(var i = 0; i < 6; i++) {
-                    var mineY = adjacent(x, y, i)[0];
-                    var mineX = adjacent(x, y, i)[1];
+                for(var m = 0; m < 6; m++) {
+                    var mineY = adjacent(x, y, m)[0];
+                    var mineX = adjacent(x, y, m)[1];
                     if(returnLevel(Game.level)[mineY][mineX][0].mineable) {
                         returnLevel(Game.level)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level, false);
                     }
@@ -2851,7 +2890,6 @@ function clicked(direction) {
                     }
                 }
             }
-            //tile.mine(x, y, lowerTile);
         }
         break;
     case 'recycler':
@@ -2919,17 +2957,17 @@ function clicked(direction) {
         }
         break;
     case 'commarray':
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
+        if(hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(208, x, y, Game.level);
         } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
+            notify(Lang.notPrepared);
         }
         break;
     case 'commarray2':
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
+        if(hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(209, x, y, Game.level);
         } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
+           notify(Lang.notPrepared);
         }
         break;
     case 'connector':
