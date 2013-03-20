@@ -45,13 +45,12 @@ function nextTurn(x, y, level) {
     var tile = returnLevel(level)[y][x][1];
 
     var checkMine = function(xIn, yIn, levelIn) {
-        var checked = false;
         for(var i = 0; i < 6; i++) {
             if(returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221 && !returnLevel(levelIn)[adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].shutdown) {
-                checked = true;
+                return true;
             }
         }
-        return checked;
+        return false;
     };
     var requisition = function(){
         var resourceCheck = false;
@@ -147,6 +146,7 @@ function nextTurn(x, y, level) {
         }
 
         //MINING
+        //TODO the mine itself is not taking any ore...
         if(tile.mining && (tile.kind === 221 || checkMine(x, y, level))) {
             var stillMining = false;
             for(var ore = 0; ore < returnLevel(level)[y][x][0].resources.length; ore++) {
@@ -154,6 +154,7 @@ function nextTurn(x, y, level) {
                     stillMining = true;
                     var mined = Math.floor(Math.random() + 0.5);
                     if(Game.storage[Game.storage.length - 1] >= mined) {
+                        console.log('hi ho hi ho');
                         returnLevel(level)[y][x][0].resources[ore] -= mined;
                         Game.storage[Game.storage.length - 1] -= mined;
                         Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
@@ -346,11 +347,11 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.vital = true;
             o.buildTime = 2;
             o.kind = returnLevel(level)[y][x][0].kind;
-            if(returnLevel(level)[y][x][0].kind === 8) {
+            if(returnLevel(level)[y][x][0].kind > 8 || builderBot) {
                 if(builderBot) {
                     o.future = [221, Lang.building];
                 } else {
-                    o.future = [8, Lang.mining];
+                    o.future = [o.kind, Lang.mining];
                 }
                 returnLevel(level)[y][x][0].ref = changeName(Lang.mining, returnLevel(level)[y][x][0].ref);
                 o.mining = true;
@@ -667,6 +668,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.artMorale = -2;
             o.crime = 5;
             o.waste = 1;
+            o.mining = true;
             o.storage = 20;
             o.future = [kind, Lang.mine];
             o.resourcesNeeded = [true,[4,1]];
@@ -2352,13 +2354,13 @@ function move(dir) {
     case 'level':
         Game.level == 4 ? Game.level = 0 : Game.level += 1;
         checkBuildings();
+        drawRadar();
         document.getElementById('slider').value = Game.level;
         break;
     default:
         break;
     }
     drawLoc();
-    drawRadar();
 }
 
 /**
@@ -2594,6 +2596,7 @@ function drawRadar() {
             var idx = (x + y * radarPixels.width) * 4;
             var kind = returnLevel(Game.level)[y][x][0].kind;
             var resourceOnTile = returnLevel(Game.level)[y][x][0].resources;
+            //TODO: Clean up this awful for!
             for(var i = 0; i < 4; i++) {
                 if(kind < 4 && kind >= 0) {
                     radarPixels.data[idx + i] = surfaceColor[kind][i];
@@ -2628,7 +2631,6 @@ function drawRadar() {
         if(thisTower === 210 || thisTower === 237){
             radius -= 25;
         }
-        console.log('drawing');
         Game.radar.beginPath();
         Game.radar.strokeStyle = '#BD222A';
         Game.radar.lineWidth = 0.3;
@@ -2986,7 +2988,7 @@ function clicked(direction) {
             } else {
                 var MBelow = returnLevel(Game.level + 1)[y][x];
                 hex[1] = bobTheBuilder(102, x, y, Game.level, true);
-                MBelow[y][x][1] = bobTheBuilder(102102, x, y, Game.level + 1, true);
+                MBelow[1] = bobTheBuilder(102102, x, y, Game.level + 1, true);
                 for(var m = 0; m < 6; m++) {
                     var mineY = adjacent(x, y, m)[0];
                     var mineX = adjacent(x, y, m)[1];
