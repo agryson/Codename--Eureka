@@ -2597,8 +2597,12 @@ function drawRadar() {
             for(var i = 0; i < 4; i++) {
                 if(kind < 4 && kind >= 0) {
                     radarPixels.data[idx + i] = surfaceColor[kind][i];
-                } else if(kind > 4 && kind < 8) {
+                } else if(kind < 13 && kind >= 9){
+                    radarPixels.data[idx + i] = surfaceColor[kind - 9][i];
+                }else if(kind > 4 && kind < 8) {
                     radarPixels.data[idx + i] = ugColor[kind - 5][i];
+                } else if(kind > 13 && kind < 17) {
+                    radarPixels.data[idx + i] = ugColor[kind - 14][i];
                 } else if(kind === 4) {
                     Game.level !== 0 ? radarPixels.data[idx + i] = ugColor[4][i] : radarPixels.data[idx + i] = surfaceColor[4][i];
                 } else {
