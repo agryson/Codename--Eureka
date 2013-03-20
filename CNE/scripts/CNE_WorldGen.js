@@ -252,7 +252,7 @@ function generateResources(map) {
         if(testAltitude < (resourceArray[i][0] + (Game.level*6)) && testAltitude > resourceArray[i][1] && x > 0 && x < limit && y < limit && y > 0 && map[y][x][0].kind !== 4) {
           map[y][x][0].resources[i] = randGen(resourceArray[i][2], 1);
           map[y][x][0].mineable = true;
-          map[y][x][0].kind = 8; //tester
+          //map[y][x][0].kind = 8; //tester
           var check = sameLevel(map, x, y, i);
           for(var count = 0; count < 6; count++) {
             var tempX = adjacent(x, y, count)[1];
@@ -260,7 +260,7 @@ function generateResources(map) {
             if(map[tempY][tempX][0].kind !== 4 && (tempY != check[0] && tempX != check[1])) {
               map[tempY][tempX][0].resources[i] = randGen(resourceArray[i][2], 1);
               map[tempY][tempX][0].mineable = true;
-              map[tempY][tempX][0].kind = 8; //This is just so that we can see it until I get the radar sorted...
+              //map[tempY][tempX][0].kind = 8; //This is just so that we can see it until I get the radar sorted...
             }
           }
           x < Game.radarRad * 2 - 1 && x > 0 ? x = check[1] : x = randGen(Game.radarRad * 2, 0);

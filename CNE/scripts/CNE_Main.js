@@ -141,6 +141,9 @@ function nextTurn(x, y, level) {
             if(tile.kind === 227 || tile.kind === 228){
                 Game.researchLabs.push([x, y, level, tile.researchTopic]);
             }
+            if(tile.kind >= 208 && tile.kind <= 210){
+                Game.commTowers.push([x, y]);
+            }
         }
 
         //MINING
@@ -476,7 +479,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 1;
             o.storage = 2;
             o.future = [kind, Lang.commarray];
-            o.resourcesNeeded = [true,[0,2],[2,2],[4,1],[12, 1],[13,1]];
+            o.resourcesNeeded = [true,[0,2],[2,2],[4,1]];
             break;
         case 209:
             //comm array 2
@@ -1019,6 +1022,8 @@ function Param() {
         [0, 3, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
+    this.commTowers = [];
+
     //[[x,y,level,topic]]
     this.researchLabs = [];
     this.currentResearch = 'engineering';
@@ -1123,10 +1128,43 @@ function Param() {
     ];
 
     this.ores = [];
+    this.resourceArray = [ //[ORENAME,PRODUCTNAME]  
+        [Lang.bauxite, Lang.aluminium],
+        [Lang.corundum, Lang.aluminium],
+        [Lang.kryolite, Lang.aluminium],
+        [Lang.limestone, Lang.calcium],
+        [Lang.copperPyrite, Lang.copper],
+        [Lang.copperGlance, Lang.copper],
+        [Lang.malachite, Lang.copper],
+        [Lang.calverite, Lang.gold],
+        [Lang.sylvanite, Lang.gold],
+        [Lang.haematite, Lang.iron],
+        [Lang.magnetite, Lang.iron],
+        [Lang.ironPyrite, Lang.iron],
+        [Lang.siderite, Lang.iron],
+        [Lang.galena, Lang.lead],
+        [Lang.anglesite, Lang.lead],
+        [Lang.dolomite, Lang.magnesium],
+        [Lang.karnalite, Lang.magnesium],
+        [Lang.cinnabar, Lang.mercury],
+        [Lang.calomel, Lang.mercury],
+        [Lang.phosphorite, Lang.phosphorous],
+        [Lang.floreapetite, Lang.phosphorous],
+        [Lang.saltPeter, Lang.potassium],
+        [Lang.karnalite, Lang.potassium],
+        [Lang.silverGlance, Lang.silver],
+        [Lang.sodiumCarbonate, Lang.sodium],
+        [Lang.rockSalt, Lang.sodium],
+        [Lang.tinPyrites, Lang.tin],
+        [Lang.cassiterite, Lang.tin],
+        [Lang.zincBlende, Lang.zinc],
+        [Lang.calamine, Lang.zinc]
+    ];
 
     //0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
     //8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
-    this.procOres = [10, 2, 4, 1, 15, 5, 1, 1, 1, 5, 1, 4, 5, 5]; //Total of 55
+    this.procOresRadarOpt = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+    this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 5, 1, 4, 5, 5];
     //Map generation vars
     this.seeder = '';
     /*
@@ -1297,6 +1335,7 @@ function eavesdrop() {
     };
     //!Start Screen
     //Sound
+    //TODO: change this to a more standardized box
     var radioCheck = document.getElementById('musicOptionViz');
     radioCheck.onclick = function() {
         radioCheck.classList.toggle('checkbox_checked');
@@ -1413,6 +1452,49 @@ function eavesdrop() {
             rightClicked();
         }
         return false;
+    };
+
+    document.getElementById("aluminiumRadarOpt").onclick = function(){
+        drawRadar();
+    };
+        document.getElementById("calciumRadarOpt").onclick = function(){
+            drawRadar();
+    };
+    document.getElementById("copperRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("goldRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("ironRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("leadRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("magnesiumRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("mercuryRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("phosphorousRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("potassiumRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("silverRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("sodiumRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("tinRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("zincRadarOpt").onclick = function(){
+        drawRadar();
     };
 
     //Left Menu
@@ -1543,13 +1625,13 @@ function eavesdrop() {
     //Global Menu
     var settings = document.getElementById('settingsContainer');
     var setBtn = document.getElementById('settings');
-    var mail = document.getElementById('mailContainer');
-    var mailBtn = document.getElementById('mail');
+    var radarOptCont = document.getElementById('radarOptContainer');
+    var radarOpt = document.getElementById('radarOpt');
     setBtn.onclick = function() {
         settings.classList.toggle('global_container_hidden');
     };
-    mailBtn.onclick = function() {
-        mail.classList.toggle('global_container_hidden');
+    radarOpt.onclick = function() {
+        radarOptCont.classList.toggle('global_container_hidden');
     };
 
     var menu = function(containerIn, buttonIn, hideClass) {
@@ -2467,13 +2549,29 @@ function returnLevel(level) {
     }
 }
 
+function inRange(x, y){
+    for(var tower = 0; tower < Game.commTowers.length; tower++){
+        var radius = 75 - Game.level*10;
+        var thisTower = Game.map[Game.commTowers[tower][1]][Game.commTowers[tower][0]][1].kind;
+        if(thisTower === 210 || thisTower === 237){
+            radius -= 25;
+        }
+        if(distance(Game.commTowers[tower][0], Game.commTowers[tower][1], x, y) <= radius){
+            return true;
+        }
+    }
+    return false;
+}
+
 //MAPS**********************************************************************************
 /**
  * Draws the radar properly
  */
 
 function drawRadar() {
+    Game.radar.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
+    var options = ["aluminiumRadarOpt","calciumRadarOpt","copperRadarOpt","goldRadarOpt","ironRadarOpt","leadRadarOpt","magnesiumRadarOpt","mercuryRadarOpt","phosphorousRadarOpt","potassiumRadarOpt","silverRadarOpt","sodiumRadarOpt","tinRadarOpt","zincRadarOpt"];
     var surfaceColor = [
         [212, 197, 174, 255],
         [201, 179, 165, 255],
@@ -2495,6 +2593,7 @@ function drawRadar() {
             // Index of the pixel in the array
             var idx = (x + y * radarPixels.width) * 4;
             var kind = returnLevel(Game.level)[y][x][0].kind;
+            var resourceOnTile = returnLevel(Game.level)[y][x][0].resources;
             for(var i = 0; i < 4; i++) {
                 if(kind < 4 && kind >= 0) {
                     radarPixels.data[idx + i] = surfaceColor[kind][i];
@@ -2505,13 +2604,76 @@ function drawRadar() {
                 } else {
                     radarPixels.data[idx + i] = other[i];
                 }
+                for(var j = 0; j < options.length; j++){
+                    if(returnLevel(Game.level)[y][x][0].mineable && document.getElementById(options[j]).checked){
+                        var ore = resourceRef(j, 0);
+                        for(var k = 0; k < ore.length; k++){
+                            if(resourceOnTile[ore[k]]){
+                                radarPixels.data[idx + i] = other[i];
+                            }
+                        }
+                    }
+                }
             }
         }
     }
     Game.radar.putImageData(radarPixels, 0, 0);
+    for(var tower = 0; tower < Game.commTowers.length; tower++){
+        var radius = 75 - Game.level*10;
+        var thisTower = Game.map[Game.commTowers[tower][1]][Game.commTowers[tower][0]][1].kind;
+        if(thisTower === 210 || thisTower === 237){
+            radius -= 25;
+        }
+        console.log('drawing');
+        Game.radar.beginPath();
+        Game.radar.strokeStyle = '#BD222A';
+        Game.radar.lineWidth = 0.3;
+        Game.radar.arc(Game.commTowers[tower][0], Game.commTowers[tower][1], radius, 0, Math.PI*2, true);
+        Game.radar.stroke();
+        Game.radar.closePath();
+    }
     Game.level === 0 ? Game.radar.fillStyle = "#000000" : Game.radar.fillStyle = "#ffffff";
     Game.radar.font = "14px Arial";
     Game.radar.fillText('Depth: ' + Game.level * 50 + 'm', 215, 298);
+}
+
+function resourceRef(ref,dir){
+    //dir should tell us if we're going from ore to processed or processed to ore
+    //0 is from processed to ore
+    //1 is from ore to processed
+    //ref is the reference
+    switch(ref){
+        case 0:
+            return [0,1,2];
+        case 1:
+            return [3];
+        case 2:
+            return [4,5,6];
+        case 3:
+            return [7,8];
+        case 4:
+            return [9,10,11,12];
+        case 5:
+            return [13,14];
+        case 6:
+            return [15,16];
+        case 7:
+            return [17,18];
+        case 8:
+            return [19,20];
+        case 9:
+            return [21,22];
+        case 10:
+            return [23];
+        case 11:
+            return [24,25];
+        case 12:
+            return [26,27];
+        case 13:
+            return [28,29];
+        default:
+            console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + ref + " " + dir);
+    }
 }
 
 /**
@@ -2616,38 +2778,7 @@ function contextContent(content, option) {
     var construct = returnLevel(Game.level)[y][x][1];
     var resources = false;
     var htmlString = '';
-    var resourceArray = [ //[ORENAME,PRODUCTNAME]
-    [Lang.bauxite, Lang.aluminium],
-    [Lang.corundum, Lang.aluminium],
-    [Lang.kryolite, Lang.aluminium],
-    [Lang.limestone, Lang.calcium],
-    [Lang.copperPyrite, Lang.copper],
-    [Lang.copperGlance, Lang.copper],
-    [Lang.malachite, Lang.copper],
-    [Lang.calverite, Lang.gold],
-    [Lang.sylvanite, Lang.gold],
-    [Lang.haematite, Lang.iron],
-    [Lang.magnetite, Lang.iron],
-    [Lang.ironPyrite, Lang.iron],
-    [Lang.siderite, Lang.iron],
-    [Lang.galena, Lang.lead],
-    [Lang.anglesite, Lang.lead],
-    [Lang.dolomite, Lang.magnesium],
-    [Lang.karnalite, Lang.magnesium],
-    [Lang.cinnabar, Lang.mercury],
-    [Lang.calomel, Lang.mercury],
-    [Lang.phosphorite, Lang.phosphorous],
-    [Lang.floreapetite, Lang.phosphorous],
-    [Lang.saltPeter, Lang.potassium],
-    [Lang.karnalite, Lang.potassium],
-    [Lang.silverGlance, Lang.silver],
-    [Lang.sodiumCarbonate, Lang.sodium],
-    [Lang.rockSalt, Lang.sodium],
-    [Lang.tinPyrites, Lang.tin],
-    [Lang.cassiterite, Lang.tin],
-    [Lang.zincBlende, Lang.zinc],
-    [Lang.calamine, Lang.zinc]
-    ];
+
     if(!option) {
         htmlString += '<span>' + tile.ref + '</span><br>';
     }
@@ -2678,8 +2809,8 @@ function contextContent(content, option) {
                 htmlString += '<h3>' + Lang.resources + '</h3><ul>';
                 resources = true;
             }
-            htmlString += '<li>' + resourceArray[i][0] + ': ' + tile.resources[i] + 't';
-            htmlString += '<ul><li>' + resourceArray[i][1] + '</ul>';
+            htmlString += '<li>' + Game.resourceArray[i][0] + ': ' + tile.resources[i] + 't';
+            htmlString += '<ul><li>' + Game.resourceArray[i][1] + '</ul>';
         }
     }
     htmlString += '</ul>';
@@ -2746,25 +2877,23 @@ function clicked(direction) {
                     break;
                 case 4:
                     Game.map[tempY][tempX][1] = bobTheBuilder(237, tempX, tempY, Game.level);
+                    Game.commTowers.push([tempX, tempY]);
                     break;
                 default:
                     console.log("The eagle most definitely has *not* landed");
                 }
             }
-
-            // ...
-            setTimeout(function() {
-                Game.buildings[37][1] = false;
-                var buildable = [0, 3, 11, 17, 27, 32, 34, 35, 36];
-                for(var ref in buildable) {
-                    Game.buildings[buildable[ref]][1] = true;
-                }
-                for(var i = 0; i < Game.robotsList.length; i++) {
-                    Game.robotsList[i][3] = true;
-                }
-                checkBuildings();
-                execReview();
-            }, 300);
+            Game.buildings[37][1] = false;
+            var buildable = [0, 3, 8, 11, 17, 23, 27, 32, 34, 35, 36];
+            for(var ref in buildable) {
+                Game.buildings[buildable[ref]][1] = true;
+            }
+            for(var i = 0; i < Game.robotsList.length; i++) {
+                Game.robotsList[i][3] = true;
+            }
+            checkBuildings();
+            execReview();
+            drawRadar();
         }
         break;
     case 'dozer':
@@ -2774,6 +2903,8 @@ function clicked(direction) {
             //tile.prepare();
             if((hex[1] && (hex[1].kind < 200 && hex[1].kind > 2)) || tile.kind > 2) {
                 notify(Lang.noDoze);
+            } else if(!inRange(x, y)){
+                notify(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
             }
@@ -2795,6 +2926,8 @@ function clicked(direction) {
                 notify(Lang.noDig);
             } else if(Game.level === 4){
                 notify(Lang.lastLevel);
+            } else if(!inRange(x, y)){
+                notify(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level, true);
                 DBelow[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1, true);
@@ -2817,6 +2950,8 @@ function clicked(direction) {
                 notify(Lang.onWater);
             } else if((hex[1] && hex[1].kind > 3) || Game.level === 0 || tile.kind > 2) {
                 notify(Lang.noCavern);
+            } else if(!inRange(x, y)){
+                notify(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level);
                 for(var z = 0; z < 6; z++) {
@@ -2842,13 +2977,15 @@ function clicked(direction) {
                 notify(Lang.noMine);
             } else if(Game.level === 4) {
                 notify(Lang.lastLevel);
+            } else if(!inRange(x, y)){
+                notify(Lang.outOfRange);
             } else {
                 var MBelow = returnLevel(Game.level + 1)[y][x];
                 hex[1] = bobTheBuilder(102, x, y, Game.level, true);
-                MBelow[1] = bobTheBuilder(102102, x, y, Game.level + 1, true);
-                for(var i = 0; i < 6; i++) {
-                    var mineY = adjacent(x, y, i)[0];
-                    var mineX = adjacent(x, y, i)[1];
+                MBelow[y][x][1] = bobTheBuilder(102102, x, y, Game.level + 1, true);
+                for(var m = 0; m < 6; m++) {
+                    var mineY = adjacent(x, y, m)[0];
+                    var mineX = adjacent(x, y, m)[1];
                     if(returnLevel(Game.level)[mineY][mineX][0].mineable) {
                         returnLevel(Game.level)[mineY][mineX][1] = bobTheBuilder(102102, mineX, mineY, Game.level, false);
                     }
@@ -2924,17 +3061,17 @@ function clicked(direction) {
         }
         break;
     case 'commarray':
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
+        if(hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(208, x, y, Game.level);
         } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
+            notify(Lang.notPrepared);
         }
         break;
     case 'commarray2':
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
+        if(hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(209, x, y, Game.level);
         } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
+           notify(Lang.notPrepared);
         }
         break;
     case 'connector':

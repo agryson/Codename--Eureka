@@ -14,6 +14,7 @@ function Lang(){
 	this.lastLevel = "You can't go any deeper than this.";
 	this.setDown = "Please choose your landing zone first...";
 	this.resourceShortage = "Resources missing: ";
+	this.outOfRange = "Out of communications range.";
 
 	//Actions and references
 	this.preparing = "Preparing";
