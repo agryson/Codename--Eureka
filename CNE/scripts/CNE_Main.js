@@ -1020,38 +1020,6 @@ function Param() {
     ];
     this.commTowers = [];
 
-    this.resourceArray = [ //[ORENAME,PRODUCTNAME]  
-        [Lang.bauxite, Lang.aluminium],
-        [Lang.corundum, Lang.aluminium],
-        [Lang.kryolite, Lang.aluminium],
-        [Lang.limestone, Lang.calcium],
-        [Lang.copperPyrite, Lang.copper],
-        [Lang.copperGlance, Lang.copper],
-        [Lang.malachite, Lang.copper],
-        [Lang.calverite, Lang.gold],
-        [Lang.sylvanite, Lang.gold],
-        [Lang.haematite, Lang.iron],
-        [Lang.magnetite, Lang.iron],
-        [Lang.ironPyrite, Lang.iron],
-        [Lang.siderite, Lang.iron],
-        [Lang.galena, Lang.lead],
-        [Lang.anglesite, Lang.lead],
-        [Lang.dolomite, Lang.magnesium],
-        [Lang.karnalite, Lang.magnesium],
-        [Lang.cinnabar, Lang.mercury],
-        [Lang.calomel, Lang.mercury],
-        [Lang.phosphorite, Lang.phosphorous],
-        [Lang.floreapetite, Lang.phosphorous],
-        [Lang.saltPeter, Lang.potassium],
-        [Lang.karnalite, Lang.potassium],
-        [Lang.silverGlance, Lang.silver],
-        [Lang.sodiumCarbonate, Lang.sodium],
-        [Lang.rockSalt, Lang.sodium],
-        [Lang.tinPyrites, Lang.tin],
-        [Lang.cassiterite, Lang.tin],
-        [Lang.zincBlende, Lang.zinc],
-        [Lang.calamine, Lang.zinc]
-    ];
     //[[x,y,level,topic]]
     this.researchLabs = [];
     this.currentResearch = 'engineering';
@@ -1156,9 +1124,42 @@ function Param() {
     ];
 
     this.ores = [];
+    this.resourceArray = [ //[ORENAME,PRODUCTNAME]  
+        [Lang.bauxite, Lang.aluminium],
+        [Lang.corundum, Lang.aluminium],
+        [Lang.kryolite, Lang.aluminium],
+        [Lang.limestone, Lang.calcium],
+        [Lang.copperPyrite, Lang.copper],
+        [Lang.copperGlance, Lang.copper],
+        [Lang.malachite, Lang.copper],
+        [Lang.calverite, Lang.gold],
+        [Lang.sylvanite, Lang.gold],
+        [Lang.haematite, Lang.iron],
+        [Lang.magnetite, Lang.iron],
+        [Lang.ironPyrite, Lang.iron],
+        [Lang.siderite, Lang.iron],
+        [Lang.galena, Lang.lead],
+        [Lang.anglesite, Lang.lead],
+        [Lang.dolomite, Lang.magnesium],
+        [Lang.karnalite, Lang.magnesium],
+        [Lang.cinnabar, Lang.mercury],
+        [Lang.calomel, Lang.mercury],
+        [Lang.phosphorite, Lang.phosphorous],
+        [Lang.floreapetite, Lang.phosphorous],
+        [Lang.saltPeter, Lang.potassium],
+        [Lang.karnalite, Lang.potassium],
+        [Lang.silverGlance, Lang.silver],
+        [Lang.sodiumCarbonate, Lang.sodium],
+        [Lang.rockSalt, Lang.sodium],
+        [Lang.tinPyrites, Lang.tin],
+        [Lang.cassiterite, Lang.tin],
+        [Lang.zincBlende, Lang.zinc],
+        [Lang.calamine, Lang.zinc]
+    ];
 
     //0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
     //8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
+    this.procOresRadarOpt = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
     this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 5, 1, 4, 5, 5];
     //Map generation vars
     this.seeder = '';
@@ -1330,6 +1331,7 @@ function eavesdrop() {
     };
     //!Start Screen
     //Sound
+    //TODO: change this to a more standardized box
     var radioCheck = document.getElementById('musicOptionViz');
     radioCheck.onclick = function() {
         radioCheck.classList.toggle('checkbox_checked');
@@ -1446,6 +1448,49 @@ function eavesdrop() {
             rightClicked();
         }
         return false;
+    };
+
+    document.getElementById("aluminiumRadarOpt").onclick = function(){
+        drawRadar();
+    };
+        document.getElementById("calciumRadarOpt").onclick = function(){
+            drawRadar();
+    };
+    document.getElementById("copperRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("goldRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("ironRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("leadRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("magnesiumRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("mercuryRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("phosphorousRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("potassiumRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("silverRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("sodiumRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("tinRadarOpt").onclick = function(){
+        drawRadar();
+    };
+    document.getElementById("zincRadarOpt").onclick = function(){
+        drawRadar();
     };
 
     //Left Menu
@@ -2522,6 +2567,7 @@ function inRange(x, y){
 function drawRadar() {
     Game.radar.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
+    var options = ["aluminiumRadarOpt","calciumRadarOpt","copperRadarOpt","goldRadarOpt","ironRadarOpt","leadRadarOpt","magnesiumRadarOpt","mercuryRadarOpt","phosphorousRadarOpt","potassiumRadarOpt","silverRadarOpt","sodiumRadarOpt","tinRadarOpt","zincRadarOpt"];
     var surfaceColor = [
         [212, 197, 174, 255],
         [201, 179, 165, 255],
@@ -2543,6 +2589,7 @@ function drawRadar() {
             // Index of the pixel in the array
             var idx = (x + y * radarPixels.width) * 4;
             var kind = returnLevel(Game.level)[y][x][0].kind;
+            var resourceOnTile = returnLevel(Game.level)[y][x][0].resources;
             for(var i = 0; i < 4; i++) {
                 if(kind < 4 && kind >= 0) {
                     radarPixels.data[idx + i] = surfaceColor[kind][i];
@@ -2552,6 +2599,16 @@ function drawRadar() {
                     Game.level !== 0 ? radarPixels.data[idx + i] = ugColor[4][i] : radarPixels.data[idx + i] = surfaceColor[4][i];
                 } else {
                     radarPixels.data[idx + i] = other[i];
+                }
+                for(var j = 0; j < options.length; j++){
+                    if(returnLevel(Game.level)[y][x][0].mineable && document.getElementById(options[j]).checked){
+                        var ore = resourceRef(j, 0);
+                        for(var k = 0; k < ore.length; k++){
+                            if(resourceOnTile[ore[k]]){
+                                radarPixels.data[idx + i] = other[i];
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -2574,6 +2631,45 @@ function drawRadar() {
     Game.level === 0 ? Game.radar.fillStyle = "#000000" : Game.radar.fillStyle = "#ffffff";
     Game.radar.font = "14px Arial";
     Game.radar.fillText('Depth: ' + Game.level * 50 + 'm', 215, 298);
+}
+
+function resourceRef(ref,dir){
+    //dir should tell us if we're going from ore to processed or processed to ore
+    //0 is from processed to ore
+    //1 is from ore to processed
+    //ref is the reference
+    switch(ref){
+        case 0:
+            return [0,1,2];
+        case 1:
+            return [3];
+        case 2:
+            return [4,5,6];
+        case 3:
+            return [7,8];
+        case 4:
+            return [9,10,11,12];
+        case 5:
+            return [13,14];
+        case 6:
+            return [15,16];
+        case 7:
+            return [17,18];
+        case 8:
+            return [19,20];
+        case 9:
+            return [21,22];
+        case 10:
+            return [23];
+        case 11:
+            return [24,25];
+        case 12:
+            return [26,27];
+        case 13:
+            return [28,29];
+        default:
+            console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + ref + " " + dir);
+    }
 }
 
 /**
