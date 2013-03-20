@@ -1019,6 +1019,39 @@ function Param() {
         [0, 1, "recycler", false, 2]
     ];
     this.commTowers = [];
+
+    this.resourceArray = [ //[ORENAME,PRODUCTNAME]  
+        [Lang.bauxite, Lang.aluminium],
+        [Lang.corundum, Lang.aluminium],
+        [Lang.kryolite, Lang.aluminium],
+        [Lang.limestone, Lang.calcium],
+        [Lang.copperPyrite, Lang.copper],
+        [Lang.copperGlance, Lang.copper],
+        [Lang.malachite, Lang.copper],
+        [Lang.calverite, Lang.gold],
+        [Lang.sylvanite, Lang.gold],
+        [Lang.haematite, Lang.iron],
+        [Lang.magnetite, Lang.iron],
+        [Lang.ironPyrite, Lang.iron],
+        [Lang.siderite, Lang.iron],
+        [Lang.galena, Lang.lead],
+        [Lang.anglesite, Lang.lead],
+        [Lang.dolomite, Lang.magnesium],
+        [Lang.karnalite, Lang.magnesium],
+        [Lang.cinnabar, Lang.mercury],
+        [Lang.calomel, Lang.mercury],
+        [Lang.phosphorite, Lang.phosphorous],
+        [Lang.floreapetite, Lang.phosphorous],
+        [Lang.saltPeter, Lang.potassium],
+        [Lang.karnalite, Lang.potassium],
+        [Lang.silverGlance, Lang.silver],
+        [Lang.sodiumCarbonate, Lang.sodium],
+        [Lang.rockSalt, Lang.sodium],
+        [Lang.tinPyrites, Lang.tin],
+        [Lang.cassiterite, Lang.tin],
+        [Lang.zincBlende, Lang.zinc],
+        [Lang.calamine, Lang.zinc]
+    ];
     //[[x,y,level,topic]]
     this.researchLabs = [];
     this.currentResearch = 'engineering';
@@ -1126,7 +1159,7 @@ function Param() {
 
     //0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
     //8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
-    this.procOres = [10, 2, 4, 1, 15, 5, 1, 1, 1, 5, 1, 4, 5, 5]; //Total of 55
+    this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 5, 1, 4, 5, 5];
     //Map generation vars
     this.seeder = '';
     /*
@@ -1543,13 +1576,13 @@ function eavesdrop() {
     //Global Menu
     var settings = document.getElementById('settingsContainer');
     var setBtn = document.getElementById('settings');
-    var mail = document.getElementById('mailContainer');
-    var mailBtn = document.getElementById('mail');
+    var radarOptCont = document.getElementById('radarOptContainer');
+    var radarOpt = document.getElementById('radarOpt');
     setBtn.onclick = function() {
         settings.classList.toggle('global_container_hidden');
     };
-    mailBtn.onclick = function() {
-        mail.classList.toggle('global_container_hidden');
+    radarOpt.onclick = function() {
+        radarOptCont.classList.toggle('global_container_hidden');
     };
 
     var menu = function(containerIn, buttonIn, hideClass) {
@@ -2532,7 +2565,7 @@ function drawRadar() {
         }
         console.log('drawing');
         Game.radar.beginPath();
-        Game.radar.strokeStyle = '#FF0000';
+        Game.radar.strokeStyle = '#BD222A';
         Game.radar.lineWidth = 0.3;
         Game.radar.arc(Game.commTowers[tower][0], Game.commTowers[tower][1], radius, 0, Math.PI*2, true);
         Game.radar.stroke();
@@ -2644,39 +2677,7 @@ function contextContent(content, option) {
     var construct = returnLevel(Game.level)[y][x][1];
     var resources = false;
     var htmlString = '';
-    var resourceArray = [ //[ORENAME,PRODUCTNAME]
-    //Will need to look into this for internationalisation
-    [Lang.bauxite, Lang.aluminium],
-    [Lang.corundum, Lang.aluminium],
-    [Lang.kryolite, Lang.aluminium],
-    [Lang.limestone, Lang.calcium],
-    [Lang.copperPyrite, Lang.copper],
-    [Lang.copperGlance, Lang.copper],
-    [Lang.malachite, Lang.copper],
-    [Lang.calverite, Lang.gold],
-    [Lang.sylvanite, Lang.gold],
-    [Lang.haematite, Lang.iron],
-    [Lang.magnetite, Lang.iron],
-    [Lang.ironPyrite, Lang.iron],
-    [Lang.siderite, Lang.iron],
-    [Lang.galena, Lang.lead],
-    [Lang.anglesite, Lang.lead],
-    [Lang.dolomite, Lang.magnesium],
-    [Lang.karnalite, Lang.magnesium],
-    [Lang.cinnabar, Lang.mercury],
-    [Lang.calomel, Lang.mercury],
-    [Lang.phosphorite, Lang.phosphorous],
-    [Lang.floreapetite, Lang.phosphorous],
-    [Lang.saltPeter, Lang.potassium],
-    [Lang.karnalite, Lang.potassium],
-    [Lang.silverGlance, Lang.silver],
-    [Lang.sodiumCarbonate, Lang.sodium],
-    [Lang.rockSalt, Lang.sodium],
-    [Lang.tinPyrites, Lang.tin],
-    [Lang.cassiterite, Lang.tin],
-    [Lang.zincBlende, Lang.zinc],
-    [Lang.calamine, Lang.zinc]
-    ];
+    
     if(!option) {
         htmlString += '<span>' + tile.ref + '</span><br>';
     }
@@ -2707,8 +2708,8 @@ function contextContent(content, option) {
                 htmlString += '<h3>' + Lang.resources + '</h3><ul>';
                 resources = true;
             }
-            htmlString += '<li>' + resourceArray[i][0] + ': ' + tile.resources[i] + 't';
-            htmlString += '<ul><li>' + resourceArray[i][1] + '</ul>';
+            htmlString += '<li>' + Game.resourceArray[i][0] + ': ' + tile.resources[i] + 't';
+            htmlString += '<ul><li>' + Game.resourceArray[i][1] + '</ul>';
         }
     }
     htmlString += '</ul>';
@@ -2782,7 +2783,7 @@ function clicked(direction) {
                 }
             }
             Game.buildings[37][1] = false;
-            var buildable = [0, 3, 8, 11, 17, 27, 32, 34, 35, 36];
+            var buildable = [0, 3, 8, 11, 17, 23, 27, 32, 34, 35, 36];
             for(var ref in buildable) {
                 Game.buildings[buildable[ref]][1] = true;
             }

@@ -391,8 +391,9 @@ button:active {
     position: absolute;
     right: 0;
     top: 0;
-    height: 400px;
+    height: 340px;
     width: 340px;
+    overflow-y: scroll;
     background: #494949;
     border-radius: 5px 0 0 0;
     -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
@@ -424,17 +425,30 @@ button:active {
     margin: 15px;
 }
 
-.mail_container{
+.radar_opt_container{
     z-index: 3;
 }
 
-.mail{
-    width: 139px;
+input[type="checkbox"]{
+    display: none;
 }
 
+input[type="checkbox"] + label {
+    display: block;
+    margin-left: 10px;
+}
+
+input[type="checkbox"]:checked + label{
+    color:white;
+} 
+
+.radar_opt{
+    width: 139px;
+}
+/*
 .mailItem{
     margin: 15px;
-}
+}*/
         /*Tabs*/
 .global_actions{
     position: absolute;
