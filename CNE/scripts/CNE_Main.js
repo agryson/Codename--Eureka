@@ -1229,14 +1229,23 @@ function saneStats(){
     if(Game.crime[Game.crime.length - 1] < 0){
         Game.crime[Game.crime.length - 1] = 0;
     }
-    if(Game.tossMorale[Game.tossMorale.length - 1] < 0){
-        Game.tossMorale[Game.tossMorale.length - 1] = 0;
+    if(Game.tossMorale[Game.tossMorale.length - 1] <= 0){
+        Game.tossMorale[Game.tossMorale.length - 1] = 1;
     }
-    if(Game.hipMorale[Game.hipMorale.length - 1] < 0){
-        Game.hipMorale[Game.hipMorale.length - 1] = 0;
+    if(Game.tossMorale[Game.tossMorale.length - 1] > 1000){
+        Game.tossMorale[Game.tossMorale.length - 1] = 1000;
     }
-    if(Game.artMorale[Game.artMorale.length - 1] < 0){
-        Game.artMorale[Game.artMorale.length - 1] = 0;
+    if(Game.hipMorale[Game.hipMorale.length - 1] <= 0){
+        Game.hipMorale[Game.hipMorale.length - 1] = 1;
+    }
+    if(Game.hipMorale[Game.hipMorale.length - 1] > 1000){
+        Game.hipMorale[Game.hipMorale.length - 1] = 1000;
+    }
+    if(Game.artMorale[Game.artMorale.length - 1] <= 0){
+        Game.artMorale[Game.artMorale.length - 1] = 1;
+    }
+    if(Game.artMorale[Game.artMorale.length - 1] > 1000){
+        Game.artMorale[Game.artMorale.length - 1] = 1000;
     }
     if(Game.food[Game.food.length - 1] < 0){
         Game.food[Game.food.length - 1] = 0;
@@ -1340,7 +1349,7 @@ function drawGraph(type, outputId, sourceData, from0) {
             con.beginPath();
             con.fillStyle = colour;
             con.moveTo(center[0], center[1]);
-            con.arc(center[0], center[1], radius, start, stop, false);
+            con.arc(center[0], center[1], radius, start, stop);
             con.lineTo(center[0], center[1]);
             con.fill();
             con.closePath();
@@ -1352,8 +1361,11 @@ function drawGraph(type, outputId, sourceData, from0) {
             total += sourceData[sum][0][sourceData[sum][0].length - 1];
         }
         for(var f = 0; f < sourceData.length; f++){
-                fillPie(nextStart, nextStart + (Math.PI*2)*(sourceData[f][0][sourceData[f][0].length - 1] / total), sourceData[f][1]);
-                nextStart += (Math.PI*2)*(sourceData[f][0][sourceData[f][0].length - 1] / total);
+            var current = sourceData[f][0][sourceData[f][0].length - 1];
+            if(current > 0){
+                fillPie(nextStart, nextStart + (Math.PI*2)*(current / total), sourceData[f][1]);
+                nextStart += (Math.PI*2)*(current / total);
+            }
         }
     } else {
         console.log("Lies, lies and damned statistics" + sourceData);
@@ -1954,10 +1966,10 @@ function execReview() {
     if(!Game.buildings[37][1]) {
         var moraleInput = [[Game.tossMorale, '#1E90FF'],[Game.hipMorale, '#00FA9A'],[Game.artMorale, '#FF4500']];
         drawGraph('line', 'morale', moraleInput);
-        document.getElementById('tossMorale').innerHTML = Game.tossMorale[Game.tossMorale.length - 1];
-        document.getElementById('hipMorale').innerHTML = Game.hipMorale[Game.hipMorale.length - 1];
-        document.getElementById('artMorale').innerHTML = Game.artMorale[Game.artMorale.length - 1];
-        document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1]) / 3);
+        document.getElementById('tossMorale').innerHTML = (Game.tossMorale[Game.tossMorale.length - 1] / 10).toFixed(1) + '%';
+        document.getElementById('hipMorale').innerHTML = (Game.hipMorale[Game.hipMorale.length - 1] / 10).toFixed(1) + '%';
+        document.getElementById('artMorale').innerHTML = (Game.artMorale[Game.artMorale.length - 1] / 10).toFixed(1) + '%';
+        document.getElementById('moraleAverage').innerHTML = (((Game.tossMorale[Game.tossMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.artMorale[Game.artMorale.length - 1]) / 3) / 10).toFixed(1) + '%';
 
         var popInput = [[Game.tossPop, '#1E90FF'],[Game.hipPop, '#00FA9A'],[Game.artPop, '#FF4500'],[Game.pop, '#DCDCDC']];
         drawGraph('line', 'population', popInput, true);
