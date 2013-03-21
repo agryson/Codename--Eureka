@@ -1328,16 +1328,34 @@ function drawGraph(type, outputId, sourceData, from0) {
         con.fillText(mini + (maxi - mini)/2, 5, 110);
         con.fillText(mini, 5, 215);
         con.closePath();
+
+    } else if(type === 'pie'){
+        var topVal = 0;
+        var topValRef;
+        var radius = Math.floor(canH / 2.1);
+        var center = [10 + radius, canH / 2];
+        var fillPie = function(start, stop, colour){
+            con.beginPath();
+            con.fillStyle = colour;
+            con.moveTo(center[0], center[1]);
+            con.arc(center[0], center[1], radius, start, stop, false);
+            con.lineTo(center[0], center[1]);
+            con.fill();
+            con.closePath();
+        };
+
+        var nextStart = 0;
+        var total = 0;
+        for(var sum = 0; sum < sourceData.length; sum++){
+            total += sourceData[sum][0][sourceData[sum][0].length - 1];
+        }
+        for(var f = 0; f < sourceData.length; f++){
+                fillPie(nextStart, nextStart + (Math.PI*2)*(sourceData[f][0][sourceData[f][0].length - 1] / total), sourceData[f][1]);
+                nextStart += (Math.PI*2)*(sourceData[f][0][sourceData[f][0].length - 1] / total);
+        }
+    } else {
+        console.log("Lies, lies and damned statistics" + sourceData);
     }
-    /*
-    //Will need to generalize this function to accept multiple data sets
-    if(type === 'pie'){
-        con.beginPath();
-        con.fillStyle = colour;
-        con.arc(canW / 2, canH / 2, Math.floor(canH / 2.1), 0, Math.floor(Math.PI*2*(mini), true);
-        con.fill();
-    }
-    */
 }
 
 /**
@@ -1939,15 +1957,15 @@ function execReview() {
         document.getElementById('artMorale').innerHTML = Game.artMorale[Game.artMorale.length - 1];
         document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1]) / 3);
 
-        var popInput = [[Game.tossPop, '#1E90FF'],['population', Game.hipPop, '#00FA9A'],[Game.artPop, '#FF4500'],[Game.pop, '#DCDCDC']];
+        var popInput = [[Game.tossPop, '#1E90FF'],[Game.hipPop, '#00FA9A'],[Game.artPop, '#FF4500'],[Game.pop, '#DCDCDC']];
         drawGraph('line', 'population', popInput, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
 
-        var sdfInput = [[Game.sdf, '#A0522D']];
-        drawGraph('line', 'homeless', sdfInput);
+        var sdfInput = [[Game.housing, '#00BFFF'],[Game.sdf, '#FF0000']];
+        drawGraph('pie', 'homeless', sdfInput);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
 
