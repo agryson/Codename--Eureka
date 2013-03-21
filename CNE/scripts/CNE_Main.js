@@ -1456,11 +1456,30 @@ function eavesdrop() {
         return false;
     };
 
+    document.getElementById('allRadarOpt').onclick = function(){
+        var option = document.getElementById('allRadarOpt').checked;
+        document.getElementById("aluminiumRadarOpt").checked = option;
+        document.getElementById("calciumRadarOpt").checked = option;
+        document.getElementById("copperRadarOpt").checked = option;
+        document.getElementById("goldRadarOpt").checked = option;
+        document.getElementById("ironRadarOpt").checked = option;
+        document.getElementById("leadRadarOpt").checked = option;
+        document.getElementById("magnesiumRadarOpt").checked = option;
+        document.getElementById("mercuryRadarOpt").checked = option;
+        document.getElementById("phosphorousRadarOpt").checked = option;
+        document.getElementById("potassiumRadarOpt").checked = option;
+        document.getElementById("silverRadarOpt").checked = option;
+        document.getElementById("sodiumRadarOpt").checked = option;
+        document.getElementById("tinRadarOpt").checked = option;
+        document.getElementById("zincRadarOpt").checked = option;       
+        drawRadar(); 
+    }
+
     document.getElementById("aluminiumRadarOpt").onclick = function(){
         drawRadar();
     };
-        document.getElementById("calciumRadarOpt").onclick = function(){
-            drawRadar();
+    document.getElementById("calciumRadarOpt").onclick = function(){
+        drawRadar();
     };
     document.getElementById("copperRadarOpt").onclick = function(){
         drawRadar();
@@ -1630,10 +1649,19 @@ function eavesdrop() {
     var radarOptCont = document.getElementById('radarOptContainer');
     var radarOpt = document.getElementById('radarOpt');
     setBtn.onclick = function() {
-        settings.classList.toggle('global_container_hidden');
+        if(settings.classList.contains('global_container_hidden')){
+            settings.classList.remove('global_container_hidden');
+            radarOptCont.classList.remove('global_container_hidden');
+        } else {
+            settings.classList.add('global_container_hidden');
+        }
     };
     radarOpt.onclick = function() {
-        radarOptCont.classList.toggle('global_container_hidden');
+        if(settings.classList.contains('global_container_hidden')){
+            radarOptCont.classList.toggle('global_container_hidden');
+        } else {
+            settings.classList.add('global_container_hidden');
+        }
     };
 
     var menu = function(containerIn, buttonIn, hideClass) {

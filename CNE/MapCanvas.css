@@ -429,6 +429,12 @@ button:active {
     z-index: 3;
 }
 
+.radar_opt_container h3, .radar_opt_container h4 {
+    color: #ECECEC;
+    margin: 2px 10px;
+
+}
+
 input[type="checkbox"]{
     display: none;
 }
@@ -447,10 +453,11 @@ input[type="checkbox"] + label span{
     width: 18px;
     height: 18px;
     vertical-align: middle;
-    background: url('images/tools.png') -18px bottom;
+    padding: 2px;
+    background: url('images/tools.png') -20px 20px;
     box-shadow: inset -1px -1px 3px #000;
     border-radius: 3px;
-    margin: 2px 2px;
+    margin: 0 10px 8px 2px;
 }
 
 input[type="checkbox"]:checked + label span{
