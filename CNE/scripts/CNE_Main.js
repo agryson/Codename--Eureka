@@ -1241,6 +1241,8 @@ function saneStats(){
     if(Game.food[Game.food.length - 1] < 0){
         Game.food[Game.food.length - 1] = 0;
     }
+
+    Game.sdf[Game.sdf.length - 1] = Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]);
 }
 
 function drawGraph(type, outputId, sourceData, from0) {
