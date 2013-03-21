@@ -1243,11 +1243,25 @@ function saneStats(){
     }
 }
 
-function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
+function drawGraph(type, outputId, sourceData, from0) {
     var can = document.getElementById(outputId);
     var con = document.getElementById(outputId).getContext('2d');
     var canW = parseInt(can.width, 10);
     var canH = parseInt(can.height, 10);
+    con.clearRect(0, 0, canW, canH);
+
+    //Get our max and min values from the input data
+    var sourceClean = [];
+    for(var m = 0; m < sourceData.length; m++){
+        sourceClean.push(sourceData[m][0]);
+    }
+    console.log(sourceClean);
+    var maxMin = getMaxMin(sourceClean);
+    var maxi = maxMin[0];
+    var mini = maxMin[1];
+    if(from0){
+        mini = 0;
+    }
 
     //returns our highest data point so we can scale the axes
     var max = function(arr) {
@@ -1276,22 +1290,27 @@ function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
         };
 
 
-    var sepX = Math.round(canW / sourceData.length);
-    var sepY = Math.round(canH / sourceData[max(sourceData)]);
-
-    //Lines
-    con.beginPath();
-    con.lineWidth = 2;
-    con.lineCap = 'round';
-    con.lineJoin = 'round';
-    con.strokeStyle = colour;
-    con.moveTo(0, canH - normal(0, sourceData));
-    for(var k = 1; k < sourceData.length; k++) {
-        con.lineTo(k * sepX, canH - normal(k, sourceData));
-    }
-    con.stroke();
-    if(gradation) {
-        //Our marks
+    if(type === 'line'){
+        for(var n = 0; n < sourceData.length; n++){
+            var sepX = Math.round(canW / sourceData[n][0].length);
+            var sepY = Math.round(canH / sourceData[max(sourceData[n][0])]);
+            var colour = sourceData[n][1];
+            for(var l = 0; l < sourceData[n][0].length; l++){
+                //Lines
+                con.beginPath();
+                con.lineWidth = 2;
+                con.lineCap = 'round';
+                con.lineJoin = 'round';
+                con.strokeStyle = colour;
+                con.moveTo(0, canH - normal(0, sourceData[n][0]));
+                for(var k = 1; k < sourceData[n][0].length; k++) {
+                    con.lineTo(k * sepX, canH - normal(k, sourceData[n][0]));
+                }
+                con.stroke();
+                con.closePath();
+            }
+        }
+        con.beginPath();
         con.strokeStyle = 'rgba(255,255,255,0.02)';
         con.lineWidth = 1;
         con.lineCap = 'butt';
@@ -1303,13 +1322,22 @@ function drawGraph(outputId, sourceData, colour, maxi, mini, gradation) {
             con.lineTo(canW - 5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
         }
         con.stroke();
-        //Our Scale
         con.fillStyle = '#D9F7FF';
         con.font = "14px Arial";
         con.fillText(maxi, 5, 12);
         con.fillText(mini + (maxi - mini)/2, 5, 110);
         con.fillText(mini, 5, 215);
+        con.closePath();
     }
+    /*
+    //Will need to generalize this function to accept multiple data sets
+    if(type === 'pie'){
+        con.beginPath();
+        con.fillStyle = colour;
+        con.arc(canW / 2, canH / 2, Math.floor(canH / 2.1), 0, Math.floor(Math.PI*2*(mini), true);
+        con.fill();
+    }
+    */
 }
 
 /**
@@ -1904,46 +1932,35 @@ function execReview() {
         };
 
     if(!Game.buildings[37][1]) {
-        document.getElementById('morale').getContext('2d').clearRect(0, 0, 325, 220);
-        var moraleLimits = getMaxMin([Game.tossMorale, Game.hipMorale, Game.artMorale]);
-        drawGraph('morale', Game.tossMorale, '#1E90FF', moraleLimits[0], moraleLimits[1], false);
-        drawGraph('morale', Game.hipMorale, '#00FA9A', moraleLimits[0], moraleLimits[1], false);
-        drawGraph('morale', Game.artMorale, '#FF4500', moraleLimits[0], moraleLimits[1], true);
+        var moraleInput = [[Game.tossMorale, '#1E90FF'],[Game.hipMorale, '#00FA9A'],[Game.artMorale, '#FF4500']];
+        drawGraph('line', 'morale', moraleInput);
         document.getElementById('tossMorale').innerHTML = Game.tossMorale[Game.tossMorale.length - 1];
         document.getElementById('hipMorale').innerHTML = Game.hipMorale[Game.hipMorale.length - 1];
         document.getElementById('artMorale').innerHTML = Game.artMorale[Game.artMorale.length - 1];
         document.getElementById('moraleAverage').innerHTML = Math.round((Game.tossMorale[Game.artMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.tossMorale[Game.artMorale.length - 1]) / 3);
 
-        document.getElementById('population').getContext('2d').clearRect(0, 0, 325, 220);
-        var popLimits = getMaxMin([Game.tossPop, Game.hipPop, Game.artPop, Game.pop]);
-        drawGraph('population', Game.tossPop, '#1E90FF', popLimits[0], 0, false);
-        drawGraph('population', Game.hipPop, '#00FA9A', popLimits[0], 0, false);
-        drawGraph('population', Game.artPop, '#FF4500', popLimits[0], 0, false);
-        drawGraph('population', Game.pop, '#DCDCDC', popLimits[0], 0, true);
+        var popInput = [[Game.tossPop, '#1E90FF'],['population', Game.hipPop, '#00FA9A'],[Game.artPop, '#FF4500'],[Game.pop, '#DCDCDC']];
+        drawGraph('line', 'population', popInput, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
 
-        document.getElementById('homeless').getContext('2d').clearRect(0, 0, 325, 220);
-        var sdfLimits = getMaxMin([Game.sdf]);
-        drawGraph('homeless', Game.sdf, '#A0522D', sdfLimits[0], 0, true);
+        var sdfInput = [[Game.sdf, '#A0522D']];
+        drawGraph('line', 'homeless', sdfInput);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
 
-        document.getElementById('crime').getContext('2d').clearRect(0, 0, 325, 220);
-        var crimeLimits = getMaxMin([Game.crime]);
-        drawGraph('crime', Game.crime, '#FF0000', crimeLimits[0], 0, true);
+        var crimeInput = [[Game.crime, '#FF0000']];
+        drawGraph('line', 'crime', crimeInput);
         document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
 
-        document.getElementById('energy').getContext('2d').clearRect(0, 0, 325, 220);
-        var energyLimits = getMaxMin([Game.energy]);
-        drawGraph('energy', Game.energy, '#00BFFF', energyLimits[0], 0, true);
+        var energyInput = [[Game.energy, '#00BFFF']];
+        drawGraph('line', 'energy', energyInput);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
 
-        document.getElementById('food').getContext('2d').clearRect(0, 0, 325, 220);
-        var foodLimits = getMaxMin([Game.food]);
-        drawGraph('food', Game.food, '#00FF7F', foodLimits[0], 0, true);
+        var foodInput = [[Game.food, '#00FF7F']];
+        drawGraph('line', 'food', foodInput);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
 
         //The resources Table...
