@@ -1214,8 +1214,13 @@ function setStats() {
     Game.sdf.push(Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]));
     Game.housing.push(0);
     var foodConsumption = Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15);
-    Game.food.push(Game.food[Game.food.length - 1] - foodConsumption);
-    Game.inStorage[Game.inStorage.length - 1] -= foodConsumption;
+    if(Game.food[Game.food.length - 1] >= foodConsumption){
+        Game.food.push(Game.food[Game.food.length - 1] - foodConsumption);
+        Game.inStorage[Game.inStorage.length - 1] -= foodConsumption;
+    } else {
+        Game.inStorage[Game.inStorage.length - 1] -= Game.food[Game.food.length - 1];
+        Game.food.push(0);
+    }
     Game.energy.push(Game.energy[Game.energy.length - 1]);
     Game.turn += 1;
     //Morale
