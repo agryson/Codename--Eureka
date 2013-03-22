@@ -55,7 +55,6 @@ function nextTurn(x, y, level) {
     var requisition = function(){
         var resourceCheck = false;
         var count = 1;
-        //console.log('resource length is ' + tile.resourcesNeeded.length + 'while the array is ' + tile.resourcesNeeded);
         for(var j = 1; j < tile.resourcesNeeded.length; j++){
             if(tile.resourcesNeeded[0] && Game.procOres[tile.resourcesNeeded[j][0]] >= tile.resourcesNeeded[j][1]){
                 count += 1;
@@ -96,9 +95,8 @@ function nextTurn(x, y, level) {
                 Game.hipMorale[Game.hipMorale.length - 1] += tile.hipMorale;
                 Game.artMorale[Game.artMorale.length - 1] += tile.artMorale;
                 Game.crime[Game.crime.length - 1] += tile.crime;
-                //Game.storage[Game.storage.length - 1] += tile.storage;
-                //Game.energy[Game.energy.length - 1] += tile.energy;
                 Game.food[Game.food.length - 1] += tile.food;
+                Game.inStorage[Game.inStorage.length - 1] += tile.food;
             } else if(Game.energy[Game.energy.length - 1] <= 10 && !tile.vital) {
                 //Otherwise shutdown for a turn
                 Game.energy[Game.energy.length - 1] -= tile.energy;
@@ -125,7 +123,7 @@ function nextTurn(x, y, level) {
             tile.buildTime = -1;
             returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
             tile.exists = true;
-            Game.storage[Game.storage.length - 1] += tile.storage;
+            Game.storageCap[Game.storageCap.length - 1] += tile.storage;
             Game.energy[Game.energy.length - 1] += tile.energy;
             if(tile.robot >= 0) {
                 Game.robotsList[tile.robot][0] -= 1;
@@ -153,10 +151,10 @@ function nextTurn(x, y, level) {
                 if(returnLevel(level)[y][x][0].resources[ore] && returnLevel(level)[y][x][0].resources[ore] > 0) {
                     stillMining = true;
                     var mined = Math.floor(Math.random() + 0.5);
-                    if(Game.storage[Game.storage.length - 1] >= mined) {
+                    if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= mined) {
                         console.log('hi ho hi ho');
                         returnLevel(level)[y][x][0].resources[ore] -= mined;
-                        Game.storage[Game.storage.length - 1] -= mined;
+                        Game.inStorage[Game.inStorage.length - 1] += mined;
                         Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
                     }
                 }
@@ -1166,7 +1164,7 @@ function Param() {
     //0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
     //8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
     this.procOresRadarOpt = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
-    this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 5, 1, 4, 5, 5];
+    this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 4, 1, 4, 5, 5]; //Total storage = 70
     //Map generation vars
     this.seeder = '';
     /*
@@ -1196,7 +1194,8 @@ function Param() {
     this.hipMorale = [500];
     this.artMorale = [500];
     this.crime = [0];
-    this.storage = [0];
+    this.storageCap = [70 + 50]; //Resources + food + lander capacity
+    this.inStorage = [70 + 50]; //Resources + food
     this.food = [50];
     this.energy = [60];
 
@@ -1206,14 +1205,16 @@ function Param() {
 
 function setStats() {
     Game.crime.push(0);
-    Game.storage.push(Game.storage[Game.storage.length - 1]);
+    Game.inStorage.push(Game.inStorage[Game.inStorage.length - 1]);
+    Game.storageCap.push(Game.storageCap[Game.storageCap.length - 1]);
     Game.tossPop.push(Game.tossPop[Game.tossPop.length - 1]);
     Game.hipPop.push(Game.hipPop[Game.hipPop.length - 1]);
     Game.artPop.push(Game.artPop[Game.artPop.length - 1]);
     Game.pop.push((Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1])));
     Game.sdf.push(Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]));
     Game.housing.push(0);
-    Game.food.push(Game.food[Game.food.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15));
+    var foodConsumption = Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15);
+    Game.food.push(Game.food[Game.food.length - 1] - foodConsumption);
     Game.energy.push(Game.energy[Game.energy.length - 1]);
     Game.turn += 1;
     //Morale
@@ -1266,7 +1267,6 @@ function drawGraph(type, outputId, sourceData, from0) {
     for(var m = 0; m < sourceData.length; m++){
         sourceClean.push(sourceData[m][0]);
     }
-    console.log(sourceClean);
     var maxMin = getMaxMin(sourceClean);
     var maxi = maxMin[0];
     var mini = maxMin[1];
@@ -1969,7 +1969,8 @@ function execReview() {
         document.getElementById('tossMorale').innerHTML = (Game.tossMorale[Game.tossMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('hipMorale').innerHTML = (Game.hipMorale[Game.hipMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('artMorale').innerHTML = (Game.artMorale[Game.artMorale.length - 1] / 10).toFixed(1) + '%';
-        document.getElementById('moraleAverage').innerHTML = (((Game.tossMorale[Game.tossMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.artMorale[Game.artMorale.length - 1]) / 3) / 10).toFixed(1) + '%';
+        var moraleAverage = ((Game.tossMorale[Game.tossMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.artMorale[Game.artMorale.length - 1]) / 3);
+        document.getElementById('moraleAverage').innerHTML = (moraleAverage / 10).toFixed(1) + '%';
 
         var popInput = [[Game.tossPop, '#1E90FF'],[Game.hipPop, '#00FA9A'],[Game.artPop, '#FF4500'],[Game.pop, '#DCDCDC']];
         drawGraph('line', 'population', popInput, true);
@@ -1994,6 +1995,28 @@ function execReview() {
         var foodInput = [[Game.food, '#00FF7F']];
         drawGraph('line', 'food', foodInput);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
+
+        var freeStorage = Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1];
+        var storageInput = [
+            [[freeStorage], '#00BFFF'],
+            [[Game.procOres[0]], '#00FF00'],
+            [[Game.procOres[1]], '#00FFFF'],
+            [[Game.procOres[2]], '#FFFF00'],
+            [[Game.procOres[3]], '#FFFFFF'],
+            [[Game.procOres[4]], '#FF00FF'],
+            [[Game.procOres[5]], '#0000FF'],
+            [[Game.procOres[6]], '#FF0000'],
+            [[Game.procOres[7]], '#006600'],
+            [[Game.procOres[8]], '#006666'],
+            [[Game.procOres[9]], '#666600'],
+            [[Game.procOres[10]], '#666666'],
+            [[Game.procOres[11]], '#000066'],
+            [[Game.procOres[12]], '#660000'],
+            [[Game.procOres[13]], '#660066'],
+            [[Game.food[Game.food.length - 1]], '#000']
+        ];
+        drawGraph('pie', 'storage', storageInput);
+        document.getElementById('storageVal').innerHTML = freeStorage;
 
         //The resources Table...
         document.getElementById('aluminiumOreList').innerHTML = sanity(Game.ores[0]) + sanity(Game.ores[1]) + sanity(Game.ores[2]);
