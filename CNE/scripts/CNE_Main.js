@@ -2019,10 +2019,9 @@ function execReview() {
 
         var freeStorage = Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1];
         var storageInput = [
-            [[freeStorage], '#00BFFF', Lang.freeStorage], 
-            [[Game.inStorage[Game.inStorage.length -1] - [Game.food[Game.food.length - 1]], '#FFF', Lang.resourceStorage],
-            [[Game.food[Game.food.length - 1]], '#000', Lang.food]
-        ];
+            [[freeStorage], '#00BFFF', Lang.freeStorage],
+            [[Game.inStorage[Game.inStorage.length -1] - Game.food[Game.food.length - 1]], '#FFF', Lang.resourceStorage],
+            [[Game.food[Game.food.length - 1]], '#000', Lang.food]];
         drawGraph('pie', 'storage', storageInput);
         document.getElementById('storageVal').innerHTML = freeStorage;
 
