@@ -1370,6 +1370,18 @@ function drawGraph(type, outputId, sourceData, from0) {
     } else {
         console.log("Lies, lies and damned statistics" + sourceData);
     }
+
+    //Legend
+    var legendLeft = 15 + 2*Math.floor(canH / 2.1);
+    var legendTop = 5;
+    var legendBottom = 20;
+    for(var legend = 0; legend < sourceData.length; legend++){
+        con.beginPath();
+        con.fillStyle = sourceData[legend][1];
+        con.fillRect(legendLeft, legendTop, 10, 10);
+        legendTop += 15;
+        con.closePath();
+    }
 }
 
 /**
@@ -1998,21 +2010,7 @@ function execReview() {
 
         var freeStorage = Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1];
         var storageInput = [
-            [[freeStorage], '#00BFFF'],
-            [[Game.procOres[0]], '#00FF00'],
-            [[Game.procOres[1]], '#00FFFF'],
-            [[Game.procOres[2]], '#FFFF00'],
-            [[Game.procOres[3]], '#FFFFFF'],
-            [[Game.procOres[4]], '#FF00FF'],
-            [[Game.procOres[5]], '#0000FF'],
-            [[Game.procOres[6]], '#FF0000'],
-            [[Game.procOres[7]], '#006600'],
-            [[Game.procOres[8]], '#006666'],
-            [[Game.procOres[9]], '#666600'],
-            [[Game.procOres[10]], '#666666'],
-            [[Game.procOres[11]], '#000066'],
-            [[Game.procOres[12]], '#660000'],
-            [[Game.procOres[13]], '#660066'],
+            [[freeStorage], '#00BFFF'], [[Game.procOres[0] + Game.procOres[1] + Game.procOres[2] + Game.procOres[3] + Game.procOres[4] + Game.procOres[5] + Game.procOres[6] + Game.procOres[7] + Game.procOres[8] + Game.procOres[9] + Game.procOres[10] + Game.procOres[11] + Game.procOres[12] + Game.procOres[13]], '#FFF'],
             [[Game.food[Game.food.length - 1]], '#000']
         ];
         drawGraph('pie', 'storage', storageInput);
