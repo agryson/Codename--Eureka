@@ -95,8 +95,10 @@ function nextTurn(x, y, level) {
                 Game.hipMorale[Game.hipMorale.length - 1] += tile.hipMorale;
                 Game.artMorale[Game.artMorale.length - 1] += tile.artMorale;
                 Game.crime[Game.crime.length - 1] += tile.crime;
-                Game.food[Game.food.length - 1] += tile.food;
-                Game.inStorage[Game.inStorage.length - 1] += tile.food;
+                if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= tile.food) {
+                    Game.food[Game.food.length - 1] += tile.food;
+                    Game.inStorage[Game.inStorage.length - 1] += tile.food;
+                }
             } else if(Game.energy[Game.energy.length - 1] <= 10 && !tile.vital) {
                 //Otherwise shutdown for a turn
                 Game.energy[Game.energy.length - 1] -= tile.energy;
@@ -144,7 +146,6 @@ function nextTurn(x, y, level) {
         }
 
         //MINING
-        //TODO the mine itself is not taking any ore...
         if(tile.mining && (tile.kind === 221 || checkMine(x, y, level))) {
             var stillMining = false;
             for(var ore = 0; ore < returnLevel(level)[y][x][0].resources.length; ore++) {
@@ -152,7 +153,6 @@ function nextTurn(x, y, level) {
                     stillMining = true;
                     var mined = Math.floor(Math.random() + 0.5);
                     if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= mined) {
-                        console.log('hi ho hi ho');
                         returnLevel(level)[y][x][0].resources[ore] -= mined;
                         Game.inStorage[Game.inStorage.length - 1] += mined;
                         Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
@@ -199,8 +199,8 @@ function nextTurn(x, y, level) {
                 }
             }
             //go through it, moving a tonne from ore to processed
-            if(count > 3) {
-                count = 3;
+            if(count > 5) {
+                count = 5;
             }
             while(count > 0) {
                 var pick = randGen(available.length, 0);
@@ -368,7 +368,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.energy = -20;
             o.tossMorale = 1;
             o.hipMorale = 2;
-            o.food = 15;
+            o.food = 3;
             o.crime = 2;
             o.waste = 2;
             o.storage = 15;
@@ -383,7 +383,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 2;
             o.hipMorale = 4;
             o.artMorale = 1;
-            o.food = 30;
+            o.food = 6;
             o.crime = 1;
             o.waste = 1;
             o.storage = 20;
@@ -820,7 +820,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.artMorale = -3;
             o.crime = 3;
             o.waste = 1;
-            o.storage = 2000;
+            o.storage = 1000;
             o.future = [kind, Lang.store];
             o.resourcesNeeded = [true,[4,1]];
             break;
@@ -1215,6 +1215,7 @@ function setStats() {
     Game.housing.push(0);
     var foodConsumption = Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15);
     Game.food.push(Game.food[Game.food.length - 1] - foodConsumption);
+    Game.inStorage[Game.inStorage.length - 1] -= foodConsumption;
     Game.energy.push(Game.energy[Game.energy.length - 1]);
     Game.turn += 1;
     //Morale
@@ -1303,8 +1304,8 @@ function drawGraph(type, outputId, sourceData, from0) {
 
     if(type === 'line'){
         for(var n = 0; n < sourceData.length; n++){
-            var sepX = Math.round(canW / sourceData[n][0].length);
-            var sepY = Math.round(canH / sourceData[max(sourceData[n][0])]);
+            var sepX = Math.floor(canW / sourceData[n][0].length);
+            var sepY = Math.floor(canH / sourceData[max(sourceData[n][0])]);
             var colour = sourceData[n][1];
             for(var l = 0; l < sourceData[n][0].length; l++){
                 //Lines
@@ -1372,15 +1373,23 @@ function drawGraph(type, outputId, sourceData, from0) {
     }
 
     //Legend
-    var legendLeft = 15 + 2*Math.floor(canH / 2.1);
+    var canL = document.getElementById(outputId + 'Legend');
+    var conL = canL.getContext('2d');
+    conL.clearRect(0, 0, canW, canH);
+    var legendLeft = 15;
     var legendTop = 5;
     var legendBottom = 20;
     for(var legend = 0; legend < sourceData.length; legend++){
-        con.beginPath();
-        con.fillStyle = sourceData[legend][1];
-        con.fillRect(legendLeft, legendTop, 10, 10);
+        conL.beginPath();
+        conL.fillStyle = sourceData[legend][1];
+        conL.fillRect(legendLeft, legendTop, 10, 10);
         legendTop += 15;
-        con.closePath();
+        conL.closePath();
+        conL.beginPath();
+        conL.fillStyle = '#D9F7FF';
+        conL.font = "14px Arial";
+        conL.fillText(sourceData[legend][2], legendLeft + 20, legendTop - 5);
+        conL.closePath();
     }
 }
 
@@ -1976,7 +1985,7 @@ function execReview() {
         };
 
     if(!Game.buildings[37][1]) {
-        var moraleInput = [[Game.tossMorale, '#1E90FF'],[Game.hipMorale, '#00FA9A'],[Game.artMorale, '#FF4500']];
+        var moraleInput = [[Game.tossMorale, '#1E90FF', Lang.tosser],[Game.hipMorale, '#00FA9A', Lang.hipstie],[Game.artMorale, '#FF4500', Lang.artie]];
         drawGraph('line', 'morale', moraleInput);
         document.getElementById('tossMorale').innerHTML = (Game.tossMorale[Game.tossMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('hipMorale').innerHTML = (Game.hipMorale[Game.hipMorale.length - 1] / 10).toFixed(1) + '%';
@@ -1984,34 +1993,35 @@ function execReview() {
         var moraleAverage = ((Game.tossMorale[Game.tossMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.artMorale[Game.artMorale.length - 1]) / 3);
         document.getElementById('moraleAverage').innerHTML = (moraleAverage / 10).toFixed(1) + '%';
 
-        var popInput = [[Game.tossPop, '#1E90FF'],[Game.hipPop, '#00FA9A'],[Game.artPop, '#FF4500'],[Game.pop, '#DCDCDC']];
+        var popInput = [[Game.tossPop, '#1E90FF', Lang.tosser],[Game.hipPop, '#00FA9A', Lang.hipstie],[Game.artPop, '#FF4500', Lang.artie],[Game.pop, '#DCDCDC', Lang.population]];
         drawGraph('line', 'population', popInput, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
 
-        var sdfInput = [[Game.housing, '#00BFFF'],[Game.sdf, '#FF0000']];
+        var sdfInput = [[Game.housing, '#00BFFF', Lang.housing],[Game.sdf, '#FF0000', Lang.sdf]];
         drawGraph('pie', 'homeless', sdfInput);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
 
-        var crimeInput = [[Game.crime, '#FF0000']];
+        var crimeInput = [[Game.crime, '#FF0000', Lang.crime]];
         drawGraph('line', 'crime', crimeInput);
         document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
 
-        var energyInput = [[Game.energy, '#00BFFF']];
+        var energyInput = [[Game.energy, '#00BFFF', Lang.energy]];
         drawGraph('line', 'energy', energyInput);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
 
-        var foodInput = [[Game.food, '#00FF7F']];
+        var foodInput = [[Game.food, '#00FF7F', Lang.food]];
         drawGraph('line', 'food', foodInput);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
 
         var freeStorage = Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1];
         var storageInput = [
-            [[freeStorage], '#00BFFF'], [[Game.procOres[0] + Game.procOres[1] + Game.procOres[2] + Game.procOres[3] + Game.procOres[4] + Game.procOres[5] + Game.procOres[6] + Game.procOres[7] + Game.procOres[8] + Game.procOres[9] + Game.procOres[10] + Game.procOres[11] + Game.procOres[12] + Game.procOres[13]], '#FFF'],
-            [[Game.food[Game.food.length - 1]], '#000']
+            [[freeStorage], '#00BFFF', Lang.freeStorage], 
+            [[Game.inStorage[Game.inStorage.length -1] - [Game.food[Game.food.length - 1]], '#FFF', Lang.resourceStorage],
+            [[Game.food[Game.food.length - 1]], '#000', Lang.food]
         ];
         drawGraph('pie', 'storage', storageInput);
         document.getElementById('storageVal').innerHTML = freeStorage;

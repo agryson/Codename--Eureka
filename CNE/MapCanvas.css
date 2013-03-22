@@ -468,6 +468,16 @@ input[type="checkbox"]:checked + label span{
 .radar_opt{
     width: 139px;
 }
+
+.stat_canvas_legend{
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+    -webkit-transition: opacity ease 0.2s;
+}
+.stat_canvas_legend:hover{
+    opacity: 1;
+}
 /*
 .mailItem{
     margin: 15px;
@@ -693,8 +703,9 @@ input[type="checkbox"]:checked + label span{
 
 .stat_container{
     float: left;
-    width: 370px;
-    text-align: center;
+    width: 350px;
+    height: 250px;
+    padding-left: 25px;
     color: #D9F7FF;
 }
 
@@ -728,7 +739,9 @@ input[type="checkbox"]:checked + label span{
 }
 
 .stat_canvas{
+    position: absolute;
     border-radius: 5px;
+    z-index: 0;
 }
 
 .stat_button{

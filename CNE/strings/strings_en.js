@@ -30,6 +30,19 @@ function Lang(){
 	this.noPower = "WARNING: Power Shortage!";
 	this.shutdown = "Building shut down";
 
+	//Stats
+	this.artie = "ArtIe";
+	this.hipstie = "Hipstie";
+	this.tosser = "TOSSer";
+	this.population = "Total Population";
+	this.housing = "Housing";
+	this.sdf = "Homeless";
+	this.crime = "Crime";
+	this.energy = "Energy";
+	this.food = "Food";
+	this.freeStorage = "Available Storage";
+	this.resourceStorage = "Resources";
+
 	//Confirmations
 	this.confirmMine = "Mine here";
 	this.confirmDoze = "Prepare this zone";
