@@ -45,6 +45,8 @@ function Lang(){
 	this.resourceStorage = "Resources";
 	this.airAvailable = "Fresh Air";
 	this.airInUse = "Air Consumption";
+	this.employed = "Employed";
+	this.unemployed = "Unemployed";
 
 	//Confirmations
 	this.confirmMine = "Mine here";

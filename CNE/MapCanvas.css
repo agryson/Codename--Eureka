@@ -698,11 +698,19 @@ input[type="checkbox"]:checked + label span{
 }
 
 .stat_container{
+    position: relative;
     float: left;
+    top: 20px;
     width: 350px;
     height: 250px;
-    padding-left: 25px;
+    padding-left: 20px;
+    padding-bottom: 20px;
     color: #D9F7FF;
+}
+
+.stat_container > span{
+    position: absolute;
+    top: -5px;
 }
 
 .stats_container{
@@ -833,6 +841,7 @@ input[type="checkbox"]:checked + label span{
 }
 
 .stat_panel{
+    overflow-y: scroll;
     height: 500px;
     padding-top: 50px;
 }

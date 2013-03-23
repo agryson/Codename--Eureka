@@ -31,6 +31,7 @@ function Construction() {
     this.hipPop = 0;
     this.artPop = 0;
     this.housing = 0;
+    this.employees = 0;
 
     this.future = [3, Lang.prepared];
     this.robot = -1;
@@ -127,6 +128,7 @@ function nextTurn(x, y, level) {
             tile.exists = true;
             Game.storageCap[Game.storageCap.length - 1] += tile.storage;
             Game.energy[Game.energy.length - 1] += tile.energy;
+            Game.employed[Game.employed.length - 1] += tile.employees;
             if(tile.robot >= 0) {
                 Game.robotsList[tile.robot][0] -= 1;
                 tile.robot = -1;
@@ -378,6 +380,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 15;
             o.future = [kind, Lang.agri];
             o.resourcesNeeded = [true,[0,2],[1,1],[4,1],[9, 1]];
+            o.employees = 2;
             break;
         case 201:
             //advanced agridome
@@ -393,6 +396,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 20;
             o.future = [kind, Lang.agri2];
             o.resourcesNeeded = [true,[0,1],[1,1],[8,1],[9, 1]];
+            o.employees = 1;
             break;
         case 202:
             //airport
@@ -404,9 +408,9 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 3;
             o.waste = 1;
             o.storage = 15;
-            o.air = -1;
             o.future = [kind, Lang.airport];
             o.resourcesNeeded = [true,[2,1],[4,2],[12, 1]];
+            o.employees = 1;
             break;
         case 203:
             //arp
@@ -421,6 +425,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.air = 100;
             o.future = [kind, Lang.arp];
             o.resourcesNeeded = [true,[0,2],[4,1],[12, 1],[13,1]];
+            o.employees = 2;
             break;
         case 204:
             //airshaft
@@ -444,6 +449,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 5;
             o.future = [kind, Lang.barracks];
             o.resourcesNeeded = [true,[4,2],[12, 1]];
+            o.employees = 2;
             break;
         case 206:
             //civil protection
@@ -458,6 +464,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 2;
             o.future = [kind, Lang.civprot];
             o.resourcesNeeded = [true,[4,2],[12, 1]];
+            o.employees = 3;
             break;
         case 207:
             //civil protection 2
@@ -472,6 +479,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 3;
             o.future = [kind, Lang.civprot2];
             o.resourcesNeeded = [true,[2,1],[4,2],[12, 1]];
+            o.employees = 1;
             break;
         case 208:
             //comm array
@@ -512,6 +520,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 10;
             o.future = [kind, Lang.command];
             o.resourcesNeeded = [true,[0,2],[2,1],[4,1],[5, 1],[10,1],[12,1],[13,1]];
+            o.employees = 3;
             break;
         case 211:
             // connector
@@ -537,6 +546,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 30;
             o.future = [kind, Lang.dronefab];
             o.resourcesNeeded = [true,[0,1],[2,1],[4,1],[5, 1],[6,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
+            o.employees = 3;
             break;
         case 213:
             // fission
@@ -552,6 +562,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 5;
             o.future = [kind, Lang.chernobyl];
             o.resourcesNeeded = [true,[0,1],[2,2],[4,2],[5, 3],[7,1],[11,2],[12,1],[13,1]];
+            o.employees = 3;
             break;
         case 214:
             // fusion
@@ -566,6 +577,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 5;
             o.future = [kind, Lang.tokamak];
             o.resourcesNeeded = [true,[0,2],[2,2],[3,1],[4, 1],[5,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
+            o.employees = 2;
             break;
         case 215:
             // factory
@@ -581,6 +593,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 30;
             o.future = [kind, Lang.genfab];
             o.resourcesNeeded = [true,[0,1],[2,1],[4,1],[12, 1]];
+            o.employees = 3;
             break;
         case 216:
             // geothermal
@@ -594,6 +607,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 2;
             o.future = [kind, Lang.geotherm];
             o.resourcesNeeded = [true,[0,1],[2,1],[4,1]];
+            o.employees = 2;
             break;
         case 217:
             // habitat
@@ -611,6 +625,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.housing = 30;
             o.future = [kind, Lang.hab];
             o.resourcesNeeded = [true,[2,1],[4,1],[5, 1],[12,1]];
+            o.employees = 1;
             break;
         case 218:
             // habitat 2
@@ -628,6 +643,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.housing = 40;
             o.future = [kind, Lang.hab2];
             o.resourcesNeeded = [true,[2,1],[3,1],[4,1],[5,1],[12, 1]];
+            o.employees = 1;
             break;
         case 219:
             // habitat 3
@@ -645,6 +661,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.housing = 50;
             o.future = [kind, Lang.hab3];
             o.resourcesNeeded = [true,[0,1],[2,1],[3,1],[5,1],[10,1],[12, 1]];
+            o.employees = 1;
             break;
         case 220:
             // hospital
@@ -659,6 +676,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 5;
             o.future = [kind, Lang.er];
             o.resourcesNeeded = [true,[0,1],[2,1],[3,1],[4,1],[5,2],[6,1],[10,1],[11,1],[12, 1],[13,1]];
+            o.employees = 3;
             break;
         case 221:
             // mine
@@ -690,6 +708,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 2;
             o.future = [kind, Lang.nursery];
             o.resourcesNeeded = [true,[0,1],[1,1],[2,1],[4,1],[6,1],[10,1],[11,1],[12, 1],[13,1]];
+            o.employees = 1;
             break;
         case 223:
             // ore processor
@@ -704,6 +723,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 50;
             o.future = [kind, Lang.oreproc];
             o.resourcesNeeded = [true,[2,1],[4,2]];
+            o.employees = 2;
             break;
         case 224:
             // recreation center
@@ -718,6 +738,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 50;
             o.future = [kind, Lang.rec];
             o.resourcesNeeded = [true,[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+            o.employees = 2;
             break;
         case 225:
             // recycler
@@ -732,6 +753,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 30;
             o.future = [kind, Lang.recycler];
             o.resourcesNeeded = [true,[2,1],[4,1],[8,1],[12, 1]];
+            o.employees = 1;
             break;
         case 226:
             // red light district
@@ -748,6 +770,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 5;
             o.future = [kind, Lang.clichy];
             o.resourcesNeeded = [true,[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+            o.employees = 2;
             break;
         case 227:
             // research center
@@ -762,6 +785,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 2;
             o.future = [kind, Lang.research];
             o.resourcesNeeded = [true,[0,1],[1, 1],[2,2],[3,1],[4,1],[5,1],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
+            o.employees = 3;
             break;
         case 228:
             // research 2
@@ -776,6 +800,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 3;
             o.future = [kind, Lang.research2];
             o.resourcesNeeded = [true,[0,1],[2,2],[3,2],[4,1],[5,2],[6,1],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2]];
+            o.employees = 3;
             break;
         case 229:
             // solar farm
@@ -802,6 +827,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 20;
             o.future = [kind, Lang.space];
             o.resourcesNeeded = [true,[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+            o.employees = 2;
             break;
         case 231:
             // stasis block
@@ -813,6 +839,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 15;
             o.future = [kind, Lang.stasis];
             o.resourcesNeeded = [true,[0,4],[1, 1],[2,3],[3,2],[4,3],[5,2],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
+            o.employees = 1;
             break;
         case 232:
             // Storage Tanks
@@ -827,6 +854,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 1000;
             o.future = [kind, Lang.store];
             o.resourcesNeeded = [true,[4,1]];
+            o.employees = 1;
             break;
         case 233:
             // University
@@ -841,6 +869,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 3;
             o.future = [kind, Lang.uni];
             o.resourcesNeeded = [true,[0,1],[1,2],[2,1],[4,1],[6,1],[7,1],[9,1],[10,1],[11,1]];
+            o.employees = 2;
             break;
         case 234:
             // warehouse
@@ -855,6 +884,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 150;
             o.future = [kind, Lang.warehouse];
             o.resourcesNeeded = [true,[0,1],[4,1]];
+            o.employees = 1;
             break;
         case 235:
             // windfarm
@@ -867,6 +897,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.artMorale = 2;
             o.future = [kind, Lang.windfarm];
             o.resourcesNeeded = [true,[0,1],[2,1],[4,1],[5,1]];
+            o.employees = 1;
             break;
         case 236:
             // workshop
@@ -882,6 +913,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 5;
             o.future = [kind, Lang.workshop];
             o.resourcesNeeded = [true,[0,1],[2,1],[4,2],[5,1],[12, 1]];
+            o.employees = 2;
             break;
         case 237:
             // lander
@@ -1192,6 +1224,7 @@ function Param() {
     this.tossPop = [50];
     this.hipPop = [50];
     this.artPop = [50];
+    this.employed = [0];
     this.pop = [150];
     this.sdf = [150];
     this.tossMorale = [500];
@@ -1219,6 +1252,7 @@ function setStats() {
     Game.pop.push((Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1])));
     Game.sdf.push(Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]));
     Game.housing.push(0);
+    Game.employed.push(Game.employed[Game.employed.length - 1]);
     var foodConsumption = Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15);
     if(Game.food[Game.food.length - 1] >= foodConsumption){
         Game.food.push(Game.food[Game.food.length - 1] - foodConsumption);
@@ -1274,6 +1308,7 @@ function saneStats(){
     }
 
     Game.sdf[Game.sdf.length - 1] = Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]);
+
 }
 
 function drawGraph(type, outputId, sourceData, from0) {
@@ -1995,6 +2030,10 @@ function execReview() {
         drawGraph('pie', 'homeless', sdfInput);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
+
+        var employedInput = [[[Game.employed[Game.employed.length - 1]], '#00BFFF', Lang.employed],[[Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1]], '#FF0000', Lang.unemployed]];
+        drawGraph('pie', 'employment', employedInput);
+        document.getElementById('employmentVal').innerHTML = Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1];
 
         var crimeInput = [[Game.crime, '#FF0000', Lang.crime]];
         drawGraph('line', 'crime', crimeInput, true);
