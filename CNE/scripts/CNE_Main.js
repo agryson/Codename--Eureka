@@ -1378,23 +1378,25 @@ function drawGraph(type, outputId, sourceData, from0) {
     }
 
     //Legend
-    var canL = document.getElementById(outputId + 'Legend');
-    var conL = canL.getContext('2d');
-    conL.clearRect(0, 0, canW, canH);
-    var legendLeft = 15;
-    var legendTop = 5;
-    var legendBottom = 20;
-    for(var legend = 0; legend < sourceData.length; legend++){
-        conL.beginPath();
-        conL.fillStyle = sourceData[legend][1];
-        conL.fillRect(legendLeft, legendTop, 10, 10);
-        legendTop += 15;
-        conL.closePath();
-        conL.beginPath();
-        conL.fillStyle = '#D9F7FF';
-        conL.font = "14px Arial";
-        conL.fillText(sourceData[legend][2], legendLeft + 20, legendTop - 5);
-        conL.closePath();
+    if(Game.turn === 0){
+        var canL = document.getElementById(outputId + 'Legend');
+        var conL = canL.getContext('2d');
+        conL.clearRect(0, 0, canW, canH);
+        var legendLeft = 15;
+        var legendTop = 5;
+        var legendBottom = 20;
+        for(var legend = 0; legend < sourceData.length; legend++){
+            conL.beginPath();
+            conL.fillStyle = sourceData[legend][1];
+            conL.fillRect(legendLeft, legendTop, 10, 10);
+            legendTop += 15;
+            conL.closePath();
+            conL.beginPath();
+            conL.fillStyle = '#D9F7FF';
+            conL.font = "14px Arial";
+            conL.fillText(sourceData[legend][2], legendLeft + 20, legendTop - 5);
+            conL.closePath();
+        }
     }
 }
 
@@ -1557,9 +1559,9 @@ function eavesdrop() {
         document.getElementById("silverRadarOpt").checked = option;
         document.getElementById("sodiumRadarOpt").checked = option;
         document.getElementById("tinRadarOpt").checked = option;
-        document.getElementById("zincRadarOpt").checked = option;       
+        document.getElementById("zincRadarOpt").checked = option;
         drawRadar(); 
-    }
+    };
 
     document.getElementById("aluminiumRadarOpt").onclick = function(){
         drawRadar();
@@ -1604,21 +1606,6 @@ function eavesdrop() {
         drawRadar();
     };
 
-    //Left Menu
-    var leftMenu = document.getElementById('menuWrap');
-    leftMenu.onmouseover = function() {
-        leftMenu.classList.remove('left_menu_hide');
-        leftMenu.classList.add('left_menu_show');
-        leftMenu.classList.add('menu_visible');
-        leftMenu.classList.remove('menu_hidden');
-    };
-    leftMenu.onmouseout = function() {
-        leftMenu.classList.remove('left_menu_show');
-        leftMenu.classList.add('left_menu_hide');
-        leftMenu.classList.remove('menu_visible');
-        leftMenu.classList.add('menu_hidden');
-    };
-    //!Left Menu
     //Executive Drop-Down Menu
     var exec = document.getElementById('execDropDown');
     var execDrop = document.getElementById('execDropDownContainer');
