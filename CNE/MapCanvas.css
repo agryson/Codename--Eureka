@@ -916,9 +916,14 @@ z-index: 1;
 /*!Pointers*/
 
 /*Animations*/
-.menu_visible{
+.menu_hidden:hover{
     opacity: 1;
     -webkit-transition: all 0.4s ease;
+}
+
+.menu_visible{
+    opacity: 1;
+    -webkit-transition: all 0.4s ease;   
 }
 
 .menu_hidden{

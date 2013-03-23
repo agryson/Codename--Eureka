@@ -1520,7 +1520,6 @@ function eavesdrop() {
             radar.classList.remove('menu_hidden');
             radar.classList.add('menu_visible');
         }
-        Game.highlight = false;
         Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     };
     var radarMap = document.getElementById('mapOverlay');
@@ -1560,7 +1559,7 @@ function eavesdrop() {
         document.getElementById("sodiumRadarOpt").checked = option;
         document.getElementById("tinRadarOpt").checked = option;
         document.getElementById("zincRadarOpt").checked = option;
-        drawRadar(); 
+        drawRadar();
     };
 
     document.getElementById("aluminiumRadarOpt").onclick = function(){
@@ -1608,27 +1607,10 @@ function eavesdrop() {
 
     //Executive Drop-Down Menu
     var exec = document.getElementById('execDropDown');
-    var execDrop = document.getElementById('execDropDownContainer');
     var execBtnContainer = document.getElementById('execBtnContainer');
     var execButton = document.getElementById('execButton');
     execBtnContainer.onclick = function() {
         menu(exec, execButton, 'exec_hidden');
-    };
-    exec.onmouseout = function() {
-        if(execButton.classList.contains('arrow_down')) {
-            exec.classList.remove('menu_visible');
-            exec.classList.add('menu_hidden');
-        } else {
-            exec.classList.remove('menu_hidden');
-            exec.classList.add('menu_visible');
-        }
-    };
-    exec.onmouseover = function() {
-        if(execButton.classList.contains('arrow_down')) {
-            exec.classList.add('menu_visible');
-            exec.classList.remove('menu_hidden');
-        }
-        Game.highlight = false;
     };
     var seeStats = document.getElementById('seeStats');
     var seeMessages = document.getElementById('seeMessages');
