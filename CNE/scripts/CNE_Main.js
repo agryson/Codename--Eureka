@@ -2004,9 +2004,14 @@ function execReview() {
         drawGraph('line', 'energy', energyInput, true);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
 
+        var airInUse = Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1])/10);
+        var freeAir = Game.air[Game.air.length - 1] - airInUse;
+        if(freeAir < 0){
+            freeAir = 0;
+        }
         var airInput = [
-            [[Game.air[Game.air.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1])/10)], '#DCDCDC', Lang.airAvailable],
-            [[Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1])/10)], '#000', Lang.airUsed]];
+            [[airInUse], '#000', Lang.airInUse],
+            [[freeAir], '#DCDCDC', Lang.airAvailable]];
         drawGraph('pie', 'air', airInput);
         document.getElementById('airVal').innerHTML = Game.air[Game.air.length - 1];
 

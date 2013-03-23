@@ -15,6 +15,7 @@ function Lang(){
 	this.setDown = "Please choose your landing zone first...";
 	this.resourceShortage = "Resources missing: ";
 	this.outOfRange = "Out of communications range.";
+	this.noAir = "WARNING: Air Shortage!";
 
 	//Actions and references
 	this.preparing = "Preparing";
@@ -43,7 +44,7 @@ function Lang(){
 	this.freeStorage = "Available Storage";
 	this.resourceStorage = "Resources";
 	this.airAvailable = "Fresh Air";
-	this.airUsed = "Air Consumption";
+	this.airInUse = "Air Consumption";
 
 	//Confirmations
 	this.confirmMine = "Mine here";
