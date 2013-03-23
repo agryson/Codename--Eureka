@@ -143,6 +143,9 @@ function nextTurn(x, y, level) {
             if(tile.kind >= 208 && tile.kind <= 210){
                 Game.commTowers.push([x, y]);
             }
+            if(tile.kind === 203){
+                Game.air[Game.air.length - 1] += tile.air;
+            }
         }
 
         //MINING
@@ -192,15 +195,16 @@ function nextTurn(x, y, level) {
             //create a list of ores ready for processing
             var available = [];
             var count = 0;
+            var processingLimit = 10;
             for(var check = 0; check < Game.ores.length; check++) {
                 if(Game.ores[check] && Game.ores[check] > 0) {
                     available.push(check);
                     count += Game.ores[check];
                 }
             }
-            //go through it, moving a tonne from ore to processed
-            if(count > 5) {
-                count = 5;
+            //go through it, moving a tonne from ore to processed, this is the processing limit of the processor
+            if(count > processingLimit) {
+                count = processingLimit;
             }
             while(count > 0) {
                 var pick = randGen(available.length, 0);
@@ -1198,9 +1202,11 @@ function Param() {
     this.inStorage = [70 + 50]; //Resources + food
     this.food = [50];
     this.energy = [60];
+    this.air = [50];
 
     //modifiers
     this.blackout = 0;
+    this.noAir = 0;
 }
 
 function setStats() {
@@ -1221,6 +1227,7 @@ function setStats() {
         Game.inStorage[Game.inStorage.length - 1] -= Game.food[Game.food.length - 1];
         Game.food.push(0);
     }
+    Game.air.push(Game.air[Game.air.length - 1]);
     Game.energy.push(Game.energy[Game.energy.length - 1]);
     Game.turn += 1;
     //Morale
@@ -1256,6 +1263,14 @@ function saneStats(){
     }
     if(Game.food[Game.food.length - 1] < 0){
         Game.food[Game.food.length - 1] = 0;
+    }
+    var airAvailable = Game.air[Game.air.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length -1] + Game.hipPop[Game.hipPop.length - 1])/10);
+    if(airAvailable <= 0){
+        Game.air[Game.air.length - 1] = 0;
+        Game.noAir += 50;
+        notify(Lang.noAir);
+    } else {
+        Game.noAir = 0;
     }
 
     Game.sdf[Game.sdf.length - 1] = Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]);
@@ -1350,7 +1365,7 @@ function drawGraph(type, outputId, sourceData, from0) {
         var topVal = 0;
         var topValRef;
         var radius = Math.floor(canH / 2.1);
-        var center = [10 + radius, canH / 2];
+        var center = [canW / 2, canH / 2];
         var fillPie = function(start, stop, colour){
             con.beginPath();
             con.fillStyle = colour;
@@ -1376,8 +1391,10 @@ function drawGraph(type, outputId, sourceData, from0) {
     } else {
         console.log("Lies, lies and damned statistics" + sourceData);
     }
-
-    //Legend
+    if(outputId === 'air'){
+        console.log(sourceData);
+    }
+    //Legend, we only draw it once
     if(Game.turn === 0){
         var canL = document.getElementById(outputId + 'Legend');
         var conL = canL.getContext('2d');
@@ -1980,15 +1997,21 @@ function execReview() {
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
 
         var crimeInput = [[Game.crime, '#FF0000', Lang.crime]];
-        drawGraph('line', 'crime', crimeInput);
+        drawGraph('line', 'crime', crimeInput, true);
         document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
 
         var energyInput = [[Game.energy, '#00BFFF', Lang.energy]];
-        drawGraph('line', 'energy', energyInput);
+        drawGraph('line', 'energy', energyInput, true);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
 
+        var airInput = [
+            [[Game.air[Game.air.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1])/10)], '#DCDCDC', Lang.airAvailable],
+            [[Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1])/10)], '#000', Lang.airUsed]];
+        drawGraph('pie', 'air', airInput);
+        document.getElementById('airVal').innerHTML = Game.air[Game.air.length - 1];
+
         var foodInput = [[Game.food, '#00FF7F', Lang.food]];
-        drawGraph('line', 'food', foodInput);
+        drawGraph('line', 'food', foodInput, true);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
 
         var freeStorage = Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1];

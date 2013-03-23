@@ -42,6 +42,8 @@ function Lang(){
 	this.food = "Food";
 	this.freeStorage = "Available Storage";
 	this.resourceStorage = "Resources";
+	this.airAvailable = "Fresh Air";
+	this.airUsed = "Air Consumption";
 
 	//Confirmations
 	this.confirmMine = "Mine here";
