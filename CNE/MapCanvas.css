@@ -707,6 +707,13 @@ input[type="checkbox"]:checked + label span{
     color: #D9F7FF;
 }
 
+.week_option {
+    position: absolute;
+    left: 100px;
+    top: 20px;
+    z-index: 1000;
+}
+
 .stats_container{
     position: absolute;
     z-index: 4;

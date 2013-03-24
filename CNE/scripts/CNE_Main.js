@@ -1366,11 +1366,14 @@ function drawGraph(type, outputId, sourceData, from0) {
     var canW = parseInt(can.width, 10);
     var canH = parseInt(can.height, 10);
     con.clearRect(0, 0, canW, canH);
-
     //Get our max and min values from the input data
     var sourceClean = [];
     for(var m = 0; m < sourceData.length; m++){
-        sourceClean.push(sourceData[m][0]);
+        if(document.getElementById("10Week").checked && Game.turn >= 10){
+            sourceClean.push(sourceData[m][0].slice(-11));
+        } else {
+            sourceClean.push(sourceData[m][0]);
+        }
     }
     var maxMin = getMaxMin(sourceClean);
     var maxi = maxMin[0];
@@ -1409,28 +1412,25 @@ function drawGraph(type, outputId, sourceData, from0) {
     if(type === 'line'){
         for(var n = 0; n < sourceData.length; n++){
             var sepX = Math.floor(canW / sourceData[n][0].length);
-            if(Game.lastTen){
-                sepX = Math.floor(canW / 10/*sourceData[n][0].length*/);
-            }
+            var tenOnly = 0;
+            var tenLimit = sourceData[n][0].length - 1;
             var sepY = Math.floor(canH / sourceData[max(sourceData[n][0])]);
-            var colour = sourceData[n][1];
-            var ten = sourceData[n][0].length-11;
-            if(!Game.lastTen){
-                ten = 0;
+            if(document.getElementById("10Week").checked && Game.turn >= 10){
+                sepX = Math.floor(canW / 10);
+                sepY = Math.floor(canH / sourceData[max(sourceData[n][0].slice(-11))]);
+                tenOnly = sourceData[n][0].length - 11;
+                tenLimit = 11;
             }
+            var colour = sourceData[n][1];
             //Lines
             con.beginPath();
             con.lineCap = 'round';
             con.lineJoin = 'round';
-            con.moveTo(0, canH - normal(ten, sourceData[n][0]));
-            var test = sourceData[n][0].length - 1;
-            if(Game.lastTen){
-                test = 11;
-            }
-            for(var k = 1; k < test; k++) {
-                var recent = sourceData[n][0].length - (11 - k);
-                if(!Game.lastTen){
-                    recent = k;
+            con.moveTo(0, canH - normal(tenOnly, sourceData[n][0]));
+            for(var k = 1; k <= tenLimit; k++) {
+                var recent = k;
+                if(document.getElementById("10Week").checked && Game.turn >= 10){
+                    recent = sourceData[n][0].length - (11 - k);
                 }
                 con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0]));
                 con.arc(k * sepX, canH - normal(recent, sourceData[n][0]), 1, 0, Math.PI*2);
