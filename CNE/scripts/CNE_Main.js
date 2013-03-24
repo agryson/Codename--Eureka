@@ -1686,6 +1686,10 @@ function eavesdrop() {
         drawRadar();
     };
 
+    document.getElementById('10Week').onclick = function(){
+        execReview();
+    };
+
     document.getElementById("aluminiumRadarOpt").onclick = function(){
         drawRadar();
     };
