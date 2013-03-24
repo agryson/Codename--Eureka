@@ -1409,26 +1409,39 @@ function drawGraph(type, outputId, sourceData, from0) {
     if(type === 'line'){
         for(var n = 0; n < sourceData.length; n++){
             var sepX = Math.floor(canW / sourceData[n][0].length);
+            if(Game.lastTen){
+                sepX = Math.floor(canW / 10/*sourceData[n][0].length*/);
+            }
             var sepY = Math.floor(canH / sourceData[max(sourceData[n][0])]);
             var colour = sourceData[n][1];
-            for(var l = 0; l < sourceData[n][0].length; l++){
-                //Lines
-                con.beginPath();
-                con.lineCap = 'round';
-                con.lineJoin = 'round';
-                con.moveTo(0, canH - normal(0, sourceData[n][0]));
-                for(var k = 1; k < sourceData[n][0].length; k++) {
-                    con.lineTo(k * sepX, canH - normal(k, sourceData[n][0]));
-                    con.arc(k * sepX, canH - normal(k, sourceData[n][0]), 1, 0, Math.PI*2);
-                }
-                con.strokeStyle = '#000';
-                con.lineWidth = 3;
-                con.stroke();
-                con.strokeStyle = colour;
-                con.lineWidth = 2;
-                con.stroke();
-                con.closePath();
+            var ten = sourceData[n][0].length-11;
+            if(!Game.lastTen){
+                ten = 0;
             }
+            //Lines
+            con.beginPath();
+            con.lineCap = 'round';
+            con.lineJoin = 'round';
+            con.moveTo(0, canH - normal(ten, sourceData[n][0]));
+            var test = sourceData[n][0].length - 1;
+            if(Game.lastTen){
+                test = 11;
+            }
+            for(var k = 1; k < test; k++) {
+                var recent = sourceData[n][0].length - (11 - k);
+                if(!Game.lastTen){
+                    recent = k;
+                }
+                con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0]));
+                con.arc(k * sepX, canH - normal(recent, sourceData[n][0]), 1, 0, Math.PI*2);
+            }
+            con.strokeStyle = '#000';
+            con.lineWidth = 3;
+            con.stroke();
+            con.strokeStyle = colour;
+            con.lineWidth = 2;
+            con.stroke();
+            con.closePath();
         }
         con.beginPath();
         con.strokeStyle = 'rgba(255,255,255,0.02)';
@@ -2079,7 +2092,7 @@ function execReview() {
 
     if(!Game.buildings[37][1]) {
         var moraleInput = [[Game.tossMorale, electricBlue, Lang.tosser],[Game.hipMorale, green, Lang.hipstie],[Game.artMorale, orange, Lang.artie]];
-        drawGraph('line', 'morale', moraleInput);
+        drawGraph('line', 'morale', moraleInput, true);
         document.getElementById('tossMorale').innerHTML = (Game.tossMorale[Game.tossMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('hipMorale').innerHTML = (Game.hipMorale[Game.hipMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('artMorale').innerHTML = (Game.artMorale[Game.artMorale.length - 1] / 10).toFixed(1) + '%';
