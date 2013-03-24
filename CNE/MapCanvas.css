@@ -700,17 +700,11 @@ input[type="checkbox"]:checked + label span{
 .stat_container{
     position: relative;
     float: left;
-    top: 20px;
+    top: 12px;
     width: 350px;
-    height: 250px;
+    height: 230px;
     padding-left: 20px;
-    padding-bottom: 20px;
     color: #D9F7FF;
-}
-
-.stat_container > span{
-    position: absolute;
-    top: -5px;
 }
 
 .stats_container{
@@ -718,6 +712,7 @@ input[type="checkbox"]:checked + label span{
     z-index: 4;
     width: 750px;
     height: 600px;
+    overflow: hidden;
     -webkit-transition: all 0.2s ease-in-out;
 }
 .message_container{
@@ -744,7 +739,7 @@ input[type="checkbox"]:checked + label span{
 
 .stat_canvas{
     position: absolute;
-    border-radius: 5px;
+    border-radius: 3px;
     z-index: 0;
 }
 

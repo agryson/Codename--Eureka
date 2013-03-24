@@ -1365,14 +1365,18 @@ function drawGraph(type, outputId, sourceData, from0) {
             for(var l = 0; l < sourceData[n][0].length; l++){
                 //Lines
                 con.beginPath();
-                con.lineWidth = 2;
                 con.lineCap = 'round';
                 con.lineJoin = 'round';
-                con.strokeStyle = colour;
                 con.moveTo(0, canH - normal(0, sourceData[n][0]));
                 for(var k = 1; k < sourceData[n][0].length; k++) {
                     con.lineTo(k * sepX, canH - normal(k, sourceData[n][0]));
+                    con.arc(k * sepX, canH - normal(k, sourceData[n][0]), 1, 0, Math.PI*2);
                 }
+                con.strokeStyle = '#000';
+                con.lineWidth = 3;
+                con.stroke();
+                con.strokeStyle = colour;
+                con.lineWidth = 2;
                 con.stroke();
                 con.closePath();
             }
@@ -1391,9 +1395,9 @@ function drawGraph(type, outputId, sourceData, from0) {
         con.stroke();
         con.fillStyle = '#D9F7FF';
         con.font = "14px Arial";
-        con.fillText(maxi, 5, 12);
-        con.fillText(mini + (maxi - mini)/2, 5, 110);
-        con.fillText(mini, 5, 215);
+        con.fillText(maxi, 5, 14);
+        con.fillText(mini + (maxi - mini)/2, 5, Math.floor(canH/2));
+        con.fillText(mini, 5, canH - 2);
         con.closePath();
 
     } else if(type === 'pie'){
@@ -1408,6 +1412,9 @@ function drawGraph(type, outputId, sourceData, from0) {
             con.arc(center[0], center[1], radius, start, stop);
             con.lineTo(center[0], center[1]);
             con.fill();
+            con.strokeStyle = '#222';
+            con.lineWidth = 1;
+            con.stroke();
             con.closePath();
         };
 
@@ -1439,8 +1446,11 @@ function drawGraph(type, outputId, sourceData, from0) {
         var legendBottom = 20;
         for(var legend = 0; legend < sourceData.length; legend++){
             conL.beginPath();
+            conL.strokeStyle = '#000';
+            conL.lineWidth = 0.5;
             conL.fillStyle = sourceData[legend][1];
             conL.fillRect(legendLeft, legendTop, 10, 10);
+            conL.strokeRect(legendLeft, legendTop, 10, 10);
             legendTop += 15;
             conL.closePath();
             conL.beginPath();
@@ -2004,6 +2014,14 @@ function researchTopicRef(topic){
 }
 
 function execReview() {
+    var darkBlue = '#66D8FF';
+    var electricBlue = 'rgb(0,255,255)';
+    var green = '#27FAB7';
+    var brown = 'rgb(153,125,0)';
+    var red = 'rgb(255,0,0)';
+    var orange = 'rgb(255,81,0)';
+    var white = 'rgb(255,255,255)';
+    var grey = 'rgb(115,126,120)'
     var sanity = function(val) {
             var test;
             val >= 0 ? test = val : test = 0;
@@ -2011,7 +2029,7 @@ function execReview() {
         };
 
     if(!Game.buildings[37][1]) {
-        var moraleInput = [[Game.tossMorale, '#1E90FF', Lang.tosser],[Game.hipMorale, '#00FA9A', Lang.hipstie],[Game.artMorale, '#FF4500', Lang.artie]];
+        var moraleInput = [[Game.tossMorale, electricBlue, Lang.tosser],[Game.hipMorale, green, Lang.hipstie],[Game.artMorale, orange, Lang.artie]];
         drawGraph('line', 'morale', moraleInput);
         document.getElementById('tossMorale').innerHTML = (Game.tossMorale[Game.tossMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('hipMorale').innerHTML = (Game.hipMorale[Game.hipMorale.length - 1] / 10).toFixed(1) + '%';
@@ -2019,27 +2037,27 @@ function execReview() {
         var moraleAverage = ((Game.tossMorale[Game.tossMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.artMorale[Game.artMorale.length - 1]) / 3);
         document.getElementById('moraleAverage').innerHTML = (moraleAverage / 10).toFixed(1) + '%';
 
-        var popInput = [[Game.tossPop, '#1E90FF', Lang.tosser],[Game.hipPop, '#00FA9A', Lang.hipstie],[Game.artPop, '#FF4500', Lang.artie],[Game.pop, '#DCDCDC', Lang.population]];
+        var popInput = [[Game.tossPop, electricBlue, Lang.tosser],[Game.hipPop, green, Lang.hipstie],[Game.artPop, orange, Lang.artie],[Game.pop, white, Lang.population]];
         drawGraph('line', 'population', popInput, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
 
-        var sdfInput = [[Game.housing, '#00BFFF', Lang.housing],[Game.sdf, '#FF0000', Lang.sdf]];
+        var sdfInput = [[Game.housing, electricBlue, Lang.housing],[Game.sdf, red, Lang.sdf]];
         drawGraph('pie', 'homeless', sdfInput);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
 
-        var employedInput = [[[Game.employed[Game.employed.length - 1]], '#00BFFF', Lang.employed],[[Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1]], '#FF0000', Lang.unemployed]];
+        var employedInput = [[[Game.employed[Game.employed.length - 1]], electricBlue, Lang.employed],[[Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1]], red, Lang.unemployed]];
         drawGraph('pie', 'employment', employedInput);
         document.getElementById('employmentVal').innerHTML = Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1];
 
-        var crimeInput = [[Game.crime, '#FF0000', Lang.crime]];
+        var crimeInput = [[Game.crime, red, Lang.crime]];
         drawGraph('line', 'crime', crimeInput, true);
         document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
 
-        var energyInput = [[Game.energy, '#00BFFF', Lang.energy]];
+        var energyInput = [[Game.energy, electricBlue, Lang.energy]];
         drawGraph('line', 'energy', energyInput, true);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
 
@@ -2049,20 +2067,20 @@ function execReview() {
             freeAir = 0;
         }
         var airInput = [
-            [[airInUse], '#000', Lang.airInUse],
-            [[freeAir], '#DCDCDC', Lang.airAvailable]];
+            [[airInUse], grey, Lang.airInUse],
+            [[freeAir], electricBlue, Lang.airAvailable]];
         drawGraph('pie', 'air', airInput);
         document.getElementById('airVal').innerHTML = Game.air[Game.air.length - 1];
 
-        var foodInput = [[Game.food, '#00FF7F', Lang.food]];
+        var foodInput = [[Game.food, green, Lang.food]];
         drawGraph('line', 'food', foodInput, true);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
 
         var freeStorage = Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1];
         var storageInput = [
-            [[freeStorage], '#00BFFF', Lang.freeStorage],
-            [[Game.inStorage[Game.inStorage.length -1] - Game.food[Game.food.length - 1]], '#FFF', Lang.resourceStorage],
-            [[Game.food[Game.food.length - 1]], '#000', Lang.food]];
+            [[freeStorage], electricBlue, Lang.freeStorage],
+            [[Game.inStorage[Game.inStorage.length -1] - Game.food[Game.food.length - 1]], brown, Lang.resourceStorage],
+            [[Game.food[Game.food.length - 1]], green, Lang.food]];
         drawGraph('pie', 'storage', storageInput);
         document.getElementById('storageVal').innerHTML = freeStorage;
 
