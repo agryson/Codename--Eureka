@@ -88,9 +88,9 @@ function nextTurn(x, y, level) {
             }
             //Provided everything is good, rock and roll
             if((Game.energy[Game.energy.length - 1] <= 10 && tile.vital) || Game.energy[Game.energy.length - 1] > 10) {
-                Game.tossPop[Game.tossPop.length - 1] += tile.tossPop;
-                Game.hipPop[Game.hipPop.length - 1] += tile.hipPop;
-                Game.artPop[Game.artPop.length - 1] += tile.artPop;
+                Game.tossBabies[Game.tossBabies.length - 1] += tile.tossPop;
+                Game.hipBabies[Game.hipBabies.length - 1] += tile.hipPop;
+                Game.artBabies[Game.artBabies.length - 1] += tile.artPop;
                 Game.housing[Game.housing.length - 1] += tile.housing;
                 Game.tossMorale[Game.tossMorale.length - 1] += tile.tossMorale;
                 Game.hipMorale[Game.hipMorale.length - 1] += tile.hipMorale;
@@ -1221,11 +1221,20 @@ function Param() {
     //this.yShift;
     //Stats
     this.housing = [0];
-    this.tossPop = [50];
-    this.hipPop = [50];
-    this.artPop = [50];
-    this.employed = [0];
     this.pop = [150];
+    this.tossPop = [50];
+    this.tossBabies = [0];
+    this.tossStudents = [0];
+    this.tossAdults = [50];
+    this.hipPop = [50];
+    this.hipBabies = [0];
+    this.hipStudents = [0];
+    this.hipAdults = [50];
+    this.artPop = [50];
+    this.artBabies = [0];
+    this.artStudents = [0];
+    this.artAdults = [50];
+    this.employed = [0];
     this.sdf = [150];
     this.tossMorale = [500];
     this.hipMorale = [500];
@@ -1246,10 +1255,50 @@ function setStats() {
     Game.crime.push(0);
     Game.inStorage.push(Game.inStorage[Game.inStorage.length - 1]);
     Game.storageCap.push(Game.storageCap[Game.storageCap.length - 1]);
-    Game.tossPop.push(Game.tossPop[Game.tossPop.length - 1]);
-    Game.hipPop.push(Game.hipPop[Game.hipPop.length - 1]);
-    Game.artPop.push(Game.artPop[Game.artPop.length - 1]);
-    Game.pop.push((Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1])));
+    Game.tossBabies.push(Game.tossBabies[Game.tossBabies.length - 1]);
+    Game.tossStudents.push(Game.tossStudents[Game.tossStudents.length - 1]);
+    Game.tossAdults.push(Game.tossAdults[Game.tossAdults.length - 1]);
+    Game.tossPop.push(Math.floor(Game.tossBabies[Game.tossBabies.length - 1] + Game.tossStudents[Game.tossStudents.length - 1] + Game.tossAdults[Game.tossAdults.length - 1]));
+    Game.hipBabies.push(Game.hipBabies[Game.hipBabies.length - 1]);
+    Game.hipStudents.push(Game.hipStudents[Game.hipStudents.length - 1]);
+    Game.hipAdults.push(Game.hipAdults[Game.hipAdults.length - 1]);
+    Game.hipPop.push(Math.floor(Game.hipBabies[Game.hipBabies.length - 1] + Game.hipStudents[Game.hipStudents.length - 1] + Game.hipAdults[Game.hipAdults.length - 1]));
+    Game.artBabies.push(Game.artBabies[Game.artBabies.length - 1]);
+    Game.artStudents.push(Game.artStudents[Game.artStudents.length - 1]);
+    Game.artAdults.push(Game.artAdults[Game.artAdults.length - 1]);
+    Game.artPop.push(Math.floor(Game.artBabies[Game.artBabies.length - 1] + Game.artStudents[Game.artStudents.length - 1] + Game.artAdults[Game.artAdults.length - 1]));
+    if(Game.turn > 190){
+        var tossGrads = Game.tossStudents[Game.tossStudents.length - 190];
+        var hipGrads = Game.hipStudents[Game.hipStudents.length - 190];
+        if(tossGrads > 0 || hipGrads > 0){
+            Game.tossAdults[Game.tossAdults.length - 1] += tossGrads;
+            Game.hipAdults[Game.hipAdults.length - 1] += hipGrads;
+            Game.tossStudents[Game.tossStudents.length - 1] -= tossGrads;
+            Game.hipStudents[Game.hipStudents.length - 1] -= hipGrads;
+        }
+    }
+    if(Game.turn >= 24){
+        var tossKids = Math.floor(Game.tossBabies[Game.tossBabies.length - 24]) - Game.tossStudents[Game.tossStudents.length - 1];
+        var hipKids = Math.floor(Game.hipBabies[Game.hipBabies.length - 24]) - Game.hipStudents[Game.hipStudents.length - 1];
+        if(tossKids > 0 || hipKids > 0){
+            Game.tossStudents[Game.tossStudents.length - 1] += tossKids;
+            Game.hipStudents[Game.hipStudents.length - 1] += hipKids;
+            Game.tossBabies[Game.tossBabies.length - 1] -= tossKids;
+            Game.hipBabies[Game.hipBabies.length - 1] -= hipKids;
+        }
+    }
+    if(Game.turn >= 5){
+        var artGrads = Game.artStudents[Game.artStudents.length - 5] - Game.artAdults[Game.artAdults.length - 1];
+        var artKids = Math.floor(Game.artBabies[Game.artBabies.length - 5]) - Game.artStudents[Game.artStudents.ength - 1];
+        if(artGrads > 0 || artKids > 0){
+            Game.artStudents[Game.artStudents.length - 1] += artKids;
+            Game.artAdults[Game.artAdults.length - 1] += artGrads;
+            Game.artBabies[Game.artBabies.length - 1] -= artKids;
+            Game.artStudents[Game.artStudents.length - 1] -= artGrads;
+        }
+    }
+    //Game.pop.push((Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1])));
+    Game.pop.push(Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1] + Game.artPop[Game.artPop.length - 1]);
     Game.sdf.push(Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]));
     Game.housing.push(0);
     Game.employed.push(Game.employed[Game.employed.length - 1]);
@@ -2041,7 +2090,7 @@ function execReview() {
         drawGraph('line', 'population', popInput, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
-        document.getElementById('artPop').innerHTML = Math.floor(Game.tossPop[Game.artPop.length - 1]);
+        document.getElementById('artPop').innerHTML = Math.floor(Game.artPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
 
         var sdfInput = [[Game.housing, electricBlue, Lang.housing],[Game.sdf, red, Lang.sdf]];
