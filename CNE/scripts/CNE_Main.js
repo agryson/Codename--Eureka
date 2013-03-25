@@ -1267,6 +1267,7 @@ function setStats() {
     Game.artStudents.push(Game.artStudents[Game.artStudents.length - 1]);
     Game.artAdults.push(Game.artAdults[Game.artAdults.length - 1]);
     Game.artPop.push(Math.floor(Game.artBabies[Game.artBabies.length - 1] + Game.artStudents[Game.artStudents.length - 1] + Game.artAdults[Game.artAdults.length - 1]));
+    //TODO: rewrite this next block cause it's shit
     if(Game.turn > 190){
         var tossGrads = Game.tossStudents[Game.tossStudents.length - 190];
         var hipGrads = Game.hipStudents[Game.hipStudents.length - 190];
@@ -1278,8 +1279,8 @@ function setStats() {
         }
     }
     if(Game.turn >= 24){
-        var tossKids = Math.floor(Game.tossBabies[Game.tossBabies.length - 24]) - Game.tossStudents[Game.tossStudents.length - 1];
-        var hipKids = Math.floor(Game.hipBabies[Game.hipBabies.length - 24]) - Game.hipStudents[Game.hipStudents.length - 1];
+        var tossKids = Math.floor(Game.tossBabies[Game.tossBabies.length - 24]) - Game.tossStudents[Game.tossStudents.length - 24];
+        var hipKids = Math.floor(Game.hipBabies[Game.hipBabies.length - 24]) - Game.hipStudents[Game.hipStudents.length - 24];
         if(tossKids > 0 || hipKids > 0){
             Game.tossStudents[Game.tossStudents.length - 1] += tossKids;
             Game.hipStudents[Game.hipStudents.length - 1] += hipKids;
@@ -1288,8 +1289,8 @@ function setStats() {
         }
     }
     if(Game.turn >= 5){
-        var artGrads = Game.artStudents[Game.artStudents.length - 5] - Game.artAdults[Game.artAdults.length - 1];
-        var artKids = Math.floor(Game.artBabies[Game.artBabies.length - 5]) - Game.artStudents[Game.artStudents.ength - 1];
+        var artGrads = Game.artStudents[Game.artStudents.length - 5] - Game.artAdults[Game.artAdults.length - 5];
+        var artKids = Math.floor(Game.artBabies[Game.artBabies.length - 5]) - Game.artStudents[Game.artStudents.ength - 5];
         if(artGrads > 0 || artKids > 0){
             Game.artStudents[Game.artStudents.length - 1] += artKids;
             Game.artAdults[Game.artAdults.length - 1] += artGrads;
@@ -1297,7 +1298,8 @@ function setStats() {
             Game.artStudents[Game.artStudents.length - 1] -= artGrads;
         }
     }
-    //Game.pop.push((Math.floor(Game.tossPop[Game.tossPop.length - 1]) + Math.floor(Game.hipPop[Game.hipPop.length - 1]) + Math.floor(Game.artPop[Game.artPop.length - 1])));
+    //til here
+    
     Game.pop.push(Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1] + Game.artPop[Game.artPop.length - 1]);
     Game.sdf.push(Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]));
     Game.housing.push(0);
@@ -1403,9 +1405,9 @@ function drawGraph(type, outputId, sourceData, from0) {
             return mem;
         };
 
-    var normal = function(val, arr) {
+    var normal = function(val, arr, axis) {
             var out = (arr[val] - mini) / (maxi - mini);
-            return out * canH;
+            return out * axis;
         };
 
 
@@ -1426,14 +1428,14 @@ function drawGraph(type, outputId, sourceData, from0) {
             con.beginPath();
             con.lineCap = 'round';
             con.lineJoin = 'round';
-            con.moveTo(0, canH - normal(tenOnly, sourceData[n][0]));
+            con.moveTo(0, canH - normal(tenOnly, sourceData[n][0], canH));
             for(var k = 1; k <= tenLimit; k++) {
                 var recent = k;
                 if(document.getElementById("10Week").checked && Game.turn >= 10){
                     recent = sourceData[n][0].length - (11 - k);
                 }
-                con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0]));
-                con.arc(k * sepX, canH - normal(recent, sourceData[n][0]), 1, 0, Math.PI*2);
+                con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0], canH));
+                con.arc(k * sepX, canH - normal(recent, sourceData[n][0], canH), 1, 0, Math.PI*2);
             }
             con.strokeStyle = '#000';
             con.lineWidth = 3;
@@ -1447,12 +1449,12 @@ function drawGraph(type, outputId, sourceData, from0) {
         con.strokeStyle = 'rgba(255,255,255,0.02)';
         con.lineWidth = 1;
         con.lineCap = 'butt';
-        con.moveTo(5, Math.floor(canH - normal(0, [0])));
-        con.lineTo(canW - 5, Math.floor(canH - normal(0, [0])));
+        con.moveTo(5, Math.floor(canH - normal(0, [0], canH)));
+        con.lineTo(canW - 5, Math.floor(canH - normal(0, [0], canH)));
         con.strokeStyle = 'rgba(255,255,255,0.08)';
         for(var grad = 0; grad <= 10; grad++) {
-            con.moveTo(5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
-            con.lineTo(canW - 5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)])));
+            con.moveTo(5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)], canH)));
+            con.lineTo(canW - 5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)], canH)));
         }
         con.stroke();
         con.fillStyle = '#D9F7FF';
@@ -1492,6 +1494,33 @@ function drawGraph(type, outputId, sourceData, from0) {
                 nextStart += (Math.PI*2)*(current / total);
             }
         }
+    } else if(type === 'bar') {
+        var barWidth = (canH - 20) / sourceData.length;
+        var startX;
+        var startY = canH - (sourceData.length)*barWidth - 10;
+        for(var bar = 0; bar < sourceData.length; bar ++){
+            if(bar % 3 ===  0){
+                startX = 10;
+                startY = canH - (sourceData.length - bar)*barWidth - 10;
+            }
+
+            con.fillStyle = sourceData[bar][1];
+            con.strokeStyle = '#222';
+            con.fillRect(startX/3, startY, (normal(0, sourceData[bar][0], canW))/3, barWidth);
+            con.strokeRect(startX/3, startY, (normal(0, sourceData[bar][0], canW))/3, barWidth);
+
+
+            startX += normal(0, sourceData[bar][0], canW);
+        }
+        /*
+        
+        con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0], canH));
+
+
+        for(var b = 0; b < sourceData.length; b++){
+            console.log(maxi);
+            console.log(mini);
+        }*/
     } else {
         console.log("Lies, lies and damned statistics" + sourceData);
     }
@@ -1913,16 +1942,14 @@ function zoom(zoomLevel) {
 
 function getMaxMin(arrayIn){
     var max = 0;
-    var min = 1000;
+    var min = 1000000;
+    var maxTest, minTest;
     for(var i = 0; i < arrayIn.length; i++){
-        for(var j = 0; j < arrayIn[i].length; j++){
-            if(arrayIn[i][j] > max){
-                max = arrayIn[i][j];
-            }
-            if(arrayIn[i][j] < min){
-                min = arrayIn[i][j];
-            }
-        }
+        maxTest = Math.max.apply(null,arrayIn[i]);
+        minTest = Math.min.apply(null,arrayIn[i]);
+        if(maxTest > max){max = maxTest;}
+        if(minTest < min){min = minTest;}
+        if(min < 0){min = 0;}
     }
     max = Math.ceil(1 + max/50) * 50;
     min = Math.floor(min/50) * 50;
@@ -2087,7 +2114,7 @@ function execReview() {
     var red = 'rgb(255,0,0)';
     var orange = 'rgb(255,81,0)';
     var white = 'rgb(255,255,255)';
-    var grey = 'rgb(115,126,120)'
+    var grey = 'rgb(115,126,120)';
     var sanity = function(val) {
             var test;
             val >= 0 ? test = val : test = 0;
@@ -2109,6 +2136,19 @@ function execReview() {
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Game.artPop[Game.artPop.length - 1]);
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
+
+        var demoInput = [
+        [[Game.tossAdults[Game.tossAdults.length - 1]], electricBlue, Lang.tosser],
+        [[Game.hipAdults[Game.hipAdults.length - 1]], green, Lang.hipstie],
+        [[Game.artAdults[Game.artAdults.length - 1]], orange, Lang.artie],
+        [[Game.tossStudents[Game.tossStudents.length - 1]], electricBlue, Lang.tosser],
+        [[Game.hipStudents[Game.hipStudents.length - 1]], green, Lang.hipstie],
+        [[Game.artStudents[Game.artStudents.length - 1]], orange, Lang.artie],
+        [[Game.tossBabies[Game.tossBabies.length - 1]], electricBlue, Lang.tosser],
+        [[Game.hipBabies[Game.hipBabies.length - 1]], green, Lang.hipstie],
+        [[Game.artBabies[Game.artBabies.length - 1]], orange, Lang.artie]
+        ];
+        drawGraph('bar', 'demographics', demoInput);
 
         var sdfInput = [[Game.housing, electricBlue, Lang.housing],[Game.sdf, red, Lang.sdf]];
         drawGraph('pie', 'homeless', sdfInput);
