@@ -1250,8 +1250,8 @@ function Param() {
     this.blackout = 0; //Power Outages
     this.noAir = 0; //Air Shortages
     this.creche = 0; //Birth to preschool
-    this.uniMod = 0; //Eduncation length
-    this.botBirth = 0; //Bot training & testing
+    this.uni = 0; //Eduncation length
+    this.botAging = 0; //Bot training & testing
 }
 
 function setStats() {
