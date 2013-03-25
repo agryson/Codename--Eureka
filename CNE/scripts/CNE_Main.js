@@ -1511,32 +1511,23 @@ function drawGraph(type, outputId, sourceData, from0) {
             }
         }
     } else if(type === 'bar') {
-        var barWidth = (canH - 20) / sourceData.length;
+        var barWidth = ((canH - 20) / sourceData.length) * 3;
         var startX;
-        var startY = canH - (sourceData.length)*barWidth - 10;
+        var startY;
         for(var bar = 0; bar < sourceData.length; bar ++){
             if(bar % 3 ===  0){
                 startX = 10;
-                startY = canH - (sourceData.length - bar)*barWidth - 10;
+                startY = canH - (sourceData.length - bar)*barWidth/3 - 15;
+                if(bar > 0){
+                    startY += 5*bar/3;
+                }
             }
-
             con.fillStyle = sourceData[bar][1];
             con.strokeStyle = '#222';
-            con.fillRect(startX/3, startY, (normal(0, sourceData[bar][0], canW))/3, barWidth);
-            con.strokeRect(startX/3, startY, (normal(0, sourceData[bar][0], canW))/3, barWidth);
-
-
+            con.fillRect(startX/2, startY, (normal(0, sourceData[bar][0], canW))/2, barWidth);
+            con.strokeRect(startX/2, startY, (normal(0, sourceData[bar][0], canW))/2, barWidth);
             startX += normal(0, sourceData[bar][0], canW);
         }
-        /*
-        
-        con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0], canH));
-
-
-        for(var b = 0; b < sourceData.length; b++){
-            console.log(maxi);
-            console.log(mini);
-        }*/
     } else {
         console.log("Lies, lies and damned statistics" + sourceData);
     }
@@ -2154,15 +2145,15 @@ function execReview() {
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
 
         var demoInput = [
-        [[Game.tossAdults[Game.tossAdults.length - 1]], electricBlue, Lang.tosser],
-        [[Game.hipAdults[Game.hipAdults.length - 1]], green, Lang.hipstie],
-        [[Game.artAdults[Game.artAdults.length - 1]], orange, Lang.artie],
-        [[Game.tossStudents[Game.tossStudents.length - 1]], electricBlue, Lang.tosser],
-        [[Game.hipStudents[Game.hipStudents.length - 1]], green, Lang.hipstie],
-        [[Game.artStudents[Game.artStudents.length - 1]], orange, Lang.artie],
-        [[Game.tossBabies[Game.tossBabies.length - 1]], electricBlue, Lang.tosser],
-        [[Game.hipBabies[Game.hipBabies.length - 1]], green, Lang.hipstie],
-        [[Game.artBabies[Game.artBabies.length - 1]], orange, Lang.artie]
+        [[Game.tossAdults[Game.tossAdults.length - 1]], electricBlue, Lang.tosserAdult],
+        [[Game.hipAdults[Game.hipAdults.length - 1]], green, Lang.hipstieAdult],
+        [[Game.artAdults[Game.artAdults.length - 1]], orange, Lang.artieAdult],
+        [[Game.tossStudents[Game.tossStudents.length - 1]], electricBlue, Lang.tosserStudent],
+        [[Game.hipStudents[Game.hipStudents.length - 1]], green, Lang.hipstieStudent],
+        [[Game.artStudents[Game.artStudents.length - 1]], orange, Lang.artieStudent],
+        [[Game.tossBabies[Game.tossBabies.length - 1]], darkBlue, Lang.tosserInfant],
+        [[Game.hipBabies[Game.hipBabies.length - 1]], green, Lang.hipstieInfant],
+        [[Game.artBabies[Game.artBabies.length - 1]], orange, Lang.artieInfant]
         ];
         drawGraph('bar', 'demographics', demoInput);
 

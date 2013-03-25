@@ -35,6 +35,15 @@ function Lang(){
 	this.artie = "ArtIe";
 	this.hipstie = "Hipstie";
 	this.tosser = "TOSSer";
+	this.artieInfant = "ArtIe Infant";
+	this.hipstieInfant = "Hipstie Infant";
+	this.tosserInfant = "TOSSer Infant";
+	this.artieStudent = "ArtIe Student";
+	this.hipstieStudent = "Hipstie Student";
+	this.tosserStudent = "TOSSer Student";
+	this.artieAdult = "ArtIe Adult";
+	this.hipstieAdult = "Hipstie Adult";
+	this.tosserAdult = "TOSSer Adult";
 	this.population = "Total Population";
 	this.housing = "Housing";
 	this.sdf = "Homeless";
