@@ -1247,8 +1247,11 @@ function Param() {
     this.air = [50];
 
     //modifiers
-    this.blackout = 0;
-    this.noAir = 0;
+    this.blackout = 0; //Power Outages
+    this.noAir = 0; //Air Shortages
+    this.creche = 0; //Birth to preschool
+    this.uniMod = 0; //Eduncation length
+    this.botBirth = 0; //Bot training & testing
 }
 
 function setStats() {
@@ -1267,14 +1270,15 @@ function setStats() {
     Game.artStudents.push(Game.artStudents[Game.artStudents.length - 1]);
     Game.artAdults.push(Game.artAdults[Game.artAdults.length - 1]);
     Game.artPop.push(Math.floor(Game.artBabies[Game.artBabies.length - 1] + Game.artStudents[Game.artStudents.length - 1] + Game.artAdults[Game.artAdults.length - 1]));
-    if(Game.turn > 190){
+    var uniMod = 216 - Game.uni;
+    if(Game.turn > uniMod){
         var tossGrads = 0;
-        if(Game.tossStudents[Game.tossStudents.length - 190] !== Game.tossStudents[Game.tossStudents.length - 189]){
-            tossGrads = Game.tossStudents[Game.tossStudents.length - 189] - Game.tossStudents[Game.tossStudents.length - 190];
+        if(Game.tossStudents[Game.tossStudents.length - uniMod] !== Game.tossStudents[Game.tossStudents.length - uniMod - 1]){
+            tossGrads = Game.tossStudents[Game.tossStudents.length - uniMod - 1] - Game.tossStudents[Game.tossStudents.length - uniMod];
         }
         var hipGrads = 0;
-        if(Game.hipStudents[Game.hipStudents.length - 190] !== Game.hipStudents[Game.hipStudents.length - 189]){
-            hipGrads = Game.hipStudents[Game.hipStudents.length - 189] - Game.hipStudents[Game.hipStudents.length - 190];
+        if(Game.hipStudents[Game.hipStudents.length - uniMod] !== Game.hipStudents[Game.hipStudents.length - uniMod - 1]){
+            hipGrads = Game.hipStudents[Game.hipStudents.length - uniMod - 1] - Game.hipStudents[Game.hipStudents.length - uniMod];
         }
         if(tossGrads > 0 || hipGrads > 0){
             Game.tossAdults[Game.tossAdults.length - 1] += tossGrads;
@@ -1283,14 +1287,15 @@ function setStats() {
             Game.hipStudents[Game.hipStudents.length - 1] -= hipGrads;
         }
     }
-    if(Game.turn >= 24){
+    var crecheMod = 36 - Game.creche;
+    if(Game.turn >= crecheMod){
         var tossKids;
-        if(Math.floor(Game.tossBabies[Game.tossBabies.length - 24]) !== Math.floor(Game.tossBabies[Game.tossBabies.length - 23])){
-            tossKids = Math.floor(Game.tossBabies[Game.tossBabies.length - 23]) - Math.floor(Game.tossBabies[Game.tossBabies.length - 24]);
+        if(Math.floor(Game.tossBabies[Game.tossBabies.length - crecheMod]) !== Math.floor(Game.tossBabies[Game.tossBabies.length - crecheMod - 1])){
+            tossKids = Math.floor(Game.tossBabies[Game.tossBabies.length - crecheMod - 1]) - Math.floor(Game.tossBabies[Game.tossBabies.length - crecheMod]);
         }
         var hipKids = 0;
-        if(Math.floor(Game.hipBabies[Game.hipBabies.length - 24]) !== Math.floor(Game.hipBabies[Game.hipBabies.length - 23])){
-            hipKids = Math.floor(Game.hipBabies[Game.hipBabies.length - 23]) - Math.floor(Game.hipBabies[Game.hipBabies.length - 24]);
+        if(Math.floor(Game.hipBabies[Game.hipBabies.length - crecheMod]) !== Math.floor(Game.hipBabies[Game.hipBabies.length - crecheMod - 1])){
+            hipKids = Math.floor(Game.hipBabies[Game.hipBabies.length - crecheMod - 1]) - Math.floor(Game.hipBabies[Game.hipBabies.length - crecheMod]);
         }
         if(tossKids > 0 || hipKids > 0){
             Game.tossStudents[Game.tossStudents.length - 1] += tossKids;
@@ -1299,14 +1304,15 @@ function setStats() {
             Game.hipBabies[Game.hipBabies.length - 1] -= hipKids;
         }
     }
-    if(Game.turn >= 5){
+    var botBirth = 10 - Game.botAging;
+    if(Game.turn >= botBirth){
         var artGrads = 0;
-        if(Game.artStudents[Game.artStudents.length - 5] !== Game.artStudents[Game.artStudents.length - 4]){
-            artGrads = Game.artStudents[Game.artStudents.length - 4] - Game.artStudents[Game.artStudents.length - 5];
+        if(Game.artStudents[Game.artStudents.length - botBirth] !== Game.artStudents[Game.artStudents.length - botBirth - 1]){
+            artGrads = Game.artStudents[Game.artStudents.length - botBirth - 1] - Game.artStudents[Game.artStudents.length - botBirth];
         }
         var artKids = 0;
-        if(Math.floor(Game.artBabies[Game.artBabies.length - 5]) !== Math.floor(Game.artBabies[Game.artBabies.length - 4])){
-            artKids = Math.floor(Game.artBabies[Game.artBabies.length - 4]) - Math.floor(Game.artBabies[Game.artBabies.length - 5]);
+        if(Math.floor(Game.artBabies[Game.artBabies.length - botBirth]) !== Math.floor(Game.artBabies[Game.artBabies.length - botBirth - 1])){
+            artKids = Math.floor(Game.artBabies[Game.artBabies.length - botBirth - 1]) - Math.floor(Game.artBabies[Game.artBabies.length - botBirth]);
         }
         if(artGrads > 0 || artKids > 0){
             Game.artStudents[Game.artStudents.length - 1] += artKids;
