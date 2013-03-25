@@ -197,6 +197,160 @@ function nextTurn(x, y, level) {
                 for(var u = 0; u < unlock[4].length; u++){
                     unlock[4][u][2] = true;
                 }
+                //Set the research results here
+                switch(topic){
+                    case "engineering":
+                    break;
+                    case "agriculturalEngineering":
+                    break;
+                    case "hydroponics":
+                    break;
+                    case "noSoilFarming":
+                    break;
+                    case "xtremeTempAgriculture":
+                    break;
+                    case "electricalEngineering":
+                    break;
+                    case "commTech":
+                    break;
+                    case "pcbDesign":
+                    break;
+                    case "processors":
+                    break;
+                    case "robotics":
+                    break;
+                    case "geneticEngineering":
+                    break;
+                    case "animalGenetics":
+                    break;
+                    case "horticulturalGenetics":
+                    break;
+                    case "humanGenetics":
+                    break;
+                    case "longevityResearch":
+                    break;
+                    case "mechanicalEngineering":
+                    break;
+                    case "massProduction":
+                    break;
+                    case "mechatronics":
+                    break;
+                    case "plm":
+                    break;
+                    case "softwareEngineering":
+                    break;
+                    case "ai":
+                    break;
+                    case "culturalSensitivity":
+                    break;
+                    case "imageProcessing":
+                    break;
+                    case "naturalLanguage":
+                    break;
+                    case "neuralNetworks":
+                    break;
+                    case "geoEngineering":
+                    break;
+                    case "terraforming":
+                    break;
+                    case "weatherControl":
+                    break;
+                    case "science":
+                    break;
+                    case "physics":
+                    break;
+                    case "experimentalPhysics":
+                    break;
+                    case "advancedMaterials":
+                    break;
+                    case "compositieMaterials":
+                    break;
+                    case "selfHealingMaterials":
+                    break;
+                    case "conductivePolymers":
+                    break;
+                    case "opticalMaterials":
+                    break;
+                    case "nanotech":
+                    break;
+                    case "bioNeutralNano":
+                    break;
+                    case "ggam":
+                    break;
+                    case "nanoFab":
+                    break;
+                    case "theoreticalPhysics":
+                    break;
+                    case "astronomy":
+                    break;
+                    case "meteorology":
+                    break;
+                    case "nuclearPhysics":
+                    break;
+                    case "chemistry":
+                    break;
+                    case "organicChemistry":
+                    break;
+                    case "polymers":
+                    break;
+                    case "physicalChemistry":
+                    break;
+                    case "oreProcessing":
+                    break;
+                    case "metallurgy":
+                    break;
+                    case "pharmaceuticalChemistry":
+                    break;
+                    case "herbicides":
+                    break;
+                    case "medicines":
+                    break;
+                    case "biology":
+                    break;
+                    case "anatomy":
+                    break;
+                    case "horticulture":
+                    break;
+                    case "physiology":
+                    break;
+                    case "radiationEffects":
+                    break;
+                    case "lowGravEffects":
+                    break;
+                    case "medicine":
+                    break;
+                    case "oncology":
+                    break;
+                    case "orthopaedics":
+                    break;
+                    case "paedeatrics":
+                    break;
+                    case "placebos":
+                    break;
+                    case "traditional":
+                        //Do Nothing... har har har
+                    break;
+                    case "arts":
+                    break;
+                    case "sociology":
+                    break;
+                    case "socialPolicy":
+                    break;
+                    case "politicalScience":
+                    break;
+                    case "culturalRelations":
+                    break;
+                    case "philosophy":
+                    break;
+                    case "ethics":
+                    break;
+                    case "scientificTheory":
+                    break;
+                    case "classicalPhilosophy":
+                    break;
+                    default:
+                        console.log("What did you say you studied? " + topic);
+                }
             }
         }
 
@@ -1347,9 +1501,9 @@ function setStats() {
     Game.energy.push(Game.energy[Game.energy.length - 1]);
     Game.turn += 1;
     //Morale
-    Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 10);
-    Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 10);
-    Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 5) - Game.blackout * 20);
+    Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 10 + (Game.leisure * 2));
+    Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 10 + (Game.leisure * 2));
+    Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 5) - Game.blackout * 20 + Game.leisure);
 
     //reset modifiers
     Game.blackout = 0;
@@ -2011,7 +2165,6 @@ function fillResearchMenu(){
                                 if(Game.researchTopics[i][4][j][4][k][4][l][2]){
                                     var tier3 = document.getElementById(Game.researchTopics[i][4][j][4][k][4][l][0]);
                                     if(!tier3.classList.contains('research_active')){
-                                        //tier3.classList.add('research_active');
                                         tier3.innerHTML = Game.researchTopics[i][4][j][4][k][4][l][1];
                                         tier3.onclick = clickedResearch;
                                     }
@@ -2054,7 +2207,6 @@ function fillResearchPanel(ident){
                     htmlString += "<br><p>" + Lang.studyingThis + " " + Lang[lab[3]] + ":</p><br>";
                     inProgress = false;
                 }
-                console.log( + lab[0] + "," + lab[1] + "," + lab[2]);
                 htmlString += "<div class='research_panel_item' onclick='jump(true," + lab[0] + "," + lab[1] + "," + lab[2] + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />";
                 htmlString += "<p>" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "</p>";
                 htmlString += "<div class='research_bar_frame' style='width: 400px; margin-left: 100px'><div class='research_bar' style='width: " + researchProgress(ident) + "%''></div></div>";
