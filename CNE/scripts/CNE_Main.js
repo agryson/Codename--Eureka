@@ -139,14 +139,22 @@ function nextTurn(x, y, level) {
                 tile.kind = tile.future[0];
                 nextTurn(x, y, level);
             }
-            if(tile.kind === 227 || tile.kind === 228){
-                Game.researchLabs.push([x, y, level, tile.researchTopic]);
-            }
-            if(tile.kind >= 208 && tile.kind <= 210){
-                Game.commTowers.push([x, y]);
-            }
             if(tile.kind === 203){
                 Game.air[Game.air.length - 1] += tile.air;
+            }else if(tile.kind >= 208 && tile.kind <= 210){
+                Game.commTowers.push([x, y]);
+            } else if(tile.kind === 222){
+                if(Game.creche <= 12){
+                    Game.creche += 1;
+                }
+            } else if(tile.kind === 224){
+                Game.leisure += 1;
+            } else if(tile.kind === 227 || tile.kind === 228){
+                Game.researchLabs.push([x, y, level, tile.researchTopic]);
+            } else if(tile.kind === 233){
+                if(Game.uni <= 24){
+                    Game.uni += 1;
+                }
             }
         }
 
@@ -1252,6 +1260,7 @@ function Param() {
     this.creche = 0; //Birth to preschool
     this.uni = 0; //Eduncation length
     this.botAging = 0; //Bot training & testing
+    this.leisure = 0;
 }
 
 function setStats() {
