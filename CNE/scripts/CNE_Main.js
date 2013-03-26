@@ -114,10 +114,9 @@ function nextTurn(x, y, level) {
                 tile.buildTime -= 1;
             } else {
                 var shortage = Lang.resourceShortage;
-                var rec = [Lang.aluminium, Lang.calcium, Lang.copper, Lang.gold, Lang.iron, Lang.lead, Lang.magnesium, Lang.mercury, Lang.phosphorous, Lang.potassium, Lang.silver, Lang.sodium, Lang.tin, Lang.zinc];
                 for(var s = 1; s < tile.resourcesNeeded.length; s++){
                     if(Game.procOres[tile.resourcesNeeded[s][0]] < tile.resourcesNeeded[s][1]){
-                        shortage += rec[tile.resourcesNeeded[s][0]] + ", ";
+                        shortage += Game.resourceNames[tile.resourcesNeeded[s][0]] + ", ";
                     }
                 }
                 notify(shortage.substring(0,shortage.length - 2));
@@ -184,7 +183,7 @@ function nextTurn(x, y, level) {
             var topic = tile.researchTopic;
             if(labRef[5] > 1){
                 labRef[5] -= 1;
-            } else {
+            } else if(labRef[5] === 1) {
                 labRef[5] = 0;
                 for(var r = 0; r < Game.researchLabs.length; r++){
                     var lab = Game.researchLabs[r];
@@ -1363,6 +1362,7 @@ function Param() {
     //8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
     this.procOresRadarOpt = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
     this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 4, 1, 4, 5, 5]; //Total storage = 70
+    this.resourceNames = [Lang.aluminium, Lang.calcium, Lang.copper, Lang.gold, Lang.iron, Lang.lead, Lang.magnesium, Lang.mercury, Lang.phosphorous, Lang.potassium, Lang.silver, Lang.sodium, Lang.tin, Lang.zinc];
     //Map generation vars
     this.seeder = '';
     /*
@@ -2052,26 +2052,20 @@ function eavesdrop() {
         }
     };
 
-    var menu = function(containerIn, buttonIn, hideClass) {
-            var container = containerIn;
-            var button = buttonIn;
-            if(button.classList.contains('arrow_down')) {
-                container.classList.add('menu_visible');
-                container.classList.remove('menu_hidden');
-            } else {
-                container.classList.remove('menu_visible');
-                container.classList.add('menu_hidden');
-            }
-            container.classList.toggle(hideClass);
-            button.classList.toggle('arrow_down');
-            button.classList.toggle('arrow_up');
-
-        };
     document.getElementById('turn').onclick = function() {
+        advanceTurn(1);
+    };
+    document.getElementById('zoom').onchange = function() {
+        var zoomLevel = document.getElementById('zoom').value;
+        zoom(zoomLevel);
+    };
+}
+
+function advanceTurn(turns){
+    while(turns > 0){
         if(!Game.buildings[37][1]) {
             var x;
             var y;
-
             setStats();
             for(y = 0; y < Game.radarRad * 2; y++) {
                 for(x = 0; x < Game.radarRad * 2; x++) {
@@ -2087,23 +2081,32 @@ function eavesdrop() {
             saneStats();
             execReview();
             document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
-
             drawRadar();
             Game.turnNum.innerHTML = "Week: " + Game.turn;
             reCount('all');
             //The following hold code just prevents accidentally skipping two turns with accidental clicks...
-            document.getElementById('turn').disabled = true;
+            /*document.getElementById('turn').disabled = true;
             setTimeout(function() {
                 document.getElementById('turn').disabled = false;
-            }, 300);
+            }, 300);*/
         } else {
             notify(Lang.setDown);
         }
-    };
-    document.getElementById('zoom').onchange = function() {
-        var zoomLevel = document.getElementById('zoom').value;
-        zoom(zoomLevel);
-    };
+        turns -=1;
+    }
+}
+
+function menu(containerIn, buttonIn, hideClass) {
+    if(buttonIn.classList.contains('arrow_down')) {
+        containerIn.classList.add('menu_visible');
+        containerIn.classList.remove('menu_hidden');
+    } else {
+        containerIn.classList.remove('menu_visible');
+        containerIn.classList.add('menu_hidden');
+    }
+    containerIn.classList.toggle(hideClass);
+    buttonIn.classList.toggle('arrow_down');
+    buttonIn.classList.toggle('arrow_up');
 }
 
 function music() {
@@ -2737,8 +2740,57 @@ function keypressed(e) {
         Game.clickedOn = 'none';
         document.body.style.cursor = "url('images/pointers/pointer.png'), default";
         break;
+    case 77:
+        menu(document.getElementById('radarContainer'), document.getElementById('radarButton'), 'radar_hidden');
+        break;
+    case 69:
+        document.getElementById('statsContainer').classList.add('exec_hidden');
+        document.getElementById('researchContainer').classList.add('exec_hidden');
+        document.getElementById('messageContainer').classList.add('exec_hidden');
+        document.getElementById('guideContainer').classList.add('exec_hidden');
+        menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        break;
+    case 83://s (statistics)
+        document.getElementById('researchContainer').classList.add('exec_hidden');
+        document.getElementById('messageContainer').classList.add('exec_hidden');
+        document.getElementById('guideContainer').classList.add('exec_hidden');
+        if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
+            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        }
+        document.getElementById('statsContainer').classList.remove('exec_hidden');
+        break;
+    case 82://r (research)
+        document.getElementById('statsContainer').classList.add('exec_hidden');
+        document.getElementById('messageContainer').classList.add('exec_hidden');
+        document.getElementById('guideContainer').classList.add('exec_hidden');
+        if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
+            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        }
+        document.getElementById('researchContainer').classList.remove('exec_hidden');
+        break;
+    case 71://g (guide)
+        document.getElementById('statsContainer').classList.add('exec_hidden');
+        document.getElementById('researchContainer').classList.add('exec_hidden');
+        document.getElementById('messageContainer').classList.add('exec_hidden');
+        if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
+            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        }
+        document.getElementById('guideContainer').classList.remove('exec_hidden');
+        break;
+    case 67://c (communiqués)
+        document.getElementById('statsContainer').classList.add('exec_hidden');
+        document.getElementById('researchContainer').classList.add('exec_hidden');
+        document.getElementById('guideContainer').classList.add('exec_hidden');
+        if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
+            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        }
+        document.getElementById('messageContainer').classList.remove('exec_hidden');
+        break;
+    case 13: //enter (next turn)
+        advanceTurn(1);
+        break;
     default:
-        console.log("Uhm... that key doesn't do anything... ");
+        console.log("Uhm... that key doesn't do anything... " + e.keyCode);
         break;
     }
 }
@@ -3202,7 +3254,7 @@ function drawLoc() {
     Game.radarLoc.closePath();
 }
 
-function rightClicked(content, option) {
+function rightClicked(content) {
     //TODO : Make context menu appear on the correct side relative to mouse position near screen edges
     var popFrame = document.getElementById('contextMenuWrapper');
     var pop = document.getElementById('contextMenu');
@@ -3223,7 +3275,7 @@ function rightClicked(content, option) {
     }, false);
 }
 
-function contextContent(content, option) {
+function contextContent(content) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
     var tile = returnLevel(Game.level)[y][x][0];
@@ -3231,9 +3283,7 @@ function contextContent(content, option) {
     var resources = false;
     var htmlString = '';
 
-    if(!option) {
-        htmlString += '<span>' + tile.ref + '</span><br>';
-    }
+    htmlString += '<span>' + tile.ref + '</span><br>';
     //build time left
     if(returnLevel(Game.level)[y][x][1] && returnLevel(Game.level)[y][x][1].kind === 100) {
         htmlString += '<span>' + Lang.buildTime + (returnLevel(Game.level)[y][x][1].buildTime + 1) + " ";
@@ -3277,6 +3327,220 @@ String.prototype.insert = function(index, string) {
 
 function changeName(string, orig) {
     return string + ' #' + orig.split('#')[1];
+}
+
+function resourceNeededList(building){
+    var resourcesNeeded;
+    var future;
+    switch(building) {
+            //Buildings
+        case 'agri':
+            //agridome
+            future = Lang.agri;
+            resourcesNeeded = [[0,2],[1,1],[4,1],[9, 1]];
+            break;
+        case 'agri2':
+            //advanced agridome
+            future = Lang.agri2;
+            resourcesNeeded = [[0,1],[1,1],[8,1],[9, 1]];
+            break;
+        case 'airport':
+            //airport
+            future = Lang.airport;
+            resourcesNeeded = [[2,1],[4,2],[12, 1]];
+            break;
+        case 'arp':
+            //arp
+            future = Lang.arp;
+            resourcesNeeded = [[0,2],[4,1],[12, 1],[13,1]];
+            break;
+        case 'airlift':
+            //airshaft
+            future = Lang.airlift;
+            resourcesNeeded = [[0,1]];
+            break;
+        case 'barracks':
+            //barracks
+            future = Lang.barracks;
+            resourcesNeeded = [[4,2],[12, 1]];
+            break;
+        case 'civprot':
+            //civil protection
+            future = Lang.civprot;
+            resourcesNeeded = [[4,2],[12, 1]];
+            break;
+        case 'civprot2':
+            //civil protection 2
+            future = Lang.civprot2;
+            resourcesNeeded = [[2,1],[4,2],[12, 1]];
+            break;
+        case 'commarray':
+            //comm array
+            future = Lang.commarray;
+            resourcesNeeded = [[0,2],[2,2],[4,1]];
+            break;
+        case 'commarray2':
+            //comm array 2
+            future = Lang.commarray2;
+            resourcesNeeded = [[0,2],[2,1],[12, 1],[13,1]];
+            break;
+        case 'command':
+            //command
+            future = Lang.command;
+            resourcesNeeded = [[0,2],[2,1],[4,1],[5, 1],[10,1],[12,1],[13,1]];
+            break;
+        case 'connector':
+            // connector
+            future = Lang.connector;
+            resourcesNeeded = [[4,1]];
+            break;
+        case 'dronefab':
+            // drone factory
+            future = Lang.dronefab;
+            resourcesNeeded = [[0,1],[2,1],[4,1],[5, 1],[6,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
+            break;
+        case 'chernobyl':
+            // fission
+            future = Lang.chernobyl;
+            resourcesNeeded = [[0,1],[2,2],[4,2],[5, 3],[7,1],[11,2],[12,1],[13,1]];
+            break;
+        case 'tokamak':
+            // fusion
+            future = Lang.tokamak;
+            resourcesNeeded = [[0,2],[2,2],[3,1],[4, 1],[5,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
+            break;
+        case 'genfab':
+            // factory
+            future = Lang.genfab;
+            resourcesNeeded = [[0,1],[2,1],[4,1],[12, 1]];
+            break;
+        case 'geotherm':
+            // geothermal
+            future = Lang.geotherm;
+            resourcesNeeded = [[0,1],[2,1],[4,1]];
+            break;
+        case 'hab':
+            // habitat
+            future = Lang.hab;
+            resourcesNeeded = [[2,1],[4,1],[5, 1],[12,1]];
+            break;
+        case 'hab2':
+            // habitat 2
+            future = Lang.hab2;
+            resourcesNeeded = [[2,1],[3,1],[4,1],[5,1],[12, 1]];
+            break;
+        case 'hab3':
+            // habitat 3
+            future = Lang.hab3;
+            resourcesNeeded = [[0,1],[2,1],[3,1],[5,1],[10,1],[12, 1]];
+            break;
+        case 'er':
+            // hospital
+            future = Lang.er;
+            resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[5,2],[6,1],[10,1],[11,1],[12, 1],[13,1]];
+            break;
+        case 'mine':
+            // mine
+            future = Lang.mine;
+            resourcesNeeded = [[4,1]];
+            break;
+        case 'nursery':
+            // nursery
+            future = Lang.nursery;
+            resourcesNeeded = [[0,1],[1,1],[2,1],[4,1],[6,1],[10,1],[11,1],[12, 1],[13,1]];
+            break;
+        case 'oreproc':
+            // ore processor
+            future = Lang.oreproc;
+            resourcesNeeded = [[2,1],[4,2]];
+            break;
+        case 'rec':
+            // recreation center
+            future = Lang.rec;
+            resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+            break;
+        case 'recycler':
+            // recycler
+            future = Lang.recycler;
+            resourcesNeeded = [[2,1],[4,1],[8,1],[12, 1]];
+            break;
+        case 'clichy':
+            // red light district
+            future = Lang.clichy;
+            resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+            break;
+        case 'research':
+            // research center
+            future = Lang.research;
+            resourcesNeeded = [[0,1],[1, 1],[2,2],[3,1],[4,1],[5,1],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
+            break;
+        case 'research2':
+            // research 2
+            future = Lang.research2;
+            resourcesNeeded = [[0,1],[2,2],[3,2],[4,1],[5,2],[6,1],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2]];
+            break;
+        case 'solar':
+            // solar farm
+            future = Lang.solar;
+            resourcesNeeded = [[0,1],[2,1],[3,1],[7,1],[8,1],[13, 1]];
+            break;
+        case 'space':
+            // space port
+            future = Lang.space;
+            resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+            break;
+        case 'stasis':
+            // stasis block
+            future = Lang.stasis;
+            resourcesNeeded = [[0,4],[1, 1],[2,3],[3,2],[4,3],[5,2],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
+            break;
+        case 'store':
+            // Storage Tanks
+            future = Lang.store;
+            resourcesNeeded = [[4,1]];
+            break;
+        case 'uni':
+            // University
+            future = Lang.uni;
+            resourcesNeeded = [[0,1],[1,2],[2,1],[4,1],[6,1],[7,1],[9,1],[10,1],[11,1]];
+            break;
+        case 'warehouse':
+            // warehouse
+            future = Lang.warehouse;
+            resourcesNeeded = [[0,1],[4,1]];
+            break;
+        case 'windfarm':
+            // windfarm
+            future = Lang.windfarm;
+            resourcesNeeded = [[0,1],[2,1],[4,1],[5,1]];
+            break;
+        case 'workshop':
+            // workshop
+            future = Lang.workshop;
+            resourcesNeeded = [[0,1],[2,1],[4,2],[5,1],[12, 1]];
+            break;
+        default:
+            console.log("What are you talking about?... :( " + building);
+            return false;
+        }
+        var htmlString = '';
+        htmlString += "<br><button class='smoky_glass main_pointer' onclick='clicked(true)' style='width: 100%; text-align: center;'>" + Lang.confirmBuild + "</button><br>";
+        htmlString += '<h3>' + Lang.resourcesNeeded + ' (' + future + ')</h3>';
+        htmlString += '<ul>';
+        for(var resource = 0; resource < resourcesNeeded.length; resource++){
+            var which = resourcesNeeded[resource][0];
+            var amount = resourcesNeeded[resource][1];
+            htmlString += '<li>' + '<span style="color:';
+            if(Game.procOres[which] >= amount){
+                htmlString += '#00FF00;"';
+            } else {
+                htmlString += '#FF0000;"';
+            }
+            htmlString += '>' + amount + '</span> ' + Game.resourceNames[which] + '</li>';
+        }
+        htmlString += '</ul>';
+        return htmlString;
+
 }
 
 function checkConnection(y, x) {
@@ -3350,7 +3614,7 @@ function clicked(direction) {
         break;
     case 'dozer':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>");
         } else {
             if((hex[1] && (hex[1].kind < 200 && hex[1].kind > 2)) || (tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
                 notify(Lang.noDoze);
@@ -3363,7 +3627,7 @@ function clicked(direction) {
         break;
     case 'digger':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>");
         } else {
             //tile.digDown(x, y, lowerTile);
             var DBelow = returnLevel(Game.level + 1);
@@ -3395,7 +3659,7 @@ function clicked(direction) {
         break;
     case 'cavernDigger':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>");
         } else {
             if(wetTest([y, x], Game.level)){
                 notify(Lang.onWater);
@@ -3418,7 +3682,7 @@ function clicked(direction) {
         break;
     case 'miner':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmMine + "</button><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmMine + "</button><br>");
         } else {
             if(wetTest([y, x], Game.level + 1)){
                 notify(Lang.onWater);
@@ -3449,255 +3713,395 @@ function clicked(direction) {
         break;
     case 'recycler':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmRecycle + "</button><br>", true);
+            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmRecycle + "</button><br>");
         } else {
             tile.recycle();
         }
         //TODO: add recycle code
         break;
     case 'agri':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(200, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'agri2':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(201, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'airport':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(202, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'arp':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(203, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'barracks':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(205, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'civprot':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(206, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'civprot2':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(207, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'command':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(210, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'commarray':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(208, x, y, Game.level);
         } else {
             notify(Lang.notPrepared);
         }
+        }
         break;
     case 'commarray2':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(209, x, y, Game.level);
         } else {
            notify(Lang.notPrepared);
         }
+        }
         break;
     case 'connector':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(211, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'dronefab':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(212, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'chernobyl':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(213, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'tokamak':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(214, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'genfab':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(215, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'geotherm':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(216, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'hab':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(217, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'hab2':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(218, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'hab3':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(219, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'er':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(220, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'nursery':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(222, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'oreproc':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(223, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'rec':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(224, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'recycler':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(225, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'clichy':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(226, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'research':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(227, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'research2':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(228, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'solar':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(229, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'space':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(230, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'stasis':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(231, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'store':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(232, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'uni':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(233, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'warehouse':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(234, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'windfarm':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(235, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
+        }
         break;
     case 'workshop':
+    if(!direction){
+        rightClicked(resourceNeededList(Game.clickedOn));
+    } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
             hex[1] = bobTheBuilder(236, x, y, Game.level);
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
+        }
         }
         break;
     default:

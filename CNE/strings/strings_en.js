@@ -30,6 +30,7 @@ function Lang(){
 	this.resources = "Resources:";
 	this.noPower = "WARNING: Power Shortage!";
 	this.shutdown = "Building shut down";
+	this.resourcesNeeded = "Required Resources:";
 
 	//Stats
 	this.artie = "ArtIe";
@@ -64,6 +65,7 @@ function Lang(){
 	this.confirmDigCavern = "Dig cavern here";
 	this.confirmRecycle = "Recycle this construction?";
 	this.undo = "Cancel order";
+	this.confirmBuild = "Build";
 
 	//Terrain types
 	this.smooth = "Smooth";
