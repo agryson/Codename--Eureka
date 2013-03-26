@@ -53,28 +53,6 @@ function nextTurn(x, y, level) {
         }
         return false;
     };
-    var requisition = function(){
-        var resourceCheck = false;
-        var count = 1;
-        for(var j = 1; j < tile.resourcesNeeded.length; j++){
-            if(tile.resourcesNeeded[0] && Game.procOres[tile.resourcesNeeded[j][0]] >= tile.resourcesNeeded[j][1]){
-                count += 1;
-            }
-        }
-        if(count === tile.resourcesNeeded.length){
-            resourceCheck = true;
-        }
-        for(var k = 1; k < tile.resourcesNeeded.length; k++){
-            if(resourceCheck){
-                tile.resourcesNeeded[0] = false;
-                Game.procOres[tile.resourcesNeeded[k][0]] -= tile.resourcesNeeded[k][1];
-            }
-        }
-        if(!tile.resourcesNeeded[0]){
-            resourceCheck = true;
-        }
-        return resourceCheck;
-    };
 
     if(tile) {
 
@@ -110,6 +88,8 @@ function nextTurn(x, y, level) {
 
         //BUILDING
         if(tile.buildTime > 0) {
+            tile.buildTime -= 1;
+            /*
             if(requisition()){
                 tile.buildTime -= 1;
             } else {
@@ -120,7 +100,7 @@ function nextTurn(x, y, level) {
                     }
                 }
                 notify(shortage.substring(0,shortage.length - 2));
-            }
+            }*/
         } else if(tile.buildTime === 0) {
             tile.buildTime = -1;
             returnLevel(level)[y][x][0].ref = changeName(tile.future[1], returnLevel(level)[y][x][0].ref);
@@ -3349,200 +3329,204 @@ function changeName(string, orig) {
     return string + ' #' + orig.split('#')[1];
 }
 
-function resourceNeededList(building){
+function resourceNeededList(building, getRec){
     var resourcesNeeded;
     var future;
     switch(building) {
             //Buildings
-        case 'agri':
-            //agridome
-            future = Lang.agri;
-            resourcesNeeded = [[0,2],[1,1],[4,1],[9, 1]];
-            break;
-        case 'agri2':
-            //advanced agridome
-            future = Lang.agri2;
-            resourcesNeeded = [[0,1],[1,1],[8,1],[9, 1]];
-            break;
-        case 'airport':
-            //airport
-            future = Lang.airport;
-            resourcesNeeded = [[2,1],[4,2],[12, 1]];
-            break;
-        case 'arp':
-            //arp
-            future = Lang.arp;
-            resourcesNeeded = [[0,2],[4,1],[12, 1],[13,1]];
-            break;
-        case 'airlift':
-            //airshaft
-            future = Lang.airlift;
-            resourcesNeeded = [[0,1]];
-            break;
-        case 'barracks':
-            //barracks
-            future = Lang.barracks;
-            resourcesNeeded = [[4,2],[12, 1]];
-            break;
-        case 'civprot':
-            //civil protection
-            future = Lang.civprot;
-            resourcesNeeded = [[4,2],[12, 1]];
-            break;
-        case 'civprot2':
-            //civil protection 2
-            future = Lang.civprot2;
-            resourcesNeeded = [[2,1],[4,2],[12, 1]];
-            break;
-        case 'commarray':
-            //comm array
-            future = Lang.commarray;
-            resourcesNeeded = [[0,2],[2,2],[4,1]];
-            break;
-        case 'commarray2':
-            //comm array 2
-            future = Lang.commarray2;
-            resourcesNeeded = [[0,2],[2,1],[12, 1],[13,1]];
-            break;
-        case 'command':
-            //command
-            future = Lang.command;
-            resourcesNeeded = [[0,2],[2,1],[4,1],[5, 1],[10,1],[12,1],[13,1]];
-            break;
-        case 'connector':
-            // connector
-            future = Lang.connector;
-            resourcesNeeded = [[4,1]];
-            break;
-        case 'dronefab':
-            // drone factory
-            future = Lang.dronefab;
-            resourcesNeeded = [[0,1],[2,1],[4,1],[5, 1],[6,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
-            break;
-        case 'chernobyl':
-            // fission
-            future = Lang.chernobyl;
-            resourcesNeeded = [[0,1],[2,2],[4,2],[5, 3],[7,1],[11,2],[12,1],[13,1]];
-            break;
-        case 'tokamak':
-            // fusion
-            future = Lang.tokamak;
-            resourcesNeeded = [[0,2],[2,2],[3,1],[4, 1],[5,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
-            break;
-        case 'genfab':
-            // factory
-            future = Lang.genfab;
-            resourcesNeeded = [[0,1],[2,1],[4,1],[12, 1]];
-            break;
-        case 'geotherm':
-            // geothermal
-            future = Lang.geotherm;
-            resourcesNeeded = [[0,1],[2,1],[4,1]];
-            break;
-        case 'hab':
-            // habitat
-            future = Lang.hab;
-            resourcesNeeded = [[2,1],[4,1],[5, 1],[12,1]];
-            break;
-        case 'hab2':
-            // habitat 2
-            future = Lang.hab2;
-            resourcesNeeded = [[2,1],[3,1],[4,1],[5,1],[12, 1]];
-            break;
-        case 'hab3':
-            // habitat 3
-            future = Lang.hab3;
-            resourcesNeeded = [[0,1],[2,1],[3,1],[5,1],[10,1],[12, 1]];
-            break;
-        case 'er':
-            // hospital
-            future = Lang.er;
-            resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[5,2],[6,1],[10,1],[11,1],[12, 1],[13,1]];
-            break;
-        case 'mine':
-            // mine
-            future = Lang.mine;
-            resourcesNeeded = [[4,1]];
-            break;
-        case 'nursery':
-            // nursery
-            future = Lang.nursery;
-            resourcesNeeded = [[0,1],[1,1],[2,1],[4,1],[6,1],[10,1],[11,1],[12, 1],[13,1]];
-            break;
-        case 'oreproc':
-            // ore processor
-            future = Lang.oreproc;
-            resourcesNeeded = [[2,1],[4,2]];
-            break;
-        case 'rec':
-            // recreation center
-            future = Lang.rec;
-            resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
-            break;
-        case 'recycler':
-            // recycler
-            future = Lang.recycler;
-            resourcesNeeded = [[2,1],[4,1],[8,1],[12, 1]];
-            break;
-        case 'clichy':
-            // red light district
-            future = Lang.clichy;
-            resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
-            break;
-        case 'research':
-            // research center
-            future = Lang.research;
-            resourcesNeeded = [[0,1],[1, 1],[2,2],[3,1],[4,1],[5,1],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
-            break;
-        case 'research2':
-            // research 2
-            future = Lang.research2;
-            resourcesNeeded = [[0,1],[2,2],[3,2],[4,1],[5,2],[6,1],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2]];
-            break;
-        case 'solar':
-            // solar farm
-            future = Lang.solar;
-            resourcesNeeded = [[0,1],[2,1],[3,1],[7,1],[8,1],[13, 1]];
-            break;
-        case 'space':
-            // space port
-            future = Lang.space;
-            resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
-            break;
-        case 'stasis':
-            // stasis block
-            future = Lang.stasis;
-            resourcesNeeded = [[0,4],[1, 1],[2,3],[3,2],[4,3],[5,2],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
-            break;
-        case 'store':
-            // Storage Tanks
-            future = Lang.store;
-            resourcesNeeded = [[4,1]];
-            break;
-        case 'uni':
-            // University
-            future = Lang.uni;
-            resourcesNeeded = [[0,1],[1,2],[2,1],[4,1],[6,1],[7,1],[9,1],[10,1],[11,1]];
-            break;
-        case 'warehouse':
-            // warehouse
-            future = Lang.warehouse;
-            resourcesNeeded = [[0,1],[4,1]];
-            break;
-        case 'windfarm':
-            // windfarm
-            future = Lang.windfarm;
-            resourcesNeeded = [[0,1],[2,1],[4,1],[5,1]];
-            break;
-        case 'workshop':
-            // workshop
-            future = Lang.workshop;
-            resourcesNeeded = [[0,1],[2,1],[4,2],[5,1],[12, 1]];
-            break;
-        default:
-            console.log("What are you talking about?... :( " + building);
-            return false;
-        }
+    case 'agri':
+        //agridome
+        future = Lang.agri;
+        resourcesNeeded = [[0,2],[1,1],[4,1],[9, 1]];
+        break;
+    case 'agri2':
+        //advanced agridome
+        future = Lang.agri2;
+        resourcesNeeded = [[0,1],[1,1],[8,1],[9, 1]];
+        break;
+    case 'airport':
+        //airport
+        future = Lang.airport;
+        resourcesNeeded = [[2,1],[4,2],[12, 1]];
+        break;
+    case 'arp':
+        //arp
+        future = Lang.arp;
+        resourcesNeeded = [[0,2],[4,1],[12, 1],[13,1]];
+        break;
+    case 'airlift':
+        //airshaft
+        future = Lang.airlift;
+        resourcesNeeded = [[0,1]];
+        break;
+    case 'barracks':
+        //barracks
+        future = Lang.barracks;
+        resourcesNeeded = [[4,2],[12, 1]];
+        break;
+    case 'civprot':
+        //civil protection
+        future = Lang.civprot;
+        resourcesNeeded = [[4,2],[12, 1]];
+        break;
+    case 'civprot2':
+        //civil protection 2
+        future = Lang.civprot2;
+        resourcesNeeded = [[2,1],[4,2],[12, 1]];
+        break;
+    case 'commarray':
+        //comm array
+        future = Lang.commarray;
+        resourcesNeeded = [[0,2],[2,2],[4,1]];
+        break;
+    case 'commarray2':
+        //comm array 2
+        future = Lang.commarray2;
+        resourcesNeeded = [[0,2],[2,1],[12, 1],[13,1]];
+        break;
+    case 'command':
+        //command
+        future = Lang.command;
+        resourcesNeeded = [[0,2],[2,1],[4,1],[5, 1],[10,1],[12,1],[13,1]];
+        break;
+    case 'connector':
+        // connector
+        future = Lang.connector;
+        resourcesNeeded = [[4,1]];
+        break;
+    case 'dronefab':
+        // drone factory
+        future = Lang.dronefab;
+        resourcesNeeded = [[0,1],[2,1],[4,1],[5, 1],[6,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
+        break;
+    case 'chernobyl':
+        // fission
+        future = Lang.chernobyl;
+        resourcesNeeded = [[0,1],[2,2],[4,2],[5, 3],[7,1],[11,2],[12,1],[13,1]];
+        break;
+    case 'tokamak':
+        // fusion
+        future = Lang.tokamak;
+        resourcesNeeded = [[0,2],[2,2],[3,1],[4, 1],[5,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
+        break;
+    case 'genfab':
+        // factory
+        future = Lang.genfab;
+        resourcesNeeded = [[0,1],[2,1],[4,1],[12, 1]];
+        break;
+    case 'geotherm':
+        // geothermal
+        future = Lang.geotherm;
+        resourcesNeeded = [[0,1],[2,1],[4,1]];
+        break;
+    case 'hab':
+        // habitat
+        future = Lang.hab;
+        resourcesNeeded = [[2,1],[4,1],[5, 1],[12,1]];
+        break;
+    case 'hab2':
+        // habitat 2
+        future = Lang.hab2;
+        resourcesNeeded = [[2,1],[3,1],[4,1],[5,1],[12, 1]];
+        break;
+    case 'hab3':
+        // habitat 3
+        future = Lang.hab3;
+        resourcesNeeded = [[0,1],[2,1],[3,1],[5,1],[10,1],[12, 1]];
+        break;
+    case 'er':
+        // hospital
+        future = Lang.er;
+        resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[5,2],[6,1],[10,1],[11,1],[12, 1],[13,1]];
+        break;
+    case 'mine':
+        // mine
+        future = Lang.mine;
+        resourcesNeeded = [[4,1]];
+        break;
+    case 'nursery':
+        // nursery
+        future = Lang.nursery;
+        resourcesNeeded = [[0,1],[1,1],[2,1],[4,1],[6,1],[10,1],[11,1],[12, 1],[13,1]];
+        break;
+    case 'oreproc':
+        // ore processor
+        future = Lang.oreproc;
+        resourcesNeeded = [[2,1],[4,2]];
+        break;
+    case 'rec':
+        // recreation center
+        future = Lang.rec;
+        resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+        break;
+    case 'recycler':
+        // recycler
+        future = Lang.recycler;
+        resourcesNeeded = [[2,1],[4,1],[8,1],[12, 1]];
+        break;
+    case 'clichy':
+        // red light district
+        future = Lang.clichy;
+        resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+        break;
+    case 'research':
+        // research center
+        future = Lang.research;
+        resourcesNeeded = [[0,1],[1, 1],[2,2],[3,1],[4,1],[5,1],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
+        break;
+    case 'research2':
+        // research 2
+        future = Lang.research2;
+        resourcesNeeded = [[0,1],[2,2],[3,2],[4,1],[5,2],[6,1],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2]];
+        break;
+    case 'solar':
+        // solar farm
+        future = Lang.solar;
+        resourcesNeeded = [[0,1],[2,1],[3,1],[7,1],[8,1],[13, 1]];
+        break;
+    case 'space':
+        // space port
+        future = Lang.space;
+        resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
+        break;
+    case 'stasis':
+        // stasis block
+        future = Lang.stasis;
+        resourcesNeeded = [[0,4],[1, 1],[2,3],[3,2],[4,3],[5,2],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
+        break;
+    case 'store':
+        // Storage Tanks
+        future = Lang.store;
+        resourcesNeeded = [[4,1]];
+        break;
+    case 'uni':
+        // University
+        future = Lang.uni;
+        resourcesNeeded = [[0,1],[1,2],[2,1],[4,1],[6,1],[7,1],[9,1],[10,1],[11,1]];
+        break;
+    case 'warehouse':
+        // warehouse
+        future = Lang.warehouse;
+        resourcesNeeded = [[0,1],[4,1]];
+        break;
+    case 'windfarm':
+        // windfarm
+        future = Lang.windfarm;
+        resourcesNeeded = [[0,1],[2,1],[4,1],[5,1]];
+        break;
+    case 'workshop':
+        // workshop
+        future = Lang.workshop;
+        resourcesNeeded = [[0,1],[2,1],[4,2],[5,1],[12, 1]];
+        break;
+    default:
+        console.log("What are you talking about?... :( " + building);
+        return false;
+    }
+    if(getRec){
+        console.log('trying' + resourcesNeeded);
+        return(requisition(resourcesNeeded));
+    } else {
         var htmlString = '';
         htmlString += "<br><button class='smoky_glass main_pointer' onclick='clicked(true)' style='width: 100%; text-align: center;'>" + Lang.confirmBuild + "</button><br>";
         htmlString += '<h3>' + Lang.resourcesNeeded + ' (' + future + ')</h3>';
@@ -3560,6 +3544,34 @@ function resourceNeededList(building){
         }
         htmlString += '</ul>';
         return htmlString;
+    }
+}
+
+function requisition(arr){
+    console.log(arr);
+    var resourceCheck = false;
+    var count = 0;
+    for(var j = 0; j < arr.length; j++){
+        if(Game.procOres[arr[j][0]] >= arr[j][1]){
+            count += 1;
+        }
+    }
+    if(count === arr.length){
+        resourceCheck = true;
+        for(var k = 0; k < arr.length; k++){
+            Game.procOres[arr[k][0]] -= arr[k][1];
+        }
+        execReview();
+    } else {
+        var shortage = Lang.resourceShortage;
+        for(var s = 1; s < arr.length; s++){
+            if(Game.procOres[arr[s][0]] < arr[s][1]){
+                shortage += Game.resourceNames[arr[s][0]] + ", ";
+            }
+        }
+        notify(shortage.substring(0,shortage.length - 2)); //removes the space and comma
+    }
+    return resourceCheck;
 
 }
 
@@ -3744,7 +3756,9 @@ function clicked(direction) {
         rightClicked(resourceNeededList(Game.clickedOn));
     } else {
         if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(200, x, y, Game.level);
+            if(resourceNeededList(Game.clickedOn, true)){
+                hex[1] = bobTheBuilder(200, x, y, Game.level);
+            }
         } else {
             !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
         }
