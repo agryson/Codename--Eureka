@@ -2757,7 +2757,12 @@ function keypressed(e) {
         if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
             menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
         }
-        document.getElementById('statsContainer').classList.remove('exec_hidden');
+        if(document.getElementById('statsContainer').classList.contains('exec_hidden')){
+            document.getElementById('statsContainer').classList.remove('exec_hidden');
+        } else {
+            document.getElementById('statsContainer').classList.add('exec_hidden');
+            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        }
         break;
     case 82://r (research)
         document.getElementById('statsContainer').classList.add('exec_hidden');
@@ -2766,7 +2771,12 @@ function keypressed(e) {
         if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
             menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
         }
-        document.getElementById('researchContainer').classList.remove('exec_hidden');
+        if(document.getElementById('researchContainer').classList.contains('exec_hidden')){
+            document.getElementById('researchContainer').classList.remove('exec_hidden');
+        } else {
+            document.getElementById('researchContainer').classList.add('exec_hidden');
+            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        }
         break;
     case 71://g (guide)
         document.getElementById('statsContainer').classList.add('exec_hidden');
@@ -2775,7 +2785,12 @@ function keypressed(e) {
         if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
             menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
         }
-        document.getElementById('guideContainer').classList.remove('exec_hidden');
+        if(document.getElementById('guideContainer').classList.contains('exec_hidden')){
+            document.getElementById('guideContainer').classList.remove('exec_hidden');
+        } else {
+            document.getElementById('guideContainer').classList.add('exec_hidden');
+            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        }
         break;
     case 67://c (communiqués)
         document.getElementById('statsContainer').classList.add('exec_hidden');
@@ -2784,7 +2799,12 @@ function keypressed(e) {
         if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
             menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
         }
-        document.getElementById('messageContainer').classList.remove('exec_hidden');
+        if(document.getElementById('messageContainer').classList.contains('exec_hidden')){
+            document.getElementById('messageContainer').classList.remove('exec_hidden');
+        } else {
+            document.getElementById('messageContainer').classList.add('exec_hidden');
+            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+        }
         break;
     case 13: //enter (next turn)
         advanceTurn(1);
