@@ -3704,16 +3704,12 @@ function clicked(direction) {
         if(!direction){
             rightClicked(resourceNeededList(Game.clickedOn));
         } else {
-            if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
+            if((checkConnection(y, x) || Game.clickedOn === 'commarray' || Game.clickedOn === 'commarray2') && hex[1] && hex[1].kind === 3) {
                 if(resourceNeededList(Game.clickedOn, true)){
                     hex[1] = bobTheBuilder(getBuildingRef(Game.clickedOn), x, y, Game.level);
                 }
             } else {
-                if(Game.clickedOn === 208 || Game.clickedOn === 209){
-                    notify(Lang.notPrepared);
-                } else {
-                    !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-                }
+                !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
             }
         }
     }
