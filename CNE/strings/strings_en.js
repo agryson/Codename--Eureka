@@ -22,7 +22,7 @@ function Lang(){
 	this.digging = "Digging";
 	this.diggingCavern = "Digging cavern";
 	this.mining = "Mining";
-	this.recycling = "Recycling";
+	this.recyclingAction = "Recycling";
 	this.buildTime = "Build time remaining: ";
 	this.building = "Building: ";
 	this.week = "week";
@@ -103,7 +103,7 @@ function Lang(){
 	this.nursery = "Nursery";
 	this.oreproc = "Ore Processor";
 	this.rec = "Recreation Center";
-	this.recycler = "Recycling Center";
+	this.recycling = "Recycling Center";
 	this.clichy = "Red Light District";
 	this.research = "Research Center";
 	this.research2 = "Advanced Research lab";

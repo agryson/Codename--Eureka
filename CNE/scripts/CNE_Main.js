@@ -1122,7 +1122,7 @@ function Param() {
         ["nursery", false, 1, Lang.nursery],
         ["oreproc", false, 0, Lang.oreproc], //
         ["rec", false, 1, Lang.rec],
-        ["recycler", false, 0, Lang.recycler],
+        ["recycling", false, 0, Lang.recycler],
         ["clichy", false, 1, Lang.clichy], //
         ["research", false, 2, Lang.research], //
         ["research2", false, 2, Lang.research2],
@@ -3255,7 +3255,7 @@ function contextContent(content) {
     }
     //resources?
     for(var i = 0; i < tile.resources.length; i++) {
-        if(tile.resources[i] > 0 && !option) {
+        if(tile.resources[i] > 0) {
             if(!resources) {
                 htmlString += '<h3>' + Lang.resources + '</h3><ul>';
                 resources = true;
@@ -3408,7 +3408,7 @@ function resourceNeededList(building, getRec){
         future = Lang.rec;
         resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
         break;
-    case 'recycler':
+    case 'recycling':
         // recycler
         future = Lang.recycler;
         resourcesNeeded = [[2,1],[4,1],[8,1],[12, 1]];
@@ -3700,395 +3700,22 @@ function clicked(direction) {
         }
         //TODO: add recycle code
         break;
-    case 'agri':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            if(resourceNeededList(Game.clickedOn, true)){
-                hex[1] = bobTheBuilder(200, x, y, Game.level);
-            }
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'agri2':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(201, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'airport':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(202, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'arp':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(203, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'barracks':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(205, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'civprot':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(206, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'civprot2':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(207, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'command':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(210, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'commarray':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(208, x, y, Game.level);
-        } else {
-            notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'commarray2':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(209, x, y, Game.level);
-        } else {
-           notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'connector':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(211, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'dronefab':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(212, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'chernobyl':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(213, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'tokamak':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(214, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'genfab':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(215, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'geotherm':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(216, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'hab':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(217, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'hab2':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(218, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'hab3':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(219, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'er':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(220, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'nursery':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(222, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'oreproc':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(223, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'rec':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(224, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'recycler':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(225, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'clichy':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(226, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'research':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(227, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'research2':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(228, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'solar':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(229, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'space':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(230, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'stasis':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(231, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'store':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(232, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'uni':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(233, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'warehouse':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(234, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'windfarm':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(235, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
-    case 'workshop':
-    if(!direction){
-        rightClicked(resourceNeededList(Game.clickedOn));
-    } else {
-        if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
-            hex[1] = bobTheBuilder(236, x, y, Game.level);
-        } else {
-            !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
-        }
-        }
-        break;
     default:
-        console.log("I don't recognise that building code...");
+        if(!direction){
+            rightClicked(resourceNeededList(Game.clickedOn));
+        } else {
+            if(checkConnection(y, x) && hex[1] && hex[1].kind === 3) {
+                if(resourceNeededList(Game.clickedOn, true)){
+                    hex[1] = bobTheBuilder(getBuildingRef(Game.clickedOn), x, y, Game.level);
+                }
+            } else {
+                if(Game.clickedOn === 208 || Game.clickedOn === 209){
+                    notify(Lang.notPrepared);
+                } else {
+                    !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
+                }
+            }
+        }
     }
     drawRadar();
 }
@@ -4097,6 +3724,83 @@ function clicked(direction) {
 /**
  *  When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
  */
+function getBuildingRef(reference){
+    switch(reference){
+        case 'agri':
+            return 200;
+        case 'agri2':
+            return 201;
+        case 'airport':
+            return 202;
+        case 'arp':
+            return 203;
+        case 'barracks':
+            return 205;
+        case 'civprot':
+            return 206;
+        case 'civprot2':
+            return 207;
+        case 'command':
+            return 210;
+        case 'commarray':
+            return 208;
+        case 'commarray2':
+            return 209;
+        case 'connector':
+            return 211;
+        case 'dronefab':
+            return 212;
+        case 'chernobyl':
+            return 213;
+        case 'tokamak':
+            return 214;
+        case 'genfab':
+            return 215;
+        case 'geotherm':
+            return 216;
+        case 'hab':
+            return 217;
+        case 'hab2':
+            return 218;
+        case 'hab3':
+            return 219;
+        case 'er':
+            return 220;
+        case 'nursery':
+            return 222;
+        case 'oreproc':
+            return 223;
+        case 'rec':
+            return 224;
+        case 'recycling':
+            return 225;
+        case 'clichy':
+            return 226;
+        case 'research':
+            return 227;
+        case 'research2':
+            return 228;
+        case 'solar':
+            return 229;
+        case 'space':
+            return 230;
+        case 'stasis':
+            return 231;
+        case 'store':
+            return 232;
+        case 'uni':
+            return 233;
+        case 'warehouse':
+            return 234;
+        case 'windfarm':
+            return 235;
+        case 'workshop':
+            return 236;
+        default :
+            console.log('what building again? ' + reference);
+    }
+
+}
 
 function construct() {
     var identity = this.id;
@@ -4200,7 +3904,7 @@ function construct() {
         case 'rec':
             document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
-        case 'recycler':
+        case 'recycling':
             document.body.style.cursor = "url('images/pointers/build.png'), default";
             break;
         case 'clichy':
