@@ -1960,6 +1960,11 @@ function eavesdrop() {
 
     //!Executive Drop Down
     //
+    //Console
+    document.getElementById('console').onclick = function() {
+        document.getElementById('console').classList.toggle('console_open');
+    };
+    //!Console
     //Global Menu
     var settings = document.getElementById('settingsContainer');
     var setBtn = document.getElementById('settings');
@@ -2611,136 +2616,165 @@ function mainLoop() {
     }
 }
 
+function runConsole(text){
+    console.log('just did it! ' + text);
+    document.getElementById('consoleInput').value = '';
+    //var command = text.substring
+    //switch(text)
+}
+
 /**
  * reacts to keyboard input appropriately
  * @param  {Object} e
  */
 
 function keypressed(e) {
-    switch(e.keyCode) {
-    case 38:
-        move('up');
-        break;
-    case 40:
-        move('down');
-        break;
-    case 37:
-        move('left');
-        break;
-    case 39:
-        move('right');
-        break;
-    case 76:
-        move('level'); //changes level
-        drawRadar();
-        break;
-    case 48:
-        Game.level = 0;
-        checkBuildings();
-        drawRadar();
-        document.getElementById('slider').value = Game.level;
-        break;
-    case 49:
-        Game.level = 1;
-        checkBuildings();
-        drawRadar();
-        document.getElementById('slider').value = Game.level;
-        break;
-    case 50:
-        Game.level = 2;
-        checkBuildings();
-        drawRadar();
-        document.getElementById('slider').value = Game.level;
-        break;
-    case 51:
-        Game.level = 3;
-        checkBuildings();
-        drawRadar();
-        document.getElementById('slider').value = Game.level;
-        break;
-    case 52:
-        Game.level = 4;
-        checkBuildings();
-        drawRadar();
-        document.getElementById('slider').value = Game.level;
-        break;
-    case 27:
-        document.getElementById(Game.clickedOn).style.background = '#000';
-        Game.clickedOn = 'none';
-        document.body.style.cursor = "url('images/pointers/pointer.png'), default";
-        break;
-    case 77:
-        menu(document.getElementById('radarContainer'), document.getElementById('radarButton'), 'radar_hidden');
-        break;
-    case 69:
-        document.getElementById('statsContainer').classList.add('exec_hidden');
-        document.getElementById('researchContainer').classList.add('exec_hidden');
-        document.getElementById('messageContainer').classList.add('exec_hidden');
-        document.getElementById('guideContainer').classList.add('exec_hidden');
-        menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-        break;
-    case 83://s (statistics)
-        document.getElementById('researchContainer').classList.add('exec_hidden');
-        document.getElementById('messageContainer').classList.add('exec_hidden');
-        document.getElementById('guideContainer').classList.add('exec_hidden');
-        if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+    if(document.activeElement === document.getElementById('consoleInput')){
+        switch(e.keyCode){
+            case 13:
+                runConsole(document.getElementById('consoleInput').value);
+                break;
+            default:
+                console.log('in the console' + e.keyCode);
         }
-        if(document.getElementById('statsContainer').classList.contains('exec_hidden')){
-            document.getElementById('statsContainer').classList.remove('exec_hidden');
-        } else {
+    } else {
+        switch(e.keyCode) {
+        case 38:
+            move('up');
+            break;
+        case 40:
+            move('down');
+            break;
+        case 37:
+            move('left');
+            break;
+        case 39:
+            move('right');
+            break;
+        case 76:
+            move('level'); //changes level
+            drawRadar();
+            break;
+        case 48:
+            Game.level = 0;
+            checkBuildings();
+            drawRadar();
+            document.getElementById('slider').value = Game.level;
+            break;
+        case 49:
+            Game.level = 1;
+            checkBuildings();
+            drawRadar();
+            document.getElementById('slider').value = Game.level;
+            break;
+        case 50:
+            Game.level = 2;
+            checkBuildings();
+            drawRadar();
+            document.getElementById('slider').value = Game.level;
+            break;
+        case 51:
+            Game.level = 3;
+            checkBuildings();
+            drawRadar();
+            document.getElementById('slider').value = Game.level;
+            break;
+        case 52:
+            Game.level = 4;
+            checkBuildings();
+            drawRadar();
+            document.getElementById('slider').value = Game.level;
+            break;
+        case 27:
+            document.getElementById(Game.clickedOn).style.background = '#000';
+            Game.clickedOn = 'none';
+            document.body.style.cursor = "url('images/pointers/pointer.png'), default";
+            break;
+        case 77:
+            menu(document.getElementById('radarContainer'), document.getElementById('radarButton'), 'radar_hidden');
+            break;
+        case 69:
             document.getElementById('statsContainer').classList.add('exec_hidden');
-            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-        }
-        break;
-    case 82://r (research)
-        document.getElementById('statsContainer').classList.add('exec_hidden');
-        document.getElementById('messageContainer').classList.add('exec_hidden');
-        document.getElementById('guideContainer').classList.add('exec_hidden');
-        if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-        }
-        if(document.getElementById('researchContainer').classList.contains('exec_hidden')){
-            document.getElementById('researchContainer').classList.remove('exec_hidden');
-        } else {
             document.getElementById('researchContainer').classList.add('exec_hidden');
-            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-        }
-        break;
-    case 71://g (guide)
-        document.getElementById('statsContainer').classList.add('exec_hidden');
-        document.getElementById('researchContainer').classList.add('exec_hidden');
-        document.getElementById('messageContainer').classList.add('exec_hidden');
-        if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-        }
-        if(document.getElementById('guideContainer').classList.contains('exec_hidden')){
-            document.getElementById('guideContainer').classList.remove('exec_hidden');
-        } else {
+            document.getElementById('messageContainer').classList.add('exec_hidden');
             document.getElementById('guideContainer').classList.add('exec_hidden');
             menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-        }
-        break;
-    case 67://c (communiqués)
-        document.getElementById('statsContainer').classList.add('exec_hidden');
-        document.getElementById('researchContainer').classList.add('exec_hidden');
-        document.getElementById('guideContainer').classList.add('exec_hidden');
-        if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-        }
-        if(document.getElementById('messageContainer').classList.contains('exec_hidden')){
-            document.getElementById('messageContainer').classList.remove('exec_hidden');
-        } else {
+            break;
+        case 83://s (statistics)
+            document.getElementById('researchContainer').classList.add('exec_hidden');
             document.getElementById('messageContainer').classList.add('exec_hidden');
-            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            document.getElementById('guideContainer').classList.add('exec_hidden');
+            if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
+                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            }
+            if(document.getElementById('statsContainer').classList.contains('exec_hidden')){
+                document.getElementById('statsContainer').classList.remove('exec_hidden');
+            } else {
+                document.getElementById('statsContainer').classList.add('exec_hidden');
+                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            }
+            break;
+        case 82://r (research)
+            document.getElementById('statsContainer').classList.add('exec_hidden');
+            document.getElementById('messageContainer').classList.add('exec_hidden');
+            document.getElementById('guideContainer').classList.add('exec_hidden');
+            if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
+                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            }
+            if(document.getElementById('researchContainer').classList.contains('exec_hidden')){
+                document.getElementById('researchContainer').classList.remove('exec_hidden');
+            } else {
+                document.getElementById('researchContainer').classList.add('exec_hidden');
+                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            }
+            break;
+        case 71://g (guide)
+            document.getElementById('statsContainer').classList.add('exec_hidden');
+            document.getElementById('researchContainer').classList.add('exec_hidden');
+            document.getElementById('messageContainer').classList.add('exec_hidden');
+            if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
+                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            }
+            if(document.getElementById('guideContainer').classList.contains('exec_hidden')){
+                document.getElementById('guideContainer').classList.remove('exec_hidden');
+            } else {
+                document.getElementById('guideContainer').classList.add('exec_hidden');
+                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            }
+            break;
+        case 67://c (communiqués)
+            document.getElementById('statsContainer').classList.add('exec_hidden');
+            document.getElementById('researchContainer').classList.add('exec_hidden');
+            document.getElementById('guideContainer').classList.add('exec_hidden');
+            if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
+                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            }
+            if(document.getElementById('messageContainer').classList.contains('exec_hidden')){
+                document.getElementById('messageContainer').classList.remove('exec_hidden');
+            } else {
+                document.getElementById('messageContainer').classList.add('exec_hidden');
+                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+            }
+            break;
+        case 13: //enter (next turn)
+            advanceTurn(1);
+            break;
+        case 84: //t terminal
+            if(document.getElementById('console').classList.contains('console_open')){
+                document.getElementById('consoleInput').value = '>';
+            } else {
+                document.getElementById('consoleInput').focus();
+            }
+            setTimeout(function(){
+                document.getElementById('consoleInput').value = '';
+            }, 30);
+            document.getElementById('console').classList.toggle('console_open');
+
+            break;
+        default:
+            console.log("Uhm... that key doesn't do anything... " + e.keyCode);
+            break;
         }
-        break;
-    case 13: //enter (next turn)
-        advanceTurn(1);
-        break;
-    default:
-        console.log("Uhm... that key doesn't do anything... " + e.keyCode);
-        break;
     }
 }
 
