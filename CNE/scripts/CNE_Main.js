@@ -2618,8 +2618,11 @@ function mainLoop() {
 
 function runConsole(text){
     console.log('just did it! ' + text);
-    document.getElementById('consoleInput').value = '';
-    //var command = text.substring
+    var input = document.getElementById('consoleInput');
+    var output = document.getElementById('consoleContent');
+    output.innerHTML += '<br>' + text;
+
+    var command = text.substring;
     //switch(text)
 }
 
@@ -2629,10 +2632,20 @@ function runConsole(text){
  */
 
 function keypressed(e) {
+    if(e.keyCode === 8){
+        window.event.stop(e);
+    }
     if(document.activeElement === document.getElementById('consoleInput')){
         switch(e.keyCode){
             case 13:
                 runConsole(document.getElementById('consoleInput').value);
+                break;
+            case 27:
+                document.getElementById('consoleInput').blur();
+                setTimeout(function(){
+                    document.getElementById('consoleInput').value = '';
+                }, 30);
+                document.getElementById('console').classList.remove('console_open');
                 break;
             default:
                 console.log('in the console' + e.keyCode);
@@ -2760,22 +2773,17 @@ function keypressed(e) {
             advanceTurn(1);
             break;
         case 84: //t terminal
-            if(document.getElementById('console').classList.contains('console_open')){
-                document.getElementById('consoleInput').value = '>';
-            } else {
-                document.getElementById('consoleInput').focus();
-            }
+            document.getElementById('consoleInput').focus();
             setTimeout(function(){
                 document.getElementById('consoleInput').value = '';
             }, 30);
-            document.getElementById('console').classList.toggle('console_open');
-
+            document.getElementById('console').classList.add('console_open');
             break;
         default:
             console.log("Uhm... that key doesn't do anything... " + e.keyCode);
-            break;
         }
     }
+    //I need to find and kill backspace - not appropriate for a chrome packaged game...
 }
 
 /**

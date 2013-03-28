@@ -727,6 +727,8 @@ input[type="checkbox"]:checked + label span{
     border-top: white 1px solid;
     border-left: white 1px solid;
     z-index: 2;
+    overflow-y: scroll;
+    overflow-x: hidden;
     -webkit-box-shadow: 1px 1px 3px 1px #000;
     box-shadow: 1px 1px 3px 1px #000;
     -webkit-transition: all ease 0.2s;
@@ -735,14 +737,21 @@ input[type="checkbox"]:checked + label span{
     font-family: courier;
 }
 
+.console_content{
+    display: inline-block;
+    background: transparent;
+    color: green;
+    width: 730px;
+    margin-top: 10px;
+    border-bottom: 1px solid #3C3C3C;
+}
+
 .console_open{
     bottom: 0;
 }
 
-textarea.console_input{
-    width: 730px;
-    margin-top: 10px;
-    height: 100%;
+input.console_input{
+    width: 710px;
     color: green;
     background: black;
     resize: none;
@@ -753,13 +762,19 @@ textarea.console_input{
     display: inline-block;
 }
 
-textarea.console_input:focus{
+input.console_input:focus{
     outline: none;
     color: green;
 }
 
-textarea.console_input:active{
+input.console_input:active{
     border: none;
+}
+
+.console_cursor{
+    float: left;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .stats_container{
