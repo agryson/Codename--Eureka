@@ -717,18 +717,16 @@ input[type="checkbox"]:checked + label span{
 .console{
     background: black;
     position: absolute;
-    bottom: -600px;
     left: 50%;
+    bottom: 0;
     margin-left: -375px;
-    text-align: center;
     width: 750px;
-    height: 650px;
+    height: 25px;
     border-radius: 10px 10px 0 0;
     border-top: white 1px solid;
     border-left: white 1px solid;
     z-index: 2;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: hidden;
     -webkit-box-shadow: 1px 1px 3px 1px #000;
     box-shadow: 1px 1px 3px 1px #000;
     -webkit-transition: all ease 0.2s;
@@ -738,19 +736,34 @@ input[type="checkbox"]:checked + label span{
 }
 
 .console_content{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    bottom: 25px;
+    text-align: left;
     display: inline-block;
     background: transparent;
     color: green;
+    overflow-y: scroll;
+    font-family: Courier;
+    font-size: 18px;
+    font-weight: bold;
     width: 730px;
+    max-height: 310px;
     margin-top: 10px;
+    margin-left: 5px;
     border-bottom: 1px solid #3C3C3C;
+    word-wrap: break-word;
 }
 
 .console_open{
-    bottom: 0;
+    height: 350px;
 }
 
 input.console_input{
+    position: absolute;
+    bottom: 0;
+    left: 25px;
     width: 710px;
     color: green;
     background: black;
@@ -772,9 +785,11 @@ input.console_input:active{
 }
 
 .console_cursor{
-    float: left;
+    position: absolute;
+    bottom: 2px;
+    left: 0;
     margin-top: 5px;
-    margin-bottom: 5px;
+    margin-left: 5px;
 }
 
 .stats_container{

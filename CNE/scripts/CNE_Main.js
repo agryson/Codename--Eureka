@@ -2616,14 +2616,45 @@ function mainLoop() {
     }
 }
 
-function runConsole(text){
-    console.log('just did it! ' + text);
-    var input = document.getElementById('consoleInput');
+function print(text){
+    if(!document.getElementById('console').classList.contains('console_open')){
+        document.getElementById('console').classList.add('console_open');
+    }
     var output = document.getElementById('consoleContent');
-    output.innerHTML += '<br>' + text;
+    output.innerHTML += text + '<br>';
+}
 
-    var command = text.substring;
+function consoleErr(text, err, command, fix){
+    if(err === 'value'){
+        print(text + ' ' + Lang.valueErr + ' "' + command + '"' + ', ' + fix);
+    } else if(err === 'command') {
+        print(text + ' ' + Lang.commandErr);
+    } else {
+        print(text + ' ' + Lang.consoleInputErr);
+    }
+}
+
+function runConsole(text){
+    document.getElementById('consoleInput').value = '';
+    print(text);
+    var input = text.split(" ");
+
     //switch(text)
+    switch(input[0]){
+        case Lang.advance:
+            if(input[1] > 0){
+                advanceTurn(input[1]);
+            } else {
+                consoleErr(input[1], 'value', input[0], Lang.integer);
+            }
+            break;
+        default:
+            consoleErr(input[0], 'gibberish')
+
+    }
+
+    //Keep this at the bottom
+    output.scrollTop = output.scrollHeight;
 }
 
 /**
@@ -2637,7 +2668,7 @@ function keypressed(e) {
     }
     if(document.activeElement === document.getElementById('consoleInput')){
         switch(e.keyCode){
-            case 13:
+            case 13: //enter
                 runConsole(document.getElementById('consoleInput').value);
                 break;
             case 27:
