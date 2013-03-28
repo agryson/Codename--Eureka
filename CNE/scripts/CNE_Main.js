@@ -2612,8 +2612,11 @@ function mainLoop() {
 
 function printConsole(text){
     if(!document.getElementById('console').classList.contains('console_open')){
-        document.getElementById('consoleInput').focus();
-        document.getElementById('console').classList.add('console_open');
+        //document.getElementById('consoleInput').focus();
+        document.getElementById('console').classList.add('console_notif');
+        setTimeout(function(){
+            document.getElementById('console').classList.remove('console_notif');
+        }, 2500);
     }
     var output = document.getElementById('consoleContent');
     output.innerHTML += text + '<br>';

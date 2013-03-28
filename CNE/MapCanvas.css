@@ -720,6 +720,10 @@ input[type="checkbox"]:checked + label span{
     font-family: courier;
 }
 
+.console_notif{
+    height: 50px;
+}
+
 .console_content{
     position: absolute;
     left: 0;
