@@ -1096,6 +1096,7 @@ function Param() {
      * [[string: 'id of menu option', boolean: available to player?, int: surface(0)/subsurface(1)/both(2)]]
      * @type {Array}
      */
+    //this.home = [];
     this.buildings = [
         ["agri", false, 0, Lang.agri], //
         ["agri2", false, 0, Lang.agri2],
@@ -2640,8 +2641,8 @@ function runConsole(text){
 
     //switch(text)
     switch(input[0]){
-        case Lang.advance:
-            if(input[1] > 0){
+        case Lang.advance: //advance multiple turns
+            if(!isNaN(input[1])){
                 advanceTurn(input[1]);
             } else {
                 consoleErr(input[1], 'value', input[0], Lang.integer);
@@ -2649,6 +2650,43 @@ function runConsole(text){
             break;
         case Lang.hello:
             printConsole(Lang.world);
+            break;
+        case Lang.level:
+            if(input[1] >= 0 || input[1] <= 4){
+                console.log(input[1]);
+                Game.level = parseInt(input[1], 10);
+                checkBuildings();
+                drawRadar();
+                document.getElementById('slider').value = Game.level;
+            } else {
+                consoleErr(input[1], 'value', input[0], Lang.integer);
+            }
+            break;
+        case Lang.home:
+            if(Game.home){
+                jump(true, Game.home[0], Game.home[1], 0);
+            } else {
+                printConsole(Lang.setDown);
+            }
+            break;
+        case Lang.help:
+            switch(input[1]){
+                case Lang.advance:
+                    printConsole(Lang.advanceMan);
+                    break;
+                case Lang.hello:
+                    printConsole(Lang.helloMan);
+                    break;
+                case Lang.level:
+                    printConsole(Lang.levelMan);
+                    break;
+                case Lang.home:
+                    printConsole(Lang.home);
+                    break;
+                default:
+                    printConsole(Lang.helpMan);
+            }
+            //manpage
             break;
         default:
             consoleErr(input[0], 'command');
@@ -2868,7 +2906,7 @@ function move(dir) {
         }
         break;
     case 'level':
-        Game.level == 4 ? Game.level = 0 : Game.level += 1;
+        Game.level === 4 ? Game.level = 0 : Game.level += 1;
         checkBuildings();
         drawRadar();
         document.getElementById('slider').value = Game.level;
@@ -3626,6 +3664,7 @@ function clicked(direction) {
             printConsole(Lang.onWater);
         } else {
             hex[1] = bobTheBuilder(210, x, y, Game.level);
+            Game.home = [x,y];
             for(var j = 0; j < 6; j++) {
                 var tempY = adjacent(x, y, j)[0];
                 var tempX = adjacent(x, y, j)[1];

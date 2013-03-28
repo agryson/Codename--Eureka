@@ -2,19 +2,19 @@ function Lang(){
 	//Custom names etc.
 	this.planet = "Gliese 581d";
 	//Notifications
-	this.noDig = "You can\'t dig here.";
-	this.noCavern = "You can\'t dig a cavern here.";
-	this.noDoze = "You can\'t prepare this terrain.";
-	this.noMine = "You can\'t mine here. Ensure a mine is in place or that no buildings or drones are present.";
-	this.noRecycle = "This can\'t be recycled.";
-	this.noConnection = "No adjacent connector node.";
-	this.notPrepared = "This terrain has not been prepared.";
-	this.buildingPresent = "You can\'t dig here, buildings or drones are present.";
+	this.noDig = "You can\'t dig here";
+	this.noCavern = "You can\'t dig a cavern here";
+	this.noDoze = "You can\'t prepare this terrain";
+	this.noMine = "You can\'t mine here. Ensure a mine is in place or that no buildings or drones are present";
+	this.noRecycle = "This can\'t be recycled";
+	this.noConnection = "No adjacent connector node";
+	this.notPrepared = "This terrain has not been prepared";
+	this.buildingPresent = "You can\'t dig here, buildings or drones are present";
 	this.onWater = "FLOOD WARNING!";
-	this.lastLevel = "You can't go any deeper than this.";
-	this.setDown = "Please choose your landing zone first...";
+	this.lastLevel = "You can't go any deeper than this";
+	this.setDown = "Please choose your landing zone first..";
 	this.resourceShortage = "Resources missing: ";
-	this.outOfRange = "Out of communications range.";
+	this.outOfRange = "Out of communications range";
 	this.noAir = "WARNING: Air Shortage!";
 
 	//Actions and references
@@ -58,7 +58,7 @@ function Lang(){
 	this.employed = "Employed";
 	this.unemployed = "Unemployed";
 
-	//Terminal Commands
+	//Terminal
 	this.valueErr = "is not a valid value for";
 	this.commandErr = "is not a recognized command";
 	this.integer = "try a number";
@@ -66,6 +66,15 @@ function Lang(){
 	this.advance = "advance";
 	this.hello = "hello";
 	this.world = "world";
+	this.level = "level";
+	this.home = "home";
+	this.help = "help";
+
+	this.advanceMan = "advance: (e.g. 'advance 5') Will advance the number of turns given";
+    this.helloMan = "hello: (e.g. 'hello') Will say hello to the world";
+    this.levelMan = "level: (e.g. 'level 2') Will move to the level given";
+    this.homeMan = "home: (e.g. 'home') Will center the map's position on the Lander";
+    this.helpMan = this.advanceMan + '<br>' + this.helloMan + '<br>' + this.levelMan + '<br>' + this.home;
 
 	//Confirmations
 	this.confirmMine = "Mine here";
