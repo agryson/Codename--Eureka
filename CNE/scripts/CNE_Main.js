@@ -2019,18 +2019,20 @@ function advanceTurn(turns){
                 Game.blackout = 30;
             }
             saneStats();
-            execReview();
-            document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
-            drawRadar();
-            Game.turnNum.innerHTML = "Week: " + Game.turn;
-            reCount('all');
+            if(turns === 1){
+                execReview();
+                document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
+                drawRadar();
+                Game.turnNum.innerHTML = "Week: " + Game.turn;
+                reCount('all');
+                document.getElementById('consoleContent').innerHTML = '';
+                printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
+            }
             //The following hold code just prevents accidentally skipping two turns with accidental clicks...
             /*document.getElementById('turn').disabled = true;
             setTimeout(function() {
                 document.getElementById('turn').disabled = false;
             }, 300);*/
-            document.getElementById('consoleContent').innerHTML = '';
-            printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
         } else {
             printConsole(Lang.setDown);
         }
@@ -2647,7 +2649,7 @@ function runConsole(text){
     }
 
     //Keep this at the bottom
-    output.scrollTop = output.scrollHeight;
+    document.getElementById('consoleContent').scrollTop = output.scrollHeight;
 }
 
 /**
