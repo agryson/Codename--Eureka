@@ -2026,7 +2026,6 @@ function advanceTurn(turns){
                 Game.turnNum.innerHTML = "Week: " + Game.turn;
                 reCount('all');
                 document.getElementById('consoleContent').innerHTML = '';
-                printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
             }
             //The following hold code just prevents accidentally skipping two turns with accidental clicks...
             /*document.getElementById('turn').disabled = true;
@@ -2038,6 +2037,7 @@ function advanceTurn(turns){
         }
         turns -=1;
     }
+    printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
 }
 
 function menu(containerIn, buttonIn, hideClass) {
@@ -2620,6 +2620,7 @@ function printConsole(text){
     }
     var output = document.getElementById('consoleContent');
     output.innerHTML += text + '<br>';
+    output.scrollTop = output.scrollHeight;
 }
 
 function consoleErr(text, err, command, fix){
@@ -2646,13 +2647,12 @@ function runConsole(text){
                 consoleErr(input[1], 'value', input[0], Lang.integer);
             }
             break;
+        case Lang.hello:
+            printConsole(Lang.world);
+            break;
         default:
             consoleErr(input[0], 'command');
-
     }
-
-    //Keep this at the bottom
-    document.getElementById('consoleContent').scrollTop = output.scrollHeight;
 }
 
 /**
@@ -2661,9 +2661,6 @@ function runConsole(text){
  */
 
 function keypressed(e) {
-    if(e.keyCode === 8){
-        window.event.stop(e);
-    }
     if(document.activeElement === document.getElementById('consoleInput')){
         switch(e.keyCode){
             case 13: //enter
@@ -2671,9 +2668,7 @@ function keypressed(e) {
                 break;
             case 27:
                 document.getElementById('consoleInput').blur();
-                setTimeout(function(){
-                    document.getElementById('consoleInput').value = '';
-                }, 30);
+                document.getElementById('consoleInput').value = '';
                 document.getElementById('console').classList.remove('console_open');
                 break;
             default:
@@ -2681,6 +2676,9 @@ function keypressed(e) {
         }
     } else {
         switch(e.keyCode) {
+        case 8: //prevent backspace from fupping up my day
+            e.preventDefault();
+            break;
         case 38:
             move('up');
             break;
@@ -2805,7 +2803,7 @@ function keypressed(e) {
             document.getElementById('consoleInput').focus();
             setTimeout(function(){
                 document.getElementById('consoleInput').value = '';
-            }, 30);
+            }, 10);
             document.getElementById('console').classList.add('console_open');
             break;
         default:

@@ -64,6 +64,8 @@ function Lang(){
 	this.integer = "try a number";
 	this.itIsNow = "it is now";
 	this.advance = "advance";
+	this.hello = "hello";
+	this.world = "world";
 
 	//Confirmations
 	this.confirmMine = "Mine here";
