@@ -1023,7 +1023,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
         }
         return o;
     } else {
-        notify(Lang.onWater);
+        printConsole(Lang.onWater);
     }
 }
 
@@ -1467,7 +1467,7 @@ function saneStats(){
     if(airAvailable <= 0){
         Game.air[Game.air.length - 1] = 0;
         Game.noAir += 50;
-        notify(Lang.noAir);
+        printConsole(Lang.noAir);
     } else {
         Game.noAir = 0;
     }
@@ -1708,6 +1708,8 @@ function eavesdrop() {
     var mainMap = document.getElementById('mPanOverlay');
     mainMap.onmousemove = function(evt) {
         getMousePos(Game.mPanCanvas, evt, true); //tracker
+        document.getElementById('console').classList.remove('console_open');
+        document.getElementById('consoleInput').blur();
     };
     mainMap.onmouseover = function() {
         Game.highlight = true;
@@ -1873,6 +1875,10 @@ function eavesdrop() {
     var execButton = document.getElementById('execButton');
     execBtnContainer.onclick = function() {
         menu(exec, execButton, 'exec_hidden');
+        document.getElementById('statsContainer').classList.add('exec_hidden');
+        document.getElementById('researchContainer').classList.add('exec_hidden');
+        document.getElementById('messageContainer').classList.add('exec_hidden');
+        document.getElementById('guideContainer').classList.add('exec_hidden');
     };
     var seeStats = document.getElementById('seeStats');
     var seeMessages = document.getElementById('seeMessages');
@@ -2009,7 +2015,7 @@ function advanceTurn(turns){
                 }
             }
             if(Game.energy[Game.energy.length - 1] <= 10) {
-                notify(Lang.noPower);
+                printConsole(Lang.noPower);
                 Game.blackout = 30;
             }
             saneStats();
@@ -2023,8 +2029,10 @@ function advanceTurn(turns){
             setTimeout(function() {
                 document.getElementById('turn').disabled = false;
             }, 300);*/
+            document.getElementById('consoleContent').innerHTML = '';
+            printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
         } else {
-            notify(Lang.setDown);
+            printConsole(Lang.setDown);
         }
         turns -=1;
     }
@@ -2497,22 +2505,6 @@ function checkRobots() {
 }
 
 /**
- * Provides notifications to the user
- * @param  {string} notif The notification to send
- */
-
-function notify(notif) {
-    var notification = document.getElementById('notifications');
-    notification.innerHTML = notif;
-    notification.style.width = 700 + 'px';
-    setTimeout(
-
-    function() {
-        notification.style.width = 0;
-    }, 2800);
-}
-
-/**
  * Generates a random number, from a base value from 0 to num-1
  * @param  {int} num is the modifier
  * @param  {int} min is the base value
@@ -2616,8 +2608,9 @@ function mainLoop() {
     }
 }
 
-function print(text){
+function printConsole(text){
     if(!document.getElementById('console').classList.contains('console_open')){
+        document.getElementById('consoleInput').focus();
         document.getElementById('console').classList.add('console_open');
     }
     var output = document.getElementById('consoleContent');
@@ -2626,17 +2619,17 @@ function print(text){
 
 function consoleErr(text, err, command, fix){
     if(err === 'value'){
-        print(text + ' ' + Lang.valueErr + ' "' + command + '"' + ', ' + fix);
+        printConsole(text + ' ' + Lang.valueErr + ' "' + command + '"' + ', ' + fix);
     } else if(err === 'command') {
-        print(text + ' ' + Lang.commandErr);
+        printConsole('"' + text + '"' + ' ' + Lang.commandErr);
     } else {
-        print(text + ' ' + Lang.consoleInputErr);
+        printConsole(text + ' ' + Lang.consoleInputErr);
     }
 }
 
 function runConsole(text){
     document.getElementById('consoleInput').value = '';
-    print(text);
+    printConsole(text);
     var input = text.split(" ");
 
     //switch(text)
@@ -2649,7 +2642,7 @@ function runConsole(text){
             }
             break;
         default:
-            consoleErr(input[0], 'gibberish')
+            consoleErr(input[0], 'command');
 
     }
 
@@ -3591,7 +3584,7 @@ function requisition(arr){
                 shortage += Game.resourceNames[arr[s][0]] + ", ";
             }
         }
-        notify(shortage.substring(0,shortage.length - 2)); //removes the space and comma
+        printConsole(shortage.substring(0,shortage.length - 2)); //removes the space and comma
     }
     return resourceCheck;
 
@@ -3627,7 +3620,7 @@ function clicked(direction) {
     switch(Game.clickedOn) {
     case 'lander':
         if(wetTest([y,x],Game.level)){
-            notify(Lang.onWater);
+            printConsole(Lang.onWater);
         } else {
             hex[1] = bobTheBuilder(210, x, y, Game.level);
             for(var j = 0; j < 6; j++) {
@@ -3671,9 +3664,9 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>");
         } else {
             if((hex[1] && (hex[1].kind < 200 && hex[1].kind > 2)) || (tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
-                notify(Lang.noDoze);
+                printConsole(Lang.noDoze);
             } else if(!inRange(x, y)){
-                notify(Lang.outOfRange);
+                printConsole(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(100, x, y, Game.level);
             }
@@ -3686,17 +3679,17 @@ function clicked(direction) {
             //tile.digDown(x, y, lowerTile);
             var DBelow = returnLevel(Game.level + 1);
             if(!checkConnection(y,x)){
-                notify(Lang.noConnection);
+                printConsole(Lang.noConnection);
             } else if(wetTest([y, x], Game.level + 1)){
-                notify(Lang.onWater);
+                printConsole(Lang.onWater);
             } else if((hex[1] && hex[1].kind >= 100) || (DBelow[y][x][1] && DBelow[y][x][1].kind >= 100)){
-                notify(Lang.buildingPresent);
+                printConsole(Lang.buildingPresent);
             } else if((tile.kind > 3 && tile.kind < 9) || tile.kind > 11) {
-                notify(Lang.noDig);
+                printConsole(Lang.noDig);
             } else if(Game.level === 4){
-                notify(Lang.lastLevel);
+                printConsole(Lang.lastLevel);
             } else if(!inRange(x, y)){
-                notify(Lang.outOfRange);
+                printConsole(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level, true);
                 DBelow[y][x][1] = bobTheBuilder(101, x, y, Game.level + 1, true);
@@ -3716,11 +3709,11 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>");
         } else {
             if(wetTest([y, x], Game.level)){
-                notify(Lang.onWater);
+                printConsole(Lang.onWater);
             } else if((hex[1] && hex[1].kind > 3) || Game.level === 0 || (tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
-                notify(Lang.noCavern);
+                printConsole(Lang.noCavern);
             } else if(!inRange(x, y)){
-                notify(Lang.outOfRange);
+                printConsole(Lang.outOfRange);
             } else {
                 hex[1] = bobTheBuilder(101, x, y, Game.level);
                 for(var z = 0; z < 6; z++) {
@@ -3739,15 +3732,15 @@ function clicked(direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmMine + "</button><br>");
         } else {
             if(wetTest([y, x], Game.level + 1)){
-                notify(Lang.onWater);
+                printConsole(Lang.onWater);
             } else if(hex[1] && hex[1].kind !== 221 && hex[1].kind >= 100) {
-                notify(Lang.noMine);
+                printConsole(Lang.noMine);
             } else if(Game.level !== 0 && (!hex[1] || hex[1] && hex[1].kind !== 221)){
-                notify(Lang.noMine);
+                printConsole(Lang.noMine);
             } else if(Game.level === 4) {
-                notify(Lang.lastLevel);
+                printConsole(Lang.lastLevel);
             } else if(!inRange(x, y)){
-                notify(Lang.outOfRange);
+                printConsole(Lang.outOfRange);
             } else {
                 var MBelow = returnLevel(Game.level + 1)[y][x];
                 hex[1] = bobTheBuilder(102, x, y, Game.level, true);
@@ -3782,7 +3775,7 @@ function clicked(direction) {
                     hex[1] = bobTheBuilder(getBuildingRef(Game.clickedOn), x, y, Game.level);
                 }
             } else {
-                !checkConnection(y, x) ? notify(Lang.noConnection) : notify(Lang.notPrepared);
+                !checkConnection(y, x) ? printConsole(Lang.noConnection) : printConsole(Lang.notPrepared);
             }
         }
     }

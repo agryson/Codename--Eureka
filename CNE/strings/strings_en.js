@@ -61,8 +61,8 @@ function Lang(){
 	//Terminal Commands
 	this.valueErr = "is not a valid value for";
 	this.commandErr = "is not a recognized command";
-	this.consoleInputErr = "is not valid input. Have you been smoking?";
 	this.integer = "try a number";
+	this.itIsNow = "it is now";
 	this.advance = "advance";
 
 	//Confirmations

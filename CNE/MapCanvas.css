@@ -185,21 +185,6 @@ button:active {
     -webkit-transition: all 1s ease;
 }
 
-/*Beginning the work on moving to classes for IDs*/
-.notifications {
-    position: absolute;
-    bottom:0;
-    right:340px;
-    padding: 0.1em;
-    border-radius: 5px 0 0 0;
-    height: 1.2em;
-    width: 0;
-    z-index: 2;
-    overflow: hidden;
-    background: #494949;
-    color: white;
-    -webkit-box-shadow: inset -1px -1px 2px 0 white;
-}
 /*        ******      Global Actions    ******      */
 .info {
     height: 2.5em;
@@ -1042,7 +1027,7 @@ z-index: 1;
     -webkit-transform: rotate(90deg);
 }
 
-/*For smaller stuff like notifications*/
+/*For smaller stuff*/
 .slide_out{
     overflow: hidden;
     -webkit-transition: all 0.2s ease-in-out;
