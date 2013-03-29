@@ -5,7 +5,9 @@
  * @return {nothing}
  */
 
-function getSeed(newGame) {
+function getSeed(newGame, name) {
+  if(!name){name = 'Gliese 581d';}
+  Lang = new Language(name);
   increment(0);
   var input = document.getElementById('seed').value;
   var popup = document.getElementById("popupContainer");
@@ -71,19 +73,19 @@ function increment(incrementer) {
   var message = document.getElementById('loadMessage');
   switch(incrementer) {
   case 1:
-    message.innerHTML = 'Engage!';
+    message.innerHTML = Lang.engage;
     break;
   case 2:
-    message.innerHTML = 'Going to Warp 11';
+    message.innerHTML = Lang.warp11;
     break;
   case 3:
-    message.innerHTML = 'Entering Orbit';
+    message.innerHTML = Lang.orbit;
     break;
   case 4:
-    message.innerHTML = 'Dropping probes';
+    message.innerHTML = Lang.probes;
     break;
   case 5:
-    message.innerHTML = 'Calling Houston... <br>This could take a while, we\'re 26 light years away!';
+    message.innerHTML = Lang.houston;
     break;
   default:
     //Do nothing
@@ -118,8 +120,7 @@ function createMap() {
   Game.level += 1;
   if(Game.level < 5) {
     increment(Game.level + 1);
-    console.log(Game.level);
-    setTimeout(createMap, 30);
+    setTimeout(createMap, 5);
   } else {
     Game.level = 0; /*draw the radar background & map once on load*/
     //start mainloop
@@ -127,9 +128,10 @@ function createMap() {
     drawZoomMap();
     drawRadar();
     drawLoc();
-    popup.style.opacity = '0';
     document.getElementById('login').onclick = null;
     document.getElementById('newSession').onclick = null;
+
+    popup.style.opacity = '0';
     popup.addEventListener('webkitTransitionEnd', function() {
       popup.style.zIndex = '-1';
     }, false);
@@ -165,7 +167,7 @@ function slide(x, y) {
     Game.map[y][x][0].ref = changeName(Lang.water, Game.map[y][x][0].ref);
     var lowest = [adjacent(x, y, randIndex)[1], adjacent(x, y, randIndex)[0]]; //x, y
     for(var j = 0; j < 6; j++) {
-      if(x > 1 && x < (Game.radarRad * 2) - 1 && y < (Game.radarRad * 2) - 1 && y > 1 && Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][0].altitude < Game.map[lowest[1]][lowest[0]][0].altitude && Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][0].kind !== 4) {
+      if(x > 1 && x < (Game.radarRad * 2) - 1 && y < (Game.radarRad * 2) - 1 && y > 1 && Game.map[adjacent(x, y, j)[0]][adjacent(x, y, j)[1]][0].altitude < Game.map[lowest[1]][lowest[0]][0].altitude) {
         lowest[1] = adjacent(x, y, j)[0];
         lowest[0] = adjacent(x, y, j)[1];
       }

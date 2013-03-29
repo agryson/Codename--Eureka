@@ -1,6 +1,6 @@
-function Lang(){
+function Language(planetName){
 	//Custom names etc.
-	this.planet = "Gliese 581d";
+	this.planet = planetName;
 	//Notifications
 	this.noDig = "You can\'t dig here";
 	this.noCavern = "You can\'t dig a cavern here";
@@ -16,6 +16,12 @@ function Lang(){
 	this.resourceShortage = "Resources missing: ";
 	this.outOfRange = "Out of communications range";
 	this.noAir = "WARNING: Air Shortage!";
+
+	this.engage = 'Engage!';
+	this.warp11 = 'Going to Warp 11';
+	this.orbit = 'Entering Orbit';
+	this.probes = 'Dropping probes';
+	this.houston = 'Calling Houston...';
 
 	//Actions and references
 	this.preparing = "Preparing";
@@ -279,9 +285,9 @@ function Lang(){
 	this.noSoilFarmingContent = "<h1>" + this.noSoilFarming + "</h1><p>The lack of microbes and humus in " + this.planet + "'s glassy sands and clays makes farming quite difficult. As a result, the colony needs to look into the options available such as expanded clay and other growth mediums.</p><p>Hydroponics and soilless farming go hand in hand, the prior focusing on optimizing the mineral mixes and water purity, while this program seeks to render the physical medium more conducive to farming (rather than just the chemical components).</p>";
 	this.xtremeTempAgricultureContent = "<h1>" + this.xtremeTempAgriculture + "</h1><p>While " + this.planet + " does sit in the right temperature range, these temperatures can vary dramatically in a few hours leading to particuar challenges in agriculture.</p><p>This research program seeks to address this and other related challenges through a combination of crop strain selection and physical temperature balancing through heat reservoirs and tweaks to growth media.</p>";
 	this.electricalEngineeringContent = "<h1>" + this.electricalEngineering + "</h1><p>The rather \"Wild West\" style equipment that we're forced to improvise with has rendered much of our electrical engineering techniques rather redundant.</p><p>This research program seeks to standardize and industrialize many of our current processes to improve efficiency and production rates.</p>";
-	this.commTechContent = "<h1>" + this.commTech + "</h1><p>High interference and various atmospheric effects have greatly reduced our comunication range.</p><p>This research program seeks to address these problems </p>";
-	this.pcbDesignContent = "PCB Design Content goes here....";
-	this.processorsContent = "Processors Content goes here....";
+	this.commTechContent = "<h1>" + this.commTech + "</h1><p>High interference and various atmospheric effects have greatly reduced our communication range.</p><p>This research program seeks to address these problems by studying how to overcome interference in the most economic ways possible given the materials available.</p>";
+	this.pcbDesignContent = "<h1>" + this.pcbDesign + "</h1><p>Our hardware, particularly electronics are much more shortlived here on " + this.planet + ". This research program aims to investigate changes to how we put these components together could improve longevity.</p><p>By defining best practices (through rigorous testing) to PCB design, such as the effects of placing certain components in such a way as to shield more fragile componenets from radiation or dust we hope to greatly improve efficiency and parts longevity.</p>";
+	this.processorsContent = "<h1>" + this.processors + "</h1><p>While we have all the information we could want on how to build fantastic processors in pristine lab conditions, we actually don't have much of the equipment necessary to avail of these advanced fabrication techniques.</p><p>This research program will seek to adapt these techniques to local needs such as improved hardening against radiation, improved temperature density due to air cooling problems with amount of dust on " + this.planet + "</p>";
 	this.roboticsContent = "Robotics Content goes here....";
 	this.geneticEngineeringContent = "Genetic Engineering Content goes here....";
 	this.animalGeneticsContent = "Animal Genetics Content goes here....";
