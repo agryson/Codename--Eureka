@@ -720,6 +720,11 @@ input[type="checkbox"]:checked + label span{
     font-family: courier;
 }
 
+input.console_input::selection{
+    background-color: green;
+    color: #000;
+}
+
 .console_notif{
     height: 50px;
 }

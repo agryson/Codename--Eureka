@@ -2514,8 +2514,12 @@ function checkRobots() {
  * @return {int}
  */
 
-function randGen(num, min) {
-    return Math.floor(Math.random() * num) + min;
+function randGen(num, min, seeded) {
+    if(seeded){
+        return Math.floor(Game.rng.random() * num) + min;
+    } else {
+        return Math.floor(Math.random() * num) + min;
+    }
 }
 
 /**
@@ -2669,6 +2673,13 @@ function runConsole(text){
                 printConsole(Lang.setDown);
             }
             break;
+        case Lang.seed:
+            if(Game.inputSeed){
+                printConsole(Game.inputSeed);
+            } else {
+                printConsole(Game.seeder);
+            }
+            break;
         case Lang.help:
             switch(input[1]){
                 case Lang.advance:
@@ -2683,14 +2694,17 @@ function runConsole(text){
                 case Lang.home:
                     printConsole(Lang.home);
                     break;
+                case Lang.seed:
+                    printConsole(Lang.seedMan);
+                    break;
                 default:
                     printConsole(Lang.helpMan);
             }
-            //manpage
             break;
         default:
             consoleErr(input[0], 'command');
     }
+    document.getElementById('console').classList.add('console_open');
 }
 
 /**

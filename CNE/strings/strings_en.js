@@ -74,7 +74,9 @@ function Lang(){
     this.helloMan = "hello: (e.g. 'hello') Will say hello to the world";
     this.levelMan = "level: (e.g. 'level 2') Will move to the level given";
     this.homeMan = "home: (e.g. 'home') Will center the map's position on the Lander";
-    this.helpMan = this.advanceMan + '<br>' + this.helloMan + '<br>' + this.levelMan + '<br>' + this.home;
+    this.seedMan = "password: (e.g. 'password') Will print your dashboard password. Please don't write it down on your desk...";
+    this.seed = "password";
+    this.helpMan = "Available commands: <br>|" + this.advance + '|    |' + this.hello + '|    |' + this.level + '|    |' + this.home + '|    |' + this.seed + '|<br>Use "help" + command to learn more. (e.g. "help advance")';
 
 	//Confirmations
 	this.confirmMine = "Mine here";

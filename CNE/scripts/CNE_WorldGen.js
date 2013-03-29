@@ -14,6 +14,7 @@ function getSeed(newGame) {
   document.getElementById('newSession').disabled = true;
   if(!newGame && input !== '') { //If I've entered a seed
     console.log('called |' + input +'|');
+    Game.inputSeed = input;
     input = input.split(' ').join('');
     for(var i = 0; i < input.length; i++) {
       seedString += input.charCodeAt(i);
@@ -145,8 +146,8 @@ function createMap() {
 function generateRivers(iterations) {
   var x, y;
   for(var i = 0; i < iterations; i++) {
-    x = randGen(Game.radarRad * 2, 0);
-    y = randGen(Game.radarRad * 2, 0);
+    x = randGen(Game.radarRad * 2, 0, true);
+    y = randGen(Game.radarRad * 2, 0, true);
     if(Game.map[y][x][0].kind === 2 || Game.map[y][x][0].kind === 1) {
       slide(x, y);
     } else {
@@ -157,7 +158,7 @@ function generateRivers(iterations) {
 
 function slide(x, y) {
   //console.log('x: ' + x + ' y: '+ y);
-  var randIndex = Math.floor(Math.random() * 6);
+  var randIndex = Math.floor(Game.rng.random() * 6);
   while(x > 0 && x < Game.radarRad * 2 && y < Game.radarRad * 2 && y > 0 && Game.map[y][x][0].kind !== 4) {
     Game.map[y][x][0].kind = 4;
     Game.map[y][x][0].diggable = false;
@@ -242,15 +243,15 @@ function generateResources(map) {
   [150, 90, 20, 40]//Calamine", "Zinc (Zn)"
     ];
   var limit = (Game.radarRad * 2) - 1;
-  var x = randGen(Game.radarRad * 2, 0);
-  var y = randGen(Game.radarRad * 2, 0);
+  var x = randGen(Game.radarRad * 2, 0, true);
+  var y = randGen(Game.radarRad * 2, 0, true);
   var sameAbove = false;
   for(var i = 0; i < resourceArray.length; i++) {
     if(Game.level === 0 || returnLevel(Game.level - 1)[y][x][0].resources[i]){
     for(var iter = 0; iter < resourceArray[i][3]; iter++) {
         var testAltitude = map[y][x][0].altitude;
         if(testAltitude < (resourceArray[i][0] + (Game.level*6)) && testAltitude > resourceArray[i][1] && x > 0 && x < limit && y < limit && y > 0 && map[y][x][0].kind !== 4) {
-          map[y][x][0].resources[i] = randGen(resourceArray[i][2], 1);
+          map[y][x][0].resources[i] = randGen(resourceArray[i][2], 1, true);
           map[y][x][0].mineable = true;
           //if we haven't already, update the texture to show resources
           if(map[y][x][0].kind < 8){
@@ -261,7 +262,7 @@ function generateResources(map) {
             var tempX = adjacent(x, y, count)[1];
             var tempY = adjacent(x, y, count)[0];
             if(map[tempY][tempX][0].kind !== 4 && (tempY != check[0] && tempX != check[1])) {
-              map[tempY][tempX][0].resources[i] = randGen(resourceArray[i][2], 1);
+              map[tempY][tempX][0].resources[i] = randGen(resourceArray[i][2], 1, true);
               map[tempY][tempX][0].mineable = true;
               //if we haven't already, update the texture to show resources
               if(map[tempY][tempX][0].kind < 8){
@@ -269,18 +270,18 @@ function generateResources(map) {
               }
             }
           }
-          x < Game.radarRad * 2 - 1 && x > 0 ? x = check[1] : x = randGen(Game.radarRad * 2, 0);
-          y < Game.radarRad * 2 - 1 && y > 0 ? y = check[0] : y = randGen(Game.radarRad * 2, 0);
+          x < Game.radarRad * 2 - 1 && x > 0 ? x = check[1] : x = randGen(Game.radarRad * 2, 0, true);
+          y < Game.radarRad * 2 - 1 && y > 0 ? y = check[0] : y = randGen(Game.radarRad * 2, 0, true);
         } else {
           iter -= 1;
-          x = randGen(Game.radarRad * 2, 0);
-          y = randGen(Game.radarRad * 2, 0);
+          x = randGen(Game.radarRad * 2, 0, true);
+          y = randGen(Game.radarRad * 2, 0, true);
         }
       }
       } else {
         i -= 1;
-        x = randGen(Game.radarRad * 2, 0);
-        y = randGen(Game.radarRad * 2, 0);
+        x = randGen(Game.radarRad * 2, 0, true);
+        y = randGen(Game.radarRad * 2, 0, true);
       }
   }
 
@@ -288,7 +289,7 @@ function generateResources(map) {
 
 function sameLevel(map, x, y, i) {
   var current = map[y][x][0].altitude;
-  var randIndex = Math.floor(Math.random() * 6);
+  var randIndex = Math.floor(Game.rng.random() * 6);
   var closest = [adjacent(x, y, randIndex)[0], adjacent(x, y, randIndex)[1]];
   var next = map[adjacent(x, y, randIndex)[0]][adjacent(x, y, randIndex)[1]][0].altitude;
   for(var count = 0; count < 6; count++) {
