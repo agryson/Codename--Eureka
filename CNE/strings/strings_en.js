@@ -63,19 +63,24 @@ function Lang(){
 	this.commandErr = "is not a recognized command";
 	this.integer = "try a number";
 	this.itIsNow = "it is now";
+	this.between = "between";
+	this.and = "and";
 	this.advance = "advance";
 	this.hello = "hello";
 	this.world = "world";
 	this.level = "level";
 	this.home = "home";
 	this.help = "help";
+    this.seed = "password";
+	this.zoom = "zoom";
+
 
 	this.advanceMan = "advance: (e.g. 'advance 5') Will advance the number of turns given";
     this.helloMan = "hello: (e.g. 'hello') Will say hello to the world";
-    this.levelMan = "level: (e.g. 'level 2') Will move to the level given";
+    this.levelMan = "level: (e.g. 'level 2') Will move to the level given (level 0 -> level 4)";
     this.homeMan = "home: (e.g. 'home') Will center the map's position on the Lander";
     this.seedMan = "password: (e.g. 'password') Will print your dashboard password. Please don't write it down on your desk...";
-    this.seed = "password";
+    this.zoomMan = "zoom: (e.g. 'zoom 3') Will zoom the map to the level given (zoom 1 -> zoom 6)";
     this.helpMan = "Available commands: <br>|" + this.advance + '|    |' + this.hello + '|    |' + this.level + '|    |' + this.home + '|    |' + this.seed + '|<br>Use "help" + command to learn more. (e.g. "help advance")';
 
 	//Confirmations

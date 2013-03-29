@@ -1733,13 +1733,10 @@ function eavesdrop() {
                 setTimeout(function() {
                     blocked = false;
                 }, 500);
-                var yTemp = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 2;
-                var xTemp = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
-                Game.retY = yTemp;
-                Game.retX = xTemp;
+                Game.retY = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 2;
+                Game.retX = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
             };
         if(event.wheelDelta > 0 && val < zoomMax) {
-            console.log(blocked);
             if(!blocked) {
                 setRet();
             }
@@ -2628,9 +2625,13 @@ function printConsole(text){
     output.scrollTop = output.scrollHeight;
 }
 
-function consoleErr(text, err, command, fix){
+function consoleErr(text, err, command, fix, lwrLimit, uprLimit){
     if(err === 'value'){
-        printConsole(text + ' ' + Lang.valueErr + ' "' + command + '"' + ', ' + fix);
+        var errText = text + ' ' + Lang.valueErr + ' "' + command + '"' + ', ' + fix;
+        if(lwrLimit){
+            errText += ' ' + Lang.between + ' ' + lwrLimit + ' ' + Lang.and + ' ' + uprLimit;
+        }
+        printConsole(errText);
     } else if(err === 'command') {
         printConsole('"' + text + '"' + ' ' + Lang.commandErr);
     } else {
@@ -2657,13 +2658,12 @@ function runConsole(text){
             break;
         case Lang.level:
             if(input[1] >= 0 || input[1] <= 4){
-                console.log(input[1]);
                 Game.level = parseInt(input[1], 10);
                 checkBuildings();
                 drawRadar();
                 document.getElementById('slider').value = Game.level;
             } else {
-                consoleErr(input[1], 'value', input[0], Lang.integer);
+                consoleErr(input[1], 'value', input[0], Lang.integer, 0, 4);
             }
             break;
         case Lang.home:
@@ -2678,6 +2678,14 @@ function runConsole(text){
                 printConsole(Game.inputSeed);
             } else {
                 printConsole(Game.seeder);
+            }
+            break;
+        case Lang.zoom:
+            if(input[1] >= 1 || input[1] <= 6){
+                document.getElementById('zoom').value = input[1];
+                zoom(input[1]);
+            } else {
+                consoleErr(input[1], 'value', input[0], Lang.integer, 1, 6);
             }
             break;
         case Lang.help:
