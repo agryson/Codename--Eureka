@@ -1713,13 +1713,12 @@ function eavesdrop() {
     //TODO: change this to a more standardized box
     var radioCheck = document.getElementById('musicOptionViz');
     radioCheck.onclick = function() {
-        radioCheck.classList.toggle('checkbox_checked');
         if(!Music.musicOn) {
             Music.musicOn = true;
             Music.play();
         } else {
             Music.musicOn = false;
-            Music.play();
+            Music.pause();
         }
     };
     //:Sound
