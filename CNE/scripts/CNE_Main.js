@@ -116,6 +116,8 @@ function nextTurn(x, y, level) {
                 }
             } else if(tile.kind === 224){
                 Game.leisure += 1;
+            } else if(tile.kind === 225){
+                Game.recyclerList.push([x,y,level]);
             } else if(tile.kind === 227 || tile.kind === 228){
                 Game.researchLabs.push([x, y, level, tile.researchTopic]);
             } else if(tile.kind === 233){
@@ -492,6 +494,9 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
                 o.future = [returnLevel(level)[y][x][0].kind - 5, Lang.cavern];
                 returnLevel(level)[y][x][0].kind -= 5;
             }
+            break;
+        case 103:
+            //TODO recycler code
             break;
 
             //Buildings
@@ -1044,6 +1049,28 @@ function Terrain() {
     //this.ref;
 }
 
+function recycle(kind, x, y, level){
+    var recycled = false;
+    for(var i = 0; i < Game.recyclerList.length; i++){
+        if(!returnLevel(Game.recyclerList[i][2])[Game.recyclerList[i][1]][Game.recyclerList[i][0]][1].shutdown && !recycled){
+            recycled = true;
+            returnLevel(level)[y][x][1] = bobTheBuilder(103, x, y, level);
+            var recovered = resourceNeededList(getBuildingRef(kind), false, true);
+            for(var j = 0; j < recovered.length; j++){
+                if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= recovered[j][1]){
+                    Game.procOres[recovered[j][0]] += recovered[j][1];
+                } else {
+                    printConsole(Lang.recycleFailure);
+                }
+            }
+        }
+    }
+    if(!recycled){
+        printConsole(Lang.noRecyclers);
+    }
+    execReview();
+}
+
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 /**
  * The main game object
@@ -1121,7 +1148,7 @@ function Param() {
         ["nursery", false, 1, Lang.nursery],
         ["oreproc", false, 0, Lang.oreproc], //
         ["rec", false, 1, Lang.rec],
-        ["recycling", false, 0, Lang.recycler],
+        ["recycling", false, 0, Lang.recycling],
         ["clichy", false, 1, Lang.clichy], //
         ["research", false, 2, Lang.research], //
         ["research2", false, 2, Lang.research2],
@@ -1148,7 +1175,7 @@ function Param() {
         [0, 1, "recycler", false, 2]
     ];
     this.commTowers = [];
-
+    this.recyclerList = [];
     //[[x,y,level,topic]]
     this.researchLabs = [];
     this.currentResearch = 'engineering';
@@ -1667,6 +1694,7 @@ window.onload = function init() {
 };
 
 function eavesdrop() {
+    document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
     //Start Screen
     document.getElementById('login').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
@@ -2050,8 +2078,19 @@ function menu(containerIn, buttonIn, hideClass) {
     buttonIn.classList.toggle('arrow_up');
 }
 
+function pageVisHandler() {
+  if (document.webkitHidden) {
+    Music.pause();
+  } else {
+    Music.play();
+  }
+}
+
 function Playlist(){
     this.musicOn = true;
+    this.pause = function() {
+        currentTrack.pause();
+    };
     this.play = function() {
         this.musicOn ? currentTrack.play() : currentTrack.pause();
     };
@@ -2063,24 +2102,24 @@ function Playlist(){
 
     //Sounds
     track0.addEventListener('ended', function() {
-      this.currentTime = 0;
-      track1.play();
-      currentTrack = track1;
+        this.currentTime = 0;
+        track1.play();
+        currentTrack = track1;
     }, false);
     track1.addEventListener('ended', function() {
-      this.currentTime = 0;
-      track2.play();
-      currentTrack = track2;
+        this.currentTime = 0;
+        track2.play();
+        currentTrack = track2;
     }, false);
     track2.addEventListener('ended', function() {
-      this.currentTime = 0;
-      track3.play();
-      currentTrack = track3;
+        this.currentTime = 0;
+        track3.play();
+        currentTrack = track3;
     }, false);
     track3.addEventListener('ended', function() {
-      this.currentTime = 0;
-      track0.play();
-      currentTrack = track0;
+        this.currentTime = 0;
+        track0.play();
+        currentTrack = track0;
     }, false);
     //!Sounds
 }
@@ -3439,7 +3478,7 @@ function changeName(string, orig) {
     return string + ' #' + orig.split('#')[1];
 }
 
-function resourceNeededList(building, getRec){
+function resourceNeededList(building, getRec, recycling){
     var resourcesNeeded;
     var future;
     switch(building) {
@@ -3633,8 +3672,9 @@ function resourceNeededList(building, getRec){
         console.log("What are you talking about?... :( " + building);
         return false;
     }
-    if(getRec){
-        console.log('trying' + resourcesNeeded);
+    if(recycling){
+        return resourcesNeeded;
+    } else if(getRec) {
         return(requisition(resourcesNeeded));
     } else {
         var htmlString = '';
@@ -3657,8 +3697,7 @@ function resourceNeededList(building, getRec){
     }
 }
 
-function requisition(arr){
-    console.log(arr);
+function requisition(arr){//TODO set up recycling here
     var resourceCheck = false;
     var count = 0;
     for(var j = 0; j < arr.length; j++){
@@ -3743,7 +3782,7 @@ function clicked(direction) {
                 }
             }
             Game.buildings[37][1] = false;
-            var buildable = [0, 3, 8, 11, 17, 23, 27, 32, 34, 35, 36];
+            var buildable = [0, 3, 8, 11, 17, 23, 25, 27, 32, 34, 35, 36];
             for(var ref in buildable) {
                 Game.buildings[buildable[ref]][1] = true;
             }
@@ -3858,7 +3897,11 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmRecycle + "</button><br>");
         } else {
-            tile.recycle();
+            if(hex[1] && hex[1].kind >= 200){
+                recycle(hex[1].kind, x, y, Game.level);
+            } else {
+                printConsole(Lang.noRecycle);
+            }
         }
         //TODO: add recycle code
         break;
@@ -3954,6 +3997,76 @@ function getBuildingRef(reference){
             return 235;
         case 'workshop':
             return 236;
+        case 200:
+            return 'agri';
+        case 201:
+            return 'agri2';
+        case 202:
+            return 'airport';
+        case 203:
+            return 'arp';
+        case 205:
+            return 'barracks';
+        case 206:
+            return 'civprot';
+        case 207:
+            return 'civprot2';
+        case 210:
+            return 'command';
+        case 208:
+            return 'commarray';
+        case 209:
+            return 'commarray2';
+        case 211:
+            return 'connector';
+        case 212:
+            return 'dronefab';
+        case 213:
+            return 'chernobyl';
+        case 214:
+            return 'tokamak';
+        case 215:
+            return 'genfab';
+        case 216:
+            return 'geotherm';
+        case 217:
+            return 'hab';
+        case 218:
+            return 'hab2';
+        case 219:
+            return 'hab3';
+        case 220:
+            return 'er';
+        case 222:
+            return 'nursery';
+        case 223:
+            return 'oreproc';
+        case 224:
+            return 'rec';
+        case 225:
+            return 'recycling';
+        case 226:
+            return 'clichy';
+        case 227:
+            return 'research';
+        case 228:
+            return 'research2';
+        case 229:
+            return 'solar';
+        case 230:
+            return 'space';
+        case 231:
+            return 'stasis';
+        case 232:
+            return 'store';
+        case 233:
+            return 'uni';
+        case 234:
+            return 'warehouse';
+        case 235:
+            return 'windfarm';
+        case 236:
+            return 'workshop';
         default :
             console.log('what building again? ' + reference);
     }

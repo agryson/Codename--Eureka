@@ -6,7 +6,7 @@ function Language(planetName){
 	this.noCavern = "You can\'t dig a cavern here";
 	this.noDoze = "You can\'t prepare this terrain";
 	this.noMine = "You can\'t mine here. Ensure a mine is in place or that no buildings or drones are present";
-	this.noRecycle = "This can\'t be recycled";
+	this.noRecycle = "Nothing to be recycled here";
 	this.noConnection = "No adjacent connector node";
 	this.notPrepared = "This terrain has not been prepared";
 	this.buildingPresent = "You can\'t dig here, buildings or drones are present";
@@ -16,6 +16,8 @@ function Language(planetName){
 	this.resourceShortage = "Resources missing: ";
 	this.outOfRange = "Out of communications range";
 	this.noAir = "WARNING: Air Shortage!";
+	this.noRecyclers = "No functioning " + this.recycling + "'s available";
+	this.recycleFailure = "Resources lost due to storage shortage";
 
 	this.engage = 'Engage!';
 	this.warp11 = 'Going to Warp 11';
