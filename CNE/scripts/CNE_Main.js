@@ -1689,7 +1689,9 @@ function drawGraph(type, outputId, sourceData, from0) {
  */
 
 window.onload = function init() {
-    Music.play();
+    if(!document.webkitHidden){
+        Music.play();
+    }
     eavesdrop();
 };
 
