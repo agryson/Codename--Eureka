@@ -2,6 +2,7 @@
 "use strict"; //this will break everything if there's any errors... that's a good thing
 var Game; //Global so I can get at it from other scripts...
 var Lang = new Language('Gliese 581d');
+var Music = new Playlist();
 
 //Nice map: 1363032002367
 //CONSTRUCTORS**********************************************************************************************
@@ -1076,9 +1077,6 @@ function Param() {
     this.terrain = new Image();
     this.terrain.src = 'images/terrain.png';
     */
-
-    this.music = new Audio('sound/spacial_winds_ambient_electronic.mp3');
-    this.musicOn = false;
     /*
     this.mouseX;
     this.mouseY;
@@ -1664,7 +1662,7 @@ function drawGraph(type, outputId, sourceData, from0) {
  */
 
 window.onload = function init() {
-    //Lang = new Lang("Gliese 581d");
+    Music.play();
     eavesdrop();
 };
 
@@ -1688,12 +1686,12 @@ function eavesdrop() {
     var radioCheck = document.getElementById('musicOptionViz');
     radioCheck.onclick = function() {
         radioCheck.classList.toggle('checkbox_checked');
-        if(!Game.musicOn) {
-            Game.musicOn = true;
-            music();
+        if(!Music.musicOn) {
+            Music.musicOn = true;
+            Music.play();
         } else {
-            Game.musicOn = false;
-            music();
+            Music.musicOn = false;
+            Music.play();
         }
     };
     //:Sound
@@ -2052,9 +2050,41 @@ function menu(containerIn, buttonIn, hideClass) {
     buttonIn.classList.toggle('arrow_up');
 }
 
-function music() {
-    Game.musicOn ? Game.music.play() : Game.music.pause();
+function Playlist(){
+    this.musicOn = true;
+    this.play = function() {
+        this.musicOn ? currentTrack.play() : currentTrack.pause();
+    };
+    var track0 = new Audio('sound/Virus-Cured_Clearside.mp3');
+    var track1 = new Audio('sound/Gone_Clearside.mp3');
+    var track2 = new Audio('sound/Shapeless_Clearside.mp3');
+    var track3 = new Audio('sound/Coma_Clearside.mp3');
+    var currentTrack = track0;
+
+    //Sounds
+    track0.addEventListener('ended', function() {
+      this.currentTime = 0;
+      track1.play();
+      currentTrack = track1;
+    }, false);
+    track1.addEventListener('ended', function() {
+      this.currentTime = 0;
+      track2.play();
+      currentTrack = track2;
+    }, false);
+    track2.addEventListener('ended', function() {
+      this.currentTime = 0;
+      track3.play();
+      currentTrack = track3;
+    }, false);
+    track3.addEventListener('ended', function() {
+      this.currentTime = 0;
+      track0.play();
+      currentTrack = track0;
+    }, false);
+    //!Sounds
 }
+
 
 function zoom(zoomLevel) {
     Game.destinationWidth = zoomLevel * 6 * 6;
