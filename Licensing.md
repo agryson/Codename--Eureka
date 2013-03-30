@@ -1,6 +1,6 @@
 Following licensing does **NOT** apply to all artwork.
 
-Following licensing is valid for *_HTML_*, *_CSS_* and *_JS_* files _(unless otherwise licensed in the file)_ and these specifically listed images:
+Following licensing is valid for *_HTML_*, *_CSS_* and *_JS_* files _(unless otherwise licensed in the file, e.g. Mersenne.js)_ and these specifically listed images:
  - build.png
  - digger.png
  - dozer.png

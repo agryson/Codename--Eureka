@@ -11,7 +11,7 @@ The project has just started and this repo is where we will be building this gam
 If it sounds like something you'd like to take part in, please get in touch! 
 This is not just about code, we need creative writers, artists, musical types - any skill you have could be useful.
 
-#Sources:
+##Sources:
 - Terrain textures are heavily modified from textures I found on [Mayang.com](http://www.mayang.com/textures/)
 - Music is used by permission from [Clearside](http://www.clearsidemusic.com/)
-- Mersenne Twister code for terrain generation is taken from [Sean McCullough's](banksean@gmail.com) JavaScript port of [Takuji Nishimura's and Makoto Matsumoto's C program for Perlin Noise](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html)
+- Mersenne Twister code for terrain generation is taken from [Sean McCullough's](https://gist.github.com/banksean/300494) JavaScript port of [Takuji Nishimura's and Makoto Matsumoto's C program for Perlin Noise](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html)
