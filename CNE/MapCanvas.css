@@ -911,6 +911,25 @@ input.console_input:active{
     width: 50%;
     float: left;
 }
+
+.resource_table{
+    border: none;
+}
+
+.resource_table tbody tr td:nth-child(1){
+    width: 30%;
+}
+
+.resource_table tbody tr td:nth-child(2){
+    width: 20%;
+}
+.resource_table tbody tr td:nth-child(3){
+    width: 10%;
+}
+
+.resource_table tbody tr:nth-child(odd){
+    background: rgba(0,0,0,0.2); 
+}
     /*!Executive Panel*/
     /*Left Menu*/
 .left_menu_slider {
