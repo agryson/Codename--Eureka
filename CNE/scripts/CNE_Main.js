@@ -1072,6 +1072,50 @@ function recycle(kind, x, y, level){
 }
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
+function database(){
+    if (!window.indexedDB) {
+        console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+    }
+    var request = window.webkitIndexedDB.open('Saves');
+    var db;
+    var objectStore;
+    request.onsuccess = function(event){
+        db = request.result;
+    };
+    request.onerror = function(event){
+        //DO something
+        console.log('No Go Roger ' + event.target.errorCode);
+    };
+    db.onerror = function(){
+        //Generic error handler for the database
+    };
+    request.onupgradeneeded = function(event){
+        //Update the stores and indices
+        db = event.target.result;
+        objectStore = db.createObjectStore("save_games", { keyPath: "inputSeed" });
+
+        var transaction = db.transaction(["save_games"], "readwrite");
+        transaction.oncomplete = function(event) {
+          console.log('Transaction open');
+        };
+
+        transaction.onerror = function(event) {
+          console.log("Transaction failed: " + event);
+        };
+
+        objectStore = transaction.objectStore("save_games");
+        request = objectStore.add(Game);
+        request.onsuccess = function(event) {
+            // event.target.result == customerData[i].ssn
+            console.log('Saved');
+        };
+    };
+
+
+    //Use Game.inputSeed as the keypath
+
+}
+
 /**
  * The main game object
  */
@@ -1320,6 +1364,7 @@ function Param() {
     this.resourceNames = [Lang.aluminium, Lang.calcium, Lang.copper, Lang.gold, Lang.iron, Lang.lead, Lang.magnesium, Lang.mercury, Lang.phosphorous, Lang.potassium, Lang.silver, Lang.sodium, Lang.tin, Lang.zinc];
     //Map generation vars
     this.seeder = '';
+    this.inputSeed = '';
     /*
     this.rng;
     this.noise;
