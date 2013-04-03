@@ -1072,49 +1072,175 @@ function recycle(kind, x, y, level){
 }
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
-function database(){
-    if (!window.indexedDB) {
-        console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
-    }
-    var request = window.webkitIndexedDB.open('Saves');
-    var db;
-    var objectStore;
-    request.onsuccess = function(event){
-        db = request.result;
-    };
-    request.onerror = function(event){
-        //DO something
-        console.log('No Go Roger ' + event.target.errorCode);
-    };
-    db.onerror = function(){
-        //Generic error handler for the database
-    };
-    request.onupgradeneeded = function(event){
-        //Update the stores and indices
-        db = event.target.result;
-        objectStore = db.createObjectStore("save_games", { keyPath: "inputSeed" });
+var database = {};
+database.indexedDB = {};
+database.indexedDB.db = null;
+database.indexedDB.open = function(){
+    var version = 1;
+    var request = window.indexedDB.open("saves", version);
 
-        var transaction = db.transaction(["save_games"], "readwrite");
-        transaction.oncomplete = function(event) {
-          console.log('Transaction open');
+    request.onupgradeneeded = function(e){
+        var db = e.target.result;
+        e.target.transaction.onerror = function(e){
+            console.log("there was a transaction problem: " + e);
         };
 
-        transaction.onerror = function(event) {
-          console.log("Transaction failed: " + event);
-        };
+        if(db.objectStoreNames.contains("saves")){
+            db.deleteObjectStore("saves");
+        }
 
-        objectStore = transaction.objectStore("save_games");
-        request = objectStore.add(Game);
-        request.onsuccess = function(event) {
-            // event.target.result == customerData[i].ssn
-            console.log('Saved');
-        };
+        var store = db.createObjectStore("saves", {keyPath: "inputSeed"});
     };
 
+    request.onsuccess = function(e){
+        console.log("successful request! " + e.target.result);
+        database.indexedDB.db = e.target.result;
+        database.indexedDB.saveGame();
+    };
+    request.onerror = function(e){
+        console.log("there was a request problem: " + e);
+    };
 
-    //Use Game.inputSeed as the keypath
+};
 
-}
+//taken from kinlan's demo todo
+database.indexedDB.saveGame = function(){
+    var db = database.indexedDB.db;
+    var trans = db.transaction(["saves"], "readwrite");
+    var store = trans.objectStore("saves");
+    var request = store.put({
+        "animate" : Game.animate,
+        "augment" : Game.augment,
+        "level" : Game.level,
+        "turn" : Game.turn,
+        "map" : Game.map,
+        "map1" : Game.map1,
+        "map2" : Game.map2,
+        "map3" : Game.map3,
+        "map4" : Game.map4,
+        "home" : Game.home,
+        "buildings" : Game.buildings,
+        "robotsList" : Game.robotsList,
+        "commTowers" : Game.commTowers,
+        "recyclerList" : Game.recyclerList,
+        "researchLabs" : Game.researchLabs,
+        "currentResearch" : Game.currentResearch,
+        "researchTopics" : Game.researchTopics,
+        "ores" : Game.ores,
+        "procOres" : Game.procOres,
+        "seeder" : Game.seeder,
+        "inputSeed" : Game.inputSeed,
+        "housing" : Game.housing,
+        "pop" : Game.pop,
+        "tossPop" : Game.tossPop,
+        "tossBabies" : Game.tossBabies,
+        "tossStudents" : Game.tossStudents,
+        "tossAdults" : Game.tossAdults,
+        "hipPop" : Game.hipPop,
+        "hipBabies" : Game.hipBabies,
+        "hipStudents" : Game.hipStudents,
+        "hipAdults" : Game.hipAdults,
+        "artPop" : Game.artPop,
+        "artBabies" : Game.artBabies,
+        "artStudents" : Game.artStudents,
+        "artAdults" : Game.artAdults,
+        "employed" : Game.employed,
+        "sdf" : Game.sdf,
+        "tossMorale" : Game.tossMorale,
+        "hipMorale" : Game.hipMorale,
+        "artMorale" : Game.artMorale,
+        "crime" : Game.crime,
+        "storageCap" : Game.storageCap,
+        "inStorage" : Game.inStorage,
+        "food" : Game.food,
+        "energy" : Game.energy,
+        "air" : Game.air,
+        "blackout" : Game.blackout,
+        "noAir" : Game.noAir,
+        "creche" : Game.creche,
+        "uni" : Game.uni,
+        "botAging" : Game.botAging,
+        "leisure" : Game.leisure
+        //so on so forth, one save per seed :)
+        //I'll eventually only save what the player has changed, using the seed to regenerate the map
+    });
+
+    request.onsuccess = function(e){
+        console.log("saved " + e);
+    };
+
+    request.onerror = function(e){
+        console.log(e.value);
+    };
+};
+
+database.indexedDB.loadGame = function(seedText){
+    var db = database.indexedDB.db;
+    var trans = db.transaction(["saves"], "readwrite");
+    var store = trans.objectStore("saves");
+    var request = store.get(seedText);
+    request.onerror = function(event) {
+        console.log("there was a problem loading the game " + event);
+    };
+    request.onsuccess = function(event) {
+        Game.animate = request.result.animate;
+        Game.augment = request.result.augment;
+        Game.level = request.result.level;
+        Game.turn = request.result.turn;
+        Game.map = request.result.map;
+        Game.map1 = request.result.map1;
+        Game.map2 = request.result.map2;
+        Game.map3 = request.result.map3;
+        Game.map4 = request.result.map4;
+        Game.home = request.result.home;
+        Game.buildings = request.result.buildings;
+        Game.robotsList = request.result.robotsList;
+        Game.commTowers = request.result.commTowers;
+        Game.recyclerList = request.result.recyclerList;
+        Game.researchLabs = request.result.researchLabs;
+        Game.currentResearch = request.result.currentResearch;
+        Game.researchTopics = request.result.researchTopics;
+        Game.ores = request.result.ores;
+        Game.procOres = request.result.procOres;
+        Game.seeder = request.result.seeder;
+        Game.inputSeed = request.result.inputSeed;
+        Game.housing = request.result.housing;
+        Game.pop = request.result.pop;
+        Game.tossPop = request.result.tossPop;
+        Game.tossBabies = request.result.tossBabies;
+        Game.tossStudents = request.result.tossStudents;
+        Game.tossAdults = request.result.tossAdults;
+        Game.hipPop = request.result.hipPop;
+        Game.hipBabies = request.result.hipBabies;
+        Game.hipStudents = request.result.hipStudents;
+        Game.hipAdults = request.result.hipAdults;
+        Game.artPop = request.result.artPop;
+        Game.artBabies = request.result.artBabies;
+        Game.artStudents = request.result.artStudents;
+        Game.artAdults = request.result.artAdults;
+        Game.employed = request.result.employed;
+        Game.sdf = request.result.sdf;
+        Game.tossMorale = request.result.tossMorale;
+        Game.hipMorale = request.result.hipMorale;
+        Game.artMorale = request.result.artMorale;
+        Game.crime = request.result.crime;
+        Game.storageCap = request.result.storageCap;
+        Game.inStorage = request.result.inStorage;
+        Game.food = request.result.food;
+        Game.energy = request.result.energy;
+        Game.air = request.result.air;
+        Game.blackout = request.result.blackout;
+        Game.noAir = request.result.noAir;
+        Game.creche = request.result.creche;
+        Game.uni = request.result.uni;
+        Game.botAging = request.result.botAging;
+        Game.leisure = request.result.leisure;
+        //so on so forth, one save per seed :)
+        //I'll eventually only save what the player has changed, using the seed to regenerate the map
+        Game.turnNum.innerHTML = Game.turn;
+        execReview();
+    };
+};
 
 /**
  * The main game object
