@@ -13,6 +13,7 @@ function Construction() {
     Notes: I got rid of food because why would one building use more than another?! So it should become a global variable.
     Think about making tile[x][y][0] the terrain and tile[x][y][1] the construction
      */
+    this.ref = "";
     this.position = [150, 150];
     this.kind = 3;
     this.exists = false;
@@ -34,6 +35,8 @@ function Construction() {
     this.housing = 0;
     this.employees = 0;
 
+    this.ores = [];
+
     this.future = [3, Lang.prepared];
     this.robot = -1;
     this.mining = false;
@@ -43,18 +46,18 @@ function Construction() {
 }
 
 function nextTurn(x, y, level) {
-    var tile = Game.map[level][y][x][1];
+    var tile = Game.mapTiles[level][y][x];
 
     var checkMine = function(xIn, yIn, levelIn) {
         for(var i = 0; i < 6; i++) {
-            if(Game.map[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1] && Game.map[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].kind === 221 && !Game.map[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]][1].shutdown) {
+            if(Game.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]] && Game.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]].kind === 221 && !Game.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]].shutdown) {
                 return true;
             }
         }
         return false;
     };
 
-    if(tile) {
+    if(typeof tile.kind === "number") {
 
         //GENERAL ADVANCEMENT OF THE GAME
         if(tile.exists) {
@@ -91,7 +94,7 @@ function nextTurn(x, y, level) {
             tile.buildTime -= 1;
         } else if(tile.buildTime === 0) {
             tile.buildTime = -1;
-            Game.mapTiles[level][y][x][0].ref = changeName(tile.future[1], Game.map[level][y][x][0].ref);
+            Game.mapTiles[level][y][x].ref = changeName(tile.future[1], Game.map[level][y][x].ref);
             tile.exists = true;
             Game.storageCap[Game.storageCap.length - 1] += tile.storage;
             Game.energy[Game.energy.length - 1] += tile.energy;
@@ -101,7 +104,7 @@ function nextTurn(x, y, level) {
                 tile.robot = -1;
             }
             if((tile.kind === 101 && tile.future[0] === 204) || (tile.kind === 102 && tile.future[0] === 221)) {
-                Game.mapTiles[level][y][x][1] = bobTheBuilder(tile.future[0], x, y, level, false);
+                Game.mapTiles[level][y][x] = bobTheBuilder(tile.future[0], x, y, level, false);
             } else {
                 tile.kind = tile.future[0];
                 nextTurn(x, y, level);
@@ -130,12 +133,12 @@ function nextTurn(x, y, level) {
         //MINING
         if(tile.mining && (tile.kind === 221 || checkMine(x, y, level))) {
             var stillMining = false;
-            for(var ore = 0; ore < Game.map[level][y][x][0].resources.length; ore++) {
-                if(Game.map[level][y][x][0].resources[ore] && Game.map[level][y][x][0].resources[ore] > 0) {
+            for(var ore = 0; ore < tile.ores.length; ore++) {
+                if(tile.ores && tile.ores[ore] > 0) {
                     stillMining = true;
                     var mined = Math.floor(Math.random() + 0.5);
                     if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= mined) {
-                        Game.map[level][y][x][0].resources[ore] -= mined;
+                        tile.ores[ore] -= mined;
                         Game.inStorage[Game.inStorage.length - 1] += mined;
                         Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
                     }
@@ -143,12 +146,13 @@ function nextTurn(x, y, level) {
             }
             if(!stillMining) {
                 tile.mining = false;
-                Game.map[level][y][x][0].ref = changeName(Lang.minedOut, Game.map[level][y][x][0].ref);
+                Game.mapTiles[level][y][x].ref = changeName(Lang.minedOut, Game.mapTiles[level][y][x].ref);
             }
         }
 
         //Research
         if(tile.researchTopic !== 'noResearch'){
+            console.log(tile.researchTopic);
             var labRef = researchTopicRef(tile.researchTopic);
             var topic = tile.researchTopic;
             if(labRef[5] > 1){
@@ -434,6 +438,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
         }
 
 
+            console.log(kind);
         switch(kind) {
             //Bots
         case 100:
@@ -461,7 +466,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.vital = true;
             o.kind = 8;
             o.buildTime = eta(3);
-            o.future = [Game.map[level][y][x][0].kind - 5, Lang.cavern];
+            o.future = [Game.map[level][y][x].kind - 5, Lang.cavern];
             o.kind = Game.map[level][y][x].kind - 5;
             o.ref = changeName(Lang.diggingCavern, Game.map[level][y][x].ref);
             reCount('cavernDigger');
@@ -477,6 +482,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.ref = changeName(Lang.mining, Game.map[level][y][x].ref);
             o.mining = true;
             o.robot = 3;
+            o.ores = Game.map[level][y][x].resources;
             Game.robotsList[3][0] += 1;
             reCount('miner');
             break;
@@ -492,6 +498,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
                 }
                 o.ref = changeName(Lang.mining, Game.map[level][y][x].ref);
                 o.mining = true;
+                o.ores = Game.map[level][y][x].resources;
             } else if(level > 0) {
                 o.future = [Game.map[level][y][x].kind - 5, Lang.cavern];
                 o.kind = Game.map[level][y][x].kind - 5;
@@ -1029,7 +1036,6 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             console.log("Bob can't build it... :( " + kind);
             return false;
         }
-        console.log(o);
         return o;
     } else {
         printConsole(Lang.onWater);
@@ -2307,7 +2313,6 @@ function fillResearchMenu(){
     //Tier0
     for(var i = 0; i < Game.researchTopics.length; i++){
         if(Game.researchTopics[i][2]){
-            console.log('filling');
             var tier0 = document.getElementById(Game.researchTopics[i][0]);
             if(!tier0.classList.contains('research_active')){
                 tier0.classList.add('research_active');
@@ -2380,7 +2385,7 @@ function fillResearchPanel(ident){
                     inProgress = false;
                 }
                 htmlString += "<div class='research_panel_item' onclick='jump(true," + lab[0] + "," + lab[1] + "," + lab[2] + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />";
-                htmlString += "<p>" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "</p>";
+                htmlString += "<p>" + Game.mapTiles[lab[2]][lab[1]][lab[0]].ref + "</p>";
                 htmlString += "<div class='research_bar_frame' style='width: 400px; margin-left: 100px'><div class='research_bar' style='width: " + researchProgress(ident) + "%''></div></div>";
                 htmlString += "</div>";
             }
@@ -2412,8 +2417,8 @@ function startResearch(ident){
     htmlString += Lang.chooseLab + " " + Lang[ident];
     for (var i = 0; i < Game.researchLabs.length; i++){
         var lab = Game.researchLabs[i];
-        returnLevel(lab[2])[lab[1]][lab[0]][1].researchTopic = lab[3];
-        htmlString += "<div class='research_panel_item' onclick='setResearchTopic(" + ident + "," + i + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />" + returnLevel(lab[2])[lab[1]][lab[0]][0].ref + "<br>";
+        Game.mapTiles[lab[2]][lab[1]][lab[0]][1].researchTopic = lab[3];
+        htmlString += "<div class='research_panel_item' onclick='setResearchTopic(" + ident + "," + i + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />" + returnLevel(lab[2])[lab[1]][lab[0]].ref + "<br>";
         htmlString += Lang.currentResearch + " " + Lang[lab[3]];
         htmlString += "<div class='research_bar_frame' style='width: 400px; margin-left: 100px'><div class='research_bar' style='width: " + researchProgress(ident) + "%''></div></div>";
         htmlString += "</div>";
@@ -3333,7 +3338,7 @@ function jump(bool, x, y, level) {
 function inRange(x, y){
     for(var tower = 0; tower < Game.commTowers.length; tower++){
         var radius = 75 - Game.level*10;
-        var thisTower = Game.mapTiles[Game.commTowers[tower][1]][Game.commTowers[tower][0]][1].kind;
+        var thisTower = Game.mapTiles[0][Game.commTowers[tower][1]][Game.commTowers[tower][0]].kind;
         if(thisTower === 210 || thisTower === 237){
             radius -= 25;
         }
@@ -3502,7 +3507,6 @@ function drawZoomMap() {
         x = 0;
         while(x <= Game.xLimit) {
             if(typeof Game.mapTiles[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind === "number"){
-                console.log('trying');
                 tileKind = Game.mapTiles[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind;
             } else {
                 tileKind = Game.map[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind;
@@ -3566,10 +3570,13 @@ function contextContent(content) {
     var construct = Game.mapTiles[Game.level][y][x];
     var resources = false;
     var htmlString = '';
-
-    htmlString += '<span>' + tile.ref + '</span><br>';
+    if(construct.exists){
+        htmlString += '<span>' + construct.ref + '</span><br>';
+    } else {
+        htmlString += '<span>' + tile.ref + '</span><br>';
+    }
     //build time left
-    if(construct && construct.kind === 100) {
+    if(construct.exists && construct.kind === 100) {
         htmlString += '<span>' + Lang.buildTime + (construct.buildTime + 1) + " ";
 
         if(construct.buildTime >= 1) {
@@ -3584,18 +3591,24 @@ function contextContent(content) {
             htmlString += content;
         }
     }
-    if(construct && construct.shutdown) {
+    if(construct.exists && construct.shutdown) {
         htmlString += '<span>' + Lang.noPower + '</span><br>';
         htmlString += '<span>' + Lang.shutdown + '</span><br>';
     }
     //resources?
-    for(var i = 0; i < tile.resources.length; i++) {
-        if(tile.resources[i] > 0) {
+    var resourceList;
+    if(construct.exists){
+        resourceList = construct.ores;
+    } else {
+        resourceList = tile.resources;
+    }
+    for(var i = 0; i < resourceList.length; i++) {
+        if(resourceList[i] > 0) {
             if(!resources) {
                 htmlString += '<h3>' + Lang.resources + '</h3><ul>';
                 resources = true;
             }
-            htmlString += '<li>' + Game.resourceArray[i][0] + ': ' + tile.resources[i] + 't';
+            htmlString += '<li>' + Game.resourceArray[i][0] + ': ' + resourceList[i] + 't';
             htmlString += '<ul><li>' + Game.resourceArray[i][1] + '</ul>';
         }
     }
@@ -3862,7 +3875,7 @@ function requisition(arr){//TODO set up recycling here
 function checkConnection(y, x) {
     var connected = false;
     for(var j = 0; j < 6; j++) {
-        if(Game.map[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]] && (Game.map[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 211 || Game.map[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 204)) {
+        if(Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]] && (Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 211 || Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 204)) {
             connected = true;
         }
     }
@@ -3891,7 +3904,7 @@ function clicked(direction) {
         if(wetTest([y,x],Game.level)){
             printConsole(Lang.onWater);
         } else {
-            hex = bobTheBuilder(210, x, y, Game.level);
+            Game.mapTiles[Game.level][y][x] = bobTheBuilder(210, x, y, Game.level);
             Game.home = [x,y];
             for(var j = 0; j < 6; j++) {
                 var tempY = adjacent(x, y, j)[0];
@@ -3938,7 +3951,7 @@ function clicked(direction) {
             } else if(!inRange(x, y)){
                 printConsole(Lang.outOfRange);
             } else {
-                hex = bobTheBuilder(100, x, y, Game.level);
+                Game.mapTiles[Game.level][y][x] = bobTheBuilder(100, x, y, Game.level);
             }
         }
         break;
@@ -3961,14 +3974,14 @@ function clicked(direction) {
             } else if(!inRange(x, y)){
                 printConsole(Lang.outOfRange);
             } else {
-                hex = bobTheBuilder(101, x, y, Game.level, true);
+                Game.mapTiles[Game.level][y][x] = bobTheBuilder(101, x, y, Game.level, true);
                 DBelow[y][x] = bobTheBuilder(101, x, y, Game.level + 1, true);
                 for(var k = 0; k < 6; k++) {
                     var belowAdj = DBelow[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]];
                     if((belowAdj && (belowAdj.kind >= 100 || belowAdj[1].kind < 4)) || Game.map[Game.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]].kind === 4 || wetTest([adjacent(x, y, k)[0], adjacent(x, y, k)[1]], Game.level + 1)) {
                         //do nothing
                     } else {
-                        belowAdj = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
+                        DBelow[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
                     }
                 }
             }
@@ -3991,7 +4004,7 @@ function clicked(direction) {
                     if((around && (around.kind >= 100 || around.kind < 4)) || Game.map[Game.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]].kind < 4 || wetTest([adjacent(x, y, z)[0], adjacent(x, y, z)[1]], Game.level + 1)) {
                         //do nothing
                     } else {
-                        around = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level);
+                        Game.mapTiles[Game.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level);
                     }
                 }
             }
@@ -4012,7 +4025,7 @@ function clicked(direction) {
             } else if(!inRange(x, y)){
                 printConsole(Lang.outOfRange);
             } else {
-                hex = bobTheBuilder(102, x, y, Game.level, true);
+                Game.mapTiles[Game.level][y][x] = bobTheBuilder(102, x, y, Game.level, true);
                 Game.mapTiles[Game.level + 1][y][x] = bobTheBuilder(102102, x, y, Game.level + 1, true);
                 for(var m = 0; m < 6; m++) {
                     var mineY = adjacent(x, y, m)[0];
@@ -4045,7 +4058,7 @@ function clicked(direction) {
         } else {
             if((checkConnection(y, x) || Game.clickedOn === 'commarray' || Game.clickedOn === 'commarray2') && hex && hex.kind === 3) {
                 if(resourceNeededList(Game.clickedOn, true)){
-                    hex = bobTheBuilder(getBuildingRef(Game.clickedOn), x, y, Game.level);
+                    Game.mapTiles[Game.level][y][x] = bobTheBuilder(getBuildingRef(Game.clickedOn), x, y, Game.level);
                 }
             } else {
                 !checkConnection(y, x) ? printConsole(Lang.noConnection) : printConsole(Lang.notPrepared);
