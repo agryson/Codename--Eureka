@@ -93,6 +93,7 @@ function nextTurn(x, y, level) {
         if(tile.buildTime > 0) {
             tile.buildTime -= 1;
         } else if(tile.buildTime === 0) {
+            tile.ores = Game.map[level][y][x].resources;
             tile.buildTime = -1;
             Game.mapTiles[level][y][x].ref = changeName(tile.future[1], Game.map[level][y][x].ref);
             tile.exists = true;
@@ -134,7 +135,7 @@ function nextTurn(x, y, level) {
         if(tile.mining && (tile.kind === 221 || checkMine(x, y, level))) {
             var stillMining = false;
             for(var ore = 0; ore < tile.ores.length; ore++) {
-                if(tile.ores && tile.ores[ore] > 0) {
+                if(tile.ores.length > 0 && tile.ores[ore] > 0) {
                     stillMining = true;
                     var mined = Math.floor(Math.random() + 0.5);
                     if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= mined) {
@@ -482,7 +483,6 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.ref = changeName(Lang.mining, Game.map[level][y][x].ref);
             o.mining = true;
             o.robot = 3;
-            o.ores = Game.map[level][y][x].resources;
             Game.robotsList[3][0] += 1;
             reCount('miner');
             break;
@@ -498,7 +498,6 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
                 }
                 o.ref = changeName(Lang.mining, Game.map[level][y][x].ref);
                 o.mining = true;
-                o.ores = Game.map[level][y][x].resources;
             } else if(level > 0) {
                 o.future = [Game.map[level][y][x].kind - 5, Lang.cavern];
                 o.kind = Game.map[level][y][x].kind - 5;
@@ -1104,7 +1103,7 @@ database.indexedDB.open = function(){
     request.onsuccess = function(e){
         console.log("successful request! " + e.target.result);
         database.indexedDB.db = e.target.result;
-        database.indexedDB.saveGame();
+        
     };
     request.onerror = function(e){
         console.log("there was a request problem: " + e);
@@ -1238,8 +1237,15 @@ database.indexedDB.loadGame = function(seedText){
         Game.leisure = request.result.leisure;
         //so on so forth, one save per seed :)
         //I'll eventually only save what the player has changed, using the seed to regenerate the map
-        Game.turnNum.innerHTML = Game.turn;
         execReview();
+        document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
+        fillResearchMenu();
+        drawRadar();
+        Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
+        reCount('all');
+        checkRobots();
+        checkBuildings();
+        document.getElementById('consoleContent').innerHTML = '';
     };
 };
 
@@ -2210,7 +2216,7 @@ function advanceTurn(turns){
                 document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
                 fillResearchMenu();
                 drawRadar();
-                Game.turnNum.innerHTML = "Week: " + Game.turn;
+                Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
                 reCount('all');
                 document.getElementById('consoleContent').innerHTML = '';
             }

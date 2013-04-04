@@ -39,6 +39,7 @@ function Language(planetName){
 	this.noPower = "WARNING: Power Shortage!";
 	this.shutdown = "Building shut down";
 	this.resourcesNeeded = "Required Resources:";
+	this.weekCounter = "Week: ";
 
 	//Stats
 	this.artie = "ArtIe";
