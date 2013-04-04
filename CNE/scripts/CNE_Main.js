@@ -414,23 +414,25 @@ function nextTurn(x, y, level) {
 }
 
 function bobTheBuilder(kind, x, y, level, builderBot) {
+    console.log(kind);
+    var eta = function(turns) {
+            if(Game.map[level][y][x].kind === 1 || Game.map[level][y][x].kind === 6) {
+                return Math.floor(turns * 1.5);
+            } else if(Game.map[level][y][x].kind === 2 || Game.map[level][y][x].kind === 7) {
+                return Math.floor(turns * 2.4);
+            } else {
+                return turns;
+            }
+        };
+
     if(Game.map[level][y][x].kind !== 4) {
         var o = new Construction();
         o.kind = 100;
         o.position = [level, x, y];
         if(kind >= 200 && kind < 300) {
-            Game.mapTiles[level][y][x].ref = changeName(Lang.building + Game.buildings[kind - 200][3], Game.map[level][y][x].ref);
+            o.ref = changeName(Lang.building + Game.buildings[kind - 200][3], Game.map[level][y][x].ref);
         }
 
-        var eta = function(turns) {
-                if(Game.map[level][y][x].kind === 1 || Game.map[level][y][x].kind === 6) {
-                    return Math.floor(turns * 1.5);
-                } else if(Game.map[level][y][x].kind === 2 || Game.map[level][y][x].kind === 7) {
-                    return Math.floor(turns * 2.4);
-                } else {
-                    return turns;
-                }
-            };
 
         switch(kind) {
             //Bots
@@ -438,7 +440,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.vital = true;
             o.buildTime = eta(2);
             o.future = [3, Lang.prepared];
-            Game.mapTiles[level][y][x].ref = changeName(Lang.preparing, Game.map[level][y][x].ref);
+            o.ref = changeName(Lang.preparing, Game.map[level][y][x].ref);
             o.robot = 0;
             Game.robotsList[0][0] += 1;
             reCount('dozer');
@@ -450,7 +452,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             if(builderBot) {
                 o.future = [204, Lang.building];
             }
-            Game.mapTiles[level][y][x].ref = changeName(Lang.digging, Game.map[level][y][x].ref);
+            o.ref = changeName(Lang.digging, Game.map[level][y][x].ref);
             o.robot = 1;
             Game.robotsList[1][0] += 1;
             reCount('digger');
@@ -460,8 +462,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.kind = 8;
             o.buildTime = eta(3);
             o.future = [Game.map[level][y][x][0].kind - 5, Lang.cavern];
-            Game.mapTiles[level][y][x].kind = Game.map[level][y][x].kind - 5;
-            Game.mapTiles[level][y][x].ref = changeName(Lang.diggingCavern, Game.map[level][y][x].ref);
+            o.kind = Game.map[level][y][x].kind - 5;
+            o.ref = changeName(Lang.diggingCavern, Game.map[level][y][x].ref);
             reCount('cavernDigger');
             break;
 
@@ -472,7 +474,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             if(builderBot) {
                 o.future = [221, Lang.building];
             }
-            Game.mapTiles[level][y][x].ref = changeName(Lang.mining, Game.map[level][y][x].ref);
+            o.ref = changeName(Lang.mining, Game.map[level][y][x].ref);
             o.mining = true;
             o.robot = 3;
             Game.robotsList[3][0] += 1;
@@ -488,11 +490,11 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
                 } else {
                     o.future = [o.kind, Lang.mining];
                 }
-                Game.mapTiles[level][y][x].ref = changeName(Lang.mining, Game.map[level][y][x].ref);
+                o.ref = changeName(Lang.mining, Game.map[level][y][x].ref);
                 o.mining = true;
             } else if(level > 0) {
                 o.future = [Game.map[level][y][x].kind - 5, Lang.cavern];
-                Game.mapTiles[level][y][x].kind = Game.map[level][y][x].kind - 5;
+                o.kind = Game.map[level][y][x].kind - 5;
             }
             break;
         case 103:
@@ -1021,12 +1023,13 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 50;
             o.energy = 60;
             o.future = [kind, Lang.lander];
-            Game.mapTiles[level][y][x].ref = changeName(Lang.lander, Game.map[level][y][x].ref);
+            o.ref = changeName(Lang.lander, Game.map[level][y][x].ref);
             break;
         default:
             console.log("Bob can't build it... :( " + kind);
             return false;
         }
+        console.log(o);
         return o;
     } else {
         printConsole(Lang.onWater);
@@ -3488,7 +3491,7 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, 
  */
 
 function drawZoomMap() {
-    var y, x, tileKind, tileRef;
+    var y, x, tileKind;
     mainLoop();
     webkitRequestAnimationFrame(drawZoomMap);
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
@@ -3498,7 +3501,8 @@ function drawZoomMap() {
     for(y = 0; y < Game.yLimit; y++) {
         x = 0;
         while(x <= Game.xLimit) {
-            if(Game.mapTiles[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].length > 0){
+            if(typeof Game.mapTiles[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind === "number"){
+                console.log('trying');
                 tileKind = Game.mapTiles[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind;
             } else {
                 tileKind = Game.map[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind;
