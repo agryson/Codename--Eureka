@@ -1103,6 +1103,7 @@ database.indexedDB.open = function(){
     request.onsuccess = function(e){
         console.log("successful request! " + e.target.result);
         database.indexedDB.db = e.target.result;
+        database.indexedDB.checkKeys();
     };
     request.onerror = function(e){
         console.log("there was a request problem: " + e);
@@ -1119,16 +1120,27 @@ database.indexedDB.checkKeys = function() {
     store.openCursor().onsuccess = function(event) {
         var cursor = event.target.result;
         if (cursor) {
-            console.log('printing');
             listSave(cursor);
             cursor.continue();
+        } else {
+            document.getElementById('popup').classList.add('popup_open');
+            //TODO: add code to tell user saveslist is ready
         }
     };
 };
 
 function listSave(data){
-    console.log(data.key);
-    console.log(data.value.turn);
+    var drop = document.getElementById('chooseSave');
+    var htmlString = '';
+    htmlString += '<button class="main_pointer" onclick=\'fillSeedForm("' + data.key + '","' + data.value.planetName + '")\'>';
+    htmlString += data.key + ' (' + Lang.week + ' ' + data.value.turn + ')';
+    htmlString += '</button><br>';
+    drop.innerHTML += htmlString;
+}
+
+function fillSeedForm(seedIn, nameIn){
+    document.getElementById('seed').value = seedIn;
+    document.getElementById('planetName').value = nameIn;
 }
 
 //taken from kinlan's demo todo
@@ -1872,6 +1884,7 @@ function drawGraph(type, outputId, sourceData, from0) {
  */
 
 window.onload = function init() {
+    database.indexedDB.open();
     if(!document.webkitHidden){
         Music.play();
     }
@@ -1886,6 +1899,12 @@ function eavesdrop() {
         checkBuildings();
         reCount('all');
         getSeed();
+    };
+    document.getElementById('seed').onfocus = function(){
+        document.getElementById('chooseSave').classList.add('drop_down_open');
+    };
+    document.getElementById('seed').onblur = function(){
+        document.getElementById('chooseSave').classList.remove('drop_down_open');
     };
     //!Start Screen
     //Sound
@@ -2228,6 +2247,7 @@ function advanceTurn(turns){
                 drawRadar();
                 Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
                 reCount('all');
+                database.indexedDB.saveGame();
                 document.getElementById('consoleContent').innerHTML = '';
             }
             //The following hold code just prevents accidentally skipping two turns with accidental clicks...

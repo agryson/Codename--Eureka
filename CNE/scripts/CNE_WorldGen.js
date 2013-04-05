@@ -18,7 +18,6 @@ function getSeed() {
     if(input !== '') { //If I've entered a seed
         console.log('called |' + input +'|');
         increment(1);
-        database.indexedDB.open();
         Game.inputSeed = input;
         input = input.split(' ').join('');
         for(var i = 0; i < input.length; i++) {
@@ -118,6 +117,11 @@ function createMap(l) {
             createMap(l + 1);
         }, 200);
     } else {
+        try{
+            database.indexedDB.loadGame(Game.inputSeed);
+        } catch(e){
+            console.log('No save by that name... ' + e);
+        }
         generateRivers(40);
         mapFit(true);
         drawZoomMap();
@@ -125,6 +129,8 @@ function createMap(l) {
         drawLoc();
 
         document.getElementById('login').onclick = null;
+        document.getElementById('seed').onfocus = null;
+        document.getElementById('seed').onblur = null;
         var popup = document.getElementById("popupContainer");
         popup.style.opacity = '0';
         popup.addEventListener('webkitTransitionEnd', function() {
