@@ -5,41 +5,39 @@
  * @return {nothing}
  */
 
-function getSeed(newGame, name) {
-  if(!name){name = 'Gliese 581d';}
-  Lang = new Language(name);
-  increment(0);
-  var input = document.getElementById('seed').value;
-  var popup = document.getElementById("popupContainer");
-  var seedString = '';
-  document.getElementById('login').disabled = true;
-  document.getElementById('newSession').disabled = true;
-  if(!newGame && input !== '') { //If I've entered a seed
-    console.log('called |' + input +'|');
-    Game.inputSeed = input;
-    input = input.split(' ').join('');
-    for(var i = 0; i < input.length; i++) {
-      seedString += input.charCodeAt(i);
-    }
-    console.log(seedString);
-    seedString = parseInt(seedString, 10) / Math.pow(10, input.length);
-    Game.seeder = seedString;
-  } else if(!newGame && input === '') {
-    alert('Please enter your dashboard password or start a new session...');
-    document.getElementById('login').disabled = false;
-    document.getElementById('newSession').disabled = false;
-  } else if(newGame) {
-    Game.seeder = new Date().getTime();
-  }
+function getSeed() {
+    var name = document.getElementById('planetName').value;
+    if(!name){name = 'Gliese 581d';}
+    Lang = new Language(name);
+    Game.planetName = name;
 
-  if(Game.seeder !== '') {
+    var input = document.getElementById('seed').value;
+    var popup = document.getElementById("popupContainer");
+    var seedString = '';
+    document.getElementById('login').disabled = true;
+    if(input !== '') { //If I've entered a seed
+        console.log('called |' + input +'|');
+        increment(1);
+        database.indexedDB.open();
+        Game.inputSeed = input;
+        input = input.split(' ').join('');
+        for(var i = 0; i < input.length; i++) {
+            seedString += input.charCodeAt(i);
+        }
+        Game.seeder = parseInt(seedString, 10) / Math.pow(10, input.length);
+    } else if(input === '') {
+        alert('Please enter your dashboard password or start a new session...');
+        document.getElementById('login').disabled = false;
+    }
+
+  if(typeof Game.seeder === 'number') {
     document.onkeydown = keypressed; //keyboard listener
     setTimeout(function() {
       Game.rng = new MersenneTwister(Game.seeder);
       Game.noise = new ClassicalNoise(Game.rng);
       Game.noise2 = new ClassicalNoise(Game.rng);
       Game.noise3 = new ClassicalNoise(Game.rng);
-      createMap();
+      createMap(0);
     }, 50);
   }
 }
@@ -98,50 +96,41 @@ function increment(incrementer) {
  * @return {nothing}
  */
 
-function createMap() {
-  var popup = document.getElementById("popupContainer");
-  for(var l = 0; l < 5; l++){
-    Game.map[l] = [];
-    Game.mapTiles[l] = [];
-    for(var y = 0; y < Game.radarRad * 2; y++) {
-      Game.map[l][y] = []; //create an array to hold the x cell, we now have a 200x200 2d array
-      Game.mapTiles[l][y] = [];
-      for(var x = 0; x < Game.radarRad * 2; x++) {
-        Game.map[l][y][x] = []; //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
-        Game.mapTiles[l][y][x] = [];
-        //map[y][x][0] = true; //invert axes because referencing the array is not like referencing a graph
-        Game.map[l][y][x] = new Terrain(); //if we're in the circle, assign a tile value
-        Game.map[l][y][x].ref = '#' + l + ':' + ((x - 150)) + ':' + ((y - 150) * (-1));
-        Game.map[l][y][x].altitude = altitude(x, y, l);
-        setType(x, y, l);
-        //map[y][x][0].resources = new Array(2); //insert the number of resources we'll be looking for
-      }
-    }
-    generateResources(Game.map[l]);
-    increment(l + 1);
-  }
-  //if(Game.level === 0) {
-    generateRivers(40);
-  //}
-  //Game.level += 1;
-  //if(Game.level < 5) {
-    //increment(Game.level + 1);
-    //setTimeout(createMap, 5);
-  //} else {
-    //Game.level = 0; /*draw the radar background & map once on load*/
-    //start mainloop
-    mapFit(true);
-    drawZoomMap();
-    drawRadar();
-    drawLoc();
-    document.getElementById('login').onclick = null;
-    document.getElementById('newSession').onclick = null;
+function createMap(l) {
+    if(l < 5){
+        Game.map[l] = [];
+        Game.mapTiles[l] = [];
+        for(var y = 0; y < Game.radarRad * 2; y++) {
+          Game.map[l][y] = []; //create an array to hold the x cell, we now have a 200x200 2d array
+          Game.mapTiles[l][y] = [];
+          for(var x = 0; x < Game.radarRad * 2; x++) {
+            Game.map[l][y][x] = []; //each cell needs to hold its own array of the specific tile's values, so we're working with a 3 dimensional array - this will change when I set tiles as objects
+            Game.mapTiles[l][y][x] = [];
+            Game.map[l][y][x] = new Terrain(); //if we're in the circle, assign a tile value
+            Game.map[l][y][x].ref = '#' + l + ':' + ((x - 150)) + ':' + ((y - 150) * (-1));
+            Game.map[l][y][x].altitude = altitude(x, y, l);
+            setType(x, y, l);
+          }
+        }
+        generateResources(Game.map[l]);
+        increment(l + 1);
+        setTimeout(function(){
+            createMap(l + 1);
+        }, 200);
+    } else {
+        generateRivers(40);
+        mapFit(true);
+        drawZoomMap();
+        drawRadar();
+        drawLoc();
 
-    popup.style.opacity = '0';
-    popup.addEventListener('webkitTransitionEnd', function() {
-      popup.style.zIndex = '-1';
-    }, false);
-  //}
+        document.getElementById('login').onclick = null;
+        var popup = document.getElementById("popupContainer");
+        popup.style.opacity = '0';
+        popup.addEventListener('webkitTransitionEnd', function() {
+            popup.style.zIndex = '-1';
+        }, false);
+    }
 }
 
 function generateRivers(iterations) {

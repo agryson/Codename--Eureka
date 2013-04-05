@@ -1103,7 +1103,6 @@ database.indexedDB.open = function(){
     request.onsuccess = function(e){
         console.log("successful request! " + e.target.result);
         database.indexedDB.db = e.target.result;
-        
     };
     request.onerror = function(e){
         console.log("there was a request problem: " + e);
@@ -1111,15 +1110,34 @@ database.indexedDB.open = function(){
 
 };
 
+database.indexedDB.checkKeys = function() {
+    var db = database.indexedDB.db;
+    var trans = db.transaction("saves");
+    var store = trans.objectStore("saves");
+
+    // Get everything in the store;
+    store.openCursor().onsuccess = function(event) {
+        var cursor = event.target.result;
+        if (cursor) {
+            console.log('printing');
+            listSave(cursor);
+            cursor.continue();
+        }
+    };
+};
+
+function listSave(data){
+    console.log(data.key);
+    console.log(data.value.turn);
+}
+
 //taken from kinlan's demo todo
 database.indexedDB.saveGame = function(){
     var db = database.indexedDB.db;
     var trans = db.transaction(["saves"], "readwrite");
     var store = trans.objectStore("saves");
     var request = store.put({
-        "animate" : Game.animate,
-        "augment" : Game.augment,
-        "level" : Game.level,
+        "planetName" : Game.planetName,
         "turn" : Game.turn,
         "mapTiles" : Game.mapTiles,
         "home" : Game.home,
@@ -1180,16 +1198,14 @@ database.indexedDB.saveGame = function(){
 
 database.indexedDB.loadGame = function(seedText){
     var db = database.indexedDB.db;
-    var trans = db.transaction(["saves"], "readwrite");
+    var trans = db.transaction("saves");
     var store = trans.objectStore("saves");
     var request = store.get(seedText);
     request.onerror = function(event) {
         console.log("there was a problem loading the game " + event);
     };
     request.onsuccess = function(event) {
-        Game.animate = request.result.animate;
-        Game.augment = request.result.augment;
-        Game.level = request.result.level;
+        Game.planetName = request.result.planetName;
         Game.turn = request.result.turn;
         Game.mapTiles = request.result.mapTiles;
         Game.home = request.result.home;
@@ -1869,13 +1885,7 @@ function eavesdrop() {
         Game = new Param(); //TODO: Should add save and load game code here...
         checkBuildings();
         reCount('all');
-        getSeed(false, document.getElementById('planetName').value);
-    };
-    document.getElementById('newSession').onclick = function() {
-        Game = new Param(); //TODO: Should add save and load game code here...
-        checkBuildings();
-        reCount('all');
-        getSeed(true, document.getElementById('planetName').value);
+        getSeed();
     };
     //!Start Screen
     //Sound
