@@ -1143,11 +1143,25 @@ function fillSeedForm(seedIn, nameIn){
     document.getElementById('planetName').value = nameIn;
 }
 
+database.indexedDB.deleteGame = function(nameIn){
+    var db = database.indexedDB.db;
+    var trans = db.transaction(["saves"], "readwrite");
+    var store = trans.objectStore("saves");
+    var wipeSlate = store.delete(nameIn);
+    wipeSlate.onsuccess = function(e) {
+        console.log("Old game wiped");
+    };
+    wipeSlate.onerror = function(e) {
+        console.log("I don't think the old game existed..." + e);
+    };
+}
+
 //taken from kinlan's demo todo
 database.indexedDB.saveGame = function(){
     var db = database.indexedDB.db;
     var trans = db.transaction(["saves"], "readwrite");
     var store = trans.objectStore("saves");
+
     var request = store.put({
         "planetName" : Game.planetName,
         "turn" : Game.turn,
@@ -1217,63 +1231,65 @@ database.indexedDB.loadGame = function(seedText){
         console.log("there was a problem loading the game " + event);
     };
     request.onsuccess = function(event) {
-        Game.planetName = request.result.planetName;
-        Game.turn = request.result.turn;
-        Game.mapTiles = request.result.mapTiles;
-        Game.home = request.result.home;
-        Game.buildings = request.result.buildings;
-        Game.robotsList = request.result.robotsList;
-        Game.commTowers = request.result.commTowers;
-        Game.recyclerList = request.result.recyclerList;
-        Game.researchLabs = request.result.researchLabs;
-        Game.currentResearch = request.result.currentResearch;
-        Game.researchTopics = request.result.researchTopics;
-        Game.ores = request.result.ores;
-        Game.procOres = request.result.procOres;
-        Game.seeder = request.result.seeder;
-        Game.inputSeed = request.result.inputSeed;
-        Game.housing = request.result.housing;
-        Game.pop = request.result.pop;
-        Game.tossPop = request.result.tossPop;
-        Game.tossBabies = request.result.tossBabies;
-        Game.tossStudents = request.result.tossStudents;
-        Game.tossAdults = request.result.tossAdults;
-        Game.hipPop = request.result.hipPop;
-        Game.hipBabies = request.result.hipBabies;
-        Game.hipStudents = request.result.hipStudents;
-        Game.hipAdults = request.result.hipAdults;
-        Game.artPop = request.result.artPop;
-        Game.artBabies = request.result.artBabies;
-        Game.artStudents = request.result.artStudents;
-        Game.artAdults = request.result.artAdults;
-        Game.employed = request.result.employed;
-        Game.sdf = request.result.sdf;
-        Game.tossMorale = request.result.tossMorale;
-        Game.hipMorale = request.result.hipMorale;
-        Game.artMorale = request.result.artMorale;
-        Game.crime = request.result.crime;
-        Game.storageCap = request.result.storageCap;
-        Game.inStorage = request.result.inStorage;
-        Game.food = request.result.food;
-        Game.energy = request.result.energy;
-        Game.air = request.result.air;
-        Game.blackout = request.result.blackout;
-        Game.noAir = request.result.noAir;
-        Game.creche = request.result.creche;
-        Game.uni = request.result.uni;
-        Game.botAging = request.result.botAging;
-        Game.leisure = request.result.leisure;
-        //so on so forth, one save per seed :)
-        //I'll eventually only save what the player has changed, using the seed to regenerate the map
-        execReview();
-        document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
-        fillResearchMenu();
-        drawRadar();
-        Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
-        reCount('all');
-        checkRobots();
-        checkBuildings();
-        document.getElementById('consoleContent').innerHTML = '';
+        if(request.result){
+            Game.planetName = request.result.planetName;
+            Game.turn = request.result.turn;
+            Game.mapTiles = request.result.mapTiles;
+            Game.home = request.result.home;
+            Game.buildings = request.result.buildings;
+            Game.robotsList = request.result.robotsList;
+            Game.commTowers = request.result.commTowers;
+            Game.recyclerList = request.result.recyclerList;
+            Game.researchLabs = request.result.researchLabs;
+            Game.currentResearch = request.result.currentResearch;
+            Game.researchTopics = request.result.researchTopics;
+            Game.ores = request.result.ores;
+            Game.procOres = request.result.procOres;
+            Game.seeder = request.result.seeder;
+            Game.inputSeed = request.result.inputSeed;
+            Game.housing = request.result.housing;
+            Game.pop = request.result.pop;
+            Game.tossPop = request.result.tossPop;
+            Game.tossBabies = request.result.tossBabies;
+            Game.tossStudents = request.result.tossStudents;
+            Game.tossAdults = request.result.tossAdults;
+            Game.hipPop = request.result.hipPop;
+            Game.hipBabies = request.result.hipBabies;
+            Game.hipStudents = request.result.hipStudents;
+            Game.hipAdults = request.result.hipAdults;
+            Game.artPop = request.result.artPop;
+            Game.artBabies = request.result.artBabies;
+            Game.artStudents = request.result.artStudents;
+            Game.artAdults = request.result.artAdults;
+            Game.employed = request.result.employed;
+            Game.sdf = request.result.sdf;
+            Game.tossMorale = request.result.tossMorale;
+            Game.hipMorale = request.result.hipMorale;
+            Game.artMorale = request.result.artMorale;
+            Game.crime = request.result.crime;
+            Game.storageCap = request.result.storageCap;
+            Game.inStorage = request.result.inStorage;
+            Game.food = request.result.food;
+            Game.energy = request.result.energy;
+            Game.air = request.result.air;
+            Game.blackout = request.result.blackout;
+            Game.noAir = request.result.noAir;
+            Game.creche = request.result.creche;
+            Game.uni = request.result.uni;
+            Game.botAging = request.result.botAging;
+            Game.leisure = request.result.leisure;
+            //so on so forth, one save per seed :)
+            //I'll eventually only save what the player has changed, using the seed to regenerate the map
+            execReview();
+            document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
+            fillResearchMenu();
+            drawRadar();
+            Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
+            reCount('all');
+            checkRobots();
+            checkBuildings();
+            document.getElementById('consoleContent').innerHTML = '';
+        }
     };
 };
 

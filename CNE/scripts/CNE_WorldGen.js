@@ -7,7 +7,7 @@
 
 function getSeed() {
     var name = document.getElementById('planetName').value;
-    if(!name){name = 'Gliese 581d';}
+    if(name === ''){name = 'Gliese 581d';}
     Lang = new Language(name);
     Game.planetName = name;
 
