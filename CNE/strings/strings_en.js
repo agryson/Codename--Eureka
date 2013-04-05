@@ -40,6 +40,8 @@ function Language(planetName){
 	this.shutdown = "Building shut down";
 	this.resourcesNeeded = "Required Resources:";
 	this.weekCounter = "Week: ";
+	this.saves = "Saved Games:";
+	this.confirmDelete = "Are you sure you want to delete";
 
 	//Stats
 	this.artie = "ArtIe";

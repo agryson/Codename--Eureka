@@ -468,7 +468,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.kind = 8;
             o.buildTime = eta(3);
             o.future = [Game.map[level][y][x].kind - 5, Lang.cavern];
-            o.kind = Game.map[level][y][x].kind - 5;
+            o.kind = 8;
             o.ref = changeName(Lang.diggingCavern, Game.map[level][y][x].ref);
             reCount('cavernDigger');
             break;
@@ -1115,7 +1115,7 @@ database.indexedDB.checkKeys = function() {
     var db = database.indexedDB.db;
     var trans = db.transaction("saves");
     var store = trans.objectStore("saves");
-
+    document.getElementById('chooseSave').innerHTML = '<span>' + Lang.saves + '</span>';
     // Get everything in the store;
     store.openCursor().onsuccess = function(event) {
         var cursor = event.target.result;
@@ -1124,7 +1124,7 @@ database.indexedDB.checkKeys = function() {
             cursor.continue();
         } else {
             document.getElementById('popup').classList.add('popup_open');
-            //TODO: add code to tell user saveslist is ready
+            document.getElementById('confirmDelete').classList.remove('delete_toast_visible');
         }
     };
 };
@@ -1132,8 +1132,9 @@ database.indexedDB.checkKeys = function() {
 function listSave(data){
     var drop = document.getElementById('chooseSave');
     var htmlString = '';
-    htmlString += '<button class="main_pointer" onclick=\'fillSeedForm("' + data.key + '","' + data.value.planetName + '")\'>';
+    htmlString += '<button id="' + data.key + '" class="save_option main_pointer" onclick=\'fillSeedForm("' + data.key + '","' + data.value.planetName + '")\'>';
     htmlString += data.key + ' (' + Lang.week + ' ' + data.value.turn + ')';
+    htmlString += '</button><button id="' + data.key + 'Del" class="delete_save main_pointer" onclick=\'confirmDelete("' + data.key + '")\'>&#215;';
     htmlString += '</button><br>';
     drop.innerHTML += htmlString;
 }
@@ -1143,6 +1144,20 @@ function fillSeedForm(seedIn, nameIn){
     document.getElementById('planetName').value = nameIn;
 }
 
+function confirmDelete(nameIn){
+    document.getElementById('deleteOK').value = nameIn;
+    document.getElementById('confirmDeleteTxt').innerHTML = Lang.confirmDelete + ' "' + nameIn + '"';
+    document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
+    document.getElementById('deleteOK').onclick = function(){
+        database.indexedDB.deleteGame(nameIn);
+        document.getElementById('deleteOK').onclick = null;
+    };
+    document.getElementById('deleteBad').onclick = function(){
+        document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
+        document.getElementById('deleteBad').onclick = null;
+    };
+}
+
 database.indexedDB.deleteGame = function(nameIn){
     var db = database.indexedDB.db;
     var trans = db.transaction(["saves"], "readwrite");
@@ -1150,11 +1165,14 @@ database.indexedDB.deleteGame = function(nameIn){
     var wipeSlate = store.delete(nameIn);
     wipeSlate.onsuccess = function(e) {
         console.log("Old game wiped");
+        document.getElementById(nameIn).style.display = 'none';
+        document.getElementById(nameIn + 'Del').style.display = 'none';
+        database.indexedDB.checkKeys();
     };
     wipeSlate.onerror = function(e) {
         console.log("I don't think the old game existed..." + e);
     };
-}
+};
 
 //taken from kinlan's demo todo
 database.indexedDB.saveGame = function(){
@@ -1288,6 +1306,7 @@ database.indexedDB.loadGame = function(seedText){
             reCount('all');
             checkRobots();
             checkBuildings();
+            jump(true, Game.home[0], Game.home[1], 0);
             document.getElementById('consoleContent').innerHTML = '';
         }
     };
@@ -1331,7 +1350,7 @@ function Param() {
      * [[string: 'id of menu option', boolean: available to player?, int: surface(0)/subsurface(1)/both(2)]]
      * @type {Array}
      */
-    //this.home = [];
+    this.home = [150,150];
     this.buildings = [
         ["agri", false, 0, Lang.agri], //
         ["agri2", false, 0, Lang.agri2],
@@ -2846,7 +2865,7 @@ function reCount(which) {
         count('recyclerCount', 'recyclerCountNum', 4);
         break;
     default:
-        console.log("Wait, I've lost count of the drones...");
+        console.log("Wait, I've lost count of the drones... " + which);
     }
     checkRobots();
 }
@@ -4030,10 +4049,10 @@ function clicked(direction) {
                 DBelow[y][x] = bobTheBuilder(101, x, y, Game.level + 1, true);
                 for(var k = 0; k < 6; k++) {
                     var belowAdj = DBelow[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]];
-                    if((belowAdj && (belowAdj.kind >= 100 || belowAdj[1].kind < 4)) || Game.map[Game.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]].kind === 4 || wetTest([adjacent(x, y, k)[0], adjacent(x, y, k)[1]], Game.level + 1)) {
+                    if((belowAdj.exists && (belowAdj.kind >= 100 || belowAdj[1].kind < 4)) || Game.map[Game.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]].kind === 4 || wetTest([adjacent(x, y, k)[0], adjacent(x, y, k)[1]], Game.level + 1)) {
                         //do nothing
                     } else {
-                        DBelow[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
+                        Game.mapTiles[Game.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
                     }
                 }
             }

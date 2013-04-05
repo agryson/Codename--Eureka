@@ -131,6 +131,7 @@ function createMap(l) {
         document.getElementById('login').onclick = null;
         document.getElementById('seed').onfocus = null;
         document.getElementById('seed').onblur = null;
+        jump(true, Game.home[0], Game.home[1], 0);
         var popup = document.getElementById("popupContainer");
         popup.style.opacity = '0';
         popup.addEventListener('webkitTransitionEnd', function() {
