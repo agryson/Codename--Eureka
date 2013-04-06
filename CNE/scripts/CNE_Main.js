@@ -2662,6 +2662,8 @@ function mapFit(bool) {
         mainMap.height = window.innerHeight + quarterHeight * 2;
         mainMap.style.top = -quarterHeight*2 + 'px';
         mainMap.style.left = -Game.destinationWidth / 2 + 'px';
+        document.body.style.width = window.innerWidth + 'px';
+        document.body.style.height = window.innerHeight + 'px';
     }
     Game.xLimit = Math.ceil(Game.mPanCanvas.width / Game.destinationWidth);
     Game.yLimit = Math.ceil(Game.mPanCanvas.height / (quarterHeight * 3));
@@ -2888,8 +2890,9 @@ function leftMenuResize(bool) {
  */
 
 function resize(e) {
-    var current = e.clientY - 30;
+    var current = e.clientY;
     var total = window.innerHeight;
+    //var barThickness = Math.round((total/100)*2);
     var percentage = Math.round((current / total) * 100);
     if(percentage < 10) {
         percentage = 11;
@@ -2898,8 +2901,8 @@ function resize(e) {
         percentage = 89;
         leftMenuResize(false);
     }
-    document.getElementById('buildingContainer').style.height = percentage + '%';
-    document.getElementById('droneContainer').style.height = 96 - percentage + '%';
+    document.getElementById('buildingContainer').style.height = percentage - 2 + '%';
+    document.getElementById('droneContainer').style.height = 98 - percentage + '%';
     //document.getElementById('leftMenuSlider').style.marginTop = percentage + '%';
 }
 
@@ -3669,7 +3672,7 @@ function contextContent(content) {
     }
     //resources?
     var resourceList;
-    if(construct.exists){
+    if(typeof construct.kind === 'number'){
         resourceList = construct.ores;
     } else {
         resourceList = tile.resources;
