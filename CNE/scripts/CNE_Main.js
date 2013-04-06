@@ -1132,18 +1132,21 @@ database.indexedDB.checkKeys = function() {
 function listSave(data){
     var drop = document.getElementById('chooseSave');
     var htmlString = '';
-    htmlString += '<button id="' + data.key + '" value="' + data.key + '" class="save_option main_pointer">';
+    var id = data.key.split(' ').join('');
+    htmlString += '<button id="' + id +'" value="' + data.key + '" class="save_option main_pointer">';
     htmlString += data.key + ' (' + Lang.week + ' ' + data.value.turn + ')';
-    htmlString += '</button><button id="' + data.key + 'Del" class="delete_save main_pointer">&#215;';
+    htmlString += '</button><button id="' + id + 'Del" class="delete_save main_pointer">&#215;';
     htmlString += '</button><br>';
     drop.innerHTML += htmlString;
-    document.getElementById(data.key).onclick = function(){
-        fillSeedForm(this.value);
-        console.log(this.value);
+    document.getElementById(id).onclick = function(){
+        var input = document.getElementById(id).value;
+        fillSeedForm(input);
+        console.log(input);
     };
-    document.getElementById(data.key + 'Del').onclick = function(){
-        var name = this.value;
-        confirmDelete(name.substring(0,name.length - 3));
+    document.getElementById(data.key.split(' ').join('') + 'Del').onclick = function(){
+        var name = document.getElementById(id + 'Del').value;
+        var key = data.key;
+        confirmDelete(key);
     };
 }
 
