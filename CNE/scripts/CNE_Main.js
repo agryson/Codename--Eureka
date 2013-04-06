@@ -4018,7 +4018,7 @@ function clicked(direction) {
         if(!direction) {
             rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>");
         } else {
-            if((hex && (hex.kind < 200 && hex.kind > 2)) || (tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
+            if((hex && (hex.kind < 200 && hex.kind > 2)) || (typeof hex.kind !== 'number' && tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
                 printConsole(Lang.noDoze);
             } else if(!inRange(x, y)){
                 printConsole(Lang.outOfRange);
