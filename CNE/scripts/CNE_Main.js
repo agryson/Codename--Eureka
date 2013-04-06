@@ -1117,10 +1117,12 @@ database.indexedDB.checkKeys = function() {
     var store = trans.objectStore("saves");
     document.getElementById('chooseSave').innerHTML = '<span>' + Lang.saves + '</span>';
     // Get everything in the store;
+    var idcounter = 0;
     store.openCursor().onsuccess = function(event) {
         var cursor = event.target.result;
         if (cursor) {
-            listSave(cursor);
+            idcounter += 1;
+            listSave(cursor, idcounter);
             cursor.continue();
         } else {
             document.getElementById('popup').classList.add('popup_open');
@@ -1129,24 +1131,19 @@ database.indexedDB.checkKeys = function() {
     };
 };
 
-function listSave(data){
+function listSave(data, id){
     var drop = document.getElementById('chooseSave');
     var htmlString = '';
-    var id = data.key.split(' ').join('');
-    htmlString += '<button id="' + id +'" value="' + data.key + '" class="save_option main_pointer">';
+    htmlString += '<button id="' + id + '" value="' + data.key + '" class="save_option main_pointer">';
     htmlString += data.key + ' (' + Lang.week + ' ' + data.value.turn + ')';
-    htmlString += '</button><button id="' + id + 'Del" class="delete_save main_pointer">&#215;';
+    htmlString += '</button><button id="rm' + id + '" value="' + data.key + '" class="delete_save main_pointer">&#215;';
     htmlString += '</button><br>';
     drop.innerHTML += htmlString;
     document.getElementById(id).onclick = function(){
-        var input = document.getElementById(id).value;
-        fillSeedForm(input);
-        console.log(input);
+        fillSeedForm(data.key);
     };
-    document.getElementById(data.key.split(' ').join('') + 'Del').onclick = function(){
-        var name = document.getElementById(id + 'Del').value;
-        var key = data.key;
-        confirmDelete(key);
+    document.getElementById('rm' + id).onclick = function(){
+        confirmDelete(data.key);
     };
 }
 
@@ -3658,7 +3655,6 @@ function contextContent(content) {
     var construct = Game.mapTiles[Game.level][y][x];
     var resources = false;
     var htmlString = '';
-    console.log(typeof construct.kind);
     if(typeof construct.kind === 'number'){
         htmlString += '<span>' + construct.ref + '</span><br>';
     } else {
@@ -3915,7 +3911,7 @@ function resourceNeededList(building, getRec, recycling){
         return(requisition(resourcesNeeded));
     } else {
         var htmlString = '';
-        htmlString += "<br><button class='smoky_glass main_pointer' onclick='clicked(true)' style='width: 100%; text-align: center;'>" + Lang.confirmBuild + "</button><br>";
+        htmlString += "<br><button id='confirmBuild' class='smoky_glass main_pointer' style='width: 100%; text-align: center;'>" + Lang.confirmBuild + "</button><br>";
         htmlString += '<h3>' + Lang.resourcesNeeded + ' (' + future + ')</h3>';
         htmlString += '<ul>';
         for(var resource = 0; resource < resourcesNeeded.length; resource++){
@@ -4033,7 +4029,11 @@ function clicked(direction) {
         break;
     case 'dozer':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDoze + "</button><br>");
+            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer'>" + Lang.confirmDoze + "</button><br>");
+            document.getElementById('confirmBuild').onclick = function(){
+                clicked(true);
+                document.getElementById('confirmBuild').onclick = null;
+            };
         } else {
             if((hex && (hex.kind < 200 && hex.kind > 2)) || (typeof hex.kind !== 'number' && tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
                 printConsole(Lang.noDoze);
@@ -4046,7 +4046,11 @@ function clicked(direction) {
         break;
     case 'digger':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDig + "</button><br>");
+            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer'>" + Lang.confirmDig + "</button><br>");
+            document.getElementById('confirmBuild').onclick = function(){
+                clicked(true);
+                document.getElementById('confirmBuild').onclick = null;
+            };
         } else {
             //tile.digDown(x, y, lowerTile);
             var DBelow = Game.mapTiles[Game.level + 1];
@@ -4078,7 +4082,11 @@ function clicked(direction) {
         break;
     case 'cavernDigger':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmDigCavern + "</button><br>");
+            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer'>" + Lang.confirmDigCavern + "</button><br>");
+            document.getElementById('confirmBuild').onclick = function(){
+                clicked(true);
+                document.getElementById('confirmBuild').onclick = null;
+            };
         } else {
             if(wetTest([y, x], Game.level)){
                 printConsole(Lang.onWater);
@@ -4101,7 +4109,11 @@ function clicked(direction) {
         break;
     case 'miner':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmMine + "</button><br>");
+            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer'>" + Lang.confirmMine + "</button><br>");
+            document.getElementById('confirmBuild').onclick = function(){
+                clicked(true);
+                document.getElementById('confirmBuild').onclick = null;
+            };
         } else {
             if(wetTest([y, x], Game.level + 1)){
                 printConsole(Lang.onWater);
@@ -4131,7 +4143,11 @@ function clicked(direction) {
         break;
     case 'recycler':
         if(!direction) {
-            rightClicked("<br><button class='smoky_glass main_pointer' onclick='clicked(true)''>" + Lang.confirmRecycle + "</button><br>");
+            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer''>" + Lang.confirmRecycle + "</button><br>");
+            document.getElementById('confirmBuild').onclick = function(){
+                clicked(true);
+                document.getElementById('confirmBuild').onclick = null;
+            };
         } else {
             if(hex && hex.kind >= 200){
                 recycle(hex.kind, x, y, Game.level);
@@ -4144,6 +4160,10 @@ function clicked(direction) {
     default:
         if(!direction){
             rightClicked(resourceNeededList(Game.clickedOn));
+            document.getElementById('confirmBuild').onclick = function(){
+                clicked(true);
+                document.getElementById('confirmBuild').onclick = null;
+            };
         } else {
             if((checkConnection(y, x) || Game.clickedOn === 'commarray' || Game.clickedOn === 'commarray2') && hex && hex.kind === 3) {
                 if(resourceNeededList(Game.clickedOn, true)){
