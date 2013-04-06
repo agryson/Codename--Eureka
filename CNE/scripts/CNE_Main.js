@@ -1132,16 +1132,15 @@ database.indexedDB.checkKeys = function() {
 function listSave(data){
     var drop = document.getElementById('chooseSave');
     var htmlString = '';
-    htmlString += '<button id="' + data.key + '" class="save_option main_pointer" onclick=\'fillSeedForm("' + data.key + '","' + data.value.planetName + '")\'>';
+    htmlString += '<button id="' + data.key + '" class="save_option main_pointer" onclick=\'fillSeedForm("' + data.key + '")\'>';
     htmlString += data.key + ' (' + Lang.week + ' ' + data.value.turn + ')';
     htmlString += '</button><button id="' + data.key + 'Del" class="delete_save main_pointer" onclick=\'confirmDelete("' + data.key + '")\'>&#215;';
     htmlString += '</button><br>';
     drop.innerHTML += htmlString;
 }
 
-function fillSeedForm(seedIn, nameIn){
+function fillSeedForm(seedIn){
     document.getElementById('seed').value = seedIn;
-    document.getElementById('planetName').value = nameIn;
 }
 
 function confirmDelete(nameIn){
@@ -1181,7 +1180,6 @@ database.indexedDB.saveGame = function(){
     var store = trans.objectStore("saves");
 
     var request = store.put({
-        "planetName" : Game.planetName,
         "turn" : Game.turn,
         "mapTiles" : Game.mapTiles,
         "home" : Game.home,
@@ -1250,7 +1248,6 @@ database.indexedDB.loadGame = function(seedText){
     };
     request.onsuccess = function(event) {
         if(request.result){
-            Game.planetName = request.result.planetName;
             Game.turn = request.result.turn;
             Game.mapTiles = request.result.mapTiles;
             Game.home = request.result.home;
