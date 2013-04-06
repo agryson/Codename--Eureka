@@ -1326,7 +1326,7 @@ function Param() {
     this.retY = this.radarRad;
     this.animate = 0;
     this.augment = true;
-
+    this.fresh = true;
     this.clickedOn = 'none';
     this.level = 0;
     this.tileHighlight = new Image();
@@ -1886,7 +1886,7 @@ function drawGraph(type, outputId, sourceData, from0) {
         console.log(sourceData);
     }
     //Legend, we only draw it once
-    if(Game.turn === 0){
+    if(Game.fresh){
         var canL = document.getElementById(outputId + 'Legend');
         var conL = canL.getContext('2d');
         conL.clearRect(0, 0, canW, canH);
@@ -2273,13 +2273,13 @@ function advanceTurn(turns){
             }
             saneStats();
             if(turns === 1){
+                reCount('all');
+                database.indexedDB.saveGame();
                 execReview();
                 document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
                 fillResearchMenu();
                 drawRadar();
                 Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
-                reCount('all');
-                database.indexedDB.saveGame();
                 document.getElementById('consoleContent').innerHTML = '';
             }
             //The following hold code just prevents accidentally skipping two turns with accidental clicks...
@@ -2639,6 +2639,9 @@ function execReview() {
         document.getElementById('sodiumProcList').innerHTML = sanity(Game.procOres[11]);
         document.getElementById('tinProcList').innerHTML = sanity(Game.procOres[12]);
         document.getElementById('zincProcList').innerHTML = sanity(Game.procOres[13]);
+
+        //Keep this at the end to draw the legends
+        Game.fresh = false;
     }
 
 }
@@ -4039,7 +4042,7 @@ function clicked(direction) {
                 printConsole(Lang.onWater);
             } else if((hex && hex.kind >= 100) || (DBelow[y][x] && DBelow[y][x].kind >= 100)){
                 printConsole(Lang.buildingPresent);
-            } else if((tile.kind > 3 && tile.kind < 9) || tile.kind > 11) {
+            } else if((hex.kind > 3 && hex.kind < 9) || hex.kind > 11) {
                 printConsole(Lang.noDig);
             } else if(Game.level === 4){
                 printConsole(Lang.lastLevel);
@@ -4065,12 +4068,12 @@ function clicked(direction) {
         } else {
             if(wetTest([y, x], Game.level)){
                 printConsole(Lang.onWater);
-            } else if((hex && hex.kind > 3) || Game.level === 0 || (tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
+            } else if((hex && hex.kind > 3) || Game.level === 0 || (hex.kind > 2 && hex.kind < 9) || hex.kind > 11) {
                 printConsole(Lang.noCavern);
             } else if(!inRange(x, y)){
                 printConsole(Lang.outOfRange);
             } else {
-                hex = bobTheBuilder(101, x, y, Game.level);
+                Game.mapTiles[Game.level][y][x] = bobTheBuilder(101, x, y, Game.level);
                 for(var z = 0; z < 6; z++) {
                     var around = Game.mapTiles[Game.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
                     if((around && (around.kind >= 100 || around.kind < 4)) || Game.map[Game.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]].kind < 4 || wetTest([adjacent(x, y, z)[0], adjacent(x, y, z)[1]], Game.level + 1)) {
