@@ -1132,11 +1132,19 @@ database.indexedDB.checkKeys = function() {
 function listSave(data){
     var drop = document.getElementById('chooseSave');
     var htmlString = '';
-    htmlString += '<button id="' + data.key + '" class="save_option main_pointer" onclick=\'fillSeedForm("' + data.key + '")\'>';
+    htmlString += '<button id="' + data.key + '" value="' + data.key + '" class="save_option main_pointer">';
     htmlString += data.key + ' (' + Lang.week + ' ' + data.value.turn + ')';
-    htmlString += '</button><button id="' + data.key + 'Del" class="delete_save main_pointer" onclick=\'confirmDelete("' + data.key + '")\'>&#215;';
+    htmlString += '</button><button id="' + data.key + 'Del" class="delete_save main_pointer">&#215;';
     htmlString += '</button><br>';
     drop.innerHTML += htmlString;
+    document.getElementById(data.key).onclick = function(){
+        fillSeedForm(this.value);
+        console.log(this.value);
+    };
+    document.getElementById(data.key + 'Del').onclick = function(){
+        var name = this.value;
+        confirmDelete(name.substring(0,name.length - 3));
+    };
 }
 
 function fillSeedForm(seedIn){
@@ -1925,6 +1933,9 @@ window.onload = function init() {
 
 function eavesdrop() {
     document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
+    document.body.addEventListener('click', function() {
+        document.body.webkitRequestFullscreen();
+    });
     //Start Screen
     document.getElementById('login').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
@@ -2535,10 +2546,10 @@ function execReview() {
     var white = 'rgb(255,255,255)';
     var grey = 'rgb(115,126,120)';
     var sanity = function(val) {
-            var test;
-            val >= 0 ? test = val : test = 0;
-            return test;
-        };
+        var test;
+        val >= 0 ? test = val : test = 0;
+        return test;
+    };
 
     if(!Game.buildings[37][1]) {
         var moraleInput = [[Game.tossMorale, electricBlue, Lang.tosser],[Game.hipMorale, green, Lang.hipstie],[Game.artMorale, orange, Lang.artie]];
