@@ -3,6 +3,7 @@
 var Game; //Global so I can get at it from other scripts...
 var Lang = new Language('Gliese 581d');
 var Music = new Playlist();
+var saveList = [];
 
 //Nice map: 1363032002367
 //CONSTRUCTORS**********************************************************************************************
@@ -1118,13 +1119,32 @@ database.indexedDB.checkKeys = function() {
     document.getElementById('chooseSave').innerHTML = '<span>' + Lang.saves + '</span>';
     // Get everything in the store;
     var idcounter = 0;
+    saveList = [];
     store.openCursor().onsuccess = function(event) {
         var cursor = event.target.result;
         if (cursor) {
-            idcounter += 1;
             listSave(cursor, idcounter);
+            idcounter += 1;
             cursor.continue();
         } else {
+            for(var i = 0; i < saveList.length/4; i++){
+                (function(_i){
+                    var obj = document.getElementById(saveList[i*4]);
+                    var val = saveList[(i*4) + 1];
+                    var objFn = function(){
+                        fillSeedForm(val);
+                    };
+                    var rmObj = document.getElementById(saveList[(i*4) + 2]);
+                    var val2 = saveList[(i*4) + 3];
+                    var rmObjFn = function(){
+                        confirmDelete(val2);
+                        console.log('inside ' + val2);
+                    };
+                    console.log(saveList[(i*4)]);
+                    obj.addEventListener('click', objFn, false);
+                    rmObj.addEventListener('click', rmObjFn, false);
+                })(i);
+            }
             document.getElementById('popup').classList.add('popup_open');
             document.getElementById('confirmDelete').classList.remove('delete_toast_visible');
         }
@@ -1139,15 +1159,14 @@ function listSave(data, id){
     htmlString += '</button><button id="rm' + id + '" value="' + data.key + '" class="delete_save main_pointer">&#215;';
     htmlString += '</button><br>';
     drop.innerHTML += htmlString;
-    document.getElementById(id).onclick = function(){
-        fillSeedForm(data.key);
-    };
-    document.getElementById('rm' + id).onclick = function(){
-        confirmDelete(data.key);
-    };
+    saveList.push(String(id));
+    saveList.push(data.key);
+    saveList.push('rm' + id);
+    saveList.push(data.key);
 }
 
 function fillSeedForm(seedIn){
+    console.log(seedIn);
     document.getElementById('seed').value = seedIn;
 }
 
@@ -1171,10 +1190,14 @@ database.indexedDB.deleteGame = function(nameIn){
     var store = trans.objectStore("saves");
     var wipeSlate = store.delete(nameIn);
     wipeSlate.onsuccess = function(e) {
-        console.log("Old game wiped");
-        document.getElementById(nameIn).style.display = 'none';
-        document.getElementById(nameIn + 'Del').style.display = 'none';
-        database.indexedDB.checkKeys();
+        console.log("Old game wiped " + nameIn);
+        for(var i = 0; i < saveList.length; i++){
+            if(saveList[i] === nameIn){
+                saveList.splice(i, 4);
+            }
+        }
+        document.getElementById('chooseSave').innerHTML = '';
+        setTimeout(function(){database.indexedDB.checkKeys();}, 30);
     };
     wipeSlate.onerror = function(e) {
         console.log("I don't think the old game existed..." + e);
