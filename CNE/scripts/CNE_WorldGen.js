@@ -6,12 +6,8 @@
  */
 
 function getSeed() {
-    var name = document.getElementById('planetName').value;
-    if(name === ''){name = 'Gliese 581d';}
-    Lang = new Language(name);
-    Game.planetName = name;
-
     var input = document.getElementById('seed').value;
+    Lang = new Language(input);
     var popup = document.getElementById("popupContainer");
     var seedString = '';
     document.getElementById('login').disabled = true;
