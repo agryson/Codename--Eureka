@@ -3641,13 +3641,14 @@ function contextContent(content) {
     var construct = Game.mapTiles[Game.level][y][x];
     var resources = false;
     var htmlString = '';
-    if(construct.exists){
+    console.log(typeof construct.kind);
+    if(typeof construct.kind === 'number'){
         htmlString += '<span>' + construct.ref + '</span><br>';
     } else {
         htmlString += '<span>' + tile.ref + '</span><br>';
     }
     //build time left
-    if(construct.exists && construct.kind === 100) {
+    if(typeof construct.kind === 'number' && construct.kind === 100) {
         htmlString += '<span>' + Lang.buildTime + (construct.buildTime + 1) + " ";
 
         if(construct.buildTime >= 1) {
@@ -3658,7 +3659,7 @@ function contextContent(content) {
         htmlString += '</span><br>';
     }
     if(content) {
-        if(!(construct && construct.kind >= 100 && construct.kind < 200)){
+        if(!(typeof construct.kind === 'number' && construct.kind >= 100 && construct.kind < 200)){
             htmlString += content;
         }
     }
