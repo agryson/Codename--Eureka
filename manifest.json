@@ -1,0 +1,16 @@
+{
+  "name": "The Lovejoy Exodus",
+  "description": "HTML5 space colony sim",
+  "version": "0.3.0.0",
+  "manifest_version": 2,
+  "app": {
+      "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "permissions": ["fullscreen"],
+  "icons": {
+    "128": "icon_128.png"
+  },
+  "offline_enabled": true
+}
