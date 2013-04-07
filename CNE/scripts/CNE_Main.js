@@ -1956,9 +1956,17 @@ window.onload = function init() {
 
 function eavesdrop() {
     document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
-    document.body.addEventListener('click', function() {
+    document.getElementById('maxIt').onclick = function(){
         document.body.webkitRequestFullscreen();
-    });
+        document.getElementById('maxIt').classList.add('full_screen_hide');
+    };
+    document.getElementById("closeGame").onclick = function(){
+        window.close();
+    };
+
+    document.getElementById('quitGame').onclick = function(){
+        //TODO: add code to return to main screen
+    };
     //Start Screen
     document.getElementById('login').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
@@ -2316,11 +2324,6 @@ function advanceTurn(turns){
                 Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
                 document.getElementById('consoleContent').innerHTML = '';
             }
-            //The following hold code just prevents accidentally skipping two turns with accidental clicks...
-            /*document.getElementById('turn').disabled = true;
-            setTimeout(function() {
-                document.getElementById('turn').disabled = false;
-            }, 300);*/
         } else {
             printConsole(Lang.setDown);
         }
