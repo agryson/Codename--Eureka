@@ -81,7 +81,7 @@ function increment(incrementer) {
     message.innerHTML = Lang.houston;
     break;
   default:
-    //Do nothing
+    message.innerHTML = '';
   }
 }
 
@@ -124,15 +124,14 @@ function createMap(l) {
         drawRadar();
         drawLoc();
 
-        document.getElementById('login').onclick = null;
-        document.getElementById('seed').onfocus = null;
-        document.getElementById('seed').onblur = null;
+        //document.getElementById('login').onclick = null;
+        //document.getElementById('seed').onfocus = null;
+        //document.getElementById('seed').onblur = null;
         jump(true, Game.home[0], Game.home[1], 0);
-        var popup = document.getElementById("popupContainer");
-        popup.style.opacity = '0';
-        popup.addEventListener('webkitTransitionEnd', function() {
-            popup.style.zIndex = '-1';
-        }, false);
+        document.getElementById("popupContainer").classList.add('popup_container_invisible');
+        setTimeout(function(){
+          document.getElementById("popupContainer").classList.add('popup_container_hidden');
+        }, 1000);
     }
 }
 

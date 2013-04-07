@@ -1965,7 +1965,20 @@ function eavesdrop() {
     };
 
     document.getElementById('quitGame').onclick = function(){
-        //TODO: add code to return to main screen
+        increment(0);
+        document.getElementById('seed').value = '';
+        document.getElementById('login').disabled = false;
+        document.getElementById("popupContainer").classList.remove('popup_container_invisible');
+        document.getElementById("popupContainer").classList.remove('popup_container_hidden');
+        menu(exec, execButton, 'exec_hidden');
+        document.getElementById('statsContainer').classList.add('exec_hidden');
+        document.getElementById('researchContainer').classList.add('exec_hidden');
+        document.getElementById('messageContainer').classList.add('exec_hidden');
+        document.getElementById('guideContainer').classList.add('exec_hidden');
+        settings.classList.add('global_container_hidden');
+        radarOptCont.classList.add('global_container_hidden');
+        document.getElementById('console').classList.remove('console_open');
+        document.getElementById('consoleContent').innerHTML = '';
     };
     //Start Screen
     document.getElementById('login').onclick = function() {
@@ -3080,7 +3093,9 @@ function keypressed(e) {
     } else {
         switch(e.keyCode) {
         case 8: //prevent backspace from fupping up my day
-            e.preventDefault();
+            if(document.activeElement !== document.getElementById('seed')){
+                e.preventDefault();
+            }
             break;
         case 38:
             move('up');
