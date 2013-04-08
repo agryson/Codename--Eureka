@@ -2006,9 +2006,19 @@ function eavesdrop() {
     //TODO: change this to a more standardized box
     document.getElementById('musicOptionViz').onclick = function() {
         Music.toggleMusic();
+        if(document.getElementById('popupMusic').checked){
+            document.getElementById('popupMusic').checked = false;
+        } else {
+            document.getElementById('popupMusic').checked = true;
+        }
     };
-    document.getElementById('popup_music').onclick = function(){
+    document.getElementById('popupMusic').onclick = function(){
         Music.toggleMusic();
+        if(document.getElementById('musicOptionViz').checked){
+            document.getElementById('musicOptionViz').checked = false;
+        } else {
+            document.getElementById('musicOptionViz').checked = true;
+        }
     };
     document.getElementById('popupVolume').onchange = function(){
         Music.changeVolume(document.getElementById('popupVolume').value);
