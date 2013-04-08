@@ -1956,6 +1956,7 @@ window.onload = function init() {
 
 function eavesdrop() {
     document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
+    //Start Screen
     document.getElementById('maxIt').onclick = function(){
         if(document.getElementById('maxIt').classList.contains('full_screen_small')){
             //Dudes - Capital 'S' here but not in the request? WTF?
@@ -1985,7 +1986,6 @@ function eavesdrop() {
         document.getElementById('console').classList.remove('console_open');
         document.getElementById('consoleContent').innerHTML = '';
     };
-    //Start Screen
     document.getElementById('login').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
         checkBuildings();
@@ -2006,6 +2006,9 @@ function eavesdrop() {
     };
     document.getElementById('popup_music').onclick = function(){
         Music.toggleMusic();
+    };
+    document.getElementById('popup_volume').onchange = function(){
+        Music.changeVolume(document.getElementById('popup_volume').value);
     };
     //:Sound
     //Left Menu
@@ -2383,7 +2386,13 @@ function Playlist(){
     };
     this.play = function() {
         this.musicOn ? currentTrack.play() : currentTrack.pause();
+        currentTrack.volume = this.volume;
     };
+    this.changeVolume = function(val){
+        currentTrack.volume = val;
+        this.volume = val;
+    };
+    this.volume = 0.1;
     var track0 = new Audio('sound/Virus-Cured_Clearside.mp3');
     var track1 = new Audio('sound/Gone_Clearside.mp3');
     var track2 = new Audio('sound/Shapeless_Clearside.mp3');
