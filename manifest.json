@@ -14,3 +14,7 @@
   },
   "offline_enabled": true
 }
+
+//Set some bounds: 
+//the minimum height should be 640px
+//minimum width: 1200px

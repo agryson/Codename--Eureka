@@ -87,10 +87,26 @@ button:active {
     min-height: 768px;
     min-width: 1024px;
     -webkit-box-shadow: inset 0 0 300px -20px #000;
-    -moz-box-shadow: inset 0 0 300px -20px #000;
     box-shadow: inset 0 0 300px -20px #000;
     z-index: 100;
     -webkit-transition: opacity ease 1s;
+}
+
+.popup_settings{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 20px;
+    width: 380px;
+    height: 80px;
+    border-radius: 5px 0 0 0;
+    -webkit-box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
+    box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
+}
+
+.popup_volume{
+    margin-left: 20px;
+    width: 340px;
 }
 
 .popup {
@@ -101,7 +117,6 @@ button:active {
     margin-top: 5%;
     border-radius: 10px;
     -webkit-box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
-    -moz-box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     box-shadow: inset 3px 3px 15px 0 #000, 1px 1px 2px 0 #6F6F6F, -1px -1px 2px 0 #101010;
     z-index: 101;
     -webkit-transition: height ease 0.2s;
@@ -145,8 +160,9 @@ button:active {
     background-position: center;
 }
 
-.full_screen_hide{
-    display: none;
+.full_screen_small{
+    width: 30px;
+    height: 30px;
 }
 
 .full_screen:hover{

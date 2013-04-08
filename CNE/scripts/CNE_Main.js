@@ -1957,8 +1957,13 @@ window.onload = function init() {
 function eavesdrop() {
     document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
     document.getElementById('maxIt').onclick = function(){
-        document.body.webkitRequestFullscreen();
-        document.getElementById('maxIt').classList.add('full_screen_hide');
+        if(document.getElementById('maxIt').classList.contains('full_screen_small')){
+            //Dudes - Capital 'S' here but not in the request? WTF?
+            document.webkitCancelFullScreen();
+        } else {
+            document.body.webkitRequestFullscreen();
+        }
+        document.getElementById('maxIt').classList.toggle('full_screen_small');
     };
     document.getElementById("closeGame").onclick = function(){
         window.close();
@@ -1996,15 +2001,11 @@ function eavesdrop() {
     //!Start Screen
     //Sound
     //TODO: change this to a more standardized box
-    var radioCheck = document.getElementById('musicOptionViz');
-    radioCheck.onclick = function() {
-        if(!Music.musicOn) {
-            Music.musicOn = true;
-            Music.play();
-        } else {
-            Music.musicOn = false;
-            Music.pause();
-        }
+    document.getElementById('musicOptionViz').onclick = function() {
+        Music.toggleMusic();
+    };
+    document.getElementById('popup_music').onclick = function(){
+        Music.toggleMusic();
     };
     //:Sound
     //Left Menu
@@ -2367,6 +2368,15 @@ function pageVisHandler() {
 }
 
 function Playlist(){
+    this.toggleMusic = function(){
+        if(!this.musicOn) {
+            this.musicOn = true;
+            this.play();
+        } else {
+            this.musicOn = false;
+            this.pause();
+        }
+    };
     this.musicOn = true;
     this.pause = function() {
         currentTrack.pause();
