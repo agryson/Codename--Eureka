@@ -1976,7 +1976,9 @@ function eavesdrop() {
         document.getElementById('login').disabled = false;
         document.getElementById("popupContainer").classList.remove('popup_container_invisible');
         document.getElementById("popupContainer").classList.remove('popup_container_hidden');
-        menu(exec, execButton, 'exec_hidden');
+        if(!exec.classList.contains('exec_hidden')){
+            menu(exec, execButton, 'exec_hidden');
+        }
         document.getElementById('statsContainer').classList.add('exec_hidden');
         document.getElementById('researchContainer').classList.add('exec_hidden');
         document.getElementById('messageContainer').classList.add('exec_hidden');
@@ -1985,6 +1987,7 @@ function eavesdrop() {
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
         document.getElementById('consoleContent').innerHTML = '';
+        database.indexedDB.checkKeys();
     };
     document.getElementById('login').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
@@ -2007,8 +2010,13 @@ function eavesdrop() {
     document.getElementById('popup_music').onclick = function(){
         Music.toggleMusic();
     };
-    document.getElementById('popup_volume').onchange = function(){
-        Music.changeVolume(document.getElementById('popup_volume').value);
+    document.getElementById('popupVolume').onchange = function(){
+        Music.changeVolume(document.getElementById('popupVolume').value);
+        document.getElementById('settingsVolume').value = document.getElementById('popupVolume').value;
+    };
+    document.getElementById('settingsVolume').onchange = function(){
+        Music.changeVolume(document.getElementById('settingsVolume').value);
+        document.getElementById('popupVolume').value = document.getElementById('settingsVolume').value;
     };
     //:Sound
     //Left Menu

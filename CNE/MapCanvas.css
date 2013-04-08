@@ -105,8 +105,15 @@ button:active {
 }
 
 .popup_volume{
-    margin-left: 20px;
+    position: relative;
+    left: 20px;
     width: 340px;
+}
+
+.settings_volume{
+    position: relative;
+    left: 20px;
+    width: 280px;
 }
 
 .popup {
