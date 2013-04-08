@@ -1961,14 +1961,26 @@ function eavesdrop() {
         if(document.getElementById('maxIt').classList.contains('full_screen_small')){
             //Dudes - Capital 'S' here but not in the request? WTF?
             document.webkitCancelFullScreen();
+            document.getElementById('fullScreen').checked = false;
         } else {
             document.body.webkitRequestFullscreen();
+            document.getElementById('fullScreen').checked = true;
         }
         document.getElementById('maxIt').classList.toggle('full_screen_small');
     };
     document.getElementById("closeGame").onclick = function(){
         window.close();
     };
+
+    document.getElementById('fullScreen').onclick = function(){
+        if(document.getElementById('maxIt').classList.contains('full_screen_small')){
+            //Dudes - Capital 'S' here but not in the request? WTF?
+            document.webkitCancelFullScreen();
+        } else {
+            document.body.webkitRequestFullscreen();
+        }
+        document.getElementById('maxIt').classList.toggle('full_screen_small');
+    }
 
     document.getElementById('quitGame').onclick = function(){
         increment(0);
