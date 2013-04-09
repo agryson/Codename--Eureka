@@ -42,6 +42,7 @@ function Language(planetName){
 	this.weekCounter = "Week: ";
 	this.saves = "Saved Games:";
 	this.confirmDelete = "Are you sure you want to delete";
+	this.available = "Available: ";
 
 	//Stats
 	this.artie = "ArtIe";

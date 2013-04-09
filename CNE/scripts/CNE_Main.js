@@ -1253,6 +1253,12 @@ function GameDisk(){
                     Game.botAging = saveDataOut[43];
                     Game.leisure = saveDataOut[44];
                     //Add code that gets read data and make Game equal to it...
+                    Game.buildings[37][1] = false;
+                    checkBuildings();
+                    checkRobots();
+                    execReview();
+                    drawRadar();
+                    jump(true, Game.home[0], Game.home[1], 0);
                 };
                 reader.readAsText(file);
             }, errorHandler);
@@ -1338,7 +1344,7 @@ function GameDisk(){
       }
 
       console.log('Error: ' + msg);
-    };    
+    };
 }
 
 /**
@@ -2000,6 +2006,9 @@ function eavesdrop() {
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
         document.getElementById('consoleContent').innerHTML = '';
+        for(var i = 0; i < Game.robotsList.length; i++) {
+            Game.robotsList[i][3] = false;
+        }
         Disk.loadList();
     };
     document.getElementById('login').onclick = function() {
@@ -2417,13 +2426,12 @@ function Playlist(){
     };
     this.play = function() {
         this.musicOn ? currentTrack.play() : currentTrack.pause();
-        currentTrack.volume = this.volume;
     };
     this.changeVolume = function(val){
         currentTrack.volume = val;
-        this.volume = val;
+        volume = val;
     };
-    this.volume = 0.1;
+    var volume = 0.1;
     var track0 = new Audio('sound/Virus-Cured_Clearside.mp3');
     var track1 = new Audio('sound/Gone_Clearside.mp3');
     var track2 = new Audio('sound/Shapeless_Clearside.mp3');
@@ -2433,23 +2441,27 @@ function Playlist(){
     //Sounds
     track0.addEventListener('ended', function() {
         this.currentTime = 0;
-        track1.play();
+        track1.volume = volume;
         currentTrack = track1;
+        track1.play();
     }, false);
     track1.addEventListener('ended', function() {
         this.currentTime = 0;
-        track2.play();
+        track2.volume = volume;
         currentTrack = track2;
+        track2.play();
     }, false);
     track2.addEventListener('ended', function() {
         this.currentTime = 0;
-        track3.play();
+        track3.volume = volume;
         currentTrack = track3;
+        track3.play();
     }, false);
     track3.addEventListener('ended', function() {
         this.currentTime = 0;
-        track0.play();
+        track0.volume = volume;
         currentTrack = track0;
+        track0.play();
     }, false);
     //!Sounds
 }
@@ -2943,7 +2955,7 @@ function changeLevel(newLevel) {
 function reCount(which) {
     var count = function(id, numID, index) {
             document.getElementById(id).style.height = ((Game.robotsList[index][1] - Game.robotsList[index][0]) / Game.robotsList[index][1]) * 100 + '%';
-            document.getElementById(numID).innerHTML = 'Available: ' + (Game.robotsList[index][1] - Game.robotsList[index][0]);
+            document.getElementById(numID).innerHTML = Lang.available + (Game.robotsList[index][1] - Game.robotsList[index][0]);
         };
     switch(which) {
     case 'dozer':

@@ -12,7 +12,6 @@ function getSeed() {
     var seedString = '';
     document.getElementById('login').disabled = true;
     if(input !== '') { //If I've entered a seed
-        console.log('called |' + input +'|');
         increment(1);
         Game.inputSeed = input;
         input = input.split(' ').join('');
@@ -119,11 +118,6 @@ function createMap(l) {
         drawZoomMap();
         drawRadar();
         drawLoc();
-
-        //document.getElementById('login').onclick = null;
-        //document.getElementById('seed').onfocus = null;
-        //document.getElementById('seed').onblur = null;
-        jump(true, Game.home[0], Game.home[1], 0);
         document.getElementById("popupContainer").classList.add('popup_container_invisible');
         setTimeout(function(){
           document.getElementById("popupContainer").classList.add('popup_container_hidden');
