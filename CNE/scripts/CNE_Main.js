@@ -1090,6 +1090,7 @@ function GameDisk(){
     };
     var success = function(filesystem){
         fs = filesystem;
+        Disk.loadList();
     };
     this.loadList = function(){
         //fill the list of loadable games
@@ -1102,14 +1103,74 @@ function GameDisk(){
             if (!results.length) {
                 listResults(entries);//this function fills our list of saves
             } else {
-                entries.push(results);
+                entries = entries.concat(toArray(results));
                 readEntries();
             }
             }, errorHandler);
         };
+        var toArray = function(list) {
+            return Array.prototype.slice.call(list || [], 0);
+        };
         //List the loaded results, such as the buttons for the loads
         var listResults = function(list){
-            console.log(list);
+            var fragment = document.createDocumentFragment();
+            var title = document.createElement('span');
+            title.innerHTML = Lang.saves;
+            fragment.appendChild(title);
+            var ids = [];
+            var rmIds = [];
+
+            list.forEach(function(entry, i) {
+                var btn = document.createElement('button');
+                btn.classList.add('save_option');
+                btn.classList.add('main_pointer');
+                btn.id = 'save' + i;
+                ids.push('save' + i);
+                btn.value = entry.name;
+                btn.innerHTML = entry.name;
+                fragment.appendChild(btn);
+                var del = document.createElement('button');
+                del.classList.add('delete_save');
+                del.classList.add('main_pointer');
+                del.id = 'rm' + i;
+                rmIds.push('rm' + i);
+                del.value = entry.name;
+                del.innerHTML = '&#215;';
+                fragment.appendChild(del);
+            });
+            document.getElementById('chooseSave').innerHTML = '';
+            document.getElementById('chooseSave').appendChild(fragment);
+            console.log(ids);
+            for(var j = 0; j < ids.length; j++){
+                //I've discovered closure! wow...
+                (function(_j){
+                    console.log(j);
+                    var id = ids[j];
+                    var rmId = rmIds[j];
+                    var obj = document.getElementById(id);
+                    var rmObj = document.getElementById(rmId);
+                    var objFn = function(){
+                        document.getElementById('seed').value = document.getElementById(id).value;
+                    };
+                    var rmObjFn = function(){
+                        var nameIn = document.getElementById(rmId).value;
+                        document.getElementById('deleteOK').value = nameIn;
+                        document.getElementById('confirmDeleteTxt').innerHTML = Lang.confirmDelete + ' "' + nameIn + '"';
+                        document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
+                        document.getElementById('deleteOK').onclick = function(){
+                            Disk.deleteGame(nameIn);
+                            document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
+                            document.getElementById('deleteOK').onclick = null;
+                        };
+                        document.getElementById('deleteBad').onclick = function(){
+                            document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
+                            document.getElementById('deleteBad').onclick = null;
+                        };
+                    };
+                    obj.addEventListener('click', objFn, false);
+                    rmObj.addEventListener('click', rmObjFn, false);
+                })();
+            }
             document.getElementById('popup').classList.add('popup_open');
         };
         readEntries(); // Start reading dirs.
@@ -1279,266 +1340,7 @@ function GameDisk(){
       console.log('Error: ' + msg);
     };    
 }
-/*
-var database = {};
-database.indexedDB = {};
-database.indexedDB.db = null;
-database.indexedDB.open = function(){
-    var version = 1;
-    var request = window.indexedDB.open("saves", version);
 
-    request.onupgradeneeded = function(e){
-        var db = e.target.result;
-        e.target.transaction.onerror = function(e){
-            console.log("there was a transaction problem: " + e);
-        };
-
-        if(db.objectStoreNames.contains("saves")){
-            db.deleteObjectStore("saves");
-        }
-
-        var store = db.createObjectStore("saves", {keyPath: "inputSeed"});
-    };
-
-    request.onsuccess = function(e){
-        console.log("successful request! " + e.target.result);
-        database.indexedDB.db = e.target.result;
-        database.indexedDB.checkKeys();
-    };
-    request.onerror = function(e){
-        console.log("there was a request problem: " + e);
-    };
-
-};
-
-database.indexedDB.checkKeys = function() {
-    var db = database.indexedDB.db;
-    var trans = db.transaction("saves");
-    var store = trans.objectStore("saves");
-    document.getElementById('chooseSave').innerHTML = '<span>' + Lang.saves + '</span>';
-    // Get everything in the store;
-    var idcounter = 0;
-    saveList = [];
-    store.openCursor().onsuccess = function(event) {
-        var cursor = event.target.result;
-        if (cursor) {
-            listSave(cursor, idcounter);
-            idcounter += 1;
-            cursor.continue();
-        } else {
-            for(var i = 0; i < saveList.length/4; i++){
-                (function(_i){
-                    var obj = document.getElementById(saveList[i*4]);
-                    var val = saveList[(i*4) + 1];
-                    var objFn = function(){
-                        fillSeedForm(val);
-                    };
-                    var rmObj = document.getElementById(saveList[(i*4) + 2]);
-                    var val2 = saveList[(i*4) + 3];
-                    var rmObjFn = function(){
-                        confirmDelete(val2);
-                        console.log('inside ' + val2);
-                    };
-                    console.log(saveList[(i*4)]);
-                    obj.addEventListener('click', objFn, false);
-                    rmObj.addEventListener('click', rmObjFn, false);
-                })(i);
-            }
-            document.getElementById('popup').classList.add('popup_open');
-            document.getElementById('confirmDelete').classList.remove('delete_toast_visible');
-        }
-    };
-};
-
-function listSave(data, id){
-    var drop = document.getElementById('chooseSave');
-    var htmlString = '';
-    htmlString += '<button id="' + id + '" value="' + data.key + '" class="save_option main_pointer">';
-    htmlString += data.key + ' (' + Lang.week + ' ' + data.value.turn + ')';
-    htmlString += '</button><button id="rm' + id + '" value="' + data.key + '" class="delete_save main_pointer">&#215;';
-    htmlString += '</button><br>';
-    drop.innerHTML += htmlString;
-    saveList.push(String(id));
-    saveList.push(data.key);
-    saveList.push('rm' + id);
-    saveList.push(data.key);
-}
-
-function fillSeedForm(seedIn){
-    console.log(seedIn);
-    document.getElementById('seed').value = seedIn;
-}
-
-function confirmDelete(nameIn){
-    document.getElementById('deleteOK').value = nameIn;
-    document.getElementById('confirmDeleteTxt').innerHTML = Lang.confirmDelete + ' "' + nameIn + '"';
-    document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
-    document.getElementById('deleteOK').onclick = function(){
-        database.indexedDB.deleteGame(nameIn);
-        document.getElementById('deleteOK').onclick = null;
-    };
-    document.getElementById('deleteBad').onclick = function(){
-        document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
-        document.getElementById('deleteBad').onclick = null;
-    };
-}
-
-database.indexedDB.deleteGame = function(nameIn){
-    var db = database.indexedDB.db;
-    var trans = db.transaction(["saves"], "readwrite");
-    var store = trans.objectStore("saves");
-    var wipeSlate = store.delete(nameIn);
-    wipeSlate.onsuccess = function(e) {
-        console.log("Old game wiped " + nameIn);
-        for(var i = 0; i < saveList.length; i++){
-            if(saveList[i] === nameIn){
-                saveList.splice(i, 4);
-            }
-        }
-        document.getElementById('chooseSave').innerHTML = '';
-        setTimeout(function(){database.indexedDB.checkKeys();}, 30);
-    };
-    wipeSlate.onerror = function(e) {
-        console.log("I don't think the old game existed..." + e);
-    };
-};
-
-//taken from kinlan's demo todo
-database.indexedDB.saveGame = function(){
-    var db = database.indexedDB.db;
-    var trans = db.transaction(["saves"], "readwrite");
-    var store = trans.objectStore("saves");
-
-    var request = store.put({
-        "turn" : Game.turn,
-        "mapTiles" : Game.mapTiles,
-        "home" : Game.home,
-        "buildings" : Game.buildings,
-        "robotsList" : Game.robotsList,
-        "commTowers" : Game.commTowers,
-        "recyclerList" : Game.recyclerList,
-        "researchLabs" : Game.researchLabs,
-        "currentResearch" : Game.currentResearch,
-        "researchTopics" : Game.researchTopics,
-        "ores" : Game.ores,
-        "procOres" : Game.procOres,
-        "seeder" : Game.seeder,
-        "inputSeed" : Game.inputSeed,
-        "housing" : Game.housing,
-        "pop" : Game.pop,
-        "tossPop" : Game.tossPop,
-        "tossBabies" : Game.tossBabies,
-        "tossStudents" : Game.tossStudents,
-        "tossAdults" : Game.tossAdults,
-        "hipPop" : Game.hipPop,
-        "hipBabies" : Game.hipBabies,
-        "hipStudents" : Game.hipStudents,
-        "hipAdults" : Game.hipAdults,
-        "artPop" : Game.artPop,
-        "artBabies" : Game.artBabies,
-        "artStudents" : Game.artStudents,
-        "artAdults" : Game.artAdults,
-        "employed" : Game.employed,
-        "sdf" : Game.sdf,
-        "tossMorale" : Game.tossMorale,
-        "hipMorale" : Game.hipMorale,
-        "artMorale" : Game.artMorale,
-        "crime" : Game.crime,
-        "storageCap" : Game.storageCap,
-        "inStorage" : Game.inStorage,
-        "food" : Game.food,
-        "energy" : Game.energy,
-        "air" : Game.air,
-        "blackout" : Game.blackout,
-        "noAir" : Game.noAir,
-        "creche" : Game.creche,
-        "uni" : Game.uni,
-        "botAging" : Game.botAging,
-        "leisure" : Game.leisure
-        //so on so forth, one save per seed :)
-        //I'll eventually only save what the player has changed, using the seed to regenerate the map
-    });
-
-    request.onsuccess = function(e){
-        console.log("saved " + e);
-    };
-
-    request.onerror = function(e){
-        console.log(e.value);
-    };
-};
-
-database.indexedDB.loadGame = function(seedText){
-    var db = database.indexedDB.db;
-    var trans = db.transaction("saves");
-    var store = trans.objectStore("saves");
-    var request = store.get(seedText);
-    request.onerror = function(event) {
-        console.log("there was a problem loading the game " + event);
-    };
-    request.onsuccess = function(event) {
-        if(request.result){
-            Game.turn = request.result.turn;
-            Game.mapTiles = request.result.mapTiles;
-            Game.home = request.result.home;
-            Game.buildings = request.result.buildings;
-            Game.robotsList = request.result.robotsList;
-            Game.commTowers = request.result.commTowers;
-            Game.recyclerList = request.result.recyclerList;
-            Game.researchLabs = request.result.researchLabs;
-            Game.currentResearch = request.result.currentResearch;
-            Game.researchTopics = request.result.researchTopics;
-            Game.ores = request.result.ores;
-            Game.procOres = request.result.procOres;
-            Game.seeder = request.result.seeder;
-            Game.inputSeed = request.result.inputSeed;
-            Game.housing = request.result.housing;
-            Game.pop = request.result.pop;
-            Game.tossPop = request.result.tossPop;
-            Game.tossBabies = request.result.tossBabies;
-            Game.tossStudents = request.result.tossStudents;
-            Game.tossAdults = request.result.tossAdults;
-            Game.hipPop = request.result.hipPop;
-            Game.hipBabies = request.result.hipBabies;
-            Game.hipStudents = request.result.hipStudents;
-            Game.hipAdults = request.result.hipAdults;
-            Game.artPop = request.result.artPop;
-            Game.artBabies = request.result.artBabies;
-            Game.artStudents = request.result.artStudents;
-            Game.artAdults = request.result.artAdults;
-            Game.employed = request.result.employed;
-            Game.sdf = request.result.sdf;
-            Game.tossMorale = request.result.tossMorale;
-            Game.hipMorale = request.result.hipMorale;
-            Game.artMorale = request.result.artMorale;
-            Game.crime = request.result.crime;
-            Game.storageCap = request.result.storageCap;
-            Game.inStorage = request.result.inStorage;
-            Game.food = request.result.food;
-            Game.energy = request.result.energy;
-            Game.air = request.result.air;
-            Game.blackout = request.result.blackout;
-            Game.noAir = request.result.noAir;
-            Game.creche = request.result.creche;
-            Game.uni = request.result.uni;
-            Game.botAging = request.result.botAging;
-            Game.leisure = request.result.leisure;
-            //so on so forth, one save per seed :)
-            //I'll eventually only save what the player has changed, using the seed to regenerate the map
-            execReview();
-            document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
-            fillResearchMenu();
-            drawRadar();
-            Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
-            reCount('all');
-            checkRobots();
-            checkBuildings();
-            jump(true, Game.home[0], Game.home[1], 0);
-            document.getElementById('consoleContent').innerHTML = '';
-        }
-    };
-};
-*/
 /**
  * The main game object
  */
@@ -2146,7 +1948,7 @@ function drawGraph(type, outputId, sourceData, from0) {
  */
 
 window.onload = function init() {
-    //database.indexedDB.open();
+    Disk.openfs();
     if(!document.webkitHidden){
         Music.play();
     }
@@ -2179,7 +1981,7 @@ function eavesdrop() {
             document.body.webkitRequestFullscreen();
         }
         document.getElementById('maxIt').classList.toggle('full_screen_small');
-    }
+    };
 
     document.getElementById('quitGame').onclick = function(){
         increment(0);
@@ -2198,7 +2000,7 @@ function eavesdrop() {
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
         document.getElementById('consoleContent').innerHTML = '';
-        //database.indexedDB.checkKeys();
+        Disk.loadList();
     };
     document.getElementById('login').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
@@ -2562,7 +2364,7 @@ function advanceTurn(turns){
             saneStats();
             if(turns === 1){
                 reCount('all');
-                //database.indexedDB.saveGame();
+                Disk.saveGame(Game.inputSeed);
                 execReview();
                 document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
                 fillResearchMenu();

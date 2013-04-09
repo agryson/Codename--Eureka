@@ -113,11 +113,7 @@ function createMap(l) {
             createMap(l + 1);
         }, 200);
     } else {
-        try{
-            //database.indexedDB.loadGame(Game.inputSeed);
-        } catch(e){
-            console.log('No save by that name... ' + e);
-        }
+        Disk.loadGame(Game.inputSeed);
         generateRivers(40);
         mapFit(true);
         drawZoomMap();
