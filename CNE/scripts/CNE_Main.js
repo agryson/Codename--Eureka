@@ -3,7 +3,8 @@
 var Game; //Global so I can get at it from other scripts...
 var Lang = new Language('Gliese 581d');
 var Music = new Playlist();
-var saveList = [];
+var Disk = new GameDisk();
+//var saveList = [];
 
 //Nice map: 1363032002367
 //CONSTRUCTORS**********************************************************************************************
@@ -1081,6 +1082,138 @@ function recycle(kind, x, y, level){
 }
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
+
+function GameDisk(){
+    var fs = null;
+    this.openfs = function(){
+        window.webkitRequestFileSystem(window.PERSISTENT, 50*1024*1024 /*50MB*/, success, errorHandler);
+    };
+    var success = function(filesystem){
+        fs = filesystem;
+    };
+    this.loadList = function(){
+        //fill the list of loadable games
+        var dirReader = fs.root.createReader();
+        var entries = [];
+
+        // Call the reader.readEntries() until no more results are returned.
+        var readEntries = function() {
+            dirReader.readEntries (function(results) {
+            if (!results.length) {
+                listResults(entries);//this function fills our list of saves
+            } else {
+                entries.push(results);
+                readEntries();
+            }
+            }, errorHandler);
+        };
+        //List the loaded results, such as the buttons for the loads
+        var listResults = function(list){
+            console.log(list);
+        };
+        readEntries(); // Start reading dirs.
+    };
+
+    this.deleteGame = function(name){
+        fs.root.getFile(name, {create: false}, function(fileEntry) {fileEntry.remove(function() {
+                console.log('File removed.');
+                Disk.loadList();
+            }, errorHandler);
+        }, errorHandler);
+    };
+
+    this.saveGame = function(){
+        fs.root.getFile(Game.inputSeed, {create: true}, function(fileEntry) {
+            console.log('About to do loadlist again...');
+            Disk.loadList();
+            console.log('About to list what I\'ll blob...');
+            buildSave();
+        // fileEntry.isFile === true
+        // fileEntry.name == 'log.txt'
+        // fileEntry.fullPath == '/log.txt'
+
+      }, errorHandler);
+    };
+
+    var buildSave = function(){
+        var saveData = [
+        Game.turn,
+        Game.mapTiles,
+        Game.home,
+        Game.buildings,
+        Game.robotsList,
+        Game.commTowers,
+        Game.recyclerList,
+        Game.researchLabs,
+        Game.currentResearch,
+        Game.researchTopics,
+        Game.ores,
+        Game.procOres,
+        Game.seeder,
+        Game.inputSeed,
+        Game.housing,
+        Game.pop,
+        Game.tossPop,
+        Game.tossBabies,
+        Game.tossStudents,
+        Game.tossAdults,
+        Game.hipPop,
+        Game.hipBabies,
+        Game.hipStudents,
+        Game.hipAdults,
+        Game.artPop,
+        Game.artBabies,
+        Game.artStudents,
+        Game.artAdults,
+        Game.employed,
+        Game.sdf,
+        Game.tossMorale,
+        Game.hipMorale,
+        Game.artMorale,
+        Game.crime,
+        Game.storageCap,
+        Game.inStorage,
+        Game.food,
+        Game.energy,
+        Game.air,
+        Game.blackout,
+        Game.noAir,
+        Game.creche,
+        Game.uni,
+        Game.botAging,
+        Game.leisure
+        ];
+        console.log(saveData);
+    };
+
+    var errorHandler = function(e) {
+      var msg = '';
+
+      switch (e.code) {
+        case FileError.QUOTA_EXCEEDED_ERR:
+          msg = 'QUOTA_EXCEEDED_ERR';
+          break;
+        case FileError.NOT_FOUND_ERR:
+          msg = 'NOT_FOUND_ERR';
+          break;
+        case FileError.SECURITY_ERR:
+          msg = 'SECURITY_ERR';
+          break;
+        case FileError.INVALID_MODIFICATION_ERR:
+          msg = 'INVALID_MODIFICATION_ERR';
+          break;
+        case FileError.INVALID_STATE_ERR:
+          msg = 'INVALID_STATE_ERR';
+          break;
+        default:
+          msg = 'Unknown Error';
+          break;
+      }
+
+      console.log('Error: ' + msg);
+    };
+}
+/*
 var database = {};
 database.indexedDB = {};
 database.indexedDB.db = null;
@@ -1339,7 +1472,7 @@ database.indexedDB.loadGame = function(seedText){
         }
     };
 };
-
+*/
 /**
  * The main game object
  */
@@ -1947,7 +2080,7 @@ function drawGraph(type, outputId, sourceData, from0) {
  */
 
 window.onload = function init() {
-    database.indexedDB.open();
+    //database.indexedDB.open();
     if(!document.webkitHidden){
         Music.play();
     }
@@ -1999,7 +2132,7 @@ function eavesdrop() {
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
         document.getElementById('consoleContent').innerHTML = '';
-        database.indexedDB.checkKeys();
+        //database.indexedDB.checkKeys();
     };
     document.getElementById('login').onclick = function() {
         Game = new Param(); //TODO: Should add save and load game code here...
@@ -2363,7 +2496,7 @@ function advanceTurn(turns){
             saneStats();
             if(turns === 1){
                 reCount('all');
-                database.indexedDB.saveGame();
+                //database.indexedDB.saveGame();
                 execReview();
                 document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
                 fillResearchMenu();

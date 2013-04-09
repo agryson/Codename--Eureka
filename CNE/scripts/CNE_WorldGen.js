@@ -114,7 +114,7 @@ function createMap(l) {
         }, 200);
     } else {
         try{
-            database.indexedDB.loadGame(Game.inputSeed);
+            //database.indexedDB.loadGame(Game.inputSeed);
         } catch(e){
             console.log('No save by that name... ' + e);
         }
