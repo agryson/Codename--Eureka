@@ -56,6 +56,8 @@ button:active {
     width: 100%;
     text-align: center;
     margin-top: 10%;
+    cursor: url(images/pointers/build.png),auto;
+    -webkit-app-region: drag;
 }
 
 .load_message {

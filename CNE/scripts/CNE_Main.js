@@ -1110,6 +1110,7 @@ function GameDisk(){
         //List the loaded results, such as the buttons for the loads
         var listResults = function(list){
             console.log(list);
+            document.getElementById('popup').classList.add('popup_open');
         };
         readEntries(); // Start reading dirs.
     };
@@ -1122,17 +1123,79 @@ function GameDisk(){
         }, errorHandler);
     };
 
-    this.saveGame = function(){
+    this.saveGame = function(name){
         fs.root.getFile(Game.inputSeed, {create: true}, function(fileEntry) {
-            console.log('About to do loadlist again...');
-            Disk.loadList();
+            //console.log('About to do loadlist again...');
+            //Disk.loadList();
             console.log('About to list what I\'ll blob...');
-            buildSave();
-        // fileEntry.isFile === true
-        // fileEntry.name == 'log.txt'
-        // fileEntry.fullPath == '/log.txt'
+            fileEntry.createWriter(function(fileWriter){
+                fileWriter.onwriteend = function(e){
+                    console.log('File written');
+                };
+                fileWriter.onerror = function(e){
+                    console.log('File write failed: ' + e.toString());
+                };
+                fileWriter.write(buildSave());
+            }, errorHandler);
+        }, errorHandler);
+    };
 
-      }, errorHandler);
+    this.loadGame = function(name){
+        fs.root.getFile(name, {}, function(fileEntry) {
+            fileEntry.file(function(file){
+                var reader = new FileReader();
+                reader.onloadend = function(e){
+                    var saveDataOut = JSON.parse(this.result);
+                    Game.turn = saveDataOut[0];
+                    Game.mapTiles = saveDataOut[1];
+                    Game.home = saveDataOut[2];
+                    Game.buildings = saveDataOut[3];
+                    Game.robotsList = saveDataOut[4];
+                    Game.commTowers = saveDataOut[5];
+                    Game.recyclerList = saveDataOut[6];
+                    Game.researchLabs = saveDataOut[7];
+                    Game.currentResearch = saveDataOut[8];
+                    Game.researchTopics = saveDataOut[9];
+                    Game.ores = saveDataOut[10];
+                    Game.procOres = saveDataOut[11];
+                    Game.seeder = saveDataOut[12];
+                    Game.inputSeed = saveDataOut[13];
+                    Game.housing = saveDataOut[14];
+                    Game.pop = saveDataOut[15];
+                    Game.tossPop = saveDataOut[16];
+                    Game.tossBabies = saveDataOut[17];
+                    Game.tossStudents = saveDataOut[18];
+                    Game.tossAdults = saveDataOut[19];
+                    Game.hipPop = saveDataOut[20];
+                    Game.hipBabies = saveDataOut[21];
+                    Game.hipStudents = saveDataOut[22];
+                    Game.hipAdults = saveDataOut[23];
+                    Game.artPop = saveDataOut[24];
+                    Game.artBabies = saveDataOut[25];
+                    Game.artStudents = saveDataOut[26];
+                    Game.artAdults = saveDataOut[27];
+                    Game.employed = saveDataOut[28];
+                    Game.sdf = saveDataOut[29];
+                    Game.tossMorale = saveDataOut[30];
+                    Game.hipMorale = saveDataOut[31];
+                    Game.artMorale = saveDataOut[32];
+                    Game.crime = saveDataOut[33];
+                    Game.storageCap = saveDataOut[34];
+                    Game.inStorage = saveDataOut[35];
+                    Game.food = saveDataOut[36];
+                    Game.energy = saveDataOut[37];
+                    Game.air = saveDataOut[38];
+                    Game.blackout = saveDataOut[39];
+                    Game.noAir = saveDataOut[40];
+                    Game.creche = saveDataOut[41];
+                    Game.uni = saveDataOut[42];
+                    Game.botAging = saveDataOut[43];
+                    Game.leisure = saveDataOut[44];
+                    //Add code that gets read data and make Game equal to it...
+                };
+                reader.readAsText(file);
+            }, errorHandler);
+        }, errorHandler);
     };
 
     var buildSave = function(){
@@ -1183,7 +1246,10 @@ function GameDisk(){
         Game.botAging,
         Game.leisure
         ];
-        console.log(saveData);
+        var saveDataString = [];
+        saveDataString.push(JSON.stringify(saveData));
+        var blob = new Blob(saveDataString);
+        return blob;
     };
 
     var errorHandler = function(e) {
@@ -1211,7 +1277,7 @@ function GameDisk(){
       }
 
       console.log('Error: ' + msg);
-    };
+    };    
 }
 /*
 var database = {};
