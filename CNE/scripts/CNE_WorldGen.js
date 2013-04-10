@@ -10,6 +10,7 @@ function NewGame(){
     Lang = new Language(input);
     var popup = document.getElementById("popupContainer");
     var seedString = '';
+    var seeder;
     document.getElementById('login').disabled = true;
     if(input !== '') { //If I've entered a seed
         Game.inputSeed = input;
@@ -17,16 +18,16 @@ function NewGame(){
         for(var i = 0; i < input.length; i++) {
             seedString += input.charCodeAt(i);
         }
-        Game.seeder = parseInt(seedString, 10) / Math.pow(10, input.length);
+        seeder = parseInt(seedString, 10) / Math.pow(10, input.length);
     } else if(input === '') {
         //alert('Please enter your dashboard password or start a new session...');
         document.getElementById('login').disabled = false;
     }
 
-    if(typeof Game.seeder === 'number') {
+    if(typeof seeder === 'number') {
       document.onkeydown = keypressed; //keyboard listener
       setTimeout(function() {
-        Game.rng = new MersenneTwister(Game.seeder);
+        Game.rng = new MersenneTwister(seeder);
         Game.noise = new ClassicalNoise(Game.rng);
         Game.noise2 = new ClassicalNoise(Game.rng);
         Game.noise3 = new ClassicalNoise(Game.rng);

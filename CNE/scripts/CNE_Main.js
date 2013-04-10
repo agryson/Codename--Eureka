@@ -1219,45 +1219,48 @@ function GameDisk(){
                     Game.researchTopics = saveDataOut[9];
                     Game.ores = saveDataOut[10];
                     Game.procOres = saveDataOut[11];
-                    Game.seeder = saveDataOut[12];
-                    Game.inputSeed = saveDataOut[13];
-                    Game.housing = saveDataOut[14];
-                    Game.pop = saveDataOut[15];
-                    Game.tossPop = saveDataOut[16];
-                    Game.tossBabies = saveDataOut[17];
-                    Game.tossStudents = saveDataOut[18];
-                    Game.tossAdults = saveDataOut[19];
-                    Game.hipPop = saveDataOut[20];
-                    Game.hipBabies = saveDataOut[21];
-                    Game.hipStudents = saveDataOut[22];
-                    Game.hipAdults = saveDataOut[23];
-                    Game.artPop = saveDataOut[24];
-                    Game.artBabies = saveDataOut[25];
-                    Game.artStudents = saveDataOut[26];
-                    Game.artAdults = saveDataOut[27];
-                    Game.employed = saveDataOut[28];
-                    Game.sdf = saveDataOut[29];
-                    Game.tossMorale = saveDataOut[30];
-                    Game.hipMorale = saveDataOut[31];
-                    Game.artMorale = saveDataOut[32];
-                    Game.crime = saveDataOut[33];
-                    Game.storageCap = saveDataOut[34];
-                    Game.inStorage = saveDataOut[35];
-                    Game.food = saveDataOut[36];
-                    Game.energy = saveDataOut[37];
-                    Game.air = saveDataOut[38];
-                    Game.blackout = saveDataOut[39];
-                    Game.noAir = saveDataOut[40];
-                    Game.creche = saveDataOut[41];
-                    Game.uni = saveDataOut[42];
-                    Game.botAging = saveDataOut[43];
-                    Game.leisure = saveDataOut[44];
+                    Game.inputSeed = saveDataOut[12];
+                    Game.housing = saveDataOut[13];
+                    Game.pop = saveDataOut[14];
+                    Game.tossPop = saveDataOut[15];
+                    Game.tossBabies = saveDataOut[16];
+                    Game.tossStudents = saveDataOut[17];
+                    Game.tossAdults = saveDataOut[18];
+                    Game.hipPop = saveDataOut[19];
+                    Game.hipBabies = saveDataOut[20];
+                    Game.hipStudents = saveDataOut[21];
+                    Game.hipAdults = saveDataOut[22];
+                    Game.artPop = saveDataOut[23];
+                    Game.artBabies = saveDataOut[24];
+                    Game.artStudents = saveDataOut[25];
+                    Game.artAdults = saveDataOut[26];
+                    Game.employed = saveDataOut[29];
+                    Game.sdf = saveDataOut[30];
+                    Game.tossMorale = saveDataOut[31];
+                    Game.hipMorale = saveDataOut[32];
+                    Game.artMorale = saveDataOut[33];
+                    Game.crime = saveDataOut[34];
+                    Game.storageCap = saveDataOut[35];
+                    Game.inStorage = saveDataOut[36];
+                    Game.food = saveDataOut[37];
+                    Game.energy = saveDataOut[38];
+                    Game.air = saveDataOut[39];
+                    Game.blackout = saveDataOut[40];
+                    Game.noAir = saveDataOut[41];
+                    Game.creche = saveDataOut[42];
+                    Game.uni = saveDataOut[43];
+                    Game.botAging = saveDataOut[44];
+                    Game.leisure = saveDataOut[45];
                     //Add code that gets read data and make Game equal to it...
                     Game.buildings[37][1] = false;
                     checkBuildings();
                     checkRobots();
+                    reCount('all');
                     execReview();
                     drawRadar();
+                    Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
+                    document.getElementById('consoleContent').innerHTML = '';
+                    printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
                     jump(true, Game.home[0], Game.home[1], 0);
                 };
                 reader.readAsText(file);
@@ -1279,7 +1282,6 @@ function GameDisk(){
         Game.researchTopics,
         Game.ores,
         Game.procOres,
-        Game.seeder,
         Game.inputSeed,
         Game.housing,
         Game.pop,
@@ -1583,7 +1585,6 @@ function Param() {
     this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 4, 1, 4, 5, 5]; //Total storage = 70
     this.resourceNames = [Lang.aluminium, Lang.calcium, Lang.copper, Lang.gold, Lang.iron, Lang.lead, Lang.magnesium, Lang.mercury, Lang.phosphorous, Lang.potassium, Lang.silver, Lang.sodium, Lang.tin, Lang.zinc];
     //Map generation vars
-    this.seeder = '';
     this.inputSeed = '';
     /*
     this.rng;
@@ -1768,6 +1769,7 @@ function saneStats(){
 }
 
 function drawGraph(type, outputId, sourceData, from0) {
+    //TODO: make this a roper little library, it's too specific right now
     var can = document.getElementById(outputId);
     var con = document.getElementById(outputId).getContext('2d');
     var canW = parseInt(can.width, 10);
@@ -1920,9 +1922,6 @@ function drawGraph(type, outputId, sourceData, from0) {
     } else {
         console.log("Lies, lies and damned statistics" + sourceData);
     }
-    if(outputId === 'air'){
-        console.log(sourceData);
-    }
     //Legend, we only draw it once
     if(Game.fresh){
         var canL = document.getElementById(outputId + 'Legend');
@@ -1996,6 +1995,7 @@ function eavesdrop() {
         document.getElementById('login').disabled = false;
         document.getElementById("popupContainer").classList.remove('popup_container_invisible');
         document.getElementById("popupContainer").classList.remove('popup_container_hidden');
+        Game = null;
         if(!exec.classList.contains('exec_hidden')){
             menu(exec, execButton, 'exec_hidden');
         }
@@ -3094,11 +3094,7 @@ function runConsole(text){
             }
             break;
         case Lang.seed:
-            if(Game.inputSeed){
-                printConsole(Game.inputSeed);
-            } else {
-                printConsole(Game.seeder);
-            }
+            printConsole(Game.inputSeed);
             break;
         case Lang.zoom:
             if(input[1] >= 1 || input[1] <= 6){
@@ -3154,7 +3150,7 @@ function keypressed(e) {
             default:
                 console.log('in the console' + e.keyCode);
         }
-    } else {
+    } else if(Game) {
         switch(e.keyCode) {
         case 8: //prevent backspace from fupping up my day
             if(document.activeElement !== document.getElementById('seed')){
