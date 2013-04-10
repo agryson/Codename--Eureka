@@ -1990,7 +1990,8 @@ function eavesdrop() {
     };
 
     document.getElementById('quitGame').onclick = function(){
-        increment(0);
+        document.getElementById('thumb').style.WebkitTransform = 'translate(-220px, 0)';
+        document.getElementById('loadMessage').innerHTML = '';
         document.getElementById('seed').value = '';
         document.getElementById('login').disabled = false;
         document.getElementById("popupContainer").classList.remove('popup_container_invisible');
@@ -2006,16 +2007,15 @@ function eavesdrop() {
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
         document.getElementById('consoleContent').innerHTML = '';
-        for(var i = 0; i < Game.robotsList.length; i++) {
-            Game.robotsList[i][3] = false;
-        }
         Disk.loadList();
     };
     document.getElementById('login').onclick = function() {
-        Game = new Param(); //TODO: Should add save and load game code here...
+        Game = new Param();
+        var Generator = new NewGame();
         checkBuildings();
+        checkRobots();
         reCount('all');
-        getSeed();
+        Generator.getSeed();
     };
     document.getElementById('seed').onfocus = function(){
         document.getElementById('chooseSave').classList.add('drop_down_open');
@@ -2860,6 +2860,8 @@ function checkBuildings() {
 }
 
 function checkRobots() {
+    console.log('in robots');
+    //TODO: clean all this shit up
     for(var r2d2 in Game.robotsList) {
         var wallE = Game.robotsList[r2d2];
         var idString = wallE[2];
