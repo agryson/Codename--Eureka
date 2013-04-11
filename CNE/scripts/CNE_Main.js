@@ -1130,6 +1130,7 @@ function GameDisk(){
                 btn.innerHTML = entry.name;
                 fragment.appendChild(btn);
                 var del = document.createElement('button');
+                del.classList.add('red_glass');
                 del.classList.add('delete_save');
                 del.classList.add('main_pointer');
                 del.id = 'rm' + i;
@@ -1140,11 +1141,9 @@ function GameDisk(){
             });
             document.getElementById('chooseSave').innerHTML = '';
             document.getElementById('chooseSave').appendChild(fragment);
-            console.log(ids);
             for(var j = 0; j < ids.length; j++){
                 //I've discovered closure! wow...
                 (function(_j){
-                    console.log(j);
                     var id = ids[j];
                     var rmId = rmIds[j];
                     var obj = document.getElementById(id);
@@ -1178,7 +1177,7 @@ function GameDisk(){
 
     this.deleteGame = function(name){
         fs.root.getFile(name, {create: false}, function(fileEntry) {fileEntry.remove(function() {
-                console.log('File removed.');
+                console.log(name + ' has been removed.');
                 Disk.loadList();
             }, errorHandler);
         }, errorHandler);
@@ -1206,6 +1205,7 @@ function GameDisk(){
             fileEntry.file(function(file){
                 var reader = new FileReader();
                 reader.onloadend = function(e){
+                    //TODO: make sure the type is conserved e.g. Game.mapTiles**[]** = saveDataOut[1];
                     var saveDataOut = JSON.parse(this.result);
                     Game.turn = saveDataOut[0];
                     Game.mapTiles = saveDataOut[1];
@@ -1234,23 +1234,23 @@ function GameDisk(){
                     Game.artBabies = saveDataOut[24];
                     Game.artStudents = saveDataOut[25];
                     Game.artAdults = saveDataOut[26];
-                    Game.employed = saveDataOut[29];
-                    Game.sdf = saveDataOut[30];
-                    Game.tossMorale = saveDataOut[31];
-                    Game.hipMorale = saveDataOut[32];
-                    Game.artMorale = saveDataOut[33];
-                    Game.crime = saveDataOut[34];
-                    Game.storageCap = saveDataOut[35];
-                    Game.inStorage = saveDataOut[36];
-                    Game.food = saveDataOut[37];
-                    Game.energy = saveDataOut[38];
-                    Game.air = saveDataOut[39];
-                    Game.blackout = saveDataOut[40];
-                    Game.noAir = saveDataOut[41];
-                    Game.creche = saveDataOut[42];
-                    Game.uni = saveDataOut[43];
-                    Game.botAging = saveDataOut[44];
-                    Game.leisure = saveDataOut[45];
+                    Game.employed = saveDataOut[27];
+                    Game.sdf = saveDataOut[28];
+                    Game.tossMorale = saveDataOut[29];
+                    Game.hipMorale = saveDataOut[30];
+                    Game.artMorale = saveDataOut[31];
+                    Game.crime = saveDataOut[32];
+                    Game.storageCap = saveDataOut[33];
+                    Game.inStorage = saveDataOut[34];
+                    Game.food = saveDataOut[35];
+                    Game.energy = saveDataOut[36];
+                    Game.air = saveDataOut[37];
+                    Game.blackout = saveDataOut[38];
+                    Game.noAir = saveDataOut[39];
+                    Game.creche = saveDataOut[40];
+                    Game.uni = saveDataOut[41];
+                    Game.botAging = saveDataOut[42];
+                    Game.leisure = saveDataOut[43];
                     //Add code that gets read data and make Game equal to it...
                     Game.buildings[37][1] = false;
                     checkBuildings();
@@ -1329,7 +1329,7 @@ function GameDisk(){
           msg = 'QUOTA_EXCEEDED_ERR';
           break;
         case FileError.NOT_FOUND_ERR:
-          msg = 'NOT_FOUND_ERR';
+          msg = 'That save doesn\'t seem to exist, we\'ll start a new game and save as we go...';
           break;
         case FileError.SECURITY_ERR:
           msg = 'SECURITY_ERR';
@@ -1784,6 +1784,7 @@ function drawGraph(type, outputId, sourceData, from0) {
             sourceClean.push(sourceData[m][0]);
         }
     }
+    console.log(sourceClean);
     var maxMin = getMaxMin(sourceClean);
     var maxi = maxMin[0];
     var mini = maxMin[1];
@@ -1995,10 +1996,13 @@ function eavesdrop() {
         document.getElementById('login').disabled = false;
         document.getElementById("popupContainer").classList.remove('popup_container_invisible');
         document.getElementById("popupContainer").classList.remove('popup_container_hidden');
-        Game = null;
         if(!exec.classList.contains('exec_hidden')){
             menu(exec, execButton, 'exec_hidden');
         }
+        for(var i = 0; i < Game.robotsList.length; i++) {
+            Game.robotsList[i][3] = false;
+        }
+        Game = null;
         document.getElementById('statsContainer').classList.add('exec_hidden');
         document.getElementById('researchContainer').classList.add('exec_hidden');
         document.getElementById('messageContainer').classList.add('exec_hidden');
@@ -2013,7 +2017,6 @@ function eavesdrop() {
         Game = new Param();
         var Generator = new NewGame();
         checkBuildings();
-        checkRobots();
         reCount('all');
         Generator.getSeed();
     };
@@ -2380,13 +2383,13 @@ function advanceTurn(turns){
                 drawRadar();
                 Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
                 document.getElementById('consoleContent').innerHTML = '';
+                printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
             }
         } else {
             printConsole(Lang.setDown);
         }
         turns -=1;
     }
-    printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
 }
 
 function menu(containerIn, buttonIn, hideClass) {
@@ -2478,12 +2481,15 @@ function getMaxMin(arrayIn){
     var min = 1000000;
     var maxTest, minTest;
     for(var i = 0; i < arrayIn.length; i++){
+        console.log(typeof arrayIn[i]);
         maxTest = Math.max.apply(null,arrayIn[i]);
         minTest = Math.min.apply(null,arrayIn[i]);
+        console.log(maxTest);
         if(maxTest > max){max = maxTest;}
         if(minTest < min){min = minTest;}
         if(min < 0){min = 0;}
     }
+    console.log(max);
     max = Math.ceil(1 + max/50) * 50;
     min = Math.floor(min/50) * 50;
     return [max, min];
@@ -2867,9 +2873,8 @@ function checkRobots() {
         var idString = wallE[2];
         var c3po = document.getElementById(idString);
         if(wallE[3]) {
-            if(c3po.style.display !== 'table') {
-                c3po.style.display = 'table';
-            }
+            c3po.classList.add('bot_show');
+            c3po.classList.remove('bot_hide');
             switch(wallE[4]) {
             case 0:
                 if(Game.level === 0) {
@@ -2902,6 +2907,9 @@ function checkRobots() {
                     document.body.style.cursor = "url('images/pointers/pointer.png'), default";
                 }
             }
+        } else {
+            c3po.classList.remove('bot_show');
+            c3po.classList.add('bot_hide');
         }
     }
     //special case for digger
@@ -4261,10 +4269,11 @@ function clicked(direction) {
     default:
         if(!direction){
             rightClicked(resourceNeededList(Game.clickedOn));
-            document.getElementById('confirmBuild').onclick = function(){
-                clicked(true);
-                document.getElementById('confirmBuild').onclick = null;
-            };
+            if(document.getElementById('confirmBuild')){
+                document.getElementById('confirmBuild').onclick = function(){
+                    clicked(true);
+                    document.getElementById('confirmBuild').onclick = null;
+                };}
         } else {
             if((checkConnection(y, x) || Game.clickedOn === 'commarray' || Game.clickedOn === 'commarray2') && hex && hex.kind === 3) {
                 if(resourceNeededList(Game.clickedOn, true)){

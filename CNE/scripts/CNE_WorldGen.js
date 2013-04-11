@@ -11,17 +11,16 @@ function NewGame(){
     var popup = document.getElementById("popupContainer");
     var seedString = '';
     var seeder;
-    document.getElementById('login').disabled = true;
     if(input !== '') { //If I've entered a seed
-        Game.inputSeed = input;
-        input = input.split(' ').join('');
-        for(var i = 0; i < input.length; i++) {
-            seedString += input.charCodeAt(i);
-        }
-        seeder = parseInt(seedString, 10) / Math.pow(10, input.length);
+      document.getElementById('login').disabled = true;
+      Game.inputSeed = input;
+      input = input.split(' ').join('');
+      for(var i = 0; i < input.length; i++) {
+        seedString += input.charCodeAt(i);
+      }
+      seeder = parseInt(seedString, 10) / Math.pow(10, input.length);
     } else if(input === '') {
-        //alert('Please enter your dashboard password or start a new session...');
-        document.getElementById('login').disabled = false;
+        document.getElementById('seed').focus();
     }
 
     if(typeof seeder === 'number') {
