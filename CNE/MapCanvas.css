@@ -373,6 +373,14 @@ button:active {
     box-shadow: 0 0 2px 0 #FFF;
 }
 
+.menu_available{
+    background: #000;
+}
+
+.menu_selected{
+    background: #393939;
+}
+
 .building_container {
     top: 0;
 }
@@ -394,7 +402,6 @@ button:active {
     position: relative;
     display: none;
     padding: 15px;
-    background: #000;
     -webkit-filter: grayscale(80%) blur(1px);
     color: gray;
     -webkit-box-shadow: inset 0 0 3px 1px #138A0c;

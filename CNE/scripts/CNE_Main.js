@@ -2826,6 +2826,7 @@ function checkBuildings() {
     for(var thing = 0; thing < Game.buildings.length; thing++) {
         var idString = Game.buildings[thing][0];
         var elem = document.getElementById(idString);
+        elem.classList.remove('menu_selected');
         if(Game.buildings[thing][1]) {
             if(elem.style.display === 'none' || elem.style.display === '') {
                 elem.style.display = 'table';
@@ -2866,12 +2867,12 @@ function checkBuildings() {
 }
 
 function checkRobots() {
-    console.log('in robots');
     //TODO: clean all this shit up
     for(var r2d2 in Game.robotsList) {
         var wallE = Game.robotsList[r2d2];
         var idString = wallE[2];
         var c3po = document.getElementById(idString);
+        c3po.classList.remove('menu_selected');
         if(wallE[3]) {
             c3po.classList.add('bot_show');
             c3po.classList.remove('bot_hide');
@@ -2901,9 +2902,10 @@ function checkRobots() {
             if(wallE[1] - wallE[0] === 0) {
                 c3po.classList.remove('active');
                 c3po.onclick = null;
-                document.getElementById(wallE[2]).style.background = '#000';
+                //document.getElementById(wallE[2]).classList.add('menu_available');
                 if(Game.clickedOn === idString) {
                     Game.clickedOn = 'none';
+                    //document.getElementById(wallE[2]).classList.remove('menu_available');
                     document.body.style.cursor = "url('images/pointers/pointer.png'), default";
                 }
             }
@@ -3212,7 +3214,7 @@ function keypressed(e) {
             document.getElementById('slider').value = Game.level;
             break;
         case 27:
-            document.getElementById(Game.clickedOn).style.background = '#000';
+            document.getElementById(Game.clickedOn).classList.add('menu_available');
             Game.clickedOn = 'none';
             document.body.style.cursor = "url('images/pointers/pointer.png'), default";
             break;
@@ -4441,16 +4443,15 @@ function getBuildingRef(reference){
 
 function construct() {
     var identity = this.id;
-    //console.log(identity);
     if(Game.clickedOn === identity) {
-        document.getElementById(Game.clickedOn).style.background = '#000';
+        document.getElementById(Game.clickedOn).classList.remove('menu_selected');
         Game.clickedOn = 'none';
         document.body.style.cursor = "url('images/pointers/pointer.png'), default";
     } else {
         if(Game.clickedOn !== 'none') {
-            document.getElementById(Game.clickedOn).style.background = '#000';
+            document.getElementById(Game.clickedOn).classList.remove('menu_selected');
         }
-        document.getElementById(identity).style.background = '#393939';
+        document.getElementById(identity).classList.add('menu_selected');
         Game.clickedOn = identity; /**TODO : Update this to be the primary key listener*/
         switch(identity) {
         case 'dozer':
