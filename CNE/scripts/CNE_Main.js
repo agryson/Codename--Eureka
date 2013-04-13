@@ -157,23 +157,13 @@ function nextTurn(x, y, level) {
         //Research
         if(tile.researchTopic !== 'noResearch'){
             console.log(tile.researchTopic);
-            var labRef = researchTopicRef(tile.researchTopic);
             var topic = tile.researchTopic;
-            if(labRef[5] > 1){
-                labRef[5] -= 1;
-            } else if(labRef[5] === 1) {
-                labRef[5] = 0;
-                for(var r = 0; r < Game.researchLabs.length; r++){
-                    var lab = Game.researchLabs[r];
-                    if(lab[3] === topic){
-                        Game.mapTiles[lab[2]][lab[1]][lab[0]].researchTopic = 'noResearch';
-                        lab[3] = 'noResearch';
-                    }
-                }
-                var unlock = researchTopicRef(topic);
-                for(var u = 0; u < unlock[4].length; u++){
-                    unlock[4][u][2] = true;
-                }
+            var labRef = researchTopicRef(topic);
+            if(labRef[3] > 1){
+                labRef[3] -= 1;
+            } else if(labRef[3] === 1) {
+                labRef[3] = 0;
+                tile.researchTopic = 'noResearch';
                 //Set the research results here
                 switch(topic){
                     case "engineering":
@@ -2705,7 +2695,6 @@ function advanceTurn(turns){
                 reCount('all');
                 Disk.saveGame(Game.inputSeed);
                 execReview();
-                var researchPanel = fillResearchPanel(Game.currentResearch);
                 fillResearchPanel('overview');
                 //setResearchClickers(researchPanel);
                 fillResearchMenu();
