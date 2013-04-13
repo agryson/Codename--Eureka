@@ -167,6 +167,7 @@ function nextTurn(x, y, level) {
                 //Set the research results here
                 switch(topic){
                     case "engineering":
+                        console.log('Just finished studying Engineering! :-D');
                     break;
                     case "agriculturalEngineering":
                     break;
@@ -1469,7 +1470,7 @@ function Param() {
                 ["terraforming", 0, [], 5, 5],
                 ["weatherControl", 0, [], 5, 5]
             ], 5, 5]
-        ], 3, 5],
+        ], 5, 5],
         ["science", 0, [
             ["physics", 0, [
                 ["experimentalPhysics", 0, [], 5, 5],
@@ -1991,8 +1992,6 @@ function clickedResearch(){
         document.getElementById(ident + 'Cont').classList.toggle('research_cont_hidden');
     }
     fillResearchPanel(ident);
-    //document.getElementById('researchPanel').innerHTML = researchPanel[0];
-    //setResearchClickers(researchPanel);
     fillResearchMenu();
 }
 
@@ -2067,16 +2066,6 @@ function fillResearchPanel(ident){
             frag.appendChild(noAvailable);
         }
     } else {
-        var progressBar2 = document.createElement('div');
-        progressBar2.classList.add('research_bar_frame');
-        progressBar2.classList.add('research_progress_' + researchProgress(ident));
-        console.log('here');
-        frag.appendChild(progressBar2);
-        var content = document.createElement('span');
-        content.innerHTML = Lang[ident + 'Content'];
-        console.log('here');
-        frag.appendChild(content);
-        //get a reference to the research topic and add a button if it's studyable
         var topicArr = researchTopicRef(ident);
         if(topicArr[3] > 0){
             topicList = true;
@@ -2087,6 +2076,16 @@ function fillResearchPanel(ident){
             btn.innerHTML = Lang.study + ' ' + Lang[ident];
             frag.appendChild(btn);
         }
+        var progressBar2 = document.createElement('div');
+        progressBar2.classList.add('research_bar_frame');
+        progressBar2.classList.add('research_progress_' + researchProgress(ident));
+        console.log('here');
+        frag.appendChild(progressBar2);
+        var content = document.createElement('span');
+        content.innerHTML = Lang[ident + 'Content'];
+        console.log('here');
+        frag.appendChild(content);
+        //get a reference to the research topic and add a button if it's studyable
     }
     document.getElementById('researchPanel').innerHTML = '';
     console.log('here');
@@ -2153,7 +2152,7 @@ function listLabs(ident){
     var noAvailable = true;
     for(var j = 0; j < Game.researchLabs.length; j++){
         var freeLab = Game.researchLabs[j];
-        if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic !== ident){
+        if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
             noAvailable = false;
             var itemFree = document.createElement('div');
             itemFree.classList.add('research_panel_item');
@@ -2173,10 +2172,10 @@ function listLabs(ident){
             studyBtn.classList.add('main_pointer');
             studyBtn.innerHTML = Lang.study + ' ' + Lang[ident];
             studyList.push(['studyBtn' + j, freeLab]);
+            itemFree.appendChild(studyBtn);
             itemFree.appendChild(imgFree);
             itemFree.appendChild(refFree);
             itemFree.appendChild(current);
-            itemFree.appendChild(studyBtn);
             frag.appendChild(itemFree);
         }
     }
@@ -2192,7 +2191,7 @@ function listLabs(ident){
     var noActive = true;
     for(var i = 0; i < Game.researchLabs.length; i++){
         var lab = Game.researchLabs[i];
-        if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic === ident){
+        if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic !== 'noResearch'){
             noActive = false;
             var item = document.createElement('div');
             item.classList.add('research_panel_item');
@@ -2201,7 +2200,7 @@ function listLabs(ident){
             var ref = document.createElement('p');
             ref.innerHTML = Game.mapTiles[lab[0]][lab[1]][lab[2]].ref;
             var current2 = document.createElement('p');
-            current2.innerHTML = Lang.currentResearch + ' ' + Lang[ident];
+            current2.innerHTML = Lang.currentResearch + ' ' + Lang[Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
             var progressBar = document.createElement('div');
             progressBar.classList.add('research_bar_frame');
             progressBar.classList.add('research_progress_' + researchProgress(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
@@ -2211,11 +2210,11 @@ function listLabs(ident){
             cancelBtn.classList.add('red_glass');
             cancelBtn.classList.add('main_pointer');
             cancelList.push(['cancelBtn' + i, lab]);
+            item.appendChild(cancelBtn);
             item.appendChild(img);
             item.appendChild(ref);
             item.appendChild(current2);
             item.appendChild(progressBar);
-            item.appendChild(cancelBtn);
             frag.appendChild(item);
         }
     }

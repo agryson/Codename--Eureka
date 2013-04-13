@@ -741,20 +741,22 @@ input[type="checkbox"]:checked + label span{
     text-align: justify;
 }
 
-.research_bar_frame{
-    width: 98%;
-    height: 8px;
-    border: solid 1px white;
+.research_panel_item button{
+    float: right;
 }
 
-.research_bar{
-    height: 100%;
-    background: green;
+.research_panel_item .research_bar_frame{
+    width: 80%;
+    height: 8px;
+    border: solid 1px white;
+    float: right;
+    margin-top: -10px;
 }
 
 .research_panel > button {
     float: right;
     margin: 10px 5px;
+    clear: both;
 }
 
 .research_panel_item{
