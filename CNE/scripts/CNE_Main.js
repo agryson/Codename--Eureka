@@ -125,7 +125,8 @@ function nextTurn(x, y, level) {
             } else if(tile.kind === 225){
                 Game.recyclerList.push([x,y,level]);
             } else if(tile.kind === 227 || tile.kind === 228){
-                Game.researchLabs.push([x, y, level, tile.researchTopic]);
+                console.log('x: ' + x + ' y: ' + y + ' level: '+ level +  tile.researchTopic);
+                Game.researchLabs.push([level, y, x]);
             } else if(tile.kind === 233){
                 if(Game.uni <= 24){
                     Game.uni += 1;
@@ -152,7 +153,7 @@ function nextTurn(x, y, level) {
                 Game.mapTiles[level][y][x].ref = changeName(Lang.minedOut, Game.mapTiles[level][y][x].ref);
             }
         }
-
+        //TODO: will surely need to fix this after ...
         //Research
         if(tile.researchTopic !== 'noResearch'){
             console.log(tile.researchTopic);
@@ -1185,9 +1186,6 @@ function GameDisk(){
 
     this.saveGame = function(name){
         fs.root.getFile(Game.inputSeed, {create: true}, function(fileEntry) {
-            //console.log('About to do loadlist again...');
-            //Disk.loadList();
-            console.log('About to list what I\'ll blob...');
             fileEntry.createWriter(function(fileWriter){
                 fileWriter.onwriteend = function(e){
                     console.log('File written');
@@ -1215,48 +1213,48 @@ function GameDisk(){
                     Game.commTowers = saveDataOut[5];
                     Game.recyclerList = saveDataOut[6];
                     Game.researchLabs = saveDataOut[7];
-                    Game.currentResearch = saveDataOut[8];
-                    Game.researchTopics = saveDataOut[9];
-                    Game.ores = saveDataOut[10];
-                    Game.procOres = saveDataOut[11];
-                    Game.inputSeed = saveDataOut[12];
-                    Game.housing = saveDataOut[13];
-                    Game.pop = saveDataOut[14];
-                    Game.tossPop = saveDataOut[15];
-                    Game.tossBabies = saveDataOut[16];
-                    Game.tossStudents = saveDataOut[17];
-                    Game.tossAdults = saveDataOut[18];
-                    Game.hipPop = saveDataOut[19];
-                    Game.hipBabies = saveDataOut[20];
-                    Game.hipStudents = saveDataOut[21];
-                    Game.hipAdults = saveDataOut[22];
-                    Game.artPop = saveDataOut[23];
-                    Game.artBabies = saveDataOut[24];
-                    Game.artStudents = saveDataOut[25];
-                    Game.artAdults = saveDataOut[26];
-                    Game.employed = saveDataOut[27];
-                    Game.sdf = saveDataOut[28];
-                    Game.tossMorale = saveDataOut[29];
-                    Game.hipMorale = saveDataOut[30];
-                    Game.artMorale = saveDataOut[31];
-                    Game.crime = saveDataOut[32];
-                    Game.storageCap = saveDataOut[33];
-                    Game.inStorage = saveDataOut[34];
-                    Game.food = saveDataOut[35];
-                    Game.energy = saveDataOut[36];
-                    Game.air = saveDataOut[37];
-                    Game.blackout = saveDataOut[38];
-                    Game.noAir = saveDataOut[39];
-                    Game.creche = saveDataOut[40];
-                    Game.uni = saveDataOut[41];
-                    Game.botAging = saveDataOut[42];
-                    Game.leisure = saveDataOut[43];
+                    Game.researchTopics = saveDataOut[8];
+                    Game.ores = saveDataOut[9];
+                    Game.procOres = saveDataOut[10];
+                    Game.inputSeed = saveDataOut[11];
+                    Game.housing = saveDataOut[12];
+                    Game.pop = saveDataOut[13];
+                    Game.tossPop = saveDataOut[14];
+                    Game.tossBabies = saveDataOut[15];
+                    Game.tossStudents = saveDataOut[16];
+                    Game.tossAdults = saveDataOut[17];
+                    Game.hipPop = saveDataOut[18];
+                    Game.hipBabies = saveDataOut[19];
+                    Game.hipStudents = saveDataOut[20];
+                    Game.hipAdults = saveDataOut[21];
+                    Game.artPop = saveDataOut[22];
+                    Game.artBabies = saveDataOut[23];
+                    Game.artStudents = saveDataOut[24];
+                    Game.artAdults = saveDataOut[25];
+                    Game.employed = saveDataOut[26];
+                    Game.sdf = saveDataOut[27];
+                    Game.tossMorale = saveDataOut[28];
+                    Game.hipMorale = saveDataOut[29];
+                    Game.artMorale = saveDataOut[30];
+                    Game.crime = saveDataOut[31];
+                    Game.storageCap = saveDataOut[32];
+                    Game.inStorage = saveDataOut[33];
+                    Game.food = saveDataOut[34];
+                    Game.energy = saveDataOut[35];
+                    Game.air = saveDataOut[36];
+                    Game.blackout = saveDataOut[37];
+                    Game.noAir = saveDataOut[38];
+                    Game.creche = saveDataOut[39];
+                    Game.uni = saveDataOut[40];
+                    Game.botAging = saveDataOut[41];
+                    Game.leisure = saveDataOut[42];
                     //Add code that gets read data and make Game equal to it...
                     Game.buildings[37][1] = false;
                     checkBuildings();
                     checkRobots();
                     reCount('all');
                     execReview();
+                    fillResearchMenu();
                     drawRadar();
                     Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
                     document.getElementById('consoleContent').innerHTML = '';
@@ -1278,7 +1276,6 @@ function GameDisk(){
         Game.commTowers,
         Game.recyclerList,
         Game.researchLabs,
-        Game.currentResearch,
         Game.researchTopics,
         Game.ores,
         Game.procOres,
@@ -1442,108 +1439,108 @@ function Param() {
     ];
     this.commTowers = [];
     this.recyclerList = [];
-    //[[x,y,level,topic]]
+    //[[level, y, x]]
     this.researchLabs = [];
-    this.currentResearch = 'engineering';
-    //[idString, langString, availableBool, preReqsArray, subTopicsArray, turnsToComplete];
-    this.researchTopics = [
-        ["engineering", Lang.engineering, true, [], [
-            ["agriculturalEngineering", Lang.agriculturalEngineering, false, [], [
-                ["hydroponics", Lang.hydroponics, false, [], [], 5, 5],
-                ["noSoilFarming", Lang.noSoilFarming, false, [], [], 5, 5],
-                ["xtremeTempAgriculture", Lang.xtremeTempAgriculture, false, [], [], 5, 5]
+    //this.currentResearch = 'engineering';
+    //[idString, preReqsCount, subTopicsArray, turnsToComplete, totalTurnsNeeded]
+    this.researchTopics = ["all", 0, [
+        ["engineering", 0, [
+            ["agriculturalEngineering", 0, [
+                ["hydroponics", 0, [], 5, 5],
+                ["noSoilFarming", 0, [], 5, 5],
+                ["xtremeTempAgriculture", 0, [], 5, 5]
             ], 5, 5],
-            ["electricalEngineering", Lang.electricalEngineering, false, [], [
-                ["commTech", Lang.commTech, false, [], [], 5, 5],
-                ["pcbDesign", Lang.pcbDesign, false, [], [], 5, 5],
-                ["processors", Lang.processors, false, [], [], 5, 5],
-                ["robotics", Lang.robotics, false, [], [], 5, 5]
+            ["electricalEngineering", 0, [
+                ["commTech", 0, [], 5, 5],
+                ["pcbDesign", 0, [], 5, 5],
+                ["processors", 0, [], 5, 5],
+                ["robotics", 0, [], 5, 5]
             ], 5, 5],
-            ["geneticEngineering", Lang.geneticEngineering, false, [], [
-                ["animalGenetics", Lang.animalGenetics, false, [], [], 5, 5],
-                ["horticulturalGenetics", Lang.horticulturalGenetics, false, [], [], 5, 5],
-                ["humanGenetics", Lang.humanGenetics, false, [], [], 5, 5],
-                ["longevityResearch", Lang.longevityResearch, false, [], [], 5, 5]
+            ["geneticEngineering", 0, [
+                ["animalGenetics", 0, [], 5, 5],
+                ["horticulturalGenetics", 0, [], 5, 5],
+                ["humanGenetics", 0, [], 5, 5],
+                ["longevityResearch", 0, [], 5, 5]
             ], 5, 5],
-            ["mechanicalEngineering", Lang.mechanicalEngineering, false, [], [
-                ["massProduction", Lang.massProduction, false, [], [], 5, 5],
-                ["mechatronics", Lang.mechatronics, false, [], [], 5, 5],
-                ["plm", Lang.plm, false, [], [], 5, 5]
+            ["mechanicalEngineering", 0, [
+                ["massProduction", 0, [], 5, 5],
+                ["mechatronics", 0, [], 5, 5],
+                ["plm", 0, [], 5, 5]
             ], 5, 5],
-            ["softwareEngineering", Lang.softwareEngineering, false, [], [
-                ["ai", Lang.ai, false, [], [
-                    ["culturalSensitivity", Lang.culturalSensitivity, false, [], [], 5, 5],
-                    ["imageProcessing", Lang.imageProcessing, false, [], [], 5, 5],
-                    ["naturalLanguage", Lang.naturalLanguage, false, [], [], 5, 5],
-                    ["neuralNetworks", Lang.neuralNetworks, false, [], [], 5, 5]
+            ["softwareEngineering", 0, [
+                ["ai", 0, [
+                    ["culturalSensitivity", 0, [], 5, 5],
+                    ["imageProcessing", 0, [], 5, 5],
+                    ["naturalLanguage", 0, [], 5, 5],
+                    ["neuralNetworks", 0, [], 5, 5]
                 ], 5, 5]
             ], 5, 5],
-            ["geoEngineering", Lang.geoEngineering, false, [], [
-                ["terraforming", Lang.terraforming, false, [], [], 5, 5],
-                ["weatherControl", Lang.weatherControl, false, [], [], 5, 5]
+            ["geoEngineering", 0, [
+                ["terraforming", 0, [], 5, 5],
+                ["weatherControl", 0, [], 5, 5]
+            ], 5, 5]
+        ], 3, 5],
+        ["science", 0, [
+            ["physics", 0, [
+                ["experimentalPhysics", 0, [], 5, 5],
+                ["advancedMaterials", 0, [
+                    ["compositieMaterials", 0, [], 5, 5],
+                    ["selfHealingMaterials", 0, [], 5, 5],
+                    ["conductivePolymers", 0, [], 5, 5],
+                    ["opticalMaterials", 0, [], 5, 5]
+                ], 5, 5],
+                ["nanotech", 0, [
+                    ["bioNeutralNano", 0, [], 5, 5],
+                    ["ggam", 0, [], 5, 5],
+                    ["nanoFab", 0, [], 5, 5]
+                ], 5, 5],
+                ["theoreticalPhysics", 0, [], 5, 5],
+                ["astronomy", 0, [], 5, 5],
+                ["meteorology", 0, [], 5, 5],
+                ["nuclearPhysics", 0, [], 5, 5]
+            ], 5, 5],
+            ["chemistry", 0, [
+                ["organicChemistry", 0, [
+                    ["polymers", 0, [], 5, 5]
+                ], 5, 5],
+                ["physicalChemistry", 0, [
+                    ["oreProcessing", 0, [], 5, 5],
+                    ["metallurgy", 0, [], 5, 5]
+                ], 5, 5],
+                ["pharmaceuticalChemistry", 0, [
+                    ["herbicides", 0, [], 5, 5],
+                    ["medicines", 0, [], 5, 5]
+                ], 5, 5]
+            ], 5, 5],
+            ["biology", 0, [
+                ["anatomy", 0, [], 5, 5],
+                ["horticulture", 0, [], 5, 5],
+                ["physiology", 0, [
+                    ["radiationEffects", 0, [], 5, 5],
+                    ["lowGravEffects", 0, [], 5, 5]
+                ], 5, 5],
+                ["medicine", 0, [
+                    ["oncology", 0, [], 5, 5],
+                    ["orthopaedics", 0, [], 5, 5],
+                    ["paedeatrics", 0, [], 5, 5],
+                    ["placebos", 0, [], 5, 5],
+                    ["traditional", 0, [], 5, 5]
+                ], 5, 5]
             ], 5, 5]
         ], 5, 5],
-        ["science", Lang.science, true, [], [
-            ["physics", Lang.physics, false, [], [
-                ["experimentalPhysics", Lang.experimentalPhysics, false, [], [], 5, 5],
-                ["advancedMaterials", Lang.advancedMaterials, false, [], [
-                    ["compositieMaterials", Lang.compositieMaterials, false, [], [], 5, 5],
-                    ["selfHealingMaterials", Lang.selfHealingMaterials, false, [], [], 5, 5],
-                    ["conductivePolymers", Lang.conductivePolymers, false, [], [], 5, 5],
-                    ["opticalMaterials", Lang.opticalMaterials, false, [], [], 5, 5]
-                ], 5, 5],
-                ["nanotech", Lang.nanotech, false, [], [
-                    ["bioNeutralNano", Lang.bioNeutralNano, false, [], [], 5, 5],
-                    ["ggam", Lang.ggam, false, [], [], 5, 5],
-                    ["nanoFab", Lang.nanoFab, false, [], [], 5, 5]
-                ], 5, 5],
-                ["theoreticalPhysics", Lang.theoreticalPhysics, false, [], [], 5, 5],
-                ["astronomy", Lang.astronomy, false, [], [], 5, 5],
-                ["meteorology", Lang.meteorology, false, [], [], 5, 5],
-                ["nuclearPhysics", Lang.nuclearPhysics, false, [], [], 5, 5]
+        ["arts", 0, [
+            ["sociology", 0, [
+                ["socialPolicy", 0, [], 5, 5],
+                ["politicalScience", 0, [], 5, 5],
+                ["culturalRelations", 0, [], 5, 5]
             ], 5, 5],
-            ["chemistry", Lang.chemistry, false, [], [
-                ["organicChemistry", Lang.organicChemistry, false, [], [
-                    ["polymers", Lang.polymers, false, [], [], 5, 5]
-                ], 5, 5],
-                ["physicalChemistry", Lang.physicalChemistry, false, [], [
-                    ["oreProcessing", Lang.oreProcessing, false, [], [], 5, 5],
-                    ["metallurgy", Lang.metallurgy, false, [], [], 5, 5]
-                ], 5, 5],
-                ["pharmaceuticalChemistry", Lang.pharmaceuticalChemistry, false, [], [
-                    ["herbicides", Lang.herbicides, false, [], [], 5, 5],
-                    ["medicines", Lang.medicines, false, [], [], 5, 5]
-                ], 5, 5]
-            ], 5, 5],
-            ["biology", Lang.biology, false, [], [
-                ["anatomy", Lang.anatomy, false, [], [], 5, 5],
-                ["horticulture", Lang.horticulture, false, [], [], 5, 5],
-                ["physiology", Lang.physiology, false, [], [
-                    ["radiationEffects", Lang.radiationEffects, false, [], [], 5, 5],
-                    ["lowGravEffects", Lang.lowGravEffects, false, [], [], 5, 5]
-                ], 5, 5],
-                ["medicine", Lang.medicine, false, [], [
-                    ["oncology", Lang.oncology, false, [], [], 5, 5],
-                    ["orthopaedics", Lang.orthopaedics, false, [], [], 5, 5],
-                    ["paedeatrics", Lang.paedeatrics, false, [], [], 5, 5],
-                    ["placebos", Lang.placebos, false, [], [], 5, 5],
-                    ["traditional", Lang.traditional, false, [], [], 5, 5]
-                ], 5, 5]
-            ], 5, 5]
-        ], 5, 5],
-        ["arts", Lang.arts, true, [], [
-            ["sociology", Lang.sociology, false, [], [
-                ["socialPolicy", Lang.socialPolicy, false, [], [], 5, 5],
-                ["politicalScience", Lang.politicalScience, false, [], [], 5, 5],
-                ["culturalRelations", Lang.culturalRelations, false, [], [], 5, 5]
-            ], 5, 5],
-            ["philosophy", Lang.philosophy, false, [], [
-                ["ethics", Lang.ethics, false, [], [], 5, 5],
-                ["scientificTheory", Lang.scientificTheory, false, [], [], 5, 5],
-                ["classicalPhilosophy", Lang.classicalPhilosophy, false, [], [], 5, 5]
+            ["philosophy", 0, [
+                ["ethics", 0, [], 5, 5],
+                ["scientificTheory", 0, [], 5, 5],
+                ["classicalPhilosophy", 0, [], 5, 5]
             ], 5, 5]
         ], 5, 5]
-    ];
+    ], 0];
 
     this.ores = [];
     this.resourceArray = [ //[ORENAME,PRODUCTNAME]  
@@ -1633,9 +1630,9 @@ function Param() {
     this.blackout = 0; //Power Outages
     this.noAir = 0; //Air Shortages
     this.creche = 0; //Birth to preschool
-    this.uni = 0; //Eduncation length
+    this.uni = 0; //Education length
     this.botAging = 0; //Bot training & testing
-    this.leisure = 0;
+    this.leisure = 0; //Recreation
 }
 
 function setStats() {
@@ -1784,7 +1781,6 @@ function drawGraph(type, outputId, sourceData, from0) {
             sourceClean.push(sourceData[m][0]);
         }
     }
-    console.log(sourceClean);
     var maxMin = getMaxMin(sourceClean);
     var maxi = maxMin[0];
     var mini = maxMin[1];
@@ -1948,6 +1944,337 @@ function drawGraph(type, outputId, sourceData, from0) {
         }
     }
 }
+
+function fillResearchMenu(){
+    var source = Game.researchTopics[2];
+
+    //Tier0
+    for(var i = 0; i < source.length; i++){
+        if(Game.researchTopics[3] === 0){
+            var tier0 = document.getElementById(source[i][0]);
+            if(!tier0.classList.contains('research_active')){
+                tier0.classList.add('research_active');
+                tier0.innerHTML = Lang[source[i][0]];
+                tier0.onclick = clickedResearch;
+            }
+            //Tier1
+            for(var j = 0; j < source[i][2].length; j++){
+                if(source[i][3] === 0){
+                    var tier1 = document.getElementById(source[i][2][j][0]);
+                    if(!tier1.classList.contains('research_active')){
+                        tier1.classList.add('research_active');
+                        tier1.innerHTML = Lang[source[i][2][j][0]];
+                        console.log(source[i][2][j][0]);
+                        tier1.onclick = clickedResearch;
+                    }
+                    //Tier2
+                    for(var k = 0; k < source[i][2][j][2].length; k++){
+                        if(source[i][2][j][3] === 0){
+                            var tier2 = document.getElementById(source[i][2][j][2][k][0]);
+                            if(!tier2.classList.contains('research_active')){
+                                tier2.classList.add('research_active');
+                                tier2.innerHTML = Lang[source[i][2][j][2][k][0]];
+                                tier2.onclick = clickedResearch;
+                            }
+                            //Tier3
+                            for(var l = 0; l < source[i][2][j][2][k][2].length; l++){
+                                if(source[i][2][j][2][k][3] === 0){
+                                    var tier3 = document.getElementById(source[i][2][j][2][k][2][l][0]);
+                                    if(!tier3.classList.contains('research_active')){
+                                        tier3.innerHTML = Lang[source[i][2][j][2][k][2][l][0]];
+                                        tier3.onclick = clickedResearch;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function clickedResearch(){
+    var ident = this.id;
+    console.log(ident);
+    if(document.getElementById(ident + 'Cont')){
+        document.getElementById(ident + 'Cont').classList.toggle('research_cont_hidden');
+    }
+    fillResearchPanel(ident);
+    //document.getElementById('researchPanel').innerHTML = researchPanel[0];
+    //setResearchClickers(researchPanel);
+    fillResearchMenu();
+}
+
+function fillResearchPanel(ident){
+    var frag = document.createDocumentFragment();
+    console.log('here');
+    var topicList = false;
+    if(ident === 'overview'){
+        var title = document.createElement('h2');
+        title.innerHTML = Lang.overview;
+        frag.appendChild(title);
+        var activeLabs = document.createElement('h3');
+        activeLabs.innerHTML = Lang.active;
+        frag.appendChild(activeLabs);
+        var noActive = true;
+        for(var i = 0; i < Game.researchLabs.length; i++){
+            var lab = Game.researchLabs[i];
+            if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic !== 'noResearch'){
+                noActive = false;
+                var item = document.createElement('div');
+                item.classList.add('research_panel_item');
+                var img = document.createElement('img');
+                img.src = 'images/researchIllustrations/' + Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic + '.png';
+                var ref = document.createElement('p');
+                ref.innerHTML = Game.mapTiles[lab[0]][lab[1]][lab[2]].ref;
+                var current = document.createElement('p');
+                if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic === 'noResearch'){
+                    current.innerHTML = Lang.currentResearch + ' ' + Lang.none;
+                } else {
+                    current.innerHTML = Lang.currentResearch + ' ' + Lang[Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
+                }
+                var progressBar = document.createElement('div');
+                progressBar.classList.add('research_bar_frame');
+                progressBar.classList.add('research_progress_' + researchProgress(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
+                item.appendChild(img);
+                item.appendChild(ref);
+                item.appendChild(current);
+                item.appendChild(progressBar);
+                frag.appendChild(item);
+            }
+        }
+        if(noActive){
+            noActive = document.createElement('h4');
+            noActive.innerHTML = Lang.none;
+            frag.appendChild(noActive);
+        }
+        var available = document.createElement('h3');
+        available.innerHTML = Lang.availableLabs;
+        frag.appendChild(available);
+        var noAvailable = true;
+        for(var j = 0; j < Game.researchLabs.length; j++){
+            var freeLab = Game.researchLabs[j];
+            if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
+                noAvailable = false;
+                var itemFree = document.createElement('div');
+                itemFree.classList.add('research_panel_item');
+                var imgFree = document.createElement('img');
+                imgFree.src = 'images/researchIllustrations/' + Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic + '.png';
+                var refFree = document.createElement('p');
+                refFree.innerHTML = Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
+                var currentNone = document.createElement('p');
+                currentNone.innerHTML = Lang.currentResearch + ' ' + Lang.none;
+                itemFree.appendChild(imgFree);
+                itemFree.appendChild(refFree);
+                itemFree.appendChild(currentNone);
+                frag.appendChild(itemFree);
+            }
+        }
+        if(noAvailable){
+            noAvailable = document.createElement('h4');
+            noAvailable.innerHTML = Lang.none;
+            frag.appendChild(noAvailable);
+        }
+    } else {
+        var progressBar2 = document.createElement('div');
+        progressBar2.classList.add('research_bar_frame');
+        progressBar2.classList.add('research_progress_' + researchProgress(ident));
+        console.log('here');
+        frag.appendChild(progressBar2);
+        var content = document.createElement('span');
+        content.innerHTML = Lang[ident + 'Content'];
+        console.log('here');
+        frag.appendChild(content);
+        //get a reference to the research topic and add a button if it's studyable
+        var topicArr = researchTopicRef(ident);
+        if(topicArr[3] > 0){
+            topicList = true;
+            var btn = document.createElement('button');
+            btn.id = 'research' + ident;
+            btn.classList.add('smoky_glass');
+            btn.classList.add('main_pointer');
+            btn.innerHTML = Lang.study + ' ' + Lang[ident];
+            frag.appendChild(btn);
+        }
+    }
+    document.getElementById('researchPanel').innerHTML = '';
+    console.log('here');
+    document.getElementById('researchPanel').appendChild(frag);
+
+    if(topicList){
+        document.getElementById('research' + ident).onclick = function(){
+            listLabs(ident);
+        };
+    }
+}
+
+function researchTopicRef(topic){
+    console.log(topic);
+    var source = Game.researchTopics[2];
+    for(var i = 0; i < source.length; i++){
+        if(source[i][0] === topic){
+            return source[i];
+        } else {
+            for(var j = 0; j < source[i][2].length; j++){
+                if(source[i][2][j][0] === topic){
+                    return source[i][2][j];
+                } else {
+                    for(var k = 0; k < source[i][2][j][2].length; k++){
+                        if(source[i][2][j][2][k][0] === topic){
+                            return source[i][2][j][2][k];
+                        } else {
+                            for(var l = 0; l < source[i][2][j][2][k][2].length; l++){
+                                if(source[i][2][j][2][k][2][l][0] === topic){
+                                    return source[i][2][j][2][k][2][l];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function researchProgress(ident){
+    console.log(ident);
+    var ref = researchTopicRef(ident);
+    console.log(ref);
+    var progress = ref[4] - ref[3];
+    if(progress !== 0){
+        progress = progress / ref[4];
+    } else {
+        return 0;
+    }
+    progress = progress * 100;
+    progress -= progress%10;
+    return progress;
+}
+
+function listLabs(ident){
+    var frag = document.createDocumentFragment();
+    console.log('Hi!');
+    var studyList = [];
+    var cancelList = [];
+    var available = document.createElement('h3');
+    available.innerHTML = Lang.availableLabs;
+    frag.appendChild(available);
+    var noAvailable = true;
+    for(var j = 0; j < Game.researchLabs.length; j++){
+        var freeLab = Game.researchLabs[j];
+        if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic !== ident){
+            noAvailable = false;
+            var itemFree = document.createElement('div');
+            itemFree.classList.add('research_panel_item');
+            var imgFree = document.createElement('img');
+            imgFree.src = 'images/researchIllustrations/' + Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic + '.png';
+            var refFree = document.createElement('p');
+            refFree.innerHTML = Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
+            var current = document.createElement('p');
+            if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
+                current.innerHTML = Lang.currentResearch + ' ' + Lang.none;
+            } else {
+                current.innerHTML = Lang.currentResearch + ' ' + Lang[Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic];
+            }
+            var studyBtn = document.createElement('button');
+            studyBtn.id = 'studyBtn' + j;
+            studyBtn.classList.add('green_glass');
+            studyBtn.classList.add('main_pointer');
+            studyBtn.innerHTML = Lang.study + ' ' + Lang[ident];
+            studyList.push(['studyBtn' + j, freeLab]);
+            itemFree.appendChild(imgFree);
+            itemFree.appendChild(refFree);
+            itemFree.appendChild(current);
+            itemFree.appendChild(studyBtn);
+            frag.appendChild(itemFree);
+        }
+    }
+    if(noAvailable){
+        noAvailable = document.createElement('h4');
+        noAvailable.innerHTML = Lang.none;
+        frag.appendChild(noAvailable);
+    }
+
+    var activeLabs = document.createElement('h3');
+    activeLabs.innerHTML = Lang.active;
+    frag.appendChild(activeLabs);
+    var noActive = true;
+    for(var i = 0; i < Game.researchLabs.length; i++){
+        var lab = Game.researchLabs[i];
+        if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic === ident){
+            noActive = false;
+            var item = document.createElement('div');
+            item.classList.add('research_panel_item');
+            var img = document.createElement('img');
+            img.src = 'images/researchIllustrations/' + Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic + '.png';
+            var ref = document.createElement('p');
+            ref.innerHTML = Game.mapTiles[lab[0]][lab[1]][lab[2]].ref;
+            var current2 = document.createElement('p');
+            current2.innerHTML = Lang.currentResearch + ' ' + Lang[ident];
+            var progressBar = document.createElement('div');
+            progressBar.classList.add('research_bar_frame');
+            progressBar.classList.add('research_progress_' + researchProgress(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
+            var cancelBtn = document.createElement('button');
+            cancelBtn.id = 'cancelBtn' + i;
+            cancelBtn.innerHTML = Lang.stopResearch;
+            cancelBtn.classList.add('red_glass');
+            cancelBtn.classList.add('main_pointer');
+            cancelList.push(['cancelBtn' + i, lab]);
+            item.appendChild(img);
+            item.appendChild(ref);
+            item.appendChild(current2);
+            item.appendChild(progressBar);
+            item.appendChild(cancelBtn);
+            frag.appendChild(item);
+        }
+    }
+    if(noActive){
+        noActive = document.createElement('h4');
+        noActive.innerHTML = Lang.none;
+        frag.appendChild(noActive);
+    }
+    document.getElementById('researchPanel').innerHTML = '';
+    console.log('here');
+    document.getElementById('researchPanel').appendChild(frag);
+
+    for(var s = 0; s < studyList.length; s++){
+        console.log('in for' + studyList);
+        (function(_s){
+            console.log('in click' + studyList);
+            var id = studyList[s][0];
+            var level = studyList[s][1][0];
+            var y = studyList[s][1][1];
+            var x = studyList[s][1][2];
+            var obj = document.getElementById(id);
+            var objFn = function(){
+                Game.mapTiles[level][y][x].researchTopic = ident;
+                listLabs(ident);
+                console.log(Game.mapTiles[level][y][x].ref + ' yo');
+            };
+            obj.addEventListener('click', objFn, false);
+        })();
+    }
+    for(var c = 0; c < cancelList.length; c++){
+        (function(_c){
+            var id = cancelList[c][0];
+            var level = cancelList[c][1][0];
+            var y = cancelList[c][1][1];
+            var x = cancelList[c][1][2];
+            var obj = document.getElementById(id);
+            var objFn = function(){
+                Game.mapTiles[level][y][x].researchTopic = 'noResearch';
+                listLabs(ident);
+            };
+            obj.addEventListener('click', objFn, false);
+        })();
+    }
+}
+
+
+
+
+
 
 /**
  * Initialize the game
@@ -2378,7 +2705,9 @@ function advanceTurn(turns){
                 reCount('all');
                 Disk.saveGame(Game.inputSeed);
                 execReview();
-                document.getElementById('researchPanel').innerHTML = fillResearchPanel(Game.currentResearch);
+                var researchPanel = fillResearchPanel(Game.currentResearch);
+                fillResearchPanel('overview');
+                //setResearchClickers(researchPanel);
                 fillResearchMenu();
                 drawRadar();
                 Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
@@ -2428,6 +2757,7 @@ function Playlist(){
         currentTrack.pause();
     };
     this.play = function() {
+        currentTrack.volume = volume;
         this.musicOn ? currentTrack.play() : currentTrack.pause();
     };
     this.changeVolume = function(val){
@@ -2481,167 +2811,17 @@ function getMaxMin(arrayIn){
     var min = 1000000;
     var maxTest, minTest;
     for(var i = 0; i < arrayIn.length; i++){
-        console.log(typeof arrayIn[i]);
         maxTest = Math.max.apply(null,arrayIn[i]);
         minTest = Math.min.apply(null,arrayIn[i]);
-        console.log(maxTest);
         if(maxTest > max){max = maxTest;}
         if(minTest < min){min = minTest;}
         if(min < 0){min = 0;}
     }
-    console.log(max);
     max = Math.ceil(1 + max/50) * 50;
     min = Math.floor(min/50) * 50;
     return [max, min];
 }
 
-function fillResearchMenu(){
-    //Tier0
-    for(var i = 0; i < Game.researchTopics.length; i++){
-        if(Game.researchTopics[i][2]){
-            var tier0 = document.getElementById(Game.researchTopics[i][0]);
-            if(!tier0.classList.contains('research_active')){
-                tier0.classList.add('research_active');
-                tier0.innerHTML = Game.researchTopics[i][1];
-                tier0.onclick = clickedResearch;
-            }
-            //Tier1
-            for(var j = 0; j < Game.researchTopics[i][4].length; j++){
-                if(Game.researchTopics[i][4][j][2]){
-                    var tier1 = document.getElementById(Game.researchTopics[i][4][j][0]);
-                    if(!tier1.classList.contains('research_active')){
-                        tier1.classList.add('research_active');
-                        tier1.innerHTML = Game.researchTopics[i][4][j][1];
-                        tier1.onclick = clickedResearch;
-                    }
-                    //Tier2
-                    for(var k = 0; k < Game.researchTopics[i][4][j][4].length; k++){
-                        if(Game.researchTopics[i][4][j][4][k][2]){
-                            var tier2 = document.getElementById(Game.researchTopics[i][4][j][4][k][0]);
-                            if(!tier2.classList.contains('research_active')){
-                                tier2.classList.add('research_active');
-                                tier2.innerHTML = Game.researchTopics[i][4][j][4][k][1];
-                                tier2.onclick = clickedResearch;
-                            }
-                            //Tier3
-                            for(var l = 0; l < Game.researchTopics[i][4][j][4][k][4].length; l++){
-                                if(Game.researchTopics[i][4][j][4][k][4][l][2]){
-                                    var tier3 = document.getElementById(Game.researchTopics[i][4][j][4][k][4][l][0]);
-                                    if(!tier3.classList.contains('research_active')){
-                                        tier3.innerHTML = Game.researchTopics[i][4][j][4][k][4][l][1];
-                                        tier3.onclick = clickedResearch;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-function clickedResearch(){
-    var ident = this.id;
-    if(document.getElementById(ident + 'Cont')){
-        document.getElementById(ident + 'Cont').classList.toggle('research_cont_hidden');
-    }
-    document.getElementById('researchPanel').innerHTML = fillResearchPanel(ident);
-    fillResearchMenu();
-}
-
-function fillResearchPanel(ident){
-    Game.currentResearch = ident;
-    var htmlString = '';
-    if(researchTopicRef(ident)[5] !== 0){
-        htmlString += "<div class='research_bar_frame'><div class='research_bar' style='width: " + researchProgress(ident) + "%'></div></div>";
-        htmlString += researchProgress(ident) + "% " + Lang.researched + "<br>";
-    } else {
-        htmlString += "100% " + Lang.researched + "<br>";
-    }
-    htmlString += '<img src="images/researchIllustrations/' + ident + '.png" />';
-    htmlString += Lang[ident + "Content"];
-    var inProgress = true;
-    if(Game.researchLabs.length > 0){
-        for(var i = 0; i < Game.researchLabs.length; i++){
-            var lab = Game.researchLabs[i];
-            if(lab[3] === ident){
-                if(inProgress){
-                    htmlString += "<br><p>" + Lang.studyingThis + " " + Lang[lab[3]] + ":</p><br>";
-                    inProgress = false;
-                }
-                htmlString += "<div class='research_panel_item' onclick='jump(true," + lab[0] + "," + lab[1] + "," + lab[2] + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />";
-                htmlString += "<p>" + Game.mapTiles[lab[2]][lab[1]][lab[0]].ref + "</p>";
-                htmlString += "<div class='research_bar_frame' style='width: 400px; margin-left: 100px'><div class='research_bar' style='width: " + researchProgress(ident) + "%''></div></div>";
-                htmlString += "</div>";
-            }
-        }
-        if(researchTopicRef(ident)[5] !== 0){
-            htmlString += '<button id="' + ident + 'Button" class="main_pointer smoky_glass" onclick="startResearch(' + ident + ')">Research</button>';
-        }
-    }
-    return htmlString;
-}
-
-function researchProgress(ident){
-    var ref = researchTopicRef(ident);
-    var progress = ref[6] - ref[5];
-    if(progress !== 0){
-        progress = progress / ref[6];
-    } else {
-        return 0;
-    }
-    progress = progress * 100;
-    progress -= progress%10;
-    return progress;
-}
-
-function startResearch(ident){
-    ident = ident.id;
-    var htmlString = '';
-    htmlString += "<h1>" + Lang.availableLabs + "</h1>";
-    htmlString += Lang.chooseLab + " " + Lang[ident];
-    for (var i = 0; i < Game.researchLabs.length; i++){
-        var lab = Game.researchLabs[i];
-        Game.mapTiles[lab[2]][lab[1]][lab[0]][1].researchTopic = lab[3];
-        htmlString += "<div class='research_panel_item' onclick='setResearchTopic(" + ident + "," + i + ")'><img src='images/researchIllustrations/" + lab[3] + ".png' />" + returnLevel(lab[2])[lab[1]][lab[0]].ref + "<br>";
-        htmlString += Lang.currentResearch + " " + Lang[lab[3]];
-        htmlString += "<div class='research_bar_frame' style='width: 400px; margin-left: 100px'><div class='research_bar' style='width: " + researchProgress(ident) + "%''></div></div>";
-        htmlString += "</div>";
-    }
-    document.getElementById('researchPanel').innerHTML = htmlString;
-}
-
-function setResearchTopic(ident, i){
-    Game.researchLabs[i][3] = ident.id;
-    startResearch(ident);
-}
-
-function researchTopicRef(topic){
-    for(var i = 0; i < Game.researchTopics.length; i++){
-        if(Game.researchTopics[i][0] === topic){
-            return Game.researchTopics[i];
-        } else {
-            for(var j = 0; j < Game.researchTopics[i][4].length; j++){
-                if(Game.researchTopics[i][4][j][0] === topic){
-                    return Game.researchTopics[i][4][j];
-                } else {
-                    for(var k = 0; k < Game.researchTopics[i][4][j][4].length; k++){
-                        if(Game.researchTopics[i][4][j][4][k][0] === topic){
-                            return Game.researchTopics[i][4][j][4][k];
-                        } else {
-                            for(var l = 0; l < Game.researchTopics[i][4][j][4][k][4].length; l++){
-                                if(Game.researchTopics[i][4][j][4][k][4][l][0] === topic){
-                                    return Game.researchTopics[i][4][j][4][k][4][l];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 function execReview() {
     var darkBlue = '#66D8FF';
@@ -2765,7 +2945,6 @@ function execReview() {
 }
 
 function mapFit(bool) {
-    console.log('I\'m refitting!');
     var quarterHeight = Math.floor(Game.destinationHeight * 0.25);
     if(bool) {
         var overlay = document.getElementById('mPanOverlay');
@@ -2828,9 +3007,8 @@ function checkBuildings() {
         var elem = document.getElementById(idString);
         elem.classList.remove('menu_selected');
         if(Game.buildings[thing][1]) {
-            if(elem.style.display === 'none' || elem.style.display === '') {
-                elem.style.display = 'table';
-            }
+            elem.classList.add('menu_show');
+            elem.classList.remove('menu_hide');
             switch(Game.buildings[thing][2]) {
             case 0:
                 if(Game.level === 0) {
@@ -2855,8 +3033,8 @@ function checkBuildings() {
                 document.getElementById(Game.buildings[thing][0]).onclick = construct;
             }
         } else {
-            elem.style.display = 'none';
-            console.log(elem.style.display);
+            elem.classList.remove('menu_show');
+            elem.classList.add('menu_hide');
             if(Game.clickedOn === idString) {
                 Game.clickedOn = 'none';
                 document.body.style.cursor = "url('images/pointers/pointer.png'), default";
@@ -2874,8 +3052,8 @@ function checkRobots() {
         var c3po = document.getElementById(idString);
         c3po.classList.remove('menu_selected');
         if(wallE[3]) {
-            c3po.classList.add('bot_show');
-            c3po.classList.remove('bot_hide');
+            c3po.classList.add('menu_show');
+            c3po.classList.remove('menu_hide');
             switch(wallE[4]) {
             case 0:
                 if(Game.level === 0) {
@@ -2910,8 +3088,8 @@ function checkRobots() {
                 }
             }
         } else {
-            c3po.classList.remove('bot_show');
-            c3po.classList.add('bot_hide');
+            c3po.classList.remove('menu_show');
+            c3po.classList.add('menu_hide');
         }
     }
     //special case for digger
@@ -2919,7 +3097,7 @@ function checkRobots() {
         var rob = document.getElementById(Game.robotsList[1][2]);
         rob.classList.remove('active');
         rob.onclick = null;
-        rob.style.background = '#000';
+        //rob.style.background = '#000';
         if(Game.clickedOn === 'digger' || (Game.clickedOn === 'cavernDigger' && Game.robotsList[1][1] - Game.robotsList[1][0] === 0)) {
             Game.clickedOn = 'none';
             document.body.style.cursor = "url('images/pointers/pointer.png'), default";
@@ -2928,7 +3106,7 @@ function checkRobots() {
             var cavDig = document.getElementById('cavernDigger');
             cavDig.classList.remove('active');
             cavDig.onclick = null;
-            cavDig.style.background = '#000';
+            //cavDig.style.background = '#000';
         }
     }
 }
@@ -3243,6 +3421,7 @@ function keypressed(e) {
             }
             break;
         case 82://r (research)
+            fillResearchPanel('overview');
             document.getElementById('statsContainer').classList.add('exec_hidden');
             document.getElementById('messageContainer').classList.add('exec_hidden');
             document.getElementById('guideContainer').classList.add('exec_hidden');

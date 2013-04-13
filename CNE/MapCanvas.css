@@ -373,10 +373,6 @@ button:active {
     box-shadow: 0 0 2px 0 #FFF;
 }
 
-.menu_available{
-    background: #000;
-}
-
 .menu_selected{
     background: #393939;
 }
@@ -400,7 +396,6 @@ button:active {
 
 .menu_item {
     position: relative;
-    display: none;
     padding: 15px;
     -webkit-filter: grayscale(80%) blur(1px);
     color: gray;
@@ -415,11 +410,11 @@ button:active {
     cursor: url(images/pointers/build.png),auto;
 }
 
-.bot_hide{
+.menu_hide{
     display: none;
 }
 
-.bot_show{
+.menu_show{
     display: table;
 }
 
@@ -446,10 +441,6 @@ button:active {
     right: 20px;
     bottom: 5px;
     font-size: 12px;
-}
-
-.building {
-    display: none;
 }
 
 .itemText {
@@ -799,6 +790,53 @@ input[type="checkbox"]:checked + label span{
     background: #3C3C3C;
     border: solid 1px green;
 }
+
+.research_progress_0{
+    background: black;
+}
+
+.research_progress_10{
+    background: -webkit-linear-gradient(top left, green 10%, black 10%);
+}
+
+.research_progress_20{
+    background: -webkit-linear-gradient(top left, green 20%, black 20%);
+}
+
+.research_progress_30{
+    background: -webkit-linear-gradient(top left, green 30%, black 30%);
+}
+
+.research_progress_40{
+    background: -webkit-linear-gradient(top left, green 40%, black 40%);
+}
+
+.research_progress_50{
+    background: -webkit-linear-gradient(top left, green 50%, black 50%);
+}
+
+.research_progress_60{
+    background: -webkit-linear-gradient(top left, green 60%, black 60%);
+}
+
+.research_progress_70{
+    background: -webkit-linear-gradient(top left, green 70%, black 70%);
+}
+
+.research_progress_80{
+    background: -webkit-linear-gradient(top left, green 80%, black 80%);
+}
+
+.research_progress_90{
+    background: -webkit-linear-gradient(top left, green 90%, black 90%);
+}
+
+.research_progress_100{
+    background: green;
+}
+
+
+
 
 .tier0{
     margin-left: 0;

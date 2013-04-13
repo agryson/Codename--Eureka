@@ -203,10 +203,15 @@ function Language(planetName){
 	//Research
 	this.availableLabs = "Available Laboratories:";
 	this.currentResearch = "Current research topic:";
+	this.active = "Active Labs:";
 	this.noResearch = "None";
 	this.chooseLab = "Choose a laboratory to study";
 	this.studyingThis = "Labs currently studying";
 	this.researched = "Researched";
+	this.overview = "Overview";
+	this.none = "None";
+	this.study = "Study";
+	this.stopResearch = "Stop Research";
 
 	//Research Topics
 	this.engineering = "Engineering";
