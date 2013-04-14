@@ -4289,6 +4289,22 @@ function clicked(direction) {
     var hex = Game.mapTiles[Game.level][y][x];
     var tile = Game.map[Game.level][y][x];
     var lowerTile, upperTile;
+    var confirmBot = function(botText){
+        var frag = document.createDocumentFragment();
+        var spacer = document.createElement('br');
+        var btn = document.createElement('button');
+        btn.innerHTML = botText;
+        btn.id = 'confirmBuild';
+        btn.classList.add('context_button');
+        btn.classList.add('smoky_glass');
+        btn.classList.add('main_pointer');
+        frag.appendChild(spacer);
+        frag.appendChild(btn);
+        frag.appendChild(spacer);
+        return frag;
+    };
+
+
     if(Game.level < 5) {
         lowerTile = Game.map[Game.level + 1][y][x];
     }
@@ -4340,8 +4356,9 @@ function clicked(direction) {
         break;
     case 'dozer':
         if(!direction) {
-            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer'>" + Lang.confirmDoze + "</button><br>");
+            rightClicked(confirmBot(Lang.confirmDoze));
             document.getElementById('confirmBuild').onclick = function(){
+                console.log('how many times?');
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
             };
@@ -4357,7 +4374,7 @@ function clicked(direction) {
         break;
     case 'digger':
         if(!direction) {
-            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer'>" + Lang.confirmDig + "</button><br>");
+            rightClicked(confirmBot(Lang.confirmDig));
             document.getElementById('confirmBuild').onclick = function(){
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
@@ -4393,7 +4410,7 @@ function clicked(direction) {
         break;
     case 'cavernDigger':
         if(!direction) {
-            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer'>" + Lang.confirmDigCavern + "</button><br>");
+            rightClicked(confirmBot(Lang.confirmDigCavern));
             document.getElementById('confirmBuild').onclick = function(){
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
@@ -4420,7 +4437,7 @@ function clicked(direction) {
         break;
     case 'miner':
         if(!direction) {
-            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer'>" + Lang.confirmMine + "</button><br>");
+            rightClicked(confirmBot(Lang.confirmMine));
             document.getElementById('confirmBuild').onclick = function(){
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
@@ -4454,7 +4471,7 @@ function clicked(direction) {
         break;
     case 'recycler':
         if(!direction) {
-            rightClicked("<br><button id='confirmBuild' class='smoky_glass main_pointer''>" + Lang.confirmRecycle + "</button><br>");
+            rightClicked(confirmBot(Lang.confirmRecycle));
             document.getElementById('confirmBuild').onclick = function(){
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
