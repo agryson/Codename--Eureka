@@ -1366,6 +1366,7 @@ function Param() {
     this.mouseY;
     */
     //General game stuff
+    this.mouseDown = false;
     this.turnNum = document.getElementById('turnNumber');
     this.turn = 0;
     this.map = [];
@@ -2384,6 +2385,13 @@ function eavesdrop() {
     mainMap.onclick = function() {
         clicked();
     };
+    mainMap.onmousedown = function(){
+        Game.mouseDown = true;
+        mapDrag();
+    };
+    mainMap.onmouseup = function(){
+        Game.mouseDown = false;
+    };
     //should consider having zoom on the radar instead of the main map or storing the retX retY for a second or two
     var blocked = false;
     mainMap.onmousewheel = function(event) {
@@ -2660,6 +2668,29 @@ function eavesdrop() {
         var zoomLevel = document.getElementById('zoom').value;
         zoom(zoomLevel);
     };
+}
+
+function mapDrag(array){
+    var last = array;
+    var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
+    var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
+    var current = [x,y];
+    if(!last){
+        console.log('what? ' + array);
+        last = [];
+        last[0] = current[0];
+        last[1] = current[1];
+    }
+    if(last[0] !== current[0] || last[1] !== current[1]){
+        Game.retX += last[0] - current[0];
+        Game.retY += last[1] - current[1];
+        console.log(current);
+    }
+    setTimeout(function(){
+        if(Game.mouseDown){
+            mapDrag(current);
+        }
+    }, 100);
 }
 
 function advanceTurn(turns){
