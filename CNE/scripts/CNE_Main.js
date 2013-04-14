@@ -1131,7 +1131,7 @@ function GameDisk(){
                 del.innerHTML = '&#215;';
                 fragment.appendChild(del);
             });
-            document.getElementById('chooseSave').innerHTML = '';
+            flush(document.getElementById('chooseSave'));
             document.getElementById('chooseSave').appendChild(fragment);
             for(var j = 0; j < ids.length; j++){
                 //I've discovered closure! wow...
@@ -1997,7 +1997,6 @@ function clickedResearch(){
 
 function fillResearchPanel(ident){
     var frag = document.createDocumentFragment();
-    console.log('here');
     var topicList = false;
     if(ident === 'overview'){
         var title = document.createElement('h2');
@@ -2079,16 +2078,13 @@ function fillResearchPanel(ident){
         var progressBar2 = document.createElement('div');
         progressBar2.classList.add('research_bar_frame');
         progressBar2.classList.add('research_progress_' + researchProgress(ident));
-        console.log('here');
         frag.appendChild(progressBar2);
         var content = document.createElement('span');
         content.innerHTML = Lang[ident + 'Content'];
-        console.log('here');
         frag.appendChild(content);
         //get a reference to the research topic and add a button if it's studyable
     }
-    document.getElementById('researchPanel').innerHTML = '';
-    console.log('here');
+    flush(document.getElementById('researchPanel'));
     document.getElementById('researchPanel').appendChild(frag);
 
     if(topicList){
@@ -2099,7 +2095,6 @@ function fillResearchPanel(ident){
 }
 
 function researchTopicRef(topic){
-    console.log(topic);
     var source = Game.researchTopics[2];
     for(var i = 0; i < source.length; i++){
         if(source[i][0] === topic){
@@ -2127,9 +2122,7 @@ function researchTopicRef(topic){
 }
 
 function researchProgress(ident){
-    console.log(ident);
     var ref = researchTopicRef(ident);
-    console.log(ref);
     var progress = ref[4] - ref[3];
     if(progress !== 0){
         progress = progress / ref[4];
@@ -2143,7 +2136,6 @@ function researchProgress(ident){
 
 function listLabs(ident){
     var frag = document.createDocumentFragment();
-    console.log('Hi!');
     var studyList = [];
     var cancelList = [];
     var available = document.createElement('h3');
@@ -2223,14 +2215,11 @@ function listLabs(ident){
         noActive.innerHTML = Lang.none;
         frag.appendChild(noActive);
     }
-    document.getElementById('researchPanel').innerHTML = '';
-    console.log('here');
+    flush(document.getElementById('researchPanel'));
     document.getElementById('researchPanel').appendChild(frag);
 
     for(var s = 0; s < studyList.length; s++){
-        console.log('in for' + studyList);
         (function(_s){
-            console.log('in click' + studyList);
             var id = studyList[s][0];
             var level = studyList[s][1][0];
             var y = studyList[s][1][1];
@@ -2239,7 +2228,6 @@ function listLabs(ident){
             var objFn = function(){
                 Game.mapTiles[level][y][x].researchTopic = ident;
                 listLabs(ident);
-                console.log(Game.mapTiles[level][y][x].ref + ' yo');
             };
             obj.addEventListener('click', objFn, false);
         })();
@@ -2260,10 +2248,12 @@ function listLabs(ident){
     }
 }
 
-
-
-
-
+function flush(elem){
+    //afaik, chrome will remove orphaned event listeners
+    while (elem.lastChild) {
+        elem.removeChild(elem.firstChild);
+    }
+}
 
 /**
  * Initialize the game
@@ -2467,7 +2457,7 @@ function eavesdrop() {
     };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
-        ev.stopPropagation();
+        //ev.stopPropagation();
         if(Game.highlight) {
             rightClicked();
         }
@@ -3909,54 +3899,76 @@ function rightClicked(content) {
     //TODO : Make context menu appear on the correct side relative to mouse position near screen edges
     var popFrame = document.getElementById('contextMenuWrapper');
     var pop = document.getElementById('contextMenu');
-    pop.innerHTML = contextContent(content);
+    var hide = function(e) {
+        if(((e.relatedTarget || e.toElement) === popFrame.nextElementSibling) || ((event.relatedTarget || event.toElement) == popFrame.parentNode)){
+            popFrame.style.opacity = '0';
+            setTimeout(function(){
+                popFrame.style.display = 'none';
+                flush(pop);
+            }, 200);
+            popFrame.removeEventListener('mouseout', hide);
+        }
+    };
+    flush(pop);
+    pop.appendChild(contextContent(content));
     popFrame.style.top = event.clientY - 25 + 'px';
     popFrame.style.left = event.clientX - 10 + 'px';
     popFrame.style.display = 'inline-block';
     popFrame.style.opacity = '1';
-    popFrame.addEventListener('mouseout', function() {
-        if(((event.relatedTarget || event.toElement) == popFrame.nextElementSibling) || ((event.relatedTarget || event.toElement) == popFrame.parentNode)) {
-            popFrame.style.opacity = '0';
-            popFrame.addEventListener('webkitTransitionEnd', function() {
-                popFrame.style.display = 'none';
-                pop.innerHTML = '';
-                popFrame.onmouseout = null;
-            }, false);
-        }
-    }, false);
+    popFrame.addEventListener('mouseout', hide, false);
+
 }
 
 function contextContent(content) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
+    console.log(Game.level + ' ' + x + ' ' + y);
     var tile = Game.map[Game.level][y][x];
     var construct = Game.mapTiles[Game.level][y][x];
     var resources = false;
-    var htmlString = '';
+    var frag = document.createDocumentFragment();
+    var spacer = document.createElement('br');
+
+    //Reference
+    var ref = document.createElement('span');
     if(typeof construct.kind === 'number'){
-        htmlString += '<span>' + construct.ref + '</span><br>';
+        ref.innerHTML = construct.ref;
     } else {
-        htmlString += '<span>' + tile.ref + '</span><br>';
+        ref.innerHTML = tile.ref;
     }
+    frag.appendChild(ref);
+    frag.appendChild(spacer);
+
     //build time left
     if(typeof construct.kind === 'number' && construct.kind === 100) {
-        htmlString += '<span>' + Lang.buildTime + (construct.buildTime + 1) + " ";
-
+        var buildTime = document.createElement('span');
+        var buildString = '';
+        buildString += Lang.buildTime + (construct.buildTime + 1) + " ";
+        //This next part is too language specific methinks
         if(construct.buildTime >= 1) {
-            htmlString += Lang.weeks;
+            buildString += Lang.weeks;
         }else{
-            htmlString += Lang.week;
+            buildString += Lang.week;
         }
-        htmlString += '</span><br>';
+        buildTime.innerHTML = buildString;
+        frag.appendChild(buildTime);
+        frag.appendChild(spacer);
     }
     if(content) {
         if(!(typeof construct.kind === 'number' && construct.kind >= 100 && construct.kind < 200)){
-            htmlString += content;
+            frag.appendChild(content);
+            //htmlString += content;
         }
     }
     if(construct.exists && construct.shutdown) {
-        htmlString += '<span>' + Lang.noPower + '</span><br>';
-        htmlString += '<span>' + Lang.shutdown + '</span><br>';
+        var power = document.createElement('span');
+        var down = document.createElement('span');
+        power.innerHTML = Lang.noPower;
+        down.innerHTML = Lang.shutdown;
+        frag.appendChild(power);
+        frag.appendChild(spacer);
+        frag.appendChild(down);
+        frag.appendChild(spacer);
     }
     //resources?
     var resourceList;
@@ -3965,19 +3977,28 @@ function contextContent(content) {
     } else {
         resourceList = tile.resources;
     }
+    var listedResources = document.createElement('ul');
     for(var i = 0; i < resourceList.length; i++) {
         if(resourceList[i] > 0) {
             if(!resources) {
-                htmlString += '<h3>' + Lang.resources + '</h3><ul>';
+                var resourceTitle = document.createElement('h3');
+                resourceTitle.innerHTML = Lang.resources;
+                frag.appendChild(resourceTitle);
                 resources = true;
             }
-            htmlString += '<li>' + Game.resourceArray[i][0] + ': ' + resourceList[i] + 't';
-            htmlString += '<ul><li>' + Game.resourceArray[i][1] + '</ul>';
+            var item = document.createElement('li');
+            item.innerHTML = Game.resourceArray[i][0] + ': ' + resourceList[i] + 't';
+            var nameIndent = document.createElement('ul');
+            var name = document.createElement('li');
+            name.innerHTML = Game.resourceArray[i][1];
+            nameIndent.appendChild(name);
+            item.appendChild(nameIndent);
+            listedResources.appendChild(item);
         }
     }
-    htmlString += '</ul>';
+    frag.appendChild(listedResources);
     //!resources
-    return htmlString;
+    return frag;
 }
 
 String.prototype.insert = function(index, string) {
