@@ -4209,23 +4209,35 @@ function resourceNeededList(building, getRec, recycling){
     } else if(getRec) {
         return(requisition(resourcesNeeded));
     } else {
-        var htmlString = '';
-        htmlString += "<br><button id='confirmBuild' class='smoky_glass main_pointer' style='width: 100%; text-align: center;'>" + Lang.confirmBuild + "</button><br>";
-        htmlString += '<h3>' + Lang.resourcesNeeded + ' (' + future + ')</h3>';
-        htmlString += '<ul>';
+        var frag = document.createDocumentFragment();
+        var spacer = document.createElement('br');
+        var need = document.createElement('button');
+        need.id = 'confirmBuild';
+        need.classList.add('smoky_glass');
+        need.classList.add('main_pointer');
+        need.classList.add('context_button');
+        need.innerHTML = Lang.confirmBuild;
+        frag.appendChild(spacer);
+        frag.appendChild(need);
+        var title = document.createElement('h3');
+        title.innerHTML = Lang.resourcesNeeded + ' (' + future + ')';
+        frag.appendChild(title);
+        var required = document.createElement('ul');
         for(var resource = 0; resource < resourcesNeeded.length; resource++){
             var which = resourcesNeeded[resource][0];
             var amount = resourcesNeeded[resource][1];
-            htmlString += '<li>' + '<span style="color:';
+            var item = document.createElement('li');
             if(Game.procOres[which] >= amount){
-                htmlString += '#00FF00;"';
+                item.classList.add('green');
             } else {
-                htmlString += '#FF0000;"';
+                item.classList.add('red');
             }
-            htmlString += '>' + amount + '</span> ' + Game.resourceNames[which] + '</li>';
+            item.innerHTML = amount + ' ' + Game.resourceNames[which];
+            required.appendChild(item);
         }
-        htmlString += '</ul>';
-        return htmlString;
+        frag.appendChild(required);
+        console.log(frag);
+        return frag;
     }
 }
 

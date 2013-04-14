@@ -474,6 +474,19 @@ button:active {
     color: white;
     box-shadow: -1px -1px 2px 0 white, inset -1px -1px 2px 0 black;
 }
+
+.context_button {
+    width: 100%;
+    text-align: center;
+}
+
+.red{
+    color: red;
+}
+
+.green{
+    color: green;
+}
 /*!Main Map*/
 
 
