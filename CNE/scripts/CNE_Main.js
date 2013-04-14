@@ -1248,7 +1248,7 @@ function GameDisk(){
                     fillResearchMenu();
                     drawRadar();
                     Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
-                    document.getElementById('consoleContent').innerHTML = '';
+                    flush(document.getElementById('consoleContent'));
                     printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
                     jump(true, Game.home[0], Game.home[1], 0);
                 };
@@ -2316,7 +2316,7 @@ function eavesdrop() {
         settings.classList.add('global_container_hidden');
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
-        document.getElementById('consoleContent').innerHTML = '';
+        flush(document.getElementById('consoleContent'));
         Disk.loadList();
     };
     document.getElementById('login').onclick = function() {
@@ -3200,14 +3200,19 @@ function mainLoop() {
 
 function printConsole(text){
     if(!document.getElementById('console').classList.contains('console_open')){
-        //document.getElementById('consoleInput').focus();
         document.getElementById('console').classList.add('console_notif');
         setTimeout(function(){
             document.getElementById('console').classList.remove('console_notif');
         }, 2500);
     }
     var output = document.getElementById('consoleContent');
-    output.innerHTML += text + '<br>';
+    var frag = document.createDocumentFragment();
+    var input = document.createElement('span');
+    var spacer = document.createElement('br');
+    input.innerHTML = text;
+    frag.appendChild(input);
+    frag.appendChild(spacer);
+    output.appendChild(frag);
     output.scrollTop = output.scrollHeight;
 }
 
@@ -4299,6 +4304,7 @@ function clicked(direction) {
         btn.classList.add('smoky_glass');
         btn.classList.add('main_pointer');
         frag.appendChild(spacer);
+        frag.appendChild(spacer);//I don't think these are doing anything... ?
         frag.appendChild(btn);
         frag.appendChild(spacer);
         return frag;
