@@ -2391,6 +2391,7 @@ function eavesdrop() {
     };
     mainMap.onmouseup = function(){
         Game.mouseDown = false;
+        drawRadar();
     };
     //should consider having zoom on the radar instead of the main map or storing the retX retY for a second or two
     var blocked = false;
@@ -2462,6 +2463,7 @@ function eavesdrop() {
     };
     radarMap.onmouseout = function() {
         Game.radarCanvas.onmousemove = null;
+        Game.highlight = false;
     };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
@@ -2674,9 +2676,8 @@ function mapDrag(array){
     var last = array;
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
-    var current = [x,y];
+    var current = [x - y%2, y - y%2];
     if(!last){
-        console.log('what? ' + array);
         last = [];
         last[0] = current[0];
         last[1] = current[1];
@@ -2684,13 +2685,14 @@ function mapDrag(array){
     if(last[0] !== current[0] || last[1] !== current[1]){
         Game.retX += last[0] - current[0];
         Game.retY += last[1] - current[1];
-        console.log(current);
     }
-    setTimeout(function(){
-        if(Game.mouseDown){
-            mapDrag(current);
-        }
-    }, 100);
+    if(Game.mouseDown){
+        setTimeout(function(){
+            mapDrag(last);
+        }, 100);
+    } else {
+        drawLoc();
+    }
 }
 
 function advanceTurn(turns){
