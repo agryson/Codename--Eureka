@@ -2682,10 +2682,17 @@ function mapDrag(array){
         last[0] = current[0];
         last[1] = current[1];
     }
+    var newX = Game.retX + last[0] - current[0];
+    var newY = Game.retY + last[1] - current[1];
     if(last[0] !== current[0] || last[1] !== current[1]){
-        Game.retX += last[0] - current[0];
-        Game.retY += last[1] - current[1];
+        if(newX <= ((Game.radarRad * 2) - (Game.xLimit / 2)) && newX >= (Game.xLimit / 2)){
+            Game.retX = newX;
+        }
+        if(newY <= ((Game.radarRad * 2) - (Game.yLimit / 2)) && newY >= (Game.yLimit / 2)){
+            Game.retY = newY;
+        }
     }
+    drawLoc();
     if(Game.mouseDown){
         setTimeout(function(){
             mapDrag(last);
