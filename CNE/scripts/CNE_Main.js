@@ -2984,17 +2984,28 @@ function mapFit(bool) {
     Game.yLimit = Math.ceil(Game.mPanCanvas.height / (quarterHeight * 3));
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
-
+    /*
+    var newX = Game.retX + last[0] - current[0];
+    var newY = Game.retY + last[1] - current[1];
+    if(last[0] !== current[0] || last[1] !== current[1]){
+        if(newX <= ((Game.radarRad * 2) - (Game.xLimit / 2)) && newX >= (Game.xLimit / 2)){
+            Game.retX = newX;
+        }
+        if(newY <= ((Game.radarRad * 2) - (Game.yLimit / 2)) && newY >= (Game.yLimit / 2)){
+            Game.retY = newY;
+        }
+    } jeronimo
+     */
     //Messy stuff to handle if I try to zoom out of the map...
-    if(Game.retY - Game.yLimit / 2 < 0) {
-        Game.retY = Math.floor(Game.retY - (Game.retY - Game.yLimit / 2));
-    } else if(Game.retY + Game.yLimit / 2 > Game.radarRad * 2) {
+    if((Game.retY - Game.yLimit) <= 2) {
+        Game.retY = Math.ceil(Game.retY - (Game.retY - (Game.yLimit / 2))) + 2;
+    } else if((Game.retY + (Game.yLimit / 2)) >= (Game.radarRad * 2)) {
         Game.retY = Math.floor(Game.retY - Game.yLimit / 2);
     }
-    if(Game.retX - Game.xLimit / 2 < 0) {
-        Game.retX = Math.floor(Game.retX - (Game.retX - Game.xLimit / 2));
-    } else if(Game.retX + Game.xLimit / 2 > Game.radarRad * 2) {
-        Game.retX = Math.floor(Game.retX - Game.xLimit / 2);
+    if((Game.retX - (Game.xLimit / 2)) <= 1) {
+        Game.retX = Math.ceil(Game.retX - (Game.retX - (Game.xLimit / 2)));
+    } else if((Game.retX + (Game.xLimit / 2)) > (Game.radarRad * 2)) {
+        Game.retX = Math.floor(Game.retX - (Game.xLimit / 2));
     }
     if(Game.yLimit % 2 === 0) {
         Game.yLimit += 1;
