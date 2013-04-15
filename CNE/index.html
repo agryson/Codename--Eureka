@@ -448,126 +448,126 @@
                                             <td>
                                                 Aluminium
                                             </td>
-                                            <td id="aluminiumOreList">
+                                            <td id="aluminiumOreListTable">
                                             </td>
-                                            <td id="aluminiumProcList">
+                                            <td id="aluminiumProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Calcium
                                             </td>
-                                            <td id="calciumOreList">
+                                            <td id="calciumOreListTable">
                                             </td>
-                                            <td id="calciumProcList">
+                                            <td id="calciumProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Copper
                                             </td>
-                                            <td id="copperOreList">
+                                            <td id="copperOreListTable">
                                             </td>
-                                            <td id="copperProcList">
+                                            <td id="copperProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Gold
                                             </td>
-                                            <td id="goldOreList">
+                                            <td id="goldOreListTable">
                                             </td>
-                                            <td id="goldProcList">
+                                            <td id="goldProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Iron
                                             </td>
-                                            <td id="ironOreList">
+                                            <td id="ironOreListTable">
                                             </td>
-                                            <td id="ironProcList">
+                                            <td id="ironProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Lead
                                             </td>
-                                            <td id="leadOreList">
+                                            <td id="leadOreListTable">
                                             </td>
-                                            <td id="leadProcList">
+                                            <td id="leadProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Magnesium
                                             </td>
-                                            <td id="magnesiumOreList">
+                                            <td id="magnesiumOreListTable">
                                             </td>
-                                            <td id="magnesiumProcList">
+                                            <td id="magnesiumProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Mercury
                                             </td>
-                                            <td id="mercuryOreList">
+                                            <td id="mercuryOreListTable">
                                             </td>
-                                            <td id="mercuryProcList">
+                                            <td id="mercuryProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Phosphorous
                                             </td>
-                                            <td id="phosphorousOreList">
+                                            <td id="phosphorousOreListTable">
                                             </td>
-                                            <td id="phosphorousProcList">
+                                            <td id="phosphorousProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Potassium
                                             </td>
-                                            <td id="potassiumOreList">
+                                            <td id="potassiumOreListTable">
                                             </td>
-                                            <td id="potassiumProcList">
+                                            <td id="potassiumProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Silver
                                             </td>
-                                            <td id="silverOreList">
+                                            <td id="silverOreListTable">
                                             </td>
-                                            <td id="silverProcList">
+                                            <td id="silverProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Sodium
                                             </td>
-                                            <td id="sodiumOreList">
+                                            <td id="sodiumOreListTable">
                                             </td>
-                                            <td id="sodiumProcList">
+                                            <td id="sodiumProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Tin
                                             </td>
-                                            <td id="tinOreList">
+                                            <td id="tinOreListTable">
                                             </td>
-                                            <td id="tinProcList">
+                                            <td id="tinProcListTable">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 Zinc
                                             </td>
-                                            <td id="zincOreList">
+                                            <td id="zincOreListTable">
                                             </td>
-                                            <td id="zincProcList">
+                                            <td id="zincProcListTable">
                                             </td>
                                         </tr>
                                     </tbody>
@@ -871,49 +871,133 @@
                 <h4>Choose which resources to display in the radar</h4>
                 <br>
                 <input id="allRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="allRadarOpt" class="all_radar_option main_pointer"><span></span>All</label>
+                    <label for="allRadarOpt" class="all_radar_option main_pointer"><span></span>All<p>(To Process / Processed)</p></label>
                 </input>
                 <input id="aluminiumRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="aluminiumRadarOpt" class="main_pointer"><span></span>Aluminium (Al)</label>
+                    <label for="aluminiumRadarOpt" class="main_pointer"><span></span>Aluminium (Al)
+                        <p>t)</p>
+                        <p id="aluminiumProcList"></p>
+                        <p>t / </p>
+                        <p id="aluminiumOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="calciumRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="calciumRadarOpt" class="main_pointer"><span></span>Calcium (Ca)</label>
+                    <label for="calciumRadarOpt" class="main_pointer"><span></span>Calcium (Ca)
+                        <p>t)</p>
+                        <p id="calciumProcList"></p>
+                        <p>t / </p>
+                        <p id="calciumOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="copperRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="copperRadarOpt" class="main_pointer"><span></span>Copper (Cu)</label>
+                    <label for="copperRadarOpt" class="main_pointer"><span></span>Copper (Cu)
+                        <p>t)</p>
+                        <p id="copperProcList"></p>
+                        <p>t / </p>
+                        <p id="copperOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="goldRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="goldRadarOpt" class="main_pointer"><span></span>Gold (Au)</label>
+                    <label for="goldRadarOpt" class="main_pointer"><span></span>Gold (Au)
+                        <p>t)</p>
+                        <p id="goldProcList"></p>
+                        <p>t / </p>
+                        <p id="goldOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="ironRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="ironRadarOpt" class="main_pointer"><span></span>Iron (Fe)</label>
+                    <label for="ironRadarOpt" class="main_pointer"><span></span>Iron (Fe)
+                        <p>t)</p>
+                        <p id="ironProcList"></p>
+                        <p>t / </p>
+                        <p id="ironOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="leadRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="leadRadarOpt" class="main_pointer"><span></span>Lead (Pb)</label>
+                    <label for="leadRadarOpt" class="main_pointer"><span></span>Lead (Pb)
+                        <p>t)</p>
+                        <p id="leadProcList"></p>
+                        <p>t / </p>
+                        <p id="leadOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="magnesiumRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="magnesiumRadarOpt" class="main_pointer"><span></span>Magnesium (Mg)</label>
+                    <label for="magnesiumRadarOpt" class="main_pointer"><span></span>Magnesium (Mg)
+                        <p>t)</p>
+                        <p id="magnesiumProcList"></p>
+                        <p>t / </p>
+                        <p id="magnesiumOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="mercuryRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="mercuryRadarOpt" class="main_pointer"><span></span>Mercury (Hg)</label>
+                    <label for="mercuryRadarOpt" class="main_pointer"><span></span>Mercury (Hg)
+                        <p>t)</p>
+                        <p id="mercuryProcList"></p>
+                        <p>t / </p>
+                        <p id="mercuryOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="phosphorousRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="phosphorousRadarOpt" class="main_pointer"><span></span>Phosphorous (P)</label>
+                    <label for="phosphorousRadarOpt" class="main_pointer"><span></span>Phosphorous (P)
+                        <p>t)</p>
+                        <p id="phosphorousProcList"></p>
+                        <p>t / </p>
+                        <p id="phosphorousOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="potassiumRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="potassiumRadarOpt" class="main_pointer"><span></span>Potassium (K)</label>
+                    <label for="potassiumRadarOpt" class="main_pointer"><span></span>Potassium (K)
+                        <p>t)</p>
+                        <p id="potassiumProcList"></p>
+                        <p>t / </p>
+                        <p id="potassiumOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="silverRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="silverRadarOpt" class="main_pointer"><span></span>Silver (Ag)</label>
+                    <label for="silverRadarOpt" class="main_pointer"><span></span>Silver (Ag)
+                        <p>t)</p>
+                        <p id="silverProcList"></p>
+                        <p>t / </p>
+                        <p id="silverOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="sodiumRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="sodiumRadarOpt" class="main_pointer"><span></span>Sodium (Na)</label>
+                    <label for="sodiumRadarOpt" class="main_pointer"><span></span>Sodium (Na)
+                        <p>t)</p>
+                        <p id="sodiumProcList"></p>
+                        <p>t / </p>
+                        <p id="sodiumOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="tinRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="tinRadarOpt" class="main_pointer"><span></span>Tin (Sn)</label>
+                    <label for="tinRadarOpt" class="main_pointer"><span></span>Tin (Sn)
+                        <p>t)</p>
+                        <p id="tinProcList"></p>
+                        <p>t / </p>
+                        <p id="tinOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <input id="zincRadarOpt" type="checkbox" class="resource_radar_opt main_pointer">
-                    <label for="zincRadarOpt" class="main_pointer"><span></span>Zinc (Zn)</label>
+                    <label for="zincRadarOpt" class="main_pointer"><span></span>Zinc (Zn)
+                        <p>t)</p>
+                        <p id="zincProcList"></p>
+                        <p>t / </p>
+                        <p id="zincOreList"></p>
+                        <p> (</p>
+                    </label>
                 </input>
                 <br>
             </div>

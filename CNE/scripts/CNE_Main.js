@@ -2926,35 +2926,35 @@ function execReview() {
         document.getElementById('storageVal').innerHTML = freeStorage;
 
         //The resources Table...
-        document.getElementById('aluminiumOreList').innerHTML = sanity(Game.ores[0]) + sanity(Game.ores[1]) + sanity(Game.ores[2]);
-        document.getElementById('calciumOreList').innerHTML = sanity(Game.ores[3]);
-        document.getElementById('copperOreList').innerHTML = sanity(Game.ores[4]) + sanity(Game.ores[5]) + sanity(Game.ores[6]);
-        document.getElementById('goldOreList').innerHTML = sanity(Game.ores[7]) + sanity(Game.ores[8]);
-        document.getElementById('ironOreList').innerHTML = sanity(Game.ores[9]) + sanity(Game.ores[10]) + sanity(Game.ores[11]) + sanity(Game.ores[12]);
-        document.getElementById('leadOreList').innerHTML = sanity(Game.ores[13]) + sanity(Game.ores[14]);
-        document.getElementById('magnesiumOreList').innerHTML = sanity(Game.ores[15]) + sanity(Game.ores[16]);
-        document.getElementById('mercuryOreList').innerHTML = sanity(Game.ores[17]) + sanity(Game.ores[18]);
-        document.getElementById('phosphorousOreList').innerHTML = sanity(Game.ores[19]) + sanity(Game.ores[20]);
-        document.getElementById('potassiumOreList').innerHTML = sanity(Game.ores[21]) + sanity(Game.ores[22]);
-        document.getElementById('silverOreList').innerHTML = sanity(Game.ores[23]);
-        document.getElementById('sodiumOreList').innerHTML = sanity(Game.ores[24]) + sanity(Game.ores[25]);
-        document.getElementById('tinOreList').innerHTML = sanity(Game.ores[26]) + sanity(Game.ores[27]);
-        document.getElementById('zincOreList').innerHTML = sanity(Game.ores[28]) + sanity(Game.ores[29]);
+        document.getElementById('aluminiumOreListTable').innerHTML = document.getElementById('aluminiumOreList').innerHTML = (0 + sanity(Game.ores[0]) + sanity(Game.ores[1]) + sanity(Game.ores[2]));
+        document.getElementById('calciumOreListTable').innerHTML = document.getElementById('calciumOreList').innerHTML = (0 + sanity(Game.ores[3]));
+        document.getElementById('copperOreListTable').innerHTML = document.getElementById('copperOreList').innerHTML = (0 + sanity(Game.ores[4]) + sanity(Game.ores[5]) + sanity(Game.ores[6]));
+        document.getElementById('goldOreListTable').innerHTML = document.getElementById('goldOreList').innerHTML = (0 + sanity(Game.ores[7]) + sanity(Game.ores[8]));
+        document.getElementById('ironOreListTable').innerHTML = document.getElementById('ironOreList').innerHTML = (0 + sanity(Game.ores[9]) + sanity(Game.ores[10]) + sanity(Game.ores[11]) + sanity(Game.ores[12]));
+        document.getElementById('leadOreListTable').innerHTML = document.getElementById('leadOreList').innerHTML = (0 + sanity(Game.ores[13]) + sanity(Game.ores[14]));
+        document.getElementById('magnesiumOreListTable').innerHTML = document.getElementById('magnesiumOreList').innerHTML = (0 + sanity(Game.ores[15]) + sanity(Game.ores[16]));
+        document.getElementById('mercuryOreListTable').innerHTML = document.getElementById('mercuryOreList').innerHTML = (0 + sanity(Game.ores[17]) + sanity(Game.ores[18]));
+        document.getElementById('phosphorousOreListTable').innerHTML = document.getElementById('phosphorousOreList').innerHTML = (0 + sanity(Game.ores[19]) + sanity(Game.ores[20]));
+        document.getElementById('potassiumOreListTable').innerHTML = document.getElementById('potassiumOreList').innerHTML = (0 + sanity(Game.ores[21]) + sanity(Game.ores[22]));
+        document.getElementById('silverOreListTable').innerHTML = document.getElementById('silverOreList').innerHTML = (0 + sanity(Game.ores[23]));
+        document.getElementById('sodiumOreListTable').innerHTML = document.getElementById('sodiumOreList').innerHTML = (0 + sanity(Game.ores[24]) + sanity(Game.ores[25]));
+        document.getElementById('tinOreListTable').innerHTML = document.getElementById('tinOreList').innerHTML = (0 + sanity(Game.ores[26]) + sanity(Game.ores[27]));
+        document.getElementById('zincOreListTable').innerHTML = document.getElementById('zincOreList').innerHTML = (0 + sanity(Game.ores[28]) + sanity(Game.ores[29]));
 
-        document.getElementById('aluminiumProcList').innerHTML = sanity(Game.procOres[0]);
-        document.getElementById('calciumProcList').innerHTML = sanity(Game.procOres[1]);
-        document.getElementById('copperProcList').innerHTML = sanity(Game.procOres[2]);
-        document.getElementById('goldProcList').innerHTML = sanity(Game.procOres[3]);
-        document.getElementById('ironProcList').innerHTML = sanity(Game.procOres[4]);
-        document.getElementById('leadProcList').innerHTML = sanity(Game.procOres[5]);
-        document.getElementById('magnesiumProcList').innerHTML = sanity(Game.procOres[6]);
-        document.getElementById('mercuryProcList').innerHTML = sanity(Game.procOres[7]);
-        document.getElementById('phosphorousProcList').innerHTML = sanity(Game.procOres[8]);
-        document.getElementById('potassiumProcList').innerHTML = sanity(Game.procOres[9]);
-        document.getElementById('silverProcList').innerHTML = sanity(Game.procOres[10]);
-        document.getElementById('sodiumProcList').innerHTML = sanity(Game.procOres[11]);
-        document.getElementById('tinProcList').innerHTML = sanity(Game.procOres[12]);
-        document.getElementById('zincProcList').innerHTML = sanity(Game.procOres[13]);
+        document.getElementById('aluminiumProcListTable').innerHTML = document.getElementById('aluminiumProcList').innerHTML = sanity(Game.procOres[0]);
+        document.getElementById('calciumProcListTable').innerHTML = document.getElementById('calciumProcList').innerHTML = sanity(Game.procOres[1]);
+        document.getElementById('copperProcListTable').innerHTML = document.getElementById('copperProcList').innerHTML = sanity(Game.procOres[2]);
+        document.getElementById('goldProcListTable').innerHTML = document.getElementById('goldProcList').innerHTML = sanity(Game.procOres[3]);
+        document.getElementById('ironProcListTable').innerHTML = document.getElementById('ironProcList').innerHTML = sanity(Game.procOres[4]);
+        document.getElementById('leadProcListTable').innerHTML = document.getElementById('leadProcList').innerHTML = sanity(Game.procOres[5]);
+        document.getElementById('magnesiumProcListTable').innerHTML = document.getElementById('magnesiumProcList').innerHTML = sanity(Game.procOres[6]);
+        document.getElementById('mercuryProcListTable').innerHTML = document.getElementById('mercuryProcList').innerHTML = sanity(Game.procOres[7]);
+        document.getElementById('phosphorousProcListTable').innerHTML = document.getElementById('phosphorousProcList').innerHTML = sanity(Game.procOres[8]);
+        document.getElementById('potassiumProcListTable').innerHTML = document.getElementById('potassiumProcList').innerHTML = sanity(Game.procOres[9]);
+        document.getElementById('silverProcListTable').innerHTML = document.getElementById('silverProcList').innerHTML = sanity(Game.procOres[10]);
+        document.getElementById('sodiumProcListTable').innerHTML = document.getElementById('sodiumProcList').innerHTML = sanity(Game.procOres[11]);
+        document.getElementById('tinProcListTable').innerHTML = document.getElementById('tinProcList').innerHTML = sanity(Game.procOres[12]);
+        document.getElementById('zincProcListTable').innerHTML = document.getElementById('zincProcList').innerHTML = sanity(Game.procOres[13]);
 
         //Keep this at the end to draw the legends
         Game.fresh = false;
@@ -2984,18 +2984,6 @@ function mapFit(bool) {
     Game.yLimit = Math.ceil(Game.mPanCanvas.height / (quarterHeight * 3));
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
-    /*
-    var newX = Game.retX + last[0] - current[0];
-    var newY = Game.retY + last[1] - current[1];
-    if(last[0] !== current[0] || last[1] !== current[1]){
-        if(newX <= ((Game.radarRad * 2) - (Game.xLimit / 2)) && newX >= (Game.xLimit / 2)){
-            Game.retX = newX;
-        }
-        if(newY <= ((Game.radarRad * 2) - (Game.yLimit / 2)) && newY >= (Game.yLimit / 2)){
-            Game.retY = newY;
-        }
-    } jeronimo
-     */
     //Messy stuff to handle if I try to zoom out of the map...
     if((Game.retY - Game.yLimit) <= 2) {
         Game.retY = Math.ceil(Game.retY - (Game.retY - (Game.yLimit / 2))) + 2;

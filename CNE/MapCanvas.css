@@ -1113,6 +1113,12 @@ input.console_input:active{
     padding-top: 50px;
 }
 
+label p{
+    display: inline;
+    float: right;
+    margin: 5px 0 0 0;
+}
+
 .resource_table{
     width: 50%;
     float: left;
