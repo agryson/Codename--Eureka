@@ -831,9 +831,34 @@
         </div>
         <div id="globalActions" class='grey_rubber global_actions'>
             <span id="turnNumber" class="turn_number">Week: 0</span>
-            <button class="info blue_glass main_pointer global_report" id="globalReport">Executive Report</button>
+            <button class="action smoky_glass main_pointer settings_button" id="settings">Settings</button>
             <button class="action green_glass main_pointer turn" id="turn">Send Orders</button>
         </div>
+        <div id='settingsPanel' class='settings_panel'>
+            <button id="closeSettings" class="close_settings red_glass main_pointer">&#215;</button>
+            <input id="10Week" type="checkbox" checked="checked" class="week_option main_pointer">
+                <label for="10Week" class="settingsItem main_pointer"><span></span>10 Week</label>
+            </input>
+            <div class='settingsItem'>
+                <span>Zoom: </span>
+                <input id='zoom' class='horizontal_pointer slider zoom' type="range" min="1" max="6" value="3" step="1"/>
+            </div>
+            <div class='settingsItem'>
+                <input id="musicOptionViz" type="checkbox" checked="checked" class="main_pointer">
+                    <label for="musicOptionViz" class="main_pointer"><span></span>Music</label>
+                    <input class='horizontal_pointer settings_volume slider' id='settingsVolume' type="range" min="0" max="1" value="0.1" step="0.01"/>
+                </input>
+            </div>
+            <div class='settingsItem'>
+                <input id="fullScreen" type="checkbox" class="main_pointer">
+                    <label for="fullScreen" class="main_pointer"><span></span>Full Screen</label>
+                </input>
+            </div>
+            <div class='settingsItem'>
+                <button id="quitGame" class="red_glass main_pointer">Quit</button>
+            </div>
+        </div>
+        <!--
         <div id='settingsContainer' class='global_container global_container_hidden settings_container'>
             <div id='settings' class='grey_rubber global_icon settings'>
                 <img src = 'images/icons/processing-02.png' />
@@ -862,6 +887,7 @@
                 </div>
             </div>
         </div>
+    -->
         <div id='radarOptContainer' class='global_container global_container_hidden radar_opt_container'>
             <div id='radarOpt' class='global_icon grey_rubber radar_opt' >
                 <img src = 'images/icons/email.png' </img>

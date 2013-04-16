@@ -113,7 +113,7 @@ button:active {
 .settings_volume{
     position: relative;
     left: 20px;
-    width: 280px;
+    width: 260px;
 }
 
 .popup {
@@ -523,6 +523,40 @@ button:active {
     box-shadow: inset 1px 1px 1px 0 #A1A1A1;
 }
 
+.settings_panel{
+    position: absolute;
+    bottom: -400px;
+    right: -340px;
+    height: 400px;
+    width: 340px;
+    z-index: 4;
+    overflow-y: scroll;
+    background: #494949;
+    border-radius: 5px 0 0 0;
+    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    -webkit-box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    -webkit-transition: all linear 0.2s;
+}
+
+.settings_button{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;   
+}
+
+.close_settings{
+    float: right;
+    margin: 10px;
+    height: 20px;
+    width: 20px;
+    font-size: 1rem;
+}
+
+.settings_panel_open{
+    bottom: 0;
+    right: 0;
+}
+
 .global_icon{
     position: absolute;
     top: -37px;
@@ -611,8 +645,8 @@ input[type="checkbox"]:checked + label span{
         /*Tabs*/
 .global_actions{
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: -200px;
+    bottom: -60px;
     min-height: 100px;
     min-width: 350px;
     -webkit-box-shadow: 0 0 2px 0 #FFF;
@@ -620,6 +654,12 @@ input[type="checkbox"]:checked + label span{
     box-shadow: 0 0 2px 0 #FFF;
     border-radius: 10px 0 0 0;
     z-index: 5;
+    -webkit-transition: all linear 0.2s;
+}
+
+.global_actions:hover {
+    right: 0;
+    bottom: 0;
 }
 
 .save {

@@ -2393,7 +2393,6 @@ function eavesdrop() {
         Game.mouseDown = false;
         drawRadar();
     };
-    //should consider having zoom on the radar instead of the main map or storing the retX retY for a second or two
     var blocked = false;
     mainMap.onmousewheel = function(event) {
         event.preventDefault();
@@ -2467,7 +2466,7 @@ function eavesdrop() {
     };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
-        //ev.stopPropagation();
+        ev.stopPropagation();
         if(Game.highlight) {
             rightClicked();
         }
@@ -2630,10 +2629,6 @@ function eavesdrop() {
         }
     };
 
-    document.getElementById('globalReport').onclick = function() {
-        menu(exec, execButton, 'exec_hidden');
-    };
-
 
     //!Executive Drop Down
     //
@@ -2643,24 +2638,23 @@ function eavesdrop() {
     };
     //!Console
     //Global Menu
-    var settings = document.getElementById('settingsContainer');
+    var closeSettings = document.getElementById('closeSettings');
     var setBtn = document.getElementById('settings');
     var radarOptCont = document.getElementById('radarOptContainer');
     var radarOpt = document.getElementById('radarOpt');
     setBtn.onclick = function() {
-        if(settings.classList.contains('global_container_hidden')){
-            settings.classList.remove('global_container_hidden');
-            radarOptCont.classList.remove('global_container_hidden');
-        } else {
-            settings.classList.add('global_container_hidden');
-        }
+        document.getElementById('settingsPanel').classList.toggle('settings_panel_open');
     };
+    closeSettings.onclick = function(){
+        document.getElementById('settingsPanel').classList.toggle('settings_panel_open');  
+    };
+
     radarOpt.onclick = function() {
-        if(settings.classList.contains('global_container_hidden')){
+        //if(settings.classList.contains('global_container_hidden')){
             radarOptCont.classList.toggle('global_container_hidden');
-        } else {
-            settings.classList.add('global_container_hidden');
-        }
+        //} else {
+          //  settings.classList.add('global_container_hidden');
+       // }
     };
 
     document.getElementById('turn').onclick = function() {
