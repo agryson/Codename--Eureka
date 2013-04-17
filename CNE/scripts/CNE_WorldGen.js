@@ -265,6 +265,9 @@ function NewGame(){
     } else {
         Disk.loadGame(Game.inputSeed);
         generateRivers(40);
+        Game.noise = null;
+        Game.noise2 = null;
+        Game.noise3 = null;
         mapFit(true);
         drawZoomMap();
         drawRadar();

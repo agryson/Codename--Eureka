@@ -586,13 +586,33 @@ button:active {
 }
 
 .radar_opt_container{
-    z-index: 3;
+    overflow-y: scroll;
+    position: absolute;
+    top: 355px;
+    bottom: 0;
+    right: -350px;
+    width: 350px;
+    background: #494949;
+    border-radius: 5px 0 0 0;
+    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    -webkit-transition: all ease 0.2s;
 }
 
-.radar_opt_container h3, .radar_opt_container h4 {
+.radar_opt_panel{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px 10px 0 10px;
+    padding-bottom: 50px;
+}
+
+.radar_opt_panel_show{
+    -webkit-transform: translate(-350px, 0);
+}
+
+.radar_opt_panel h3, .radar_opt_panel h4 {
     color: #ECECEC;
     margin: 2px 10px;
-
 }
 
 input[type="checkbox"]{
@@ -626,7 +646,16 @@ input[type="checkbox"]:checked + label span{
 }
 
 .radar_opt{
-    width: 139px;
+    position: absolute;
+    display: inline-block;
+    top: 360px;
+    right: 0;
+    height: 56px;
+    padding-top: 24px;
+    border-radius: 5px 0 0 5px;
+    background: #494949;
+    box-shadow: inset 1px 1px 1px 0 #A1A1A1;
+    -webkit-transition: all ease 0.2s;
 }
 
 .stat_canvas_legend{
@@ -654,12 +683,14 @@ input[type="checkbox"]:checked + label span{
     box-shadow: 0 0 2px 0 #FFF;
     border-radius: 10px 0 0 0;
     z-index: 5;
+    opacity: 0.6;
     -webkit-transition: all linear 0.2s;
 }
 
 .global_actions:hover {
     right: 0;
     bottom: 0;
+    opacity: 1;
 }
 
 .save {

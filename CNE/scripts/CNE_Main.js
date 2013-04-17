@@ -1038,19 +1038,11 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
 /**
  * The main object for a tile, tracking its kind, and state
  */
-
 function Terrain() {
-    /*
-    this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
-    this.altitude; //altitude
-    this.UG;
-    this.turns; //remembers how many turns are left to become a tile of the desired kind
-    this.diggable;
-    */
+    //this.ref
+    //this.altitude
     this.resources = [];
-    //this.ref;
 }
-
 function recycle(kind, x, y, level){
     var recycled = false;
     for(var i = 0; i < Game.recyclerList.length; i++){
@@ -2265,10 +2257,39 @@ window.onload = function init() {
     if(!document.webkitHidden){
         Music.play();
     }
-    eavesdrop();
-};
 
-function eavesdrop() {
+    var mapDrag = function(array){
+        var last = array;
+        var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
+        var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
+        var current = [x - y%2, y - y%2];
+        if(!last){
+            last = [];
+            last[0] = current[0];
+            last[1] = current[1];
+        }
+        var newX = Game.retX + last[0] - current[0];
+        var newY = Game.retY + last[1] - current[1];
+        if(last[0] !== current[0] || last[1] !== current[1]){
+            if(newX <= ((Game.radarRad * 2) - (Game.xLimit / 2)) && newX >= (Game.xLimit / 2)){
+                Game.retX = newX;
+            }
+            if(newY <= ((Game.radarRad * 2) - (Game.yLimit / 2)) && newY >= (Game.yLimit / 2)){
+                Game.retY = newY;
+            }
+        }
+        drawLoc();
+        if(Game.mouseDown){
+            setTimeout(function(){
+                mapDrag(last);
+            }, 100);
+        } else {
+            drawLoc();
+        }
+    }   
+
+
+    
     document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
     //Start Screen
     document.getElementById('maxIt').onclick = function(){
@@ -2314,7 +2335,7 @@ function eavesdrop() {
         document.getElementById('researchContainer').classList.add('exec_hidden');
         document.getElementById('messageContainer').classList.add('exec_hidden');
         document.getElementById('guideContainer').classList.add('exec_hidden');
-        settings.classList.add('global_container_hidden');
+        document.getElementById('settingsPanel').classList.remove('settings_panel_open');
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
         flush(document.getElementById('consoleContent'));
@@ -2646,15 +2667,12 @@ function eavesdrop() {
         document.getElementById('settingsPanel').classList.toggle('settings_panel_open');
     };
     closeSettings.onclick = function(){
-        document.getElementById('settingsPanel').classList.toggle('settings_panel_open');  
+        document.getElementById('settingsPanel').classList.toggle('settings_panel_open');
     };
 
     radarOpt.onclick = function() {
-        //if(settings.classList.contains('global_container_hidden')){
-            radarOptCont.classList.toggle('global_container_hidden');
-        //} else {
-          //  settings.classList.add('global_container_hidden');
-       // }
+            radarOptCont.classList.toggle('radar_opt_panel_show');
+            radarOpt.classList.toggle('radar_opt_panel_show');
     };
 
     document.getElementById('turn').onclick = function() {
@@ -2664,37 +2682,7 @@ function eavesdrop() {
         var zoomLevel = document.getElementById('zoom').value;
         zoom(zoomLevel);
     };
-}
-
-function mapDrag(array){
-    var last = array;
-    var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
-    var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
-    var current = [x - y%2, y - y%2];
-    if(!last){
-        last = [];
-        last[0] = current[0];
-        last[1] = current[1];
-    }
-    var newX = Game.retX + last[0] - current[0];
-    var newY = Game.retY + last[1] - current[1];
-    if(last[0] !== current[0] || last[1] !== current[1]){
-        if(newX <= ((Game.radarRad * 2) - (Game.xLimit / 2)) && newX >= (Game.xLimit / 2)){
-            Game.retX = newX;
-        }
-        if(newY <= ((Game.radarRad * 2) - (Game.yLimit / 2)) && newY >= (Game.yLimit / 2)){
-            Game.retY = newY;
-        }
-    }
-    drawLoc();
-    if(Game.mouseDown){
-        setTimeout(function(){
-            mapDrag(last);
-        }, 100);
-    } else {
-        drawLoc();
-    }
-}
+};
 
 function advanceTurn(turns){
     while(turns > 0){
@@ -3948,11 +3936,11 @@ function rightClicked(content) {
         }
     };
     flush(pop);
-    pop.appendChild(contextContent(content));
     popFrame.style.top = event.clientY - 25 + 'px';
     popFrame.style.left = event.clientX - 10 + 'px';
     popFrame.style.display = 'inline-block';
     popFrame.style.opacity = '1';
+    pop.appendChild(contextContent(content));
     popFrame.addEventListener('mouseout', hide, false);
 
 }
@@ -3960,7 +3948,6 @@ function rightClicked(content) {
 function contextContent(content) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
-    console.log(Game.level + ' ' + x + ' ' + y);
     var tile = Game.map[Game.level][y][x];
     var construct = Game.mapTiles[Game.level][y][x];
     var resources = false;
@@ -3974,11 +3961,12 @@ function contextContent(content) {
     } else {
         ref.innerHTML = tile.ref;
     }
+    frag.appendChild(spacer);
     frag.appendChild(ref);
     frag.appendChild(spacer);
 
     //build time left
-    if(typeof construct.kind === 'number' && construct.kind === 100) {
+    if(construct.exists && construct.kind === 100) {
         var buildTime = document.createElement('span');
         var buildString = '';
         buildString += Lang.buildTime + (construct.buildTime + 1) + " ";
@@ -4010,7 +3998,7 @@ function contextContent(content) {
     }
     //resources?
     var resourceList;
-    if(typeof construct.kind === 'number'){
+    if(construct.exists){
         resourceList = construct.ores;
     } else {
         resourceList = tile.resources;
