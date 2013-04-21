@@ -13,7 +13,6 @@ var Disk = new GameDisk();
 function Construction() {
     /*
     Notes: I got rid of food because why would one building use more than another?! So it should become a global variable.
-    Think about making tile[x][y][0] the terrain and tile[x][y][1] the construction
      */
     this.ref = "";
     this.position = [150, 150];
@@ -2286,10 +2285,8 @@ window.onload = function init() {
         } else {
             drawLoc();
         }
-    }   
+    };
 
-
-    
     document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
     //Start Screen
     document.getElementById('maxIt').onclick = function(){
@@ -2336,7 +2333,8 @@ window.onload = function init() {
         document.getElementById('messageContainer').classList.add('exec_hidden');
         document.getElementById('guideContainer').classList.add('exec_hidden');
         document.getElementById('settingsPanel').classList.remove('settings_panel_open');
-        radarOptCont.classList.add('global_container_hidden');
+        radarOptCont.classList.remove('radar_opt_panel_show');
+        radarOpt.classList.remove('radar_opt_panel_show');
         document.getElementById('console').classList.remove('console_open');
         flush(document.getElementById('consoleContent'));
         Disk.loadList();
@@ -3806,11 +3804,8 @@ function drawRadar() {
     Game.radar.fillText('Depth: ' + Game.level * 50 + 'm', 215, 298);
 }
 
-function resourceRef(ref,dir){
-    //dir should tell us if we're going from ore to processed or processed to ore
-    //0 is from processed to ore
-    //1 is from ore to processed
-    //ref is the reference
+function resourceRef(ref){
+    //ref is the reference in the procOres array, this function tells you which Ores are equivalent
     switch(ref){
         case 0:
             return [0,1,2];
@@ -3850,6 +3845,7 @@ function resourceRef(ref,dir){
  * @param  {int} tileType  type of tile to draw
  * @param  {int} tilePosX  Tile's x coordinate
  * @param  {int} tilePosY  Tile's y coordinate
+ * @param  {object} source [The source image object to draw from]
  * @param  {boolean} highlight Whether or not we should highlight the tile
  * @param  {boolean} darkness  Whether or not we should darken this tile
  */
@@ -3981,7 +3977,7 @@ function contextContent(content) {
         frag.appendChild(spacer);
     }
     if(content) {
-        if(!(typeof construct.kind === 'number' && construct.kind >= 100 && construct.kind < 200)){
+        if(!(construct.exists && construct.kind >= 100 && construct.kind < 200)){
             frag.appendChild(content);
             //htmlString += content;
         }
@@ -3998,6 +3994,9 @@ function contextContent(content) {
     }
     //resources?
     var resourceList;
+    //TODO: potential bug, by dozing a mine, I could now access all of its resources again! 
+    //Need to ensure that I don't copy over resources when the resources have already been copied over... 
+    //keep track of it in the recycler / dozer function
     if(construct.exists){
         resourceList = construct.ores;
     } else {
@@ -4243,10 +4242,10 @@ function resourceNeededList(building, getRec, recycling){
         need.classList.add('main_pointer');
         need.classList.add('context_button');
         need.innerHTML = Lang.confirmBuild;
-        frag.appendChild(spacer);
-        frag.appendChild(need);
         var title = document.createElement('h3');
         title.innerHTML = Lang.resourcesNeeded + ' (' + future + ')';
+        frag.appendChild(spacer);
+        frag.appendChild(need);
         frag.appendChild(title);
         var required = document.createElement('ul');
         for(var resource = 0; resource < resourcesNeeded.length; resource++){
@@ -4262,7 +4261,6 @@ function resourceNeededList(building, getRec, recycling){
             required.appendChild(item);
         }
         frag.appendChild(required);
-        console.log(frag);
         return frag;
     }
 }
@@ -4385,7 +4383,6 @@ function clicked(direction) {
         if(!direction) {
             rightClicked(confirmBot(Lang.confirmDoze));
             document.getElementById('confirmBuild').onclick = function(){
-                console.log('how many times?');
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
             };
