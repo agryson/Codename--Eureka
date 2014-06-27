@@ -1,9 +1,15 @@
 //WORLD GENERATION****************************************************************
-function NewGame(){
 /**
- * Accepts and parses the seed before passing it to the world generator
- * @param  {boolean} newGame Is this a new game or not?
- * @return {nothing}
+* One big wrapper for everything needed to create the maps, resources rivers etc.
+* or to load them and regenerate from the seed (we save memory through 
+* procedural generation)
+*/
+function NewGame(){
+
+
+
+/**
+ * Parses the seed before passing it to the world generator
  */
   this.getSeed = function() {
     var input = document.getElementById('seed').value;
@@ -35,13 +41,21 @@ function NewGame(){
     }
   };
 
+
+
+  /*TODO: the dependancy on Game.map, rather than returning the array to it is
+  probably something we should have a look at*/
+  /**
+  * Creates a map for the provided level, inserting it into the Game.map
+  * @param {int} l Level for which a map (2D) should be generated
+  */
   var createMap = function(l) {
+
+
+
     /**
-     * Sets altitude according to the world generator results
-     * @param  {int} x     X coordinate for the tie we're getting altitude for
-     * @param  {int} y     Y coordinate for the tile we're gettign altitude for
-     * @param  {int} level What level are we workign on?
-     * @return {int}       The altitude for the tile
+     * Increments the loader bar, and displays appropriate message
+     * @param {int} incrementer Value from 1 to 5 (the step we shoudl go to)
      */
     var increment = function(incrementer) {
       document.getElementById('thumb').style.WebkitTransform = 'translate(' + (-220 + incrementer * 44) + 'px, 0)';
@@ -66,6 +80,16 @@ function NewGame(){
         message.innerHTML = '';
       }
     };
+
+
+
+    /**
+     * Sets altitude according to the world generator results
+     * @param  {int} x     X coordinate for the tile we're getting altitude for
+     * @param  {int} y     Y coordinate for the tile we're gettign altitude for
+     * @param  {int} level What level are we working on?
+     * @return {int}       The altitude for the tile
+     */
     var altitude = function(x, y, level) {
       if(level === 0) {
         var gridSize = 75;
@@ -78,11 +102,14 @@ function NewGame(){
       }
     };
 
-    /**
-     * Increments the loader bar
-     * @return {nothing}
-     */
 
+
+    /**
+    * Picks the locations at which rivers will be seeded, passing the work of 
+    * actually creating the rivers to slide()
+    * @param {int} iterations The number of iterations to go through 
+    *    (i.e. the number of rivers to generate)
+    */
     var generateRivers = function(iterations) {
       var x, y;
       for(var i = 0; i < iterations; i++) {
@@ -96,15 +123,29 @@ function NewGame(){
       }
     };
 
+
+
+    /**
+    * Creates rivers: moves recursively from the provided coordinates, avoiding 
+    * water, seeking the lowest local altitude and turning it into water
+    * @param {int} x     X coordinate of the tile we're at
+    * @param {int} y     Y coordiante of the tile we're at
+    * @param {int} level The Level we're working with
+    */
     var slide = function(x, y) {
       var randIndex = Math.floor(Game.rng.random() * 6);
-      while(x > 0 && x < Game.radarRad * 2 && y < Game.radarRad * 2 && y > 0 && Game.map[0][y][x].kind !== 4) {
+      while(x > 0 && x < Game.radarRad * 2 && 
+          y < Game.radarRad * 2 && y > 0 && 
+          Game.map[0][y][x].kind !== 4) {
         Game.map[0][y][x].kind = 4;
         Game.map[0][y][x].diggable = false;
         Game.map[0][y][x].ref = changeName(Lang.water, Game.map[0][y][x].ref);
         var lowest = [adjacent(x, y, randIndex)[1], adjacent(x, y, randIndex)[0]]; //x, y
         for(var j = 0; j < 6; j++) {
-          if(x > 1 && x < (Game.radarRad * 2) - 1 && y < (Game.radarRad * 2) - 1 && y > 1 && Game.map[0][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].altitude < Game.map[0][lowest[1]][lowest[0]].altitude) {
+          if(x > 1 && x < (Game.radarRad * 2) - 1 && 
+              y < (Game.radarRad * 2) - 1 && 
+              y > 1 && 
+              Game.map[0][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].altitude < Game.map[0][lowest[1]][lowest[0]].altitude) {
             lowest[1] = adjacent(x, y, j)[0];
             lowest[0] = adjacent(x, y, j)[1];
           }
@@ -112,6 +153,8 @@ function NewGame(){
         slide(lowest[0], lowest[1]);
       }
     };
+
+
 
     /**
     * Sets the tile type as a function of altitude
@@ -145,6 +188,12 @@ function NewGame(){
       level === 0 ? map.UG = false : map.UG = true;
     };
 
+
+
+    /**
+    * Generates resources on the provided map
+    * @param {array} map Map to add resources to
+    */
     var generateResources = function(map) {
       var resourceArray = [ //[MAXALT,MINALT,DENSITY,SPREAD]
       [190, 160, 40, 60],//Bauxite", "Aluminium (Al)"
@@ -222,6 +271,17 @@ function NewGame(){
       }
     };
 
+
+
+    /**
+    * Will give the adjacent tile that is _closest_ in altitude to the one at
+    * the coordinates provided, this simulates 'seams' of resources that flow 
+    * around the map's topography
+    * @param {array} map The map array to crawl
+    * @param {int} x X coordinate of tile to test
+    * @param {int} y Y coordinate of tile to test
+    * @param {int} i Index of the resource to be filled in
+    */
     var sameLevel = function(map, x, y, i) {
       var current = map[y][x].altitude;
       var randIndex = Math.floor(Game.rng.random() * 6);
@@ -229,7 +289,8 @@ function NewGame(){
       var next = map[adjacent(x, y, randIndex)[0]][adjacent(x, y, randIndex)[1]].altitude;
       for(var count = 0; count < 6; count++) {
         var nextTest = map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]].altitude;
-        if(Math.abs(next - current) > Math.abs(nextTest - current) && !map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]].resources[i]) {
+        if(Math.abs(next - current) > Math.abs(nextTest - current) &&
+             !map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]].resources[i]) {
           next = nextTest;
           closest = [adjacent(x, y, count)[0], adjacent(x, y, count)[1]];
         }
@@ -237,11 +298,9 @@ function NewGame(){
       return closest;
     };
 
+
+
     /*creates the map (Finally)*/
-    /**
-     * Creates the map Array
-     * @return {nothing}
-     */
     if(l < 5){
         Game.map[l] = [];
         Game.mapTiles[l] = [];
