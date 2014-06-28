@@ -3833,7 +3833,7 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, 
 function drawZoomMap() {
     var y, x, tileKind;
     mainLoop();
-    webkitRequestAnimationFrame(drawZoomMap);
+    requestAnimationFrame(drawZoomMap);
     Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
     if(Game.highlight) {
         drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc, false, 0, 0);
