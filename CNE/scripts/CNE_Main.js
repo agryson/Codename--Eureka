@@ -1815,7 +1815,7 @@ function Param() {
     this.researchLabs = [];
     /**
     * The current research topic, if any
-    * @member {string} urrentResearch
+    * @member {string} currentResearch
     * @memberof Param
     */
     /**
