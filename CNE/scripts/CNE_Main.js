@@ -10,43 +10,172 @@ var Disk = new GameDisk();
 //CONSTRUCTORS**********************************************************************************************
 /*Define our Constructors*/
 
+
+
+/**
+* Constructor for constructions! Any building that is placed on the map will 
+* have these variables at its disposal
+* @constructor
+*/
 function Construction() {
     /*
-    Notes: I got rid of food because why would one building use more than another?! So it should become a global variable.
+    Notes: I got rid of food because why would one building use more than another?! 
+    So it should become a global variable.
     Think about making tile[x][y][0] the terrain and tile[x][y][1] the construction
      */
+    /**
+    * @memberof Construction
+    * @member {string} ref
+    */
     this.ref = "";
+    /**
+    * @memberof Construction
+    * @member {array} position
+    */
     this.position = [150, 150];
+    /**
+    * @memberof Construction
+    * @member {int} kind
+    */
     this.kind = 3;
+    /**
+    * @memberof Construction
+    * @member {bool} exists
+    */
     this.exists = false;
+    /**
+    * @memberof Construction
+    * @member {int} buildTime
+    */
     this.buildTime = -1;
+    /**
+    * @memberof Construction
+    * @member {int} age
+    */
     this.age = 0;
+    /**
+    * @memberof Construction
+    * @member {int} health
+    */
     this.health = 0;
+    /**
+    * @memberof Construction
+    * @member {int} energy
+    */
     this.energy = 0;
+    /**
+    * @memberof Construction
+    * @member {int} food
+    */
     this.food = 0;
+    /**
+    * @memberof Construction
+    * @member {int} tossMorale
+    */
     this.tossMorale = 0;
+    /**
+    * @memberof Construction
+    * @member {int} hipMorale
+    */
     this.hipMorale = 0;
+    /**
+    * @memberof Construction
+    * @member {int} artMorale
+    */
     this.artMorale = 0;
+    /**
+    * @memberof Construction
+    * @member {int} air
+    */
     this.air = 0;
+    /**
+    * @memberof Construction
+    * @member {int} crime
+    */
     this.crime = 0;
+    /**
+    * @memberof Construction
+    * @member {int} waste
+    */
     this.waste = 0;
+    /**
+    * @memberof Construction
+    * @member {int} storage
+    */
     this.storage = 0;
+    /**
+    * @memberof Construction
+    * @member {int} tossPop
+    */
     this.tossPop = 0;
+    /**
+    * @memberof Construction
+    * @member {int} hipPop
+    */
     this.hipPop = 0;
+    /**
+    * @memberof Construction
+    * @member {int} artPop
+    */
     this.artPop = 0;
+    /**
+    * @memberof Construction
+    * @member {int} housing
+    */
     this.housing = 0;
+    /**
+    * @memberof Construction
+    * @member {int} employees
+    */
     this.employees = 0;
 
+    /**
+    * @memberof Construction
+    * @member {array} ores
+    */
     this.ores = [];
 
+    /**
+    * @memberof Construction
+    * @member {array} future
+    */
     this.future = [3, Lang.prepared];
+    /**
+    * @memberof Construction
+    * @member {int} robot
+    */
     this.robot = -1;
+    /**
+    * @memberof Construction
+    * @member {bool} mining
+    */
     this.mining = false;
+    /**
+    * @memberof Construction
+    * @member {bool} vital
+    */
     this.vital = false;
+    /**
+    * @memberof Construction
+    * @member {bool} shutdown
+    */
     this.shutdown = false;
+    /**
+    * @memberof Construction
+    * @member {string} researchTopic
+    */
     this.researchTopic = 'noResearch';
 }
 
+
+
+/**
+* Calculates what the state of the given tile should be in the next turn, setting 
+* it appropriately depending on if its a mine, building, research center etc.
+* @param {int} x X coordinate of the tile to calculate
+* @param {int} y Y coordinate of the tile to calculate
+* @param {int} level Level the tile is on
+*/
 function nextTurn(x, y, level) {
     var tile = Game.mapTiles[level][y][x];
 
@@ -412,17 +541,38 @@ function nextTurn(x, y, level) {
     }
 }
 
+
+
+/**
+* Builds everything, including temporary structures like drones, this is also 
+* currently where all the parameters for the different buildings are stored
+* @param {int} kind Kind of structure to build
+* @param {int} x X coordinate on which to build
+* @param {int} y Y coordiante on which to build
+* @param {int} level Level on which to build
+* @param {bool} [builderBot] If this is a temporary, precursor structure or not
+*/
 function bobTheBuilder(kind, x, y, level, builderBot) {
     console.log(kind);
+
+
+
+    /**
+    * Calculates the number of turns need to do something based on modifiers
+    * @param {int} turns Base number of turns to calculate for
+    * @return {int} Returns the modified value
+    */
     var eta = function(turns) {
-            if(Game.map[level][y][x].kind === 1 || Game.map[level][y][x].kind === 6) {
-                return Math.floor(turns * 1.5);
-            } else if(Game.map[level][y][x].kind === 2 || Game.map[level][y][x].kind === 7) {
-                return Math.floor(turns * 2.4);
-            } else {
-                return turns;
-            }
-        };
+        var lowModifier = 1.5;
+        var highModifier = 2.4;
+        if(Game.map[level][y][x].kind === 1 || Game.map[level][y][x].kind === 6) {
+            return Math.floor(turns * lowModifier);
+        } else if(Game.map[level][y][x].kind === 2 || Game.map[level][y][x].kind === 7) {
+            return Math.floor(turns * highModifier);
+        } else {
+            return turns;
+        }
+    };
 
     if(Game.map[level][y][x].kind !== 4) {
         var o = new Construction();
@@ -431,9 +581,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
         if(kind >= 200 && kind < 300) {
             o.ref = changeName(Lang.building + Game.buildings[kind - 200][3], Game.map[level][y][x].ref);
         }
-
-
-            console.log(kind);
+        console.log(kind);
         switch(kind) {
             //Bots
         case 100:
@@ -1035,22 +1183,66 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
     }
 }
 
-/**
- * The main object for a tile, tracking its kind, and state
- */
 
+
+/**
+* The main object for a tile, tracking its kind, and state, initially empty 
+* apart from resources
+* @constructor
+*/
 function Terrain() {
-    /*
-    this.kind; // 0=Smooth, 1=Rough, 2=Mountainous, 3=Prepared/MinedOut 4=Water 5=constructionAnimation
-    this.altitude; //altitude
-    this.UG;
-    this.turns; //remembers how many turns are left to become a tile of the desired kind
-    this.diggable;
+    /**
+    * Array that stores the list of resources. This is the only instantiated 
+    * property to save on memory
+    * @memberof Terrain
+    * @member {array} resources
     */
     this.resources = [];
-    //this.ref;
+    /**
+    * Kind of tile. Possible values are: 
+    * - 0=Smooth
+    * - 1=Rough
+    * - 2=Mountainous
+    * - 3=Prepared/MinedOut
+    * - 4=Water
+    * - 5=constructionAnimation
+    *
+    * @memberof Terrain 
+    * @member {int} kind
+    */
+    /**
+    * @memberof Terrain 
+    * @member {int} altitude 
+    */
+    /**
+    * @memberof Terrain 
+    * @member {int} UG
+    */
+    /**
+    * Stores the number of turns that are left to become a tile of the desired kind
+    * @memberof Terrain 
+    * @member {int} turns
+    */
+    /**
+    * @memberof Terrain 
+    * @member {bool} diggable
+    */
+    /**
+    * @memberof Terrain 
+    * @member {int} ref
+    */
 }
 
+
+
+/**
+* Recycles the provided tile, recovering the resources if any recycler buildings
+* are available, printing status to the in game console
+* @param {int} kind The type of building to recycle
+* @param {int} x X coordinate of tile to recycle
+* @param {int} y Y coordinate of tile to recycle
+* @param {int} level Level on which to recycle
+*/
 function recycle(kind, x, y, level){
     var recycled = false;
     for(var i = 0; i < Game.recyclerList.length; i++){
@@ -1075,35 +1267,80 @@ function recycle(kind, x, y, level){
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 
+
+
+/**
+* Wrapper function for everything we need to manage save games, load games etc.
+* @constructor
+*/
 function GameDisk(){
     var fs = null;
+
+
+
+    /**
+    * Opens or creates a persistent local file system
+    */
     this.openfs = function(){
         window.webkitRequestFileSystem(window.PERSISTENT, 50*1024*1024 /*50MB*/, success, errorHandler);
     };
+
+
+
+    /**
+    * Success handler, assigning the filesystem to something we can use and then
+    * starts loading any existing games
+    * @param {DOMFileSystem} filesystem The filesystem passed in from openfs()
+    */
     var success = function(filesystem){
         fs = filesystem;
         Disk.loadList();
     };
+
+
+
+    /**
+    * Fills the list of loadable games from the file system
+    * @constructor
+    */
     this.loadList = function(){
-        //fill the list of loadable games
         var dirReader = fs.root.createReader();
         var entries = [];
 
-        // Call the reader.readEntries() until no more results are returned.
+
+
+        /**
+        * Iterates through all of the saved games available
+        */
         var readEntries = function() {
             dirReader.readEntries (function(results) {
-            if (!results.length) {
-                listResults(entries);//this function fills our list of saves
-            } else {
-                entries = entries.concat(toArray(results));
-                readEntries();
-            }
+                if (!results.length) {
+                    listResults(entries);//this function fills our list of saves
+                } else {
+                    entries = entries.concat(toArray(results));
+                    readEntries();
+                }
             }, errorHandler);
         };
+
+
+
+        /**
+        * @param {FileEntry} list FileEntry object (basically an array representing
+        * a list of save games)
+        * @return {array} Returns an array of FileEntry objects
+        */
         var toArray = function(list) {
             return Array.prototype.slice.call(list || [], 0);
         };
-        //List the loaded results, such as the buttons for the loads
+
+
+
+        /**
+        * List the loaded results, creating buttons for the loads
+        * @param {array} list The array of save games available
+        * @todo The list parameter here, and the one in {@link toArray} could be confused, we should consider changing one or the other
+        */
         var listResults = function(list){
             var fragment = document.createDocumentFragment();
             var title = document.createElement('span');
@@ -1140,9 +1377,22 @@ function GameDisk(){
                     var rmId = rmIds[j];
                     var obj = document.getElementById(id);
                     var rmObj = document.getElementById(rmId);
+
+
+
+                    /**
+                    * Sets the current seed value to the saved value, allowing for 
+                    * procedural regeneration of the terrain
+                    */
                     var objFn = function(){
                         document.getElementById('seed').value = document.getElementById(id).value;
                     };
+
+
+
+                    /**
+                    * Handles save game deletion on user input
+                    */
                     var rmObjFn = function(){
                         var nameIn = document.getElementById(rmId).value;
                         document.getElementById('deleteOK').value = nameIn;
@@ -1167,6 +1417,12 @@ function GameDisk(){
         readEntries(); // Start reading dirs.
     };
 
+
+
+    /**
+    * Deletes the game from the filesystem
+    * @param {string} name The name of the save game to delete
+    */
     this.deleteGame = function(name){
         fs.root.getFile(name, {create: false}, function(fileEntry) {fileEntry.remove(function() {
                 console.log(name + ' has been removed.');
@@ -1175,6 +1431,12 @@ function GameDisk(){
         }, errorHandler);
     };
 
+
+
+    /**
+    * Saves the game to filesystem
+    * @param {string} name Name of the game to save
+    */
     this.saveGame = function(name){
         fs.root.getFile(Game.inputSeed, {create: true}, function(fileEntry) {
             fileEntry.createWriter(function(fileWriter){
@@ -1189,6 +1451,12 @@ function GameDisk(){
         }, errorHandler);
     };
 
+
+
+    /**
+    * Manages game loads, assigning the values to their proper places
+    * @param {string} name Name of game to load
+    */
     this.loadGame = function(name){
         fs.root.getFile(name, {}, function(fileEntry) {
             fileEntry.file(function(file){
@@ -1257,6 +1525,12 @@ function GameDisk(){
         }, errorHandler);
     };
 
+
+
+    /**
+    * Creates the appropriate format to save
+    * @return {blob} The save game JSON, blobbified
+    */
     var buildSave = function(){
         var saveData = [
         Game.turn,
@@ -1309,50 +1583,158 @@ function GameDisk(){
         return blob;
     };
 
+
+
+    /**
+    * Prints appropriate error information to console if any
+    * @param {FileError} Error Error thrown
+    */
     var errorHandler = function(e) {
       console.log(e.name + ' : ' + e.message);
     };
 }
 
 /**
- * The main game object
+ * The main game object, that stores everyhing we need 
+ * @constructor
  */
-
 function Param() {
-    //Radar related vars...
-    this.radarRad = 150; //this is the radius of the map that we want, changing it here should change it everywhere except the html
-    //The zoomed in map related thigs...
+    /**
+    * The radius of the map that we want, changing it should change it everywhere except the html
+    * @memberof Param
+    * @member {int} radarRad
+    */
+    this.radarRad = 150;
+    //The zoomed in map related things...
+    /**
+    * @memberof Param
+    * @member {int} destinationWidth
+    */
     this.destinationWidth = 120;
+    /**
+    * @memberof Param
+    * @member {int} destinationHeight
+    */
     this.destinationHeight = 140;
-    //this.xLimit = Math.ceil(document.width / 90);
-    //this.yLimit = Math.ceil(document.height / 78);
+    /**
+    * Number of tiles to show in x-axis according to <tt>Math.ceil(document.width / 90)</tt>
+    * @memberof Param
+    * @member {int} xLimit
+    */
+    /**
+    * Number of tiles to show in the y-axis according <tt>to Math.ceil(document.height / 78)</tt>
+    * @memberof Param
+    * @member {int} yLimit
+    */
+    /**
+    * @memberof Param
+    * @member {bool} highlight
+    */
     this.highlight = false;
+    /**
+    * Initial x-position of map on radar (Reticule)
+    * @memberof Param
+    * @member {int} retX
+    */
     this.retX = this.radarRad;
+    /**
+    * Initial y-position of map on radar (Reticule)
+    * @memberof Param
+    * @member {int} retY
+    */
     this.retY = this.radarRad;
+    /**
+    * Which animation frame we are on for animated tiles
+    * @memberof Param
+    * @member {int} animate
+    */
     this.animate = 0;
+    /**
+    * Whether we're animating forwards or backwards in the animation loop
+    * @memberof Param
+    * @member {bool} augment
+    */
     this.augment = true;
+    /**
+    * @memberof Param
+    * @member {bool} fresh
+    */
     this.fresh = true;
+    /**
+    * @memberof Param
+    * @member {string} clickedOn
+    */
     this.clickedOn = 'none';
+    /**
+    * The level the player is currently on
+    * @memberof Param
+    * @member {int} level
+    */
     this.level = 0;
+    /**
+    * Source Image for the highlight sprite
+    * @memberof Param
+    * @member {Object} tileHighlight
+    */
     this.tileHighlight = new Image();
     this.tileHighlight.src = 'images/tools.png';
+    /**
+    * Source Image for the main spritesheet
+    * @memberof Param
+    * @member {Object} spritesheet
+    */
     this.spritesheet = new Image();
     this.spritesheet.src = 'images/spritesheet.png';
-    /*
-    this.mouseX;
-    this.mouseY;
+    /**
+    * @member {int} mouseX
+    * @memberof Param
+    */ 
+    /**
+    * @memberof Param
+    * @member {int} mouseY
     */
     //General game stuff
-    this.turnNum = document.getElementById('turnNumber');
-    this.turn = 0;
-    this.map = [];
-    this.mapTiles = [];
-    //I <3  Sublime Text 2's multiple cursors!!!
     /**
-     * [[string: 'id of menu option', boolean: available to player?, int: surface(0)/subsurface(1)/both(2)]]
-     * @type {Array}
-     */
+    * Element that displays the turn number
+    * @todo This shouldn't need to be stored in the Game object
+    * @memberof Param
+    * @member {HTMLElement} turnNum
+    */
+    this.turnNum = document.getElementById('turnNumber');
+    /**
+    * Which turn it is
+    * @memberof Param
+    * @member {int} turn
+    */
+    this.turn = 0;
+    /**
+    * The procedurally generated map, all of it
+    * @memberof Param
+    * @member {array} map
+    */
+    this.map = [];
+    /**
+    * Anythign that's on the map but wasn't procedurally generated, a cheap way of saving user data
+    * @memberof Param
+    * @member {array} mapTiles
+    */
+    this.mapTiles = [];
+    /**
+    * Coordinates where the player placed their lander
+    * @memberof Param
+    * @member {array} home
+    */
     this.home = [150,150];
+    /**
+    * The list of buildings according to :
+    * [id, availableToPlayer, levelType, name]
+    * - {string} : id
+    * - {bool} : availableToPlayer
+    * - {int} : levelType (0=surface, 1=subsurface, 2=both)
+    * - {link} : name from the language class
+    * @memberof Param
+    * @member {array} buildings
+    */
     this.buildings = [
         ["agri", false, 0, Lang.agri], //
         ["agri2", false, 0, Lang.agri2],
@@ -1394,9 +1776,16 @@ function Param() {
         ["lander", true, 0, Lang.lander]
     ];
     /**
-     * List of robots
-     * [[int: inUse, int: totalAvailable, string: 'idString', boolean: availableToPlayer, int: surface(0)/subsurface(1)/both(2)]]
-     * @type {Array}
+     * List of robots with following syntax:
+     * [inUse, totalAvailable, idString, availableToPlayer, levelType]
+     * Where the types are:
+     * - {int} : inUse
+     * - {int} : totalAvailable
+     * - {string} : idString
+     * - {bool} : availableToPlayer
+     * - {int} : levelType (0=surface, 1=subsurface, 2=both)
+     * @memberof Param
+     * @member {array} robotsList
      */
     this.robotsList = [
         [0, 5, "dozer", false, 2], //
@@ -1405,12 +1794,41 @@ function Param() {
         [0, 3, "miner", false, 2], //
         [0, 1, "recycler", false, 2]
     ];
+    /**
+    * Coordinates of the commtowers on the map
+    * @memberof Param
+    * @member {array} commTowers
+    */
     this.commTowers = [];
+    /**
+    * Coordinates of the recyclers on the map
+    * @memberof Param
+    * @member {array} recyclerList
+    */
     this.recyclerList = [];
     //[[level, y, x]]
+    /**
+    * Coordinates of the research facilities on the map
+    * @memberof Param
+    * @member {array} researchLabs
+    */
     this.researchLabs = [];
-    //this.currentResearch = 'engineering';
-    //[idString, preReqsCount, subTopicsArray, turnsToComplete, totalTurnsNeeded]
+    /**
+    * The current research topic, if any
+    * @member {string} urrentResearch
+    * @memberof Param
+    */
+    /**
+    * Hierarchical list of the research topics available: 
+    * [idString, preReqsCount, subTopicsArray, turnsToComplete, totalTurnsNeeded]
+    * - {string} : idString
+    * - {int} : preReqsCount
+    * - {array} : subTopicsArray
+    * - {int} : turnsToComplete
+    * - {int} : totalTurnsNeeded
+    * @memberof Param
+    * @member {array} researchTopics
+    */
     this.researchTopics = ["all", 0, [
         ["engineering", 0, [
             ["agriculturalEngineering", 0, [
@@ -1509,9 +1927,19 @@ function Param() {
             ], 5, 5]
         ], 5, 5]
     ], 0];
-
+    /**
+    * The ores that have been mined (but not processed)
+    * @memberof Param
+    * @member {array} ores
+    */
     this.ores = [];
-    this.resourceArray = [ //[ORENAME,PRODUCTNAME]  
+    /**
+    * List associating the orenames to their processed mineral name
+    * [ORENAME,PRODUCTNAME]
+    * @memberof Param
+    * @member {array} resourceArray
+    */
+    this.resourceArray = [  
         [Lang.bauxite, Lang.aluminium],
         [Lang.corundum, Lang.aluminium],
         [Lang.kryolite, Lang.aluminium],
@@ -1544,65 +1972,291 @@ function Param() {
         [Lang.calamine, Lang.zinc]
     ];
 
-    //0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
-    //8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
+    /**
+    * List of booleans to see whether or not to display this resource on the radar. 
+    * Order, with indexes, is: 0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
+    * 8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
+    * @memberof Param
+    * @member {array} procOresRadarOpt
+    */
     this.procOresRadarOpt = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
-    this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 4, 1, 4, 5, 5]; //Total storage = 70
+    /**
+    * The ores that have been processed. The total sum should not exceed the colony's total storage capacity. 
+    * Order, with indexes, is: 0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
+    * 8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
+    * @memberof Param
+    * @member {array} procOres
+    */
+    this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 4, 1, 4, 5, 5];
+    /**
+    * The language strings for each resource, recovered from the Language Class
+    * Order, with indexes, is: 0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
+    * 8 Phosphorous, 9 Potassium, 10 Silver, 11 Sodium, 12 Tin, 13 Zinc
+    * @memberof Param
+    * @member {array} resourceNames
+    */
     this.resourceNames = [Lang.aluminium, Lang.calcium, Lang.copper, Lang.gold, Lang.iron, Lang.lead, Lang.magnesium, Lang.mercury, Lang.phosphorous, Lang.potassium, Lang.silver, Lang.sodium, Lang.tin, Lang.zinc];
     //Map generation vars
+    /**
+    * The string from which to seed the map
+    * @memberof Param
+    * @member {string} inputSeed
+    */
     this.inputSeed = '';
-    /*
-    this.rng;
-    this.noise;
-    this.noise2;
-    this.noise3;
+    /**
+    * @member {float} rng
+    * @memberof Param
+    */
+    /**
+    * @member {float} noise
+    * @memberof Param
+    */
+    /**
+    * @member {float} noise2
+    * @memberof Param
+    */
+    /**
+    * @memberof Param
+    * @member {float} noise3
     */
     //General canvas vars...
+    /**
+    * @memberof Param
+    * @member {HTMLElement} mPanCanvas
+    */
     this.mPanCanvas = document.getElementById('mPanOverlay');
+    /**
+    * @memberof Param
+    * @member {CanvasContext} mPanLoc
+    */
     this.mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
+    /**
+    * @memberof Param
+    * @member {HTMLElement} mPanelCanvas
+    */
     this.mPanelCanvas = document.getElementById('mainPanel');
+    /**
+    * @memberof Param
+    * @member {CanvasContext} mPanel
+    */
     this.mPanel = document.getElementById('mainPanel').getContext('2d');
+    /**
+    * @memberof Param
+    * @member {HTMLElement} radarCanvas
+    */
     this.radarCanvas = document.getElementById('mapOverlay');
+    /**
+    * @memberof Param
+    * @member {CanvasContext} radar
+    */
     this.radar = document.getElementById('map').getContext('2d');
+    /**
+    * @memberof Param
+    * @member {CanvasContext} radarLoc
+    */
     this.radarLoc = document.getElementById('mapOverlay').getContext('2d');
-
-    //this.yShift;
+    /**
+    * Accounts for the fact that hexagonal grids, when scrolled up, aren't in line
+    * @name yShift
+    * @memberof Param
+    * @member {int} ts
+    */
     //Stats
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} housing
+    */
     this.housing = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} pop
+    */
     this.pop = [150];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} tossPop
+    */
     this.tossPop = [50];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} tossBabies
+    */
     this.tossBabies = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} tossStudents
+    */
     this.tossStudents = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} tossAdults
+    */
     this.tossAdults = [50];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} hipPop
+    */
     this.hipPop = [50];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} hipBabies
+    */
     this.hipBabies = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} hipStudents
+    */
     this.hipStudents = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} hipAdults
+    */
     this.hipAdults = [50];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} artPop
+    */
     this.artPop = [50];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} artBabies
+    */
     this.artBabies = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} artStudents
+    */
     this.artStudents = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} artAdults
+    */
     this.artAdults = [50];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} employed
+    */
     this.employed = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} sdf
+    */
     this.sdf = [150];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} tossMorale
+    */
     this.tossMorale = [500];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} hipMorale
+    */
     this.hipMorale = [500];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} artMorale
+    */
     this.artMorale = [500];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} crime
+    */
     this.crime = [0];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} storageCap
+    */
     this.storageCap = [70 + 50]; //Resources + food + lander capacity
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} inStorage
+    */
     this.inStorage = [70 + 50]; //Resources + food
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} food
+    */
     this.food = [50];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} energy
+    */
     this.energy = [60];
+    /**
+    * Stores values for statistics
+    * @memberof Param
+    * @member {array} air
+    */
     this.air = [50];
 
     //modifiers
-    this.blackout = 0; //Power Outages
-    this.noAir = 0; //Air Shortages
-    this.creche = 0; //Birth to preschool
-    this.uni = 0; //Education length
-    this.botAging = 0; //Bot training & testing
-    this.leisure = 0; //Recreation
+    /**
+    * Modifier for Power Outages
+    * @memberof Param
+    * @member {int} blackout
+    */
+    this.blackout = 0;
+    /**
+    * Modifier for Air Shortages
+    * @memberof Param
+    * @member {int} noAir
+    */
+    this.noAir = 0;
+    /**
+    * Modifier for Birth to preschool
+    * @memberof Param
+    * @member {int} creche
+    */
+    this.creche = 0;
+    /**
+    * Modifier for Education length
+    * @memberof Param
+    * @member {int} uni
+    */
+    this.uni = 0;
+    /**
+    * Modifier for Bot training & testing
+    * @memberof Param
+    * @member {int} botAging
+    */
+    this.botAging = 0;
+    /**
+    * Modifier for Recreation
+    * @memberof Param
+    * @member {int} leisure
+    */
+    this.leisure = 0;
 }
 
+
+
+/**
+* Pushes all tracked data to the relevant places for in-game statistics
+*/
 function setStats() {
     Game.crime.push(0);
     Game.inStorage.push(Game.inStorage[Game.inStorage.length - 1]);
@@ -1695,6 +2349,11 @@ function setStats() {
     Game.blackout = 0;
 }
 
+
+
+/**
+* Corrects the statistics for illogical stuff (percentages over 100 etc.)
+*/
 function saneStats(){
     if(Game.crime[Game.crime.length - 1] < 0){
         Game.crime[Game.crime.length - 1] = 0;
@@ -1733,8 +2392,17 @@ function saneStats(){
 
 }
 
+
+
+/**
+* Draws all graphs and charts for the statistics panel
+* @param {string} type The type of chart. Valid values are <tt>line</tt>, <tt>pie</tt> & <tt>bar</tt>
+* @param {string} outputId The id of the canvas to draw to
+* @param {array} sourceData The array of data to plot
+* @param {bool} [from0] If true, forces y-axis to start from 0 rather than adapting to the data given
+* @todo make this a proper little library, it's too specific right now
+*/
 function drawGraph(type, outputId, sourceData, from0) {
-    //TODO: make this a roper little library, it's too specific right now
     var can = document.getElementById(outputId);
     var con = document.getElementById(outputId).getContext('2d');
     var canW = parseInt(can.width, 10);
@@ -1756,7 +2424,11 @@ function drawGraph(type, outputId, sourceData, from0) {
         mini = 0;
     }
 
-    //returns our highest data point so we can scale the axes
+    /**
+    * Returns our highest data point so we can scale the axes
+    * @param {array} arr Data to be processed
+    * @returns {int} Index of the max data point
+    */
     var max = function(arr) {
             var mem = 0;
             for(var i = 0; i < arr.length; i++) {
@@ -1767,6 +2439,11 @@ function drawGraph(type, outputId, sourceData, from0) {
             return mem;
         };
 
+    /**
+    * Returns our lowest data point so we can scale the axes
+    * @param {array} arr Data to be processed
+    * @returns {int} Index of the min data point
+    */
     var min = function(arr) {
             var mem = 0;
             for(var i = 0; i < arr.length; i++) {
@@ -1777,6 +2454,15 @@ function drawGraph(type, outputId, sourceData, from0) {
             return mem;
         };
 
+
+
+    /**
+    * Returns data normalized to the given axis
+    * @param {int} val The index of the datapoint to normalize
+    * @param {array} arr The dataset to look in
+    * @param {int} axis The length of the axis in pixels to normalise to
+    * @returns {int} The normalized data
+    */
     var normal = function(val, arr, axis) {
             var out = (arr[val] - mini) / (maxi - mini);
             return out * axis;
@@ -1913,6 +2599,11 @@ function drawGraph(type, outputId, sourceData, from0) {
     }
 }
 
+
+
+/**
+* Populates the research menu
+*/
 function fillResearchMenu(){
     var source = Game.researchTopics[2];
 
@@ -1962,6 +2653,11 @@ function fillResearchMenu(){
     }
 }
 
+
+
+/**
+* Opens appropriate research panel when a research menu item is clicked
+*/
 function clickedResearch(){
     var ident = this.id;
     console.log(ident);
@@ -1972,6 +2668,12 @@ function clickedResearch(){
     fillResearchMenu();
 }
 
+
+
+/**
+* Populates the research panel with the appropriate information
+* @param {string} ident ID of menu item that was clicked
+*/
 function fillResearchPanel(ident){
     var frag = document.createDocumentFragment();
     var topicList = false;
@@ -2071,6 +2773,13 @@ function fillResearchPanel(ident){
     }
 }
 
+
+
+/**
+* Based on an input string, finds the corresponding {@link Param.researchTopics} sub-array
+* @param {string} topic The topic for which a reference is needed
+* @returns {array} The {@link Param.researchTopics} sub-array that corresponds to <tt>topic</tt>
+*/
 function researchTopicRef(topic){
     var source = Game.researchTopics[2];
     for(var i = 0; i < source.length; i++){
@@ -2098,6 +2807,13 @@ function researchTopicRef(topic){
     }
 }
 
+
+
+/**
+* Returns the research progress as a percenteage
+* @param {string} ident The topic for which the research progress is needed
+* @returns {int} Research progress as a percentage
+*/
 function researchProgress(ident){
     var ref = researchTopicRef(ident);
     var progress = ref[4] - ref[3];
@@ -2111,6 +2827,12 @@ function researchProgress(ident){
     return progress;
 }
 
+
+
+/**
+* Populates a list of labs that are actively researching hte given topic, and/or are available to research it
+* @param {string} ident The topic for which the player needs the lab list
+*/
 function listLabs(ident){
     var frag = document.createDocumentFragment();
     var studyList = [];
@@ -2225,6 +2947,14 @@ function listLabs(ident){
     }
 }
 
+
+
+/**
+* Given a container element, will unhook all of the child elements (Chrome should 
+* then remove the orphaned click listeners during garbage collection)
+* @param {HTMLElement} Element to flush out
+* @todo Confirm that Chrome removes orphaned click listeners
+*/
 function flush(elem){
     //afaik, chrome will remove orphaned event listeners
     while (elem.lastChild) {
@@ -2232,10 +2962,11 @@ function flush(elem){
     }
 }
 
+
+
 /**
  * Initialize the game
  */
-
 window.onload = function init() {
     Disk.openfs();
     if(!document.webkitHidden){
@@ -2244,6 +2975,11 @@ window.onload = function init() {
     eavesdrop();
 };
 
+
+
+/**
+* Wrapper function for all the main click listeners
+*/
 function eavesdrop() {
     document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
     //Start Screen
@@ -2363,6 +3099,10 @@ function eavesdrop() {
     };
     //should consider having zoom on the radar instead of the main map or storing the retX retY for a second or two
     var blocked = false;
+    /**
+    * Catches mousewheel event, and zooms map appropriately
+    * @param {event} event Caught mousewheel event
+    */
     mainMap.onmousewheel = function(event) {
         event.preventDefault();
         var zoomPos = document.getElementById('zoom');
@@ -2639,6 +3379,12 @@ function eavesdrop() {
     };
 }
 
+
+
+/**
+* Advances teh game by a given number of turns
+* @param {int} turns Number of turns to advance by
+*/
 function advanceTurn(turns){
     while(turns > 0){
         if(!Game.buildings[37][1]) {
@@ -2676,6 +3422,14 @@ function advanceTurn(turns){
     }
 }
 
+
+
+/**
+* Manages the openign and closing of menus
+* @param {HTMLElement} containerIn Container containing the menu to show or hide
+* @param {HTMLElement} buttonIn Button for the container
+* @param {string} hideClass Class that determines visibility of the container
+*/
 function menu(containerIn, buttonIn, hideClass) {
     if(buttonIn.classList.contains('arrow_down')) {
         containerIn.classList.add('menu_visible');
@@ -2689,6 +3443,11 @@ function menu(containerIn, buttonIn, hideClass) {
     buttonIn.classList.toggle('arrow_up');
 }
 
+
+
+/**
+* Handles what needs to be done if the page is visible or not (pause music etc.)
+*/
 function pageVisHandler() {
   if (document.webkitHidden) {
     Music.pause();
@@ -2697,7 +3456,16 @@ function pageVisHandler() {
   }
 }
 
+
+
+/**
+* All of the music functions
+* @constructor
+*/
 function Playlist(){
+    /**
+    * Toggles music on or off
+    */
     this.toggleMusic = function(){
         if(!this.musicOn) {
             this.musicOn = true;
@@ -2708,13 +3476,23 @@ function Playlist(){
         }
     };
     this.musicOn = true;
+    /**
+    * Pauses music
+    */
     this.pause = function() {
         currentTrack.pause();
     };
+    /**
+    * Plays music
+    */
     this.play = function() {
         currentTrack.volume = volume;
         this.musicOn ? currentTrack.play() : currentTrack.pause();
     };
+    /**
+    * Sets volume to provided value
+    * @param {int} val Desired volume level
+    */
     this.changeVolume = function(val){
         currentTrack.volume = val;
         volume = val;
@@ -2755,12 +3533,24 @@ function Playlist(){
 }
 
 
+
+/**
+* Sets the map's zoom to provided zoom level
+* @param {int} zoomLevel The level of zoom that's needed
+*/
 function zoom(zoomLevel) {
     Game.destinationWidth = zoomLevel * 6 * 6;
     Game.destinationHeight = zoomLevel * 7 * 6;
     mapFit();
 }
 
+
+
+/**
+* For a provided array, will return an array fo the max and min values
+* @param {array} arrayIn Array to find the max/min values of
+* @returns {array} The max/min values <tt>[max,min]</tt> 
+*/
 function getMaxMin(arrayIn){
     var max = 0;
     var min = 1000000;
@@ -2778,6 +3568,10 @@ function getMaxMin(arrayIn){
 }
 
 
+
+/**
+* Opens the Executive Review panel, coloring in all of the statistics when we need them
+*/
 function execReview() {
     var darkBlue = '#66D8FF';
     var electricBlue = 'rgb(0,255,255)';
@@ -2899,6 +3693,12 @@ function execReview() {
 
 }
 
+
+
+/**
+* Fits the map to the screen
+* @param {bool} [bool] Tells mapFit() if the window has been resized or not
+*/
 function mapFit(bool) {
     var quarterHeight = Math.floor(Game.destinationHeight * 0.25);
     if(bool) {
@@ -2955,7 +3755,6 @@ function mapFit(bool) {
  * Checks which buildings are available to the player and
  * populates the sidebar with those buildings
  */
-
 function checkBuildings() {
     for(var thing = 0; thing < Game.buildings.length; thing++) {
         var idString = Game.buildings[thing][0];
@@ -2999,6 +3798,11 @@ function checkBuildings() {
     checkRobots();
 }
 
+
+
+/**
+* Manages what robots are available for the given context in the menu
+*/
 function checkRobots() {
     //TODO: clean all this shit up
     for(var r2d2 in Game.robotsList) {
@@ -3066,13 +3870,15 @@ function checkRobots() {
     }
 }
 
+
+
 /**
  * Generates a random number, from a base value from 0 to num-1
  * @param  {int} num is the modifier
  * @param  {int} min is the base value
- * @return {int}
+ * @param {bool} [seeded] Whether the generated number should use the game's seed
+ * @return {int} The random number
  */
-
 function randGen(num, min, seeded) {
     if(seeded){
         return Math.floor(Game.rng.random() * num) + min;
@@ -3081,22 +3887,24 @@ function randGen(num, min, seeded) {
     }
 }
 
+
+
 /**
  * Changes level from an input (slider etc.)
  * @param  {int} newLevel the level we would change to
  */
-
 function changeLevel(newLevel) {
     Game.level = parseInt(newLevel, 10);
     checkBuildings();
     drawRadar();
 }
 
+
+
 /**
  * Recounts the number of bots available and updates the counter bars appropriately
- * @param  {string} which is the type of robot we're dealing with
+ * @param  {string} which The type of robot we're dealing with
  */
-
 function reCount(which) {
     var count = function(id, numID, index) {
             document.getElementById(id).style.height = ((Game.robotsList[index][1] - Game.robotsList[index][0]) / Game.robotsList[index][1]) * 100 + '%';
@@ -3131,9 +3939,8 @@ function reCount(which) {
 
 /**
  * resizes the left menus on mouse drag
- * @param  {boolean} bool check to see if we should be resizing
+ * @param  {boolean} [bool] check to see if we should be resizing
  */
-
 function leftMenuResize(bool) {
     if(bool) {
         document.getElementById('leftMenu').onmousemove = resize;
@@ -3143,9 +3950,9 @@ function leftMenuResize(bool) {
 }
 
 /**
- * manages the actual values for the resize (see leftMenuResize)
+ * Manages the actual values for the resized menu from {@link leftMenuResize}
+ * @param {event} e The mousemove event
  */
-
 function resize(e) {
     var current = e.clientY;
     var total = window.innerHeight;
@@ -3166,7 +3973,6 @@ function resize(e) {
 /**
  * The main game loop
  */
-
 function mainLoop() {
     var N = 22; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
     Game.augment ? Game.animate += 1 : Game.animate -= 1;
@@ -3175,6 +3981,12 @@ function mainLoop() {
     }
 }
 
+
+
+/**
+* Prints provided text to the in-game console
+* @param {string} text Text to print
+*/
 function printConsole(text){
     if(!document.getElementById('console').classList.contains('console_open')){
         document.getElementById('console').classList.add('console_notif');
@@ -3193,6 +4005,17 @@ function printConsole(text){
     output.scrollTop = output.scrollHeight;
 }
 
+
+
+/**
+* In the event of bad input to the in-game console, prints the error message
+* @param {string} text The erroneous console input
+* @param {string} err The error type
+* @param {string} [command] The command that was passed
+* @param {string} [fix] Proposed fix
+* @param {int} [lwrLimit] Lowest accepted value for this command
+* @param {int} [uprLimit] Highest accepted value for this command
+*/
 function consoleErr(text, err, command, fix, lwrLimit, uprLimit){
     if(err === 'value'){
         var errText = text + ' ' + Lang.valueErr + ' "' + command + '"' + ', ' + fix;
@@ -3207,6 +4030,12 @@ function consoleErr(text, err, command, fix, lwrLimit, uprLimit){
     }
 }
 
+
+
+/**
+* Parses the proveded string and runs appropriate command ro throws appropriate error
+* @param {string} text The text to parse and run
+*/
 function runConsole(text){
     document.getElementById('consoleInput').value = '';
     printConsole(text);
@@ -3279,11 +4108,12 @@ function runConsole(text){
     document.getElementById('console').classList.add('console_open');
 }
 
-/**
- * reacts to keyboard input appropriately
- * @param  {Object} e
- */
 
+
+/**
+ * Generic keyboard listener
+ * @param  {Event} e The event passed in upon key press
+ */
 function keypressed(e) {
     if(document.activeElement === document.getElementById('consoleInput')){
         switch(e.keyCode){
@@ -3445,8 +4275,7 @@ function keypressed(e) {
  * @param  {Object} canvas
  * @param  {Event} evt
  */
-
-function getMousePos(canvas, evt, onMap) {
+function getMousePos(canvas, evt) {
     // get canvas position
     var obj = canvas;
     var top = 0;
@@ -3467,7 +4296,6 @@ function getMousePos(canvas, evt, onMap) {
  *and then redraws the maps and radar
  * @param  {string} dir is the direction to move
  */
-
 function move(dir) {
     var upY = Game.retY - 2;
     var downY = Game.retY + 2;
@@ -3508,13 +4336,12 @@ function move(dir) {
 
 /**
  * Returns the adjacent tile reference in y and x (inverted for historical reasons)
- * @param  {int} x
- * @param  {int} y
+ * @param  {int} x X coordiante for tile we want to get the adjacent tiles for
+ * @param  {int} y Y coordiante for tile we want to get the adjacent tiles for
  * @param  {int} index Which tile are we checking? 0 for top left then count up
  * clockwise
- * @return {array}
+ * @return {array} The coordinates for the tile at the provided index
  */
-
 function adjacent(x, y, index) {
     if(y % 2 === 0) {
         index += 6;
@@ -3549,9 +4376,8 @@ function adjacent(x, y, index) {
  * Checks if any adjacent tiles are wet
  * @param  {array} yxArrayIn is an array of the y & x coordinates of the tile to test
  * @param  {int} level provides the level to test on
- * @return {boolean}
+ * @return {boolean} Wet or not
  */
-
 function wetTest(yxArrayIn, level) {
     var yxArray = yxArrayIn.slice(0);
     for(var i = 0; i < 6; i++) {
@@ -3563,22 +4389,21 @@ function wetTest(yxArrayIn, level) {
 }
 
 /**
- * returns the distance of the given point from the centrepoint
- * @param  {int} x1
- * @param  {int} y1
- * @param  {int} x2
- * @param  {int} y2
- * @return {float}
+ * Returns the distance between two points
+ * @param  {int} x1 First point's X coordinate
+ * @param  {int} y1 First point's Y coordinate 
+ * @param  {int} x2 Second point's X coordinate
+ * @param  {int} y2 Second point's Y coordinate
+ * @return {float} The distance (in same units as provided)
  */
-
 function distance(x1, y1, x2, y2) {
     return Math.round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
 }
+
 /**
  * Random walk function for "clumpy" randomness
  * @return {int}
  */
-
 function randWalk() {
     var walk = Math.floor(Math.random() * 3);
     switch(walk) {
@@ -3593,13 +4418,13 @@ function randWalk() {
     }
 }
 
-/*Get the tile x or y value for the tile the mouse is currently over*/
+
+
 /**
  * Gets the x or y value for the currently moused over tile
- * @param  {string} axis Which axis are we working with?
- * @return {int}
+ * @param  {string} The axis we want the coordinate of
+ * @return {int} The coordinate for desired axis
  */
-
 function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
 
@@ -3653,10 +4478,15 @@ function getTile(axis) {
     }
 }
 
+
+
 /**
  * When the radar is clicked, moves the map to that location
+ * @param {bool} [bool] Force a jump to a particular spot (see other parameters)
+ * @param {int} [x] X coordinate for where the map was clicked
+ * @param {int} [y] Y coordinate for where the map was clicked
+ * @param {int} [level] The level the player is on
  */
-
 function jump(bool, x, y, level) {
     if(bool){
         Game.retX = x + 1;
@@ -3670,6 +4500,14 @@ function jump(bool, x, y, level) {
     drawLoc();
 }
 
+
+
+/**
+* Determines if a point is within communications range of the colony or not
+* @param {int} x X coordinate of point to test
+* @param {int} y Y coordinate of point to test
+* @returns {bool} Whether the point is in communications range or not
+*/
 function inRange(x, y){
     for(var tower = 0; tower < Game.commTowers.length; tower++){
         var radius = 75 - Game.level*10;
@@ -3685,10 +4523,12 @@ function inRange(x, y){
 }
 
 //MAPS**********************************************************************************
+
+
+
 /**
  * Draws the radar properly
  */
-
 function drawRadar() {
     Game.radar.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
@@ -3762,6 +4602,15 @@ function drawRadar() {
     Game.radar.fillText('Depth: ' + Game.level * 50 + 'm', 215, 298);
 }
 
+
+
+/**
+* Cross references the indexes of processed minerals to their ores
+* @param {int} ref 
+* @param {int} dir 'Direction' of the conversion: (0 processed -> ore; 1 ore -> processed
+* @returns {array} 
+* @todo dir seems redundant here
+*/
 function resourceRef(ref,dir){
     //dir should tell us if we're going from ore to processed or processed to ore
     //0 is from processed to ore
@@ -3801,15 +4650,19 @@ function resourceRef(ref,dir){
     }
 }
 
-/**
- * accepts the kind of tile to draw, the x column number and the y column number, then draws it
- * @param  {int} tileType  type of tile to draw
- * @param  {int} tilePosX  Tile's x coordinate
- * @param  {int} tilePosY  Tile's y coordinate
- * @param  {boolean} highlight Whether or not we should highlight the tile
- * @param  {boolean} darkness  Whether or not we should darken this tile
- */
 
+
+/**
+ * Accepts the kind of tile to draw, the x column number and the y column number, then draws it
+ * @param {int} tileType  Type of tile to draw
+ * @param {int} tilePosX  Tile's x coordinate
+ * @param {int} tilePosY  Tile's y coordinate
+ * @param {Object} source The image object to get sprite from.(Probably {@link Param#tileHighlight} or {@link Param#spritesheet})
+ * @param {Object} destination The canvas context to draw the images to
+ * @param {bool} animateIt Whether or not the sprite is animated
+ * @param {int} modX From 0, move to the modXth sprite
+ * @param {int} modY From 0, move to the modYth sprite
+ */
 function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, modX, modY) {
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
     sourceWidth = 216; //original tile width
@@ -3826,10 +4679,12 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, 
     destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
 }
 
-/**
- * this draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
- */
 
+
+
+/**
+ * Draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
+ */
 function drawZoomMap() {
     var y, x, tileKind;
     mainLoop();
@@ -3859,10 +4714,11 @@ function drawZoomMap() {
     }
 }
 
+
+
 /**
  * draws the current location on the small radar map
  */
-
 function drawLoc() {
     Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
     Game.radarLoc.beginPath();
@@ -3877,10 +4733,19 @@ function drawLoc() {
     Game.radarLoc.closePath();
 }
 
+
+
+/**
+* Upon right click, creates the context menu
+* @param {string} content The content for the right click menu in html
+*/
 function rightClicked(content) {
     //TODO : Make context menu appear on the correct side relative to mouse position near screen edges
     var popFrame = document.getElementById('contextMenuWrapper');
     var pop = document.getElementById('contextMenu');
+    /**
+    * @param {Event} e Upon detecting a mouseout, hides and cleans up the menu
+    */
     var hide = function(e) {
         if(((e.relatedTarget || e.toElement) === popFrame.nextElementSibling) || ((event.relatedTarget || event.toElement) == popFrame.parentNode)){
             popFrame.style.opacity = '0';
@@ -3901,6 +4766,13 @@ function rightClicked(content) {
 
 }
 
+
+
+/**
+* Once a right click menu has been created, returns the HTML fragment to to be appended
+* @param {string} content Html content to put into the right click menu
+* @returns {Object} Document Fragment to append
+*/
 function contextContent(content) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
@@ -3983,15 +4855,42 @@ function contextContent(content) {
     return frag;
 }
 
+
+
+/**
+* Inserts the provided string into the provided index
+* @param {int} index Index at which to insert the string
+* @param {string} string The string to insert
+* @returns {string} Modified string
+*/
 String.prototype.insert = function(index, string) {
     if(index > 0) return this.slice(0, index) + string + this.slice(index);
     else return string + this;
 };
 
+
+
+/**
+* Given two strings, will return a modified version (for tile references)
+* @param {string} string String to be placed at begginning of modified string
+* @param {string} orig Original string
+* @returns {string} Returns <tt>string</tt> + " #" + the first word after # in <tt>orig</tt>
+*/
 function changeName(string, orig) {
     return string + ' #' + orig.split('#')[1];
 }
 
+
+
+/**
+* Provides the list of materials needed, either as a directly usable array, a 
+* boolean value representing availability or as a Document Fragment for use in 
+* the context menu
+* @param {string} building The building to get list for
+* @param {bool} getRec If true, will try to requisition the required materials, returning success or failure
+* @param {bool} recycling If true, will simply get the array of materials needed for a construction
+* @returns {(array|bool|Object)} Array of materials needed | Success or failure of requisition | Document Fragment listing material availability
+*/
 function resourceNeededList(building, getRec, recycling){
     var resourcesNeeded;
     var future;
@@ -4223,6 +5122,16 @@ function resourceNeededList(building, getRec, recycling){
     }
 }
 
+
+
+/**
+* Depending on availability, will take the resources indicated. If not all the 
+* resources are available, it wil print the missing resources to the in-game
+* console
+* @param {array} arr Array of materials to requisition
+* @returns {bool} Success or not
+* @todo This function should probably handle recycling as well
+*/
 function requisition(arr){//TODO set up recycling here
     var resourceCheck = false;
     var count = 0;
@@ -4250,19 +5159,33 @@ function requisition(arr){//TODO set up recycling here
 
 }
 
+
+
+/**
+* Checks connectivity of the provided tile with the colony (on the current level)
+* @param {int} y Y coordinate to check
+* @param {int} x X coordinate to check
+* @returns {bool} Connected or not
+*/
 function checkConnection(y, x) {
     var connected = false;
     for(var j = 0; j < 6; j++) {
-        if(Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]] && (Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 211 || Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 204)) {
+        if(Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]] && 
+           (Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 211 || 
+           Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 204)) {
             connected = true;
         }
     }
     return connected;
 }
-/**
- * Performs the appropriate action for the tile that is clicked upon
- */
 
+
+
+/**
+ * Performs the appropriate actions for the tile that is clicked upon depending on 
+ * the construction or robot chosen
+ * @param {bool} direction If true, action takes place, if not, will ask for confirmation
+ */
 function clicked(direction) {
     var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
     var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
@@ -4491,7 +5414,8 @@ function clicked(direction) {
 
 
 /**
- *  When I click on a menu item, this remembers what it is _unless_ I click again, in which case, it forgets
+ * When a menu item is clicked, this remembers what it is until the next click 
+ * @param {string} reference The menu item id that was clicked
  */
 function getBuildingRef(reference){
     switch(reference){
@@ -4641,6 +5565,12 @@ function getBuildingRef(reference){
 
 }
 
+
+
+/**
+* Changes cursor appropriately depending on interaction with menu
+* @todo The resources used in this function should be generalized
+*/
 function construct() {
     var identity = this.id;
     if(Game.clickedOn === identity) {

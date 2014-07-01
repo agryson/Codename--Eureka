@@ -10,6 +10,7 @@ function NewGame(){
 
 /**
  * Parses the seed before passing it to the world generator
+ * @todo The generated noises shouldn't need to be stored in the Game Object
  */
   this.getSeed = function() {
     var input = document.getElementById('seed').value;
@@ -43,11 +44,11 @@ function NewGame(){
 
 
 
-  /*TODO: the dependancy on Game.map, rather than returning the array to it is
-  probably something we should have a look at*/
   /**
   * Creates a map for the provided level, inserting it into the Game.map
   * @param {int} l Level for which a map (2D) should be generated
+  * @todo the dependancy on Game.map, rather than returning the array to it is
+  * probably something we should have a look at
   */
   var createMap = function(l) {
 
