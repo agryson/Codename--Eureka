@@ -1,10 +1,10 @@
-#Codename Eureka - Documentation
-##Introduction
+##Codename Eureka - Documentation
+###Introduction
 Welcome to the Codename Eureka Documentation. Codename Eureka is a turn based, single player space-colony sim. These pages provide all the functional documentation. If instead you're looking for general information on development, story, UI design etc., you should instead [check out the wiki](http://gryson.duckdns.org:4269/mediawiki).
 
 Developed mainly for pleasure and education, we use git for source code management, mediawiki for documentation, mantis for bug tracking, all hosted on a Raspberry Pi hooked up to a 200Mbps connection in Paris (with daily backups).
 
-##Getting Started
+###Getting Started
 You can clone the git repo like so:
 <pre>git clone ssh://git@gryson.duckdns.org:4242/Codename--Eureka</pre>
 _(You need to have previously provided your ssh pubkey)_
