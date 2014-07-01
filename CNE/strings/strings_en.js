@@ -1,3 +1,7 @@
+/**
+* @constructor
+* @param {string} planetName The desired name for the planet
+*/
 function Language(planetName){
 	//Custom names etc.
 	this.planet = planetName;
