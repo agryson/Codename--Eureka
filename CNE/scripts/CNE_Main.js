@@ -3382,7 +3382,7 @@ function eavesdrop() {
 
 
 /**
-* Advances teh game by a given number of turns
+* Advances the game by a given number of turns
 * @param {int} turns Number of turns to advance by
 */
 function advanceTurn(turns){
