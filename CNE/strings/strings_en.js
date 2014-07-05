@@ -1,5 +1,5 @@
 /**
-* Language strings, changing this file, and index.html will change the language everywhere
+* Language strings. Updating index.html (and the language script it points to) will update the language everywhere
 * @global
 */
 var TRANS = {
