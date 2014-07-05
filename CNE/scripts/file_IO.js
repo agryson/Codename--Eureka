@@ -168,7 +168,7 @@ var FileIO = (function(){
     * @param {Object} Game Game object to save
     */
     publicFunctions.saveGame = function(Game){
-        fs.root.getFile(Game.inputSeed, {create: true}, function(fileEntry) {
+        fs.root.getFile(Conf.inputSeed, {create: true}, function(fileEntry) {
             fileEntry.createWriter(function(fileWriter){
                 fileWriter.onwriteend = function(e){
                     console.log('File written');
@@ -189,67 +189,67 @@ var FileIO = (function(){
     * @param {Object} Game Game object (default) that will be loaded onto
     */
     publicFunctions.loadGame = function(Game){
-        fs.root.getFile(Game.inputSeed, {}, function(fileEntry) {
+        fs.root.getFile(Conf.inputSeed, {}, function(fileEntry) {
             fileEntry.file(function(file){
                 var reader = new FileReader();
                 reader.onloadend = function(e){
-                    //TODO: make sure the type is conserved e.g. Game.mapTiles**[]** = saveDataOut[1];
+                    //TODO: make sure the type is conserved e.g. Conf.mapTiles**[]** = saveDataOut[1];
                     var saveDataOut = JSON.parse(this.result);
-                    Game.turn = saveDataOut[0];
-                    Game.mapTiles = saveDataOut[1];
-                    Game.home = saveDataOut[2];
-                    Game.buildings = saveDataOut[3];
-                    Game.robotsList = saveDataOut[4];
-                    Game.commTowers = saveDataOut[5];
-                    Game.recyclerList = saveDataOut[6];
-                    Game.researchLabs = saveDataOut[7];
-                    Game.researchTopics = saveDataOut[8];
-                    Game.ores = saveDataOut[9];
-                    Game.procOres = saveDataOut[10];
-                    Game.inputSeed = saveDataOut[11];
-                    Game.housing = saveDataOut[12];
-                    Game.pop = saveDataOut[13];
-                    Game.tossPop = saveDataOut[14];
-                    Game.tossBabies = saveDataOut[15];
-                    Game.tossStudents = saveDataOut[16];
-                    Game.tossAdults = saveDataOut[17];
-                    Game.hipPop = saveDataOut[18];
-                    Game.hipBabies = saveDataOut[19];
-                    Game.hipStudents = saveDataOut[20];
-                    Game.hipAdults = saveDataOut[21];
-                    Game.artPop = saveDataOut[22];
-                    Game.artBabies = saveDataOut[23];
-                    Game.artStudents = saveDataOut[24];
-                    Game.artAdults = saveDataOut[25];
-                    Game.employed = saveDataOut[26];
-                    Game.sdf = saveDataOut[27];
-                    Game.tossMorale = saveDataOut[28];
-                    Game.hipMorale = saveDataOut[29];
-                    Game.artMorale = saveDataOut[30];
-                    Game.crime = saveDataOut[31];
-                    Game.storageCap = saveDataOut[32];
-                    Game.inStorage = saveDataOut[33];
-                    Game.food = saveDataOut[34];
-                    Game.energy = saveDataOut[35];
-                    Game.air = saveDataOut[36];
-                    Game.blackout = saveDataOut[37];
-                    Game.noAir = saveDataOut[38];
-                    Game.creche = saveDataOut[39];
-                    Game.uni = saveDataOut[40];
-                    Game.botAging = saveDataOut[41];
-                    Game.leisure = saveDataOut[42];
+                    Conf.turn = saveDataOut[0];
+                    Conf.mapTiles = saveDataOut[1];
+                    Conf.home = saveDataOut[2];
+                    Conf.buildings = saveDataOut[3];
+                    Conf.robotsList = saveDataOut[4];
+                    Conf.commTowers = saveDataOut[5];
+                    Conf.recyclerList = saveDataOut[6];
+                    Conf.researchLabs = saveDataOut[7];
+                    Conf.researchTopics = saveDataOut[8];
+                    Conf.ores = saveDataOut[9];
+                    Conf.procOres = saveDataOut[10];
+                    Conf.inputSeed = saveDataOut[11];
+                    Conf.housing = saveDataOut[12];
+                    Conf.pop = saveDataOut[13];
+                    Conf.tossPop = saveDataOut[14];
+                    Conf.tossBabies = saveDataOut[15];
+                    Conf.tossStudents = saveDataOut[16];
+                    Conf.tossAdults = saveDataOut[17];
+                    Conf.hipPop = saveDataOut[18];
+                    Conf.hipBabies = saveDataOut[19];
+                    Conf.hipStudents = saveDataOut[20];
+                    Conf.hipAdults = saveDataOut[21];
+                    Conf.artPop = saveDataOut[22];
+                    Conf.artBabies = saveDataOut[23];
+                    Conf.artStudents = saveDataOut[24];
+                    Conf.artAdults = saveDataOut[25];
+                    Conf.employed = saveDataOut[26];
+                    Conf.sdf = saveDataOut[27];
+                    Conf.tossMorale = saveDataOut[28];
+                    Conf.hipMorale = saveDataOut[29];
+                    Conf.artMorale = saveDataOut[30];
+                    Conf.crime = saveDataOut[31];
+                    Conf.storageCap = saveDataOut[32];
+                    Conf.inStorage = saveDataOut[33];
+                    Conf.food = saveDataOut[34];
+                    Conf.energy = saveDataOut[35];
+                    Conf.air = saveDataOut[36];
+                    Conf.blackout = saveDataOut[37];
+                    Conf.noAir = saveDataOut[38];
+                    Conf.creche = saveDataOut[39];
+                    Conf.uni = saveDataOut[40];
+                    Conf.botAging = saveDataOut[41];
+                    Conf.leisure = saveDataOut[42];
                     //Add code that gets read data and make Game equal to it...
-                    Game.buildings[37][1] = false;
+                    Conf.buildings[37][1] = false;
                     checkBuildings();
                     checkRobots();
                     reCount('all');
                     execReview();
                     fillResearchMenu();
                     drawRadar();
-                    Game.turnNum.innerHTML = TRANS.weekCounter + Game.turn;
+                    Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
                     Tools.flush(document.getElementById('consoleContent'));
-                    printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Game.turn);
-                    jump(true, Game.home[0], Game.home[1], 0);
+                    printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
+                    jump(true, Conf.home[0], Conf.home[1], 0);
                 };
                 reader.readAsText(file);
             }, _errorHandler);
@@ -266,49 +266,49 @@ var FileIO = (function(){
     */
     var _buildSave = function(Game){
         var saveData = [
-        Game.turn,
-        Game.mapTiles,
-        Game.home,
-        Game.buildings,
-        Game.robotsList,
-        Game.commTowers,
-        Game.recyclerList,
-        Game.researchLabs,
-        Game.researchTopics,
-        Game.ores,
-        Game.procOres,
-        Game.inputSeed,
-        Game.housing,
-        Game.pop,
-        Game.tossPop,
-        Game.tossBabies,
-        Game.tossStudents,
-        Game.tossAdults,
-        Game.hipPop,
-        Game.hipBabies,
-        Game.hipStudents,
-        Game.hipAdults,
-        Game.artPop,
-        Game.artBabies,
-        Game.artStudents,
-        Game.artAdults,
-        Game.employed,
-        Game.sdf,
-        Game.tossMorale,
-        Game.hipMorale,
-        Game.artMorale,
-        Game.crime,
-        Game.storageCap,
-        Game.inStorage,
-        Game.food,
-        Game.energy,
-        Game.air,
-        Game.blackout,
-        Game.noAir,
-        Game.creche,
-        Game.uni,
-        Game.botAging,
-        Game.leisure
+        Conf.turn,
+        Conf.mapTiles,
+        Conf.home,
+        Conf.buildings,
+        Conf.robotsList,
+        Conf.commTowers,
+        Conf.recyclerList,
+        Conf.researchLabs,
+        Conf.researchTopics,
+        Conf.ores,
+        Conf.procOres,
+        Conf.inputSeed,
+        Conf.housing,
+        Conf.pop,
+        Conf.tossPop,
+        Conf.tossBabies,
+        Conf.tossStudents,
+        Conf.tossAdults,
+        Conf.hipPop,
+        Conf.hipBabies,
+        Conf.hipStudents,
+        Conf.hipAdults,
+        Conf.artPop,
+        Conf.artBabies,
+        Conf.artStudents,
+        Conf.artAdults,
+        Conf.employed,
+        Conf.sdf,
+        Conf.tossMorale,
+        Conf.hipMorale,
+        Conf.artMorale,
+        Conf.crime,
+        Conf.storageCap,
+        Conf.inStorage,
+        Conf.food,
+        Conf.energy,
+        Conf.air,
+        Conf.blackout,
+        Conf.noAir,
+        Conf.creche,
+        Conf.uni,
+        Conf.botAging,
+        Conf.leisure
         ];
         var saveDataString = [];
         saveDataString.push(JSON.stringify(saveData));

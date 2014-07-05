@@ -1,27 +1,26 @@
 /**
- * The default configuration constructor. A new Conf() will instantiate all the 
- * main variables with their default values.
- * @constructor
- * @todo Turn this into a namespace, no need for it to be a function
+ * Modularized config namespace that instantiates all our initial values
+ * @namespace Conf
  */
-function Conf() {
+var Conf = (function(){
+    var conf = {};
     /**
     * The radius of the map that we want, changing it should change it everywhere except the html
     * @memberof Conf
     * @member {int} radarRad
     */
-    this.radarRad = 150;
+    conf.radarRad = 150;
     //The zoomed in map related things...
     /**
     * @memberof Conf
     * @member {int} destinationWidth
     */
-    this.destinationWidth = 120;
+    conf.destinationWidth = 120;
     /**
     * @memberof Conf
     * @member {int} destinationHeight
     */
-    this.destinationHeight = 140;
+    conf.destinationHeight = 140;
     /**
     * Number of tiles to show in x-axis according to <tt>Math.ceil(document.width / 90)</tt>
     * @memberof Conf
@@ -36,61 +35,61 @@ function Conf() {
     * @memberof Conf
     * @member {bool} highlight
     */
-    this.highlight = false;
+    conf.highlight = false;
     /**
     * Initial x-position of map on radar (Reticule)
     * @memberof Conf
     * @member {int} retX
     */
-    this.retX = this.radarRad;
+    conf.retX = conf.radarRad;
     /**
     * Initial y-position of map on radar (Reticule)
     * @memberof Conf
     * @member {int} retY
     */
-    this.retY = this.radarRad;
+    conf.retY = conf.radarRad;
     /**
     * Which animation frame we are on for animated tiles
     * @memberof Conf
     * @member {int} animate
     */
-    this.animate = 0;
+    conf.animate = 0;
     /**
     * Whether we're animating forwards or backwards in the animation loop
     * @memberof Conf
     * @member {bool} augment
     */
-    this.augment = true;
+    conf.augment = true;
     /**
     * @memberof Conf
     * @member {bool} fresh
     */
-    this.fresh = true;
+    conf.fresh = true;
     /**
     * @memberof Conf
     * @member {string} clickedOn
     */
-    this.clickedOn = 'none';
+    conf.clickedOn = 'none';
     /**
     * The level the player is currently on
     * @memberof Conf
     * @member {int} level
     */
-    this.level = 0;
+    conf.level = 0;
     /**
     * Source Image for the highlight sprite
     * @memberof Conf
     * @member {Object} tileHighlight
     */
-    this.tileHighlight = new Image();
-    this.tileHighlight.src = 'images/tools.png';
+    conf.tileHighlight = new Image();
+    conf.tileHighlight.src = 'images/tools.png';
     /**
     * Source Image for the main spritesheet
     * @memberof Conf
     * @member {Object} spritesheet
     */
-    this.spritesheet = new Image();
-    this.spritesheet.src = 'images/spritesheet.png';
+    conf.spritesheet = new Image();
+    conf.spritesheet.src = 'images/spritesheet.png';
     /**
     * @member {int} mouseX
     * @memberof Conf
@@ -106,31 +105,31 @@ function Conf() {
     * @memberof Conf
     * @member {HTMLElement} turnNum
     */
-    this.turnNum = document.getElementById('turnNumber');
+    conf.turnNum = document.getElementById('turnNumber');
     /**
     * Which turn it is
     * @memberof Conf
     * @member {int} turn
     */
-    this.turn = 0;
+    conf.turn = 0;
     /**
     * The procedurally generated map, all of it
     * @memberof Conf
     * @member {array} map
     */
-    this.map = [];
+    conf.map = [];
     /**
     * Anythign that's on the map but wasn't procedurally generated, a cheap way of saving user data
     * @memberof Conf
     * @member {array} mapTiles
     */
-    this.mapTiles = [];
+    conf.mapTiles = [];
     /**
     * Coordinates where the player placed their lander
     * @memberof Conf
     * @member {array} home
     */
-    this.home = [150,150];
+    conf.home = [150,150];
     /**
     * The list of buildings according to :
     * [id, availableToPlayer, levelType, name]
@@ -141,7 +140,7 @@ function Conf() {
     * @memberof Conf
     * @member {array} buildings
     */
-    this.buildings = [
+    conf.buildings = [
         ["agri", false, 0, TRANS.agri], //
         ["agri2", false, 0, TRANS.agri2],
         ["airport", false, 0, TRANS.airport],
@@ -193,7 +192,7 @@ function Conf() {
      * @memberof Conf
      * @member {array} robotsList
      */
-    this.robotsList = [
+    conf.robotsList = [
         [0, 5, "dozer", false, 2], //
         [0, 3, "digger", false, 2], //
         [0, 3, "cavernDigger", false, 1], //
@@ -205,20 +204,20 @@ function Conf() {
     * @memberof Conf
     * @member {array} commTowers
     */
-    this.commTowers = [];
+    conf.commTowers = [];
     /**
     * Coordinates of the recyclers on the map
     * @memberof Conf
     * @member {array} recyclerList
     */
-    this.recyclerList = [];
+    conf.recyclerList = [];
     //[[level, y, x]]
     /**
     * Coordinates of the research facilities on the map
     * @memberof Conf
     * @member {array} researchLabs
     */
-    this.researchLabs = [];
+    conf.researchLabs = [];
     /**
     * The current research topic, if any
     * @member {string} currentResearch
@@ -235,7 +234,7 @@ function Conf() {
     * @memberof Conf
     * @member {array} researchTopics
     */
-    this.researchTopics = ["all", 0, [
+    conf.researchTopics = ["all", 0, [
         ["engineering", 0, [
             ["agriculturalEngineering", 0, [
                 ["hydroponics", 0, [], 5, 5],
@@ -338,14 +337,14 @@ function Conf() {
     * @memberof Conf
     * @member {array} ores
     */
-    this.ores = [];
+    conf.ores = [];
     /**
     * List associating the orenames to their processed mineral name
     * [ORENAME,PRODUCTNAME]
     * @memberof Conf
     * @member {array} resourceArray
     */
-    this.resourceArray = [  
+    conf.resourceArray = [  
         [TRANS.bauxite, TRANS.aluminium],
         [TRANS.corundum, TRANS.aluminium],
         [TRANS.kryolite, TRANS.aluminium],
@@ -385,7 +384,7 @@ function Conf() {
     * @memberof Conf
     * @member {array} procOresRadarOpt
     */
-    this.procOresRadarOpt = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+    conf.procOresRadarOpt = [false, false, false, false, false, false, false, false, false, false, false, false, false, false];
     /**
     * The ores that have been processed. The total sum should not exceed the colony's total storage capacity. 
     * Order, with indexes, is: 0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
@@ -393,7 +392,7 @@ function Conf() {
     * @memberof Conf
     * @member {array} procOres
     */
-    this.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 4, 1, 4, 5, 5];
+    conf.procOres = [15, 2, 10, 1, 15, 5, 1, 1, 1, 4, 1, 4, 5, 5];
     /**
     * The language strings for each resource, recovered from the Language Class
     * Order, with indexes, is: 0 Aluminium, 1 Calcium, 2 Copper, 3 Gold, 4 Iron, 5 Lead, 6 Magnesium, 7 Mercury,
@@ -401,14 +400,14 @@ function Conf() {
     * @memberof Conf
     * @member {array} resourceNames
     */
-    this.resourceNames = [TRANS.aluminium, TRANS.calcium, TRANS.copper, TRANS.gold, TRANS.iron, TRANS.lead, TRANS.magnesium, TRANS.mercury, TRANS.phosphorous, TRANS.potassium, TRANS.silver, TRANS.sodium, TRANS.tin, TRANS.zinc];
+    conf.resourceNames = [TRANS.aluminium, TRANS.calcium, TRANS.copper, TRANS.gold, TRANS.iron, TRANS.lead, TRANS.magnesium, TRANS.mercury, TRANS.phosphorous, TRANS.potassium, TRANS.silver, TRANS.sodium, TRANS.tin, TRANS.zinc];
     //Map generation vars
     /**
     * The string from which to seed the map
     * @memberof Conf
     * @member {string} inputSeed
     */
-    this.inputSeed = '';
+    conf.inputSeed = '';
     /**
     * @member {float} rng
     * @memberof Conf
@@ -430,37 +429,37 @@ function Conf() {
     * @memberof Conf
     * @member {HTMLElement} mPanCanvas
     */
-    this.mPanCanvas = document.getElementById('mPanOverlay');
+    conf.mPanCanvas = document.getElementById('mPanOverlay');
     /**
     * @memberof Conf
     * @member {CanvasContext} mPanLoc
     */
-    this.mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
+    conf.mPanLoc = document.getElementById('mPanOverlay').getContext('2d');
     /**
     * @memberof Conf
     * @member {HTMLElement} mPanelCanvas
     */
-    this.mPanelCanvas = document.getElementById('mainPanel');
+    conf.mPanelCanvas = document.getElementById('mainPanel');
     /**
     * @memberof Conf
     * @member {CanvasContext} mPanel
     */
-    this.mPanel = document.getElementById('mainPanel').getContext('2d');
+    conf.mPanel = document.getElementById('mainPanel').getContext('2d');
     /**
     * @memberof Conf
     * @member {HTMLElement} radarCanvas
     */
-    this.radarCanvas = document.getElementById('mapOverlay');
+    conf.radarCanvas = document.getElementById('mapOverlay');
     /**
     * @memberof Conf
     * @member {CanvasContext} radar
     */
-    this.radar = document.getElementById('map').getContext('2d');
+    conf.radar = document.getElementById('map').getContext('2d');
     /**
     * @memberof Conf
     * @member {CanvasContext} radarLoc
     */
-    this.radarLoc = document.getElementById('mapOverlay').getContext('2d');
+    conf.radarLoc = document.getElementById('mapOverlay').getContext('2d');
     /**
     * Accounts for the fact that hexagonal grids, when scrolled up, aren't in line
     * @name yShift
@@ -473,151 +472,151 @@ function Conf() {
     * @memberof Conf
     * @member {array} housing
     */
-    this.housing = [0];
+    conf.housing = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} pop
     */
-    this.pop = [150];
+    conf.pop = [150];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} tossPop
     */
-    this.tossPop = [50];
+    conf.tossPop = [50];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} tossBabies
     */
-    this.tossBabies = [0];
+    conf.tossBabies = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} tossStudents
     */
-    this.tossStudents = [0];
+    conf.tossStudents = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} tossAdults
     */
-    this.tossAdults = [50];
+    conf.tossAdults = [50];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} hipPop
     */
-    this.hipPop = [50];
+    conf.hipPop = [50];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} hipBabies
     */
-    this.hipBabies = [0];
+    conf.hipBabies = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} hipStudents
     */
-    this.hipStudents = [0];
+    conf.hipStudents = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} hipAdults
     */
-    this.hipAdults = [50];
+    conf.hipAdults = [50];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} artPop
     */
-    this.artPop = [50];
+    conf.artPop = [50];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} artBabies
     */
-    this.artBabies = [0];
+    conf.artBabies = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} artStudents
     */
-    this.artStudents = [0];
+    conf.artStudents = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} artAdults
     */
-    this.artAdults = [50];
+    conf.artAdults = [50];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} employed
     */
-    this.employed = [0];
+    conf.employed = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} sdf
     */
-    this.sdf = [150];
+    conf.sdf = [150];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} tossMorale
     */
-    this.tossMorale = [500];
+    conf.tossMorale = [500];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} hipMorale
     */
-    this.hipMorale = [500];
+    conf.hipMorale = [500];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} artMorale
     */
-    this.artMorale = [500];
+    conf.artMorale = [500];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} crime
     */
-    this.crime = [0];
+    conf.crime = [0];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} storageCap
     */
-    this.storageCap = [70 + 50]; //Resources + food + lander capacity
+    conf.storageCap = [70 + 50]; //Resources + food + lander capacity
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} inStorage
     */
-    this.inStorage = [70 + 50]; //Resources + food
+    conf.inStorage = [70 + 50]; //Resources + food
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} food
     */
-    this.food = [50];
+    conf.food = [50];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} energy
     */
-    this.energy = [60];
+    conf.energy = [60];
     /**
     * Stores values for statistics
     * @memberof Conf
     * @member {array} air
     */
-    this.air = [50];
+    conf.air = [50];
 
     //modifiers
     /**
@@ -625,35 +624,37 @@ function Conf() {
     * @memberof Conf
     * @member {int} blackout
     */
-    this.blackout = 0;
+    conf.blackout = 0;
     /**
     * Modifier for Air Shortages
     * @memberof Conf
     * @member {int} noAir
     */
-    this.noAir = 0;
+    conf.noAir = 0;
     /**
     * Modifier for Birth to preschool
     * @memberof Conf
     * @member {int} creche
     */
-    this.creche = 0;
+    conf.creche = 0;
     /**
     * Modifier for Education length
     * @memberof Conf
     * @member {int} uni
     */
-    this.uni = 0;
+    conf.uni = 0;
     /**
     * Modifier for Bot training & testing
     * @memberof Conf
     * @member {int} botAging
     */
-    this.botAging = 0;
+    conf.botAging = 0;
     /**
     * Modifier for Recreation
     * @memberof Conf
     * @member {int} leisure
     */
-    this.leisure = 0;
-}
+    conf.leisure = 0;
+
+    return conf;
+})();

@@ -31,7 +31,7 @@ var Tools = (function(){
 		randomGenerator: function(range, base, seeded) {
 			var min = base || 0;
 			var randomNumber;
-			seeded ? randomNumber = Game.rng.random() : randomNumber = Math.random();
+			seeded ? randomNumber = Conf.rng.random() : randomNumber = Math.random();
 		    return Math.floor(randomNumber * range) + min;
 		},
 

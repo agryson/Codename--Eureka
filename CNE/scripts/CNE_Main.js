@@ -1,6 +1,5 @@
 /*jslint node: true */
 "use strict"; //this will break everything if there's any errors... that's a good thing
-var Game; //Global so I can get at it from other scripts...
 //var saveList = [];
 
 //Nice map: 1363032002367
@@ -174,11 +173,11 @@ function Construction() {
 * @param {int} level Level the tile is on
 */
 function nextTurn(x, y, level) {
-    var tile = Game.mapTiles[level][y][x];
+    var tile = Conf.mapTiles[level][y][x];
 
     var checkMine = function(xIn, yIn, levelIn) {
         for(var i = 0; i < 6; i++) {
-            if(Game.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]] && Game.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]].kind === 221 && !Game.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]].shutdown) {
+            if(Conf.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]] && Conf.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]].kind === 221 && !Conf.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]].shutdown) {
                 return true;
             }
         }
@@ -191,29 +190,29 @@ function nextTurn(x, y, level) {
         if(tile.exists) {
             tile.age += 1;
             //If power is back, FLAME ON!
-            if(Game.energy[Game.energy.length - 1] > 10 && tile.shutdown) {
-                Game.energy[Game.energy.length - 1] += tile.energy;
+            if(Conf.energy[Conf.energy.length - 1] > 10 && tile.shutdown) {
+                Conf.energy[Conf.energy.length - 1] += tile.energy;
                 tile.shutdown = false;
             }
             //Provided everything is good, rock and roll
-            if((Game.energy[Game.energy.length - 1] <= 10 && tile.vital) || Game.energy[Game.energy.length - 1] > 10) {
-                Game.tossBabies[Game.tossBabies.length - 1] += tile.tossPop;
-                Game.hipBabies[Game.hipBabies.length - 1] += tile.hipPop;
-                Game.artBabies[Game.artBabies.length - 1] += tile.artPop;
-                Game.housing[Game.housing.length - 1] += tile.housing;
-                Game.tossMorale[Game.tossMorale.length - 1] += tile.tossMorale;
-                Game.hipMorale[Game.hipMorale.length - 1] += tile.hipMorale;
-                Game.artMorale[Game.artMorale.length - 1] += tile.artMorale;
-                Game.crime[Game.crime.length - 1] += tile.crime;
-                if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= tile.food) {
-                    Game.food[Game.food.length - 1] += tile.food;
-                    Game.inStorage[Game.inStorage.length - 1] += tile.food;
+            if((Conf.energy[Conf.energy.length - 1] <= 10 && tile.vital) || Conf.energy[Conf.energy.length - 1] > 10) {
+                Conf.tossBabies[Conf.tossBabies.length - 1] += tile.tossPop;
+                Conf.hipBabies[Conf.hipBabies.length - 1] += tile.hipPop;
+                Conf.artBabies[Conf.artBabies.length - 1] += tile.artPop;
+                Conf.housing[Conf.housing.length - 1] += tile.housing;
+                Conf.tossMorale[Conf.tossMorale.length - 1] += tile.tossMorale;
+                Conf.hipMorale[Conf.hipMorale.length - 1] += tile.hipMorale;
+                Conf.artMorale[Conf.artMorale.length - 1] += tile.artMorale;
+                Conf.crime[Conf.crime.length - 1] += tile.crime;
+                if(Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1] >= tile.food) {
+                    Conf.food[Conf.food.length - 1] += tile.food;
+                    Conf.inStorage[Conf.inStorage.length - 1] += tile.food;
                 }
-            } else if(Game.energy[Game.energy.length - 1] <= 10 && !tile.vital) {
+            } else if(Conf.energy[Conf.energy.length - 1] <= 10 && !tile.vital) {
                 //Otherwise shutdown for a turn
-                Game.energy[Game.energy.length - 1] -= tile.energy;
+                Conf.energy[Conf.energy.length - 1] -= tile.energy;
                 tile.shutdown = true;
-                Game.blackout = 1;
+                Conf.blackout = 1;
             }
         }
 
@@ -221,41 +220,41 @@ function nextTurn(x, y, level) {
         if(tile.buildTime > 0) {
             tile.buildTime -= 1;
         } else if(tile.buildTime === 0) {
-            tile.ores = Game.map[level][y][x].resources;
+            tile.ores = Conf.map[level][y][x].resources;
             tile.buildTime = -1;
-            Game.mapTiles[level][y][x].ref = changeName(tile.future[1], Game.map[level][y][x].ref);
+            Conf.mapTiles[level][y][x].ref = changeName(tile.future[1], Conf.map[level][y][x].ref);
             tile.exists = true;
-            Game.storageCap[Game.storageCap.length - 1] += tile.storage;
-            Game.energy[Game.energy.length - 1] += tile.energy;
-            Game.employed[Game.employed.length - 1] += tile.employees;
+            Conf.storageCap[Conf.storageCap.length - 1] += tile.storage;
+            Conf.energy[Conf.energy.length - 1] += tile.energy;
+            Conf.employed[Conf.employed.length - 1] += tile.employees;
             if(tile.robot >= 0) {
-                Game.robotsList[tile.robot][0] -= 1;
+                Conf.robotsList[tile.robot][0] -= 1;
                 tile.robot = -1;
             }
             if((tile.kind === 101 && tile.future[0] === 204) || (tile.kind === 102 && tile.future[0] === 221)) {
-                Game.mapTiles[level][y][x] = bobTheBuilder(tile.future[0], x, y, level, false);
+                Conf.mapTiles[level][y][x] = bobTheBuilder(tile.future[0], x, y, level, false);
             } else {
                 tile.kind = tile.future[0];
                 nextTurn(x, y, level);
             }
             if(tile.kind === 203){
-                Game.air[Game.air.length - 1] += tile.air;
+                Conf.air[Conf.air.length - 1] += tile.air;
             }else if(tile.kind >= 208 && tile.kind <= 210){
-                Game.commTowers.push([x, y]);
+                Conf.commTowers.push([x, y]);
             } else if(tile.kind === 222){
-                if(Game.creche <= 12){
-                    Game.creche += 1;
+                if(Conf.creche <= 12){
+                    Conf.creche += 1;
                 }
             } else if(tile.kind === 224){
-                Game.leisure += 1;
+                Conf.leisure += 1;
             } else if(tile.kind === 225){
-                Game.recyclerList.push([x,y,level]);
+                Conf.recyclerList.push([x,y,level]);
             } else if(tile.kind === 227 || tile.kind === 228){
                 console.log('x: ' + x + ' y: ' + y + ' level: '+ level +  tile.researchTopic);
-                Game.researchLabs.push([level, y, x]);
+                Conf.researchLabs.push([level, y, x]);
             } else if(tile.kind === 233){
-                if(Game.uni <= 24){
-                    Game.uni += 1;
+                if(Conf.uni <= 24){
+                    Conf.uni += 1;
                 }
             }
         }
@@ -267,16 +266,16 @@ function nextTurn(x, y, level) {
                 if(tile.ores.length > 0 && tile.ores[ore] > 0) {
                     stillMining = true;
                     var mined = Math.floor(Math.random() + 0.5);
-                    if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= mined) {
+                    if(Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1] >= mined) {
                         tile.ores[ore] -= mined;
-                        Game.inStorage[Game.inStorage.length - 1] += mined;
-                        Game.ores[ore] ? Game.ores[ore] += mined : Game.ores[ore] = mined;
+                        Conf.inStorage[Conf.inStorage.length - 1] += mined;
+                        Conf.ores[ore] ? Conf.ores[ore] += mined : Conf.ores[ore] = mined;
                     }
                 }
             }
             if(!stillMining) {
                 tile.mining = false;
-                Game.mapTiles[level][y][x].ref = changeName(TRANS.minedOut, Game.mapTiles[level][y][x].ref);
+                Conf.mapTiles[level][y][x].ref = changeName(TRANS.minedOut, Conf.mapTiles[level][y][x].ref);
             }
         }
         //TODO: will surely need to fix this after ...
@@ -454,10 +453,10 @@ function nextTurn(x, y, level) {
             var available = [];
             var count = 0;
             var processingLimit = 10;
-            for(var check = 0; check < Game.ores.length; check++) {
-                if(Game.ores[check] && Game.ores[check] > 0) {
+            for(var check = 0; check < Conf.ores.length; check++) {
+                if(Conf.ores[check] && Conf.ores[check] > 0) {
                     available.push(check);
-                    count += Game.ores[check];
+                    count += Conf.ores[check];
                 }
             }
             //go through it, moving a tonne from ore to processed, this is the processing limit of the processor
@@ -466,67 +465,67 @@ function nextTurn(x, y, level) {
             }
             while(count > 0) {
                 var pick = Tools.randomGenerator(available.length, 0);
-                if(Game.ores[available[pick]] > 0) {
-                    Game.ores[available[pick]] -= 1;
+                if(Conf.ores[available[pick]] > 0) {
+                    Conf.ores[available[pick]] -= 1;
                     switch(available[pick]) {
                         //direct ores to the right index of the processed array
                     case 0:
                     case 1:
                     case 2:
-                        Game.procOres[0] += 1;
+                        Conf.procOres[0] += 1;
                         break;
                     case 3:
-                        Game.procOres[1] += 1;
+                        Conf.procOres[1] += 1;
                         break;
                     case 4:
                     case 5:
                     case 6:
-                        Game.procOres[2] += 1;
+                        Conf.procOres[2] += 1;
                         break;
                     case 7:
                     case 8:
-                        Game.procOres[3] += 1;
+                        Conf.procOres[3] += 1;
                         break;
                     case 9:
                     case 10:
                     case 11:
                     case 12:
-                        Game.procOres[4] += 1;
+                        Conf.procOres[4] += 1;
                         break;
                     case 13:
                     case 14:
-                        Game.procOres[5] += 1;
+                        Conf.procOres[5] += 1;
                         break;
                     case 15:
                     case 16:
-                        Game.procOres[6] += 1;
+                        Conf.procOres[6] += 1;
                         break;
                     case 17:
                     case 18:
-                        Game.procOres[7] += 1;
+                        Conf.procOres[7] += 1;
                         break;
                     case 19:
                     case 20:
-                        Game.procOres[8] += 1;
+                        Conf.procOres[8] += 1;
                         break;
                     case 21:
                     case 22:
-                        Game.procOres[9] += 1;
+                        Conf.procOres[9] += 1;
                         break;
                     case 23:
-                        Game.procOres[10] += 1;
+                        Conf.procOres[10] += 1;
                         break;
                     case 24:
                     case 25:
-                        Game.procOres[11] += 1;
+                        Conf.procOres[11] += 1;
                         break;
                     case 26:
                     case 27:
-                        Game.procOres[12] += 1;
+                        Conf.procOres[12] += 1;
                         break;
                     case 28:
                     case 29:
-                        Game.procOres[13] += 1;
+                        Conf.procOres[13] += 1;
                         break;
                     default:
                         console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + available[pick]);
@@ -562,21 +561,21 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
     var eta = function(turns) {
         var lowModifier = 1.5;
         var highModifier = 2.4;
-        if(Game.map[level][y][x].kind === 1 || Game.map[level][y][x].kind === 6) {
+        if(Conf.map[level][y][x].kind === 1 || Conf.map[level][y][x].kind === 6) {
             return Math.floor(turns * lowModifier);
-        } else if(Game.map[level][y][x].kind === 2 || Game.map[level][y][x].kind === 7) {
+        } else if(Conf.map[level][y][x].kind === 2 || Conf.map[level][y][x].kind === 7) {
             return Math.floor(turns * highModifier);
         } else {
             return turns;
         }
     };
 
-    if(Game.map[level][y][x].kind !== 4) {
+    if(Conf.map[level][y][x].kind !== 4) {
         var o = new Construction();
         o.kind = 100;
         o.position = [level, x, y];
         if(kind >= 200 && kind < 300) {
-            o.ref = changeName(TRANS.building + Game.buildings[kind - 200][3], Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.building + Conf.buildings[kind - 200][3], Conf.map[level][y][x].ref);
         }
         console.log(kind);
         switch(kind) {
@@ -585,9 +584,9 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.vital = true;
             o.buildTime = eta(2);
             o.future = [3, TRANS.prepared];
-            o.ref = changeName(TRANS.preparing, Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.preparing, Conf.map[level][y][x].ref);
             o.robot = 0;
-            Game.robotsList[0][0] += 1;
+            Conf.robotsList[0][0] += 1;
             reCount('dozer');
             break;
         case 101:
@@ -597,18 +596,18 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             if(builderBot) {
                 o.future = [204, TRANS.building];
             }
-            o.ref = changeName(TRANS.digging, Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.digging, Conf.map[level][y][x].ref);
             o.robot = 1;
-            Game.robotsList[1][0] += 1;
+            Conf.robotsList[1][0] += 1;
             reCount('digger');
             break;
         case 101101:
             o.vital = true;
             o.kind = 8;
             o.buildTime = eta(3);
-            o.future = [Game.map[level][y][x].kind - 5, TRANS.cavern];
+            o.future = [Conf.map[level][y][x].kind - 5, TRANS.cavern];
             o.kind = 8;
-            o.ref = changeName(TRANS.diggingCavern, Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.diggingCavern, Conf.map[level][y][x].ref);
             reCount('cavernDigger');
             break;
 
@@ -619,27 +618,27 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             if(builderBot) {
                 o.future = [221, TRANS.building];
             }
-            o.ref = changeName(TRANS.mining, Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.mining, Conf.map[level][y][x].ref);
             o.mining = true;
             o.robot = 3;
-            Game.robotsList[3][0] += 1;
+            Conf.robotsList[3][0] += 1;
             reCount('miner');
             break;
         case 102102:
             o.vital = true;
             o.buildTime = 2;
-            o.kind = Game.map[level][y][x].kind;
-            if(Game.map[level][y][x].kind > 8 || builderBot) {
+            o.kind = Conf.map[level][y][x].kind;
+            if(Conf.map[level][y][x].kind > 8 || builderBot) {
                 if(builderBot) {
                     o.future = [221, TRANS.building];
                 } else {
                     o.future = [o.kind, TRANS.mining];
                 }
-                o.ref = changeName(TRANS.mining, Game.map[level][y][x].ref);
+                o.ref = changeName(TRANS.mining, Conf.map[level][y][x].ref);
                 o.mining = true;
             } else if(level > 0) {
-                o.future = [Game.map[level][y][x].kind - 5, TRANS.cavern];
-                o.kind = Game.map[level][y][x].kind - 5;
+                o.future = [Conf.map[level][y][x].kind - 5, TRANS.cavern];
+                o.kind = Conf.map[level][y][x].kind - 5;
             }
             break;
         case 103:
@@ -1168,7 +1167,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 50;
             o.energy = 60;
             o.future = [kind, TRANS.lander];
-            o.ref = changeName(TRANS.lander, Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.lander, Conf.map[level][y][x].ref);
             break;
         default:
             console.log("Bob can't build it... :( " + kind);
@@ -1242,14 +1241,14 @@ function Terrain() {
 */
 function recycle(kind, x, y, level){
     var recycled = false;
-    for(var i = 0; i < Game.recyclerList.length; i++){
-        if(!Game.mapTiles[Game.recyclerList[i][2]][Game.recyclerList[i][1]][Game.recyclerList[i][0]][1].shutdown && !recycled){
+    for(var i = 0; i < Conf.recyclerList.length; i++){
+        if(!Conf.mapTiles[Conf.recyclerList[i][2]][Conf.recyclerList[i][1]][Conf.recyclerList[i][0]][1].shutdown && !recycled){
             recycled = true;
-            Game.mapTiles[level][y][x][1] = bobTheBuilder(103, x, y, level);
+            Conf.mapTiles[level][y][x][1] = bobTheBuilder(103, x, y, level);
             var recovered = resourceNeededList(getBuildingRef(kind), false, true);
             for(var j = 0; j < recovered.length; j++){
-                if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= recovered[j][1]){
-                    Game.procOres[recovered[j][0]] += recovered[j][1];
+                if(Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1] >= recovered[j][1]){
+                    Conf.procOres[recovered[j][0]] += recovered[j][1];
                 } else {
                     printConsole(TRANS.recycleFailure);
                 }
@@ -1270,95 +1269,95 @@ function recycle(kind, x, y, level){
 * Pushes all tracked data to the relevant places for in-game statistics
 */
 function setStats() {
-    Game.crime.push(0);
-    Game.inStorage.push(Game.inStorage[Game.inStorage.length - 1]);
-    Game.storageCap.push(Game.storageCap[Game.storageCap.length - 1]);
-    Game.tossBabies.push(Game.tossBabies[Game.tossBabies.length - 1]);
-    Game.tossStudents.push(Game.tossStudents[Game.tossStudents.length - 1]);
-    Game.tossAdults.push(Game.tossAdults[Game.tossAdults.length - 1]);
-    Game.tossPop.push(Math.floor(Game.tossBabies[Game.tossBabies.length - 1] + Game.tossStudents[Game.tossStudents.length - 1] + Game.tossAdults[Game.tossAdults.length - 1]));
-    Game.hipBabies.push(Game.hipBabies[Game.hipBabies.length - 1]);
-    Game.hipStudents.push(Game.hipStudents[Game.hipStudents.length - 1]);
-    Game.hipAdults.push(Game.hipAdults[Game.hipAdults.length - 1]);
-    Game.hipPop.push(Math.floor(Game.hipBabies[Game.hipBabies.length - 1] + Game.hipStudents[Game.hipStudents.length - 1] + Game.hipAdults[Game.hipAdults.length - 1]));
-    Game.artBabies.push(Game.artBabies[Game.artBabies.length - 1]);
-    Game.artStudents.push(Game.artStudents[Game.artStudents.length - 1]);
-    Game.artAdults.push(Game.artAdults[Game.artAdults.length - 1]);
-    Game.artPop.push(Math.floor(Game.artBabies[Game.artBabies.length - 1] + Game.artStudents[Game.artStudents.length - 1] + Game.artAdults[Game.artAdults.length - 1]));
-    var uniMod = 216 - Game.uni;
-    if(Game.turn > uniMod){
+    Conf.crime.push(0);
+    Conf.inStorage.push(Conf.inStorage[Conf.inStorage.length - 1]);
+    Conf.storageCap.push(Conf.storageCap[Conf.storageCap.length - 1]);
+    Conf.tossBabies.push(Conf.tossBabies[Conf.tossBabies.length - 1]);
+    Conf.tossStudents.push(Conf.tossStudents[Conf.tossStudents.length - 1]);
+    Conf.tossAdults.push(Conf.tossAdults[Conf.tossAdults.length - 1]);
+    Conf.tossPop.push(Math.floor(Conf.tossBabies[Conf.tossBabies.length - 1] + Conf.tossStudents[Conf.tossStudents.length - 1] + Conf.tossAdults[Conf.tossAdults.length - 1]));
+    Conf.hipBabies.push(Conf.hipBabies[Conf.hipBabies.length - 1]);
+    Conf.hipStudents.push(Conf.hipStudents[Conf.hipStudents.length - 1]);
+    Conf.hipAdults.push(Conf.hipAdults[Conf.hipAdults.length - 1]);
+    Conf.hipPop.push(Math.floor(Conf.hipBabies[Conf.hipBabies.length - 1] + Conf.hipStudents[Conf.hipStudents.length - 1] + Conf.hipAdults[Conf.hipAdults.length - 1]));
+    Conf.artBabies.push(Conf.artBabies[Conf.artBabies.length - 1]);
+    Conf.artStudents.push(Conf.artStudents[Conf.artStudents.length - 1]);
+    Conf.artAdults.push(Conf.artAdults[Conf.artAdults.length - 1]);
+    Conf.artPop.push(Math.floor(Conf.artBabies[Conf.artBabies.length - 1] + Conf.artStudents[Conf.artStudents.length - 1] + Conf.artAdults[Conf.artAdults.length - 1]));
+    var uniMod = 216 - Conf.uni;
+    if(Conf.turn > uniMod){
         var tossGrads = 0;
-        if(Game.tossStudents[Game.tossStudents.length - uniMod] !== Game.tossStudents[Game.tossStudents.length - uniMod - 1]){
-            tossGrads = Game.tossStudents[Game.tossStudents.length - uniMod - 1] - Game.tossStudents[Game.tossStudents.length - uniMod];
+        if(Conf.tossStudents[Conf.tossStudents.length - uniMod] !== Conf.tossStudents[Conf.tossStudents.length - uniMod - 1]){
+            tossGrads = Conf.tossStudents[Conf.tossStudents.length - uniMod - 1] - Conf.tossStudents[Conf.tossStudents.length - uniMod];
         }
         var hipGrads = 0;
-        if(Game.hipStudents[Game.hipStudents.length - uniMod] !== Game.hipStudents[Game.hipStudents.length - uniMod - 1]){
-            hipGrads = Game.hipStudents[Game.hipStudents.length - uniMod - 1] - Game.hipStudents[Game.hipStudents.length - uniMod];
+        if(Conf.hipStudents[Conf.hipStudents.length - uniMod] !== Conf.hipStudents[Conf.hipStudents.length - uniMod - 1]){
+            hipGrads = Conf.hipStudents[Conf.hipStudents.length - uniMod - 1] - Conf.hipStudents[Conf.hipStudents.length - uniMod];
         }
         if(tossGrads > 0 || hipGrads > 0){
-            Game.tossAdults[Game.tossAdults.length - 1] += tossGrads;
-            Game.hipAdults[Game.hipAdults.length - 1] += hipGrads;
-            Game.tossStudents[Game.tossStudents.length - 1] -= tossGrads;
-            Game.hipStudents[Game.hipStudents.length - 1] -= hipGrads;
+            Conf.tossAdults[Conf.tossAdults.length - 1] += tossGrads;
+            Conf.hipAdults[Conf.hipAdults.length - 1] += hipGrads;
+            Conf.tossStudents[Conf.tossStudents.length - 1] -= tossGrads;
+            Conf.hipStudents[Conf.hipStudents.length - 1] -= hipGrads;
         }
     }
-    var crecheMod = 36 - Game.creche;
-    if(Game.turn >= crecheMod){
+    var crecheMod = 36 - Conf.creche;
+    if(Conf.turn >= crecheMod){
         var tossKids;
-        if(Math.floor(Game.tossBabies[Game.tossBabies.length - crecheMod]) !== Math.floor(Game.tossBabies[Game.tossBabies.length - crecheMod - 1])){
-            tossKids = Math.floor(Game.tossBabies[Game.tossBabies.length - crecheMod - 1]) - Math.floor(Game.tossBabies[Game.tossBabies.length - crecheMod]);
+        if(Math.floor(Conf.tossBabies[Conf.tossBabies.length - crecheMod]) !== Math.floor(Conf.tossBabies[Conf.tossBabies.length - crecheMod - 1])){
+            tossKids = Math.floor(Conf.tossBabies[Conf.tossBabies.length - crecheMod - 1]) - Math.floor(Conf.tossBabies[Conf.tossBabies.length - crecheMod]);
         }
         var hipKids = 0;
-        if(Math.floor(Game.hipBabies[Game.hipBabies.length - crecheMod]) !== Math.floor(Game.hipBabies[Game.hipBabies.length - crecheMod - 1])){
-            hipKids = Math.floor(Game.hipBabies[Game.hipBabies.length - crecheMod - 1]) - Math.floor(Game.hipBabies[Game.hipBabies.length - crecheMod]);
+        if(Math.floor(Conf.hipBabies[Conf.hipBabies.length - crecheMod]) !== Math.floor(Conf.hipBabies[Conf.hipBabies.length - crecheMod - 1])){
+            hipKids = Math.floor(Conf.hipBabies[Conf.hipBabies.length - crecheMod - 1]) - Math.floor(Conf.hipBabies[Conf.hipBabies.length - crecheMod]);
         }
         if(tossKids > 0 || hipKids > 0){
-            Game.tossStudents[Game.tossStudents.length - 1] += tossKids;
-            Game.hipStudents[Game.hipStudents.length - 1] += hipKids;
-            Game.tossBabies[Game.tossBabies.length - 1] -= tossKids;
-            Game.hipBabies[Game.hipBabies.length - 1] -= hipKids;
+            Conf.tossStudents[Conf.tossStudents.length - 1] += tossKids;
+            Conf.hipStudents[Conf.hipStudents.length - 1] += hipKids;
+            Conf.tossBabies[Conf.tossBabies.length - 1] -= tossKids;
+            Conf.hipBabies[Conf.hipBabies.length - 1] -= hipKids;
         }
     }
-    var botBirth = 10 - Game.botAging;
-    if(Game.turn >= botBirth){
+    var botBirth = 10 - Conf.botAging;
+    if(Conf.turn >= botBirth){
         var artGrads = 0;
-        if(Game.artStudents[Game.artStudents.length - botBirth] !== Game.artStudents[Game.artStudents.length - botBirth - 1]){
-            artGrads = Game.artStudents[Game.artStudents.length - botBirth - 1] - Game.artStudents[Game.artStudents.length - botBirth];
+        if(Conf.artStudents[Conf.artStudents.length - botBirth] !== Conf.artStudents[Conf.artStudents.length - botBirth - 1]){
+            artGrads = Conf.artStudents[Conf.artStudents.length - botBirth - 1] - Conf.artStudents[Conf.artStudents.length - botBirth];
         }
         var artKids = 0;
-        if(Math.floor(Game.artBabies[Game.artBabies.length - botBirth]) !== Math.floor(Game.artBabies[Game.artBabies.length - botBirth - 1])){
-            artKids = Math.floor(Game.artBabies[Game.artBabies.length - botBirth - 1]) - Math.floor(Game.artBabies[Game.artBabies.length - botBirth]);
+        if(Math.floor(Conf.artBabies[Conf.artBabies.length - botBirth]) !== Math.floor(Conf.artBabies[Conf.artBabies.length - botBirth - 1])){
+            artKids = Math.floor(Conf.artBabies[Conf.artBabies.length - botBirth - 1]) - Math.floor(Conf.artBabies[Conf.artBabies.length - botBirth]);
         }
         if(artGrads > 0 || artKids > 0){
-            Game.artStudents[Game.artStudents.length - 1] += artKids;
-            Game.artAdults[Game.artAdults.length - 1] += artGrads;
-            Game.artBabies[Game.artBabies.length - 1] -= artKids;
-            Game.artStudents[Game.artStudents.length - 1] -= artGrads;
+            Conf.artStudents[Conf.artStudents.length - 1] += artKids;
+            Conf.artAdults[Conf.artAdults.length - 1] += artGrads;
+            Conf.artBabies[Conf.artBabies.length - 1] -= artKids;
+            Conf.artStudents[Conf.artStudents.length - 1] -= artGrads;
         }
     }
 
-    Game.pop.push(Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1] + Game.artPop[Game.artPop.length - 1]);
-    Game.sdf.push(Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]));
-    Game.housing.push(0);
-    Game.employed.push(Game.employed[Game.employed.length - 1]);
-    var foodConsumption = Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1]) / 15);
-    if(Game.food[Game.food.length - 1] >= foodConsumption){
-        Game.food.push(Game.food[Game.food.length - 1] - foodConsumption);
-        Game.inStorage[Game.inStorage.length - 1] -= foodConsumption;
+    Conf.pop.push(Conf.tossPop[Conf.tossPop.length - 1] + Conf.hipPop[Conf.hipPop.length - 1] + Conf.artPop[Conf.artPop.length - 1]);
+    Conf.sdf.push(Conf.pop[Conf.pop.length - 1] - Math.floor(Conf.housing[Conf.housing.length - 1]));
+    Conf.housing.push(0);
+    Conf.employed.push(Conf.employed[Conf.employed.length - 1]);
+    var foodConsumption = Math.floor((Conf.tossPop[Conf.tossPop.length - 1] + Conf.hipPop[Conf.hipPop.length - 1]) / 15);
+    if(Conf.food[Conf.food.length - 1] >= foodConsumption){
+        Conf.food.push(Conf.food[Conf.food.length - 1] - foodConsumption);
+        Conf.inStorage[Conf.inStorage.length - 1] -= foodConsumption;
     } else {
-        Game.inStorage[Game.inStorage.length - 1] -= Game.food[Game.food.length - 1];
-        Game.food.push(0);
+        Conf.inStorage[Conf.inStorage.length - 1] -= Conf.food[Conf.food.length - 1];
+        Conf.food.push(0);
     }
-    Game.air.push(Game.air[Game.air.length - 1]);
-    Game.energy.push(Game.energy[Game.energy.length - 1]);
-    Game.turn += 1;
+    Conf.air.push(Conf.air[Conf.air.length - 1]);
+    Conf.energy.push(Conf.energy[Conf.energy.length - 1]);
+    Conf.turn += 1;
     //Morale
-    Game.tossMorale.push(Game.tossMorale[Game.tossMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 10 + (Game.leisure * 2));
-    Game.hipMorale.push(Game.hipMorale[Game.hipMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 3) + Math.floor(Game.food[Game.food.length - 1]) - Game.blackout * 10 + (Game.leisure * 2));
-    Game.artMorale.push(Game.artMorale[Game.artMorale.length - 1] - Math.floor(Game.sdf[Game.sdf.length - 1] / 5) - Game.blackout * 20 + Game.leisure);
+    Conf.tossMorale.push(Conf.tossMorale[Conf.tossMorale.length - 1] - Math.floor(Conf.sdf[Conf.sdf.length - 1] / 3) + Math.floor(Conf.food[Conf.food.length - 1]) - Conf.blackout * 10 + (Conf.leisure * 2));
+    Conf.hipMorale.push(Conf.hipMorale[Conf.hipMorale.length - 1] - Math.floor(Conf.sdf[Conf.sdf.length - 1] / 3) + Math.floor(Conf.food[Conf.food.length - 1]) - Conf.blackout * 10 + (Conf.leisure * 2));
+    Conf.artMorale.push(Conf.artMorale[Conf.artMorale.length - 1] - Math.floor(Conf.sdf[Conf.sdf.length - 1] / 5) - Conf.blackout * 20 + Conf.leisure);
 
     //reset modifiers
-    Game.blackout = 0;
+    Conf.blackout = 0;
 }
 
 
@@ -1367,40 +1366,40 @@ function setStats() {
 * Corrects the statistics for illogical stuff (percentages over 100 etc.)
 */
 function saneStats(){
-    if(Game.crime[Game.crime.length - 1] < 0){
-        Game.crime[Game.crime.length - 1] = 0;
+    if(Conf.crime[Conf.crime.length - 1] < 0){
+        Conf.crime[Conf.crime.length - 1] = 0;
     }
-    if(Game.tossMorale[Game.tossMorale.length - 1] <= 0){
-        Game.tossMorale[Game.tossMorale.length - 1] = 1;
+    if(Conf.tossMorale[Conf.tossMorale.length - 1] <= 0){
+        Conf.tossMorale[Conf.tossMorale.length - 1] = 1;
     }
-    if(Game.tossMorale[Game.tossMorale.length - 1] > 1000){
-        Game.tossMorale[Game.tossMorale.length - 1] = 1000;
+    if(Conf.tossMorale[Conf.tossMorale.length - 1] > 1000){
+        Conf.tossMorale[Conf.tossMorale.length - 1] = 1000;
     }
-    if(Game.hipMorale[Game.hipMorale.length - 1] <= 0){
-        Game.hipMorale[Game.hipMorale.length - 1] = 1;
+    if(Conf.hipMorale[Conf.hipMorale.length - 1] <= 0){
+        Conf.hipMorale[Conf.hipMorale.length - 1] = 1;
     }
-    if(Game.hipMorale[Game.hipMorale.length - 1] > 1000){
-        Game.hipMorale[Game.hipMorale.length - 1] = 1000;
+    if(Conf.hipMorale[Conf.hipMorale.length - 1] > 1000){
+        Conf.hipMorale[Conf.hipMorale.length - 1] = 1000;
     }
-    if(Game.artMorale[Game.artMorale.length - 1] <= 0){
-        Game.artMorale[Game.artMorale.length - 1] = 1;
+    if(Conf.artMorale[Conf.artMorale.length - 1] <= 0){
+        Conf.artMorale[Conf.artMorale.length - 1] = 1;
     }
-    if(Game.artMorale[Game.artMorale.length - 1] > 1000){
-        Game.artMorale[Game.artMorale.length - 1] = 1000;
+    if(Conf.artMorale[Conf.artMorale.length - 1] > 1000){
+        Conf.artMorale[Conf.artMorale.length - 1] = 1000;
     }
-    if(Game.food[Game.food.length - 1] < 0){
-        Game.food[Game.food.length - 1] = 0;
+    if(Conf.food[Conf.food.length - 1] < 0){
+        Conf.food[Conf.food.length - 1] = 0;
     }
-    var airAvailable = Game.air[Game.air.length - 1] - Math.floor((Game.tossPop[Game.tossPop.length -1] + Game.hipPop[Game.hipPop.length - 1])/10);
+    var airAvailable = Conf.air[Conf.air.length - 1] - Math.floor((Conf.tossPop[Conf.tossPop.length -1] + Conf.hipPop[Conf.hipPop.length - 1])/10);
     if(airAvailable <= 0){
-        Game.air[Game.air.length - 1] = 0;
-        Game.noAir += 50;
+        Conf.air[Conf.air.length - 1] = 0;
+        Conf.noAir += 50;
         printConsole(TRANS.noAir);
     } else {
-        Game.noAir = 0;
+        Conf.noAir = 0;
     }
 
-    Game.sdf[Game.sdf.length - 1] = Game.pop[Game.pop.length - 1] - Math.floor(Game.housing[Game.housing.length - 1]);
+    Conf.sdf[Conf.sdf.length - 1] = Conf.pop[Conf.pop.length - 1] - Math.floor(Conf.housing[Conf.housing.length - 1]);
 
 }
 
@@ -1423,7 +1422,7 @@ function drawGraph(type, outputId, sourceData, from0) {
     //Get our max and min values from the input data
     var sourceClean = [];
     for(var m = 0; m < sourceData.length; m++){
-        if(document.getElementById("10Week").checked && Game.turn >= 10){
+        if(document.getElementById("10Week").checked && Conf.turn >= 10){
             sourceClean.push(sourceData[m][0].slice(-11));
         } else {
             sourceClean.push(sourceData[m][0]);
@@ -1487,7 +1486,7 @@ function drawGraph(type, outputId, sourceData, from0) {
             var tenOnly = 0;
             var tenLimit = sourceData[n][0].length - 1;
             var sepY = Math.floor(canH / sourceData[max(sourceData[n][0])]);
-            if(document.getElementById("10Week").checked && Game.turn >= 10){
+            if(document.getElementById("10Week").checked && Conf.turn >= 10){
                 sepX = Math.floor(canW / 10);
                 sepY = Math.floor(canH / sourceData[max(sourceData[n][0].slice(-11))]);
                 tenOnly = sourceData[n][0].length - 11;
@@ -1501,7 +1500,7 @@ function drawGraph(type, outputId, sourceData, from0) {
             con.moveTo(0, canH - normal(tenOnly, sourceData[n][0], canH));
             for(var k = 1; k <= tenLimit; k++) {
                 var recent = k;
-                if(document.getElementById("10Week").checked && Game.turn >= 10){
+                if(document.getElementById("10Week").checked && Conf.turn >= 10){
                     recent = sourceData[n][0].length - (11 - k);
                 }
                 con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0], canH));
@@ -1586,7 +1585,7 @@ function drawGraph(type, outputId, sourceData, from0) {
         console.log("Lies, lies and damned statistics" + sourceData);
     }
     //Legend, we only draw it once
-    if(Game.fresh){
+    if(Conf.fresh){
         var canL = document.getElementById(outputId + 'Legend');
         var conL = canL.getContext('2d');
         conL.clearRect(0, 0, canW, canH);
@@ -1617,11 +1616,11 @@ function drawGraph(type, outputId, sourceData, from0) {
 * Populates the research menu
 */
 function fillResearchMenu(){
-    var source = Game.researchTopics[2];
+    var source = Conf.researchTopics[2];
 
     //Tier0
     for(var i = 0; i < source.length; i++){
-        if(Game.researchTopics[3] === 0){
+        if(Conf.researchTopics[3] === 0){
             var tier0 = document.getElementById(source[i][0]);
             if(!tier0.classList.contains('research_active')){
                 tier0.classList.add('research_active');
@@ -1697,25 +1696,25 @@ function fillResearchPanel(ident){
         activeLabs.innerHTML = TRANS.active;
         frag.appendChild(activeLabs);
         var noActive = true;
-        for(var i = 0; i < Game.researchLabs.length; i++){
-            var lab = Game.researchLabs[i];
-            if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic !== 'noResearch'){
+        for(var i = 0; i < Conf.researchLabs.length; i++){
+            var lab = Conf.researchLabs[i];
+            if(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic !== 'noResearch'){
                 noActive = false;
                 var item = document.createElement('div');
                 item.classList.add('research_panel_item');
                 var img = document.createElement('img');
-                img.src = 'images/researchIllustrations/' + Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic + '.png';
+                img.src = 'images/researchIllustrations/' + Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic + '.png';
                 var ref = document.createElement('p');
-                ref.innerHTML = Game.mapTiles[lab[0]][lab[1]][lab[2]].ref;
+                ref.innerHTML = Conf.mapTiles[lab[0]][lab[1]][lab[2]].ref;
                 var current = document.createElement('p');
-                if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic === 'noResearch'){
+                if(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic === 'noResearch'){
                     current.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
                 } else {
-                    current.innerHTML = TRANS.currentResearch + ' ' + TRANS[Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
+                    current.innerHTML = TRANS.currentResearch + ' ' + TRANS[Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
                 }
                 var progressBar = document.createElement('div');
                 progressBar.classList.add('research_bar_frame');
-                progressBar.classList.add('research_progress_' + researchProgress(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
+                progressBar.classList.add('research_progress_' + researchProgress(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
                 item.appendChild(img);
                 item.appendChild(ref);
                 item.appendChild(current);
@@ -1732,16 +1731,16 @@ function fillResearchPanel(ident){
         available.innerHTML = TRANS.availableLabs;
         frag.appendChild(available);
         var noAvailable = true;
-        for(var j = 0; j < Game.researchLabs.length; j++){
-            var freeLab = Game.researchLabs[j];
-            if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
+        for(var j = 0; j < Conf.researchLabs.length; j++){
+            var freeLab = Conf.researchLabs[j];
+            if(Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
                 noAvailable = false;
                 var itemFree = document.createElement('div');
                 itemFree.classList.add('research_panel_item');
                 var imgFree = document.createElement('img');
-                imgFree.src = 'images/researchIllustrations/' + Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic + '.png';
+                imgFree.src = 'images/researchIllustrations/' + Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic + '.png';
                 var refFree = document.createElement('p');
-                refFree.innerHTML = Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
+                refFree.innerHTML = Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
                 var currentNone = document.createElement('p');
                 currentNone.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
                 itemFree.appendChild(imgFree);
@@ -1793,7 +1792,7 @@ function fillResearchPanel(ident){
 * @returns {array} The {@link Conf.researchTopics} sub-array that corresponds to <tt>topic</tt>
 */
 function researchTopicRef(topic){
-    var source = Game.researchTopics[2];
+    var source = Conf.researchTopics[2];
     for(var i = 0; i < source.length; i++){
         if(source[i][0] === topic){
             return source[i];
@@ -1853,21 +1852,21 @@ function listLabs(ident){
     available.innerHTML = TRANS.availableLabs;
     frag.appendChild(available);
     var noAvailable = true;
-    for(var j = 0; j < Game.researchLabs.length; j++){
-        var freeLab = Game.researchLabs[j];
-        if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
+    for(var j = 0; j < Conf.researchLabs.length; j++){
+        var freeLab = Conf.researchLabs[j];
+        if(Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
             noAvailable = false;
             var itemFree = document.createElement('div');
             itemFree.classList.add('research_panel_item');
             var imgFree = document.createElement('img');
-            imgFree.src = 'images/researchIllustrations/' + Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic + '.png';
+            imgFree.src = 'images/researchIllustrations/' + Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic + '.png';
             var refFree = document.createElement('p');
-            refFree.innerHTML = Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
+            refFree.innerHTML = Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
             var current = document.createElement('p');
-            if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
+            if(Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
                 current.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
             } else {
-                current.innerHTML = TRANS.currentResearch + ' ' + TRANS[Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic];
+                current.innerHTML = TRANS.currentResearch + ' ' + TRANS[Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic];
             }
             var studyBtn = document.createElement('button');
             studyBtn.id = 'studyBtn' + j;
@@ -1892,21 +1891,21 @@ function listLabs(ident){
     activeLabs.innerHTML = TRANS.active;
     frag.appendChild(activeLabs);
     var noActive = true;
-    for(var i = 0; i < Game.researchLabs.length; i++){
-        var lab = Game.researchLabs[i];
-        if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic !== 'noResearch'){
+    for(var i = 0; i < Conf.researchLabs.length; i++){
+        var lab = Conf.researchLabs[i];
+        if(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic !== 'noResearch'){
             noActive = false;
             var item = document.createElement('div');
             item.classList.add('research_panel_item');
             var img = document.createElement('img');
-            img.src = 'images/researchIllustrations/' + Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic + '.png';
+            img.src = 'images/researchIllustrations/' + Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic + '.png';
             var ref = document.createElement('p');
-            ref.innerHTML = Game.mapTiles[lab[0]][lab[1]][lab[2]].ref;
+            ref.innerHTML = Conf.mapTiles[lab[0]][lab[1]][lab[2]].ref;
             var current2 = document.createElement('p');
-            current2.innerHTML = TRANS.currentResearch + ' ' + TRANS[Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
+            current2.innerHTML = TRANS.currentResearch + ' ' + TRANS[Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
             var progressBar = document.createElement('div');
             progressBar.classList.add('research_bar_frame');
-            progressBar.classList.add('research_progress_' + researchProgress(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
+            progressBar.classList.add('research_progress_' + researchProgress(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
             var cancelBtn = document.createElement('button');
             cancelBtn.id = 'cancelBtn' + i;
             cancelBtn.innerHTML = TRANS.stopResearch;
@@ -1937,7 +1936,7 @@ function listLabs(ident){
             var x = studyList[s][1][2];
             var obj = document.getElementById(id);
             var objFn = function(){
-                Game.mapTiles[level][y][x].researchTopic = ident;
+                Conf.mapTiles[level][y][x].researchTopic = ident;
                 listLabs(ident);
             };
             obj.addEventListener('click', objFn, false);
@@ -1951,7 +1950,7 @@ function listLabs(ident){
             var x = cancelList[c][1][2];
             var obj = document.getElementById(id);
             var objFn = function(){
-                Game.mapTiles[level][y][x].researchTopic = 'noResearch';
+                Conf.mapTiles[level][y][x].researchTopic = 'noResearch';
                 listLabs(ident);
             };
             obj.addEventListener('click', objFn, false);
@@ -2015,8 +2014,8 @@ function eavesdrop() {
         if(!exec.classList.contains('exec_hidden')){
             menu(exec, execButton, 'exec_hidden');
         }
-        for(var i = 0; i < Game.robotsList.length; i++) {
-            Game.robotsList[i][3] = false;
+        for(var i = 0; i < Conf.robotsList.length; i++) {
+            Conf.robotsList[i][3] = false;
         }
         Game = null;
         document.getElementById('statsContainer').classList.add('exec_hidden');
@@ -2030,7 +2029,6 @@ function eavesdrop() {
         FileIO.loadList();
     };
     document.getElementById('login').onclick = function() {
-        Game = new Conf();
         var Generator = new NewGame();
         checkBuildings();
         reCount('all');
@@ -2081,15 +2079,15 @@ function eavesdrop() {
     //Canvas Map
     var mainMap = document.getElementById('mPanOverlay');
     mainMap.onmousemove = function(evt) {
-        getMousePos(Game.mPanCanvas, evt, true); //tracker
+        getMousePos(Conf.mPanCanvas, evt, true); //tracker
         document.getElementById('console').classList.remove('console_open');
         document.getElementById('consoleInput').blur();
     };
     mainMap.onmouseover = function() {
-        Game.highlight = true;
+        Conf.highlight = true;
     };
     mainMap.onmouseout = function() {
-        Game.mPanLoc.clearRect(0, 0, document.width, document.height + 50);
+        Conf.mPanLoc.clearRect(0, 0, document.width, document.height + 50);
     };
     mainMap.onclick = function() {
         clicked();
@@ -2110,8 +2108,8 @@ function eavesdrop() {
                 setTimeout(function() {
                     blocked = false;
                 }, 500);
-                Game.retY = Game.retY - Math.round(Game.yLimit / 2) + getTile('y') + 2;
-                Game.retX = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
+                Conf.retY = Conf.retY - Math.round(Conf.yLimit / 2) + getTile('y') + 2;
+                Conf.retX = Conf.retX - Math.round(Conf.xLimit / 2) + getTile('x');
             };
         if(event.wheelDelta > 0 && val < zoomMax) {
             if(!blocked) {
@@ -2155,24 +2153,24 @@ function eavesdrop() {
             radar.classList.remove('menu_hidden');
             radar.classList.add('menu_visible');
         }
-        Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
+        Conf.mPanLoc.clearRect(0, 0, Conf.mPanCanvas.width, Conf.mPanCanvas.height);
     };
     var radarMap = document.getElementById('mapOverlay');
     radarMap.onclick = function(evt) {
-        getMousePos(Game.radarCanvas, evt);
-        Game.highlight = false;
+        getMousePos(Conf.radarCanvas, evt);
+        Conf.highlight = false;
         jump();
     };
     radarMap.onmouseover = function() {
-        Game.highlight = false;
+        Conf.highlight = false;
     };
     radarMap.onmouseout = function() {
-        Game.radarCanvas.onmousemove = null;
+        Conf.radarCanvas.onmousemove = null;
     };
     window.oncontextmenu = function(ev) {
         ev.preventDefault();
         //ev.stopPropagation();
-        if(Game.highlight) {
+        if(Conf.highlight) {
             rightClicked();
         }
         return false;
@@ -2384,20 +2382,20 @@ function eavesdrop() {
 */
 function advanceTurn(turns){
     while(turns > 0){
-        if(!Game.buildings[37][1]) {
+        if(!Conf.buildings[37][1]) {
             var x;
             var y;
             setStats();
-            for(y = 0; y < Game.radarRad * 2; y++) {
-                for(x = 0; x < Game.radarRad * 2; x++) {
+            for(y = 0; y < Conf.radarRad * 2; y++) {
+                for(x = 0; x < Conf.radarRad * 2; x++) {
                     for(var l = 0; l < 5; l++) {
                         nextTurn(x, y, l);
                     }
                 }
             }
-            if(Game.energy[Game.energy.length - 1] <= 10) {
+            if(Conf.energy[Conf.energy.length - 1] <= 10) {
                 printConsole(TRANS.noPower);
-                Game.blackout = 30;
+                Conf.blackout = 30;
             }
             saneStats();
             if(turns === 1){
@@ -2408,9 +2406,9 @@ function advanceTurn(turns){
                 //setResearchClickers(researchPanel);
                 fillResearchMenu();
                 drawRadar();
-                Game.turnNum.innerHTML = TRANS.weekCounter + Game.turn;
+                Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
                 document.getElementById('consoleContent').innerHTML = '';
-                printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Game.turn);
+                printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
             }
         } else {
             printConsole(TRANS.setDown);
@@ -2460,8 +2458,8 @@ function pageVisHandler() {
 * @param {int} zoomLevel The level of zoom that's needed
 */
 function zoom(zoomLevel) {
-    Game.destinationWidth = zoomLevel * 6 * 6;
-    Game.destinationHeight = zoomLevel * 7 * 6;
+    Conf.destinationWidth = zoomLevel * 6 * 6;
+    Conf.destinationHeight = zoomLevel * 7 * 6;
     mapFit();
 }
 
@@ -2508,54 +2506,54 @@ function execReview() {
         return test;
     };
 
-    if(!Game.buildings[37][1]) {
-        var moraleInput = [[Game.tossMorale, electricBlue, TRANS.tosser],[Game.hipMorale, green, TRANS.hipstie],[Game.artMorale, orange, TRANS.artie]];
+    if(!Conf.buildings[37][1]) {
+        var moraleInput = [[Conf.tossMorale, electricBlue, TRANS.tosser],[Conf.hipMorale, green, TRANS.hipstie],[Conf.artMorale, orange, TRANS.artie]];
         drawGraph('line', 'morale', moraleInput, true);
-        document.getElementById('tossMorale').innerHTML = (Game.tossMorale[Game.tossMorale.length - 1] / 10).toFixed(1) + '%';
-        document.getElementById('hipMorale').innerHTML = (Game.hipMorale[Game.hipMorale.length - 1] / 10).toFixed(1) + '%';
-        document.getElementById('artMorale').innerHTML = (Game.artMorale[Game.artMorale.length - 1] / 10).toFixed(1) + '%';
-        var moraleAverage = ((Game.tossMorale[Game.tossMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.artMorale[Game.artMorale.length - 1]) / 3);
+        document.getElementById('tossMorale').innerHTML = (Conf.tossMorale[Conf.tossMorale.length - 1] / 10).toFixed(1) + '%';
+        document.getElementById('hipMorale').innerHTML = (Conf.hipMorale[Conf.hipMorale.length - 1] / 10).toFixed(1) + '%';
+        document.getElementById('artMorale').innerHTML = (Conf.artMorale[Conf.artMorale.length - 1] / 10).toFixed(1) + '%';
+        var moraleAverage = ((Conf.tossMorale[Conf.tossMorale.length - 1] + Conf.hipMorale[Conf.hipMorale.length - 1] + Conf.artMorale[Conf.artMorale.length - 1]) / 3);
         document.getElementById('moraleAverage').innerHTML = (moraleAverage / 10).toFixed(1) + '%';
 
-        var popInput = [[Game.tossPop, electricBlue, TRANS.tosser],[Game.hipPop, green, TRANS.hipstie],[Game.artPop, orange, TRANS.artie],[Game.pop, white, TRANS.population]];
+        var popInput = [[Conf.tossPop, electricBlue, TRANS.tosser],[Conf.hipPop, green, TRANS.hipstie],[Conf.artPop, orange, TRANS.artie],[Conf.pop, white, TRANS.population]];
         drawGraph('line', 'population', popInput, true);
-        document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
-        document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
-        document.getElementById('artPop').innerHTML = Math.floor(Game.artPop[Game.artPop.length - 1]);
-        document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
+        document.getElementById('tossPop').innerHTML = Math.floor(Conf.tossPop[Conf.tossPop.length - 1]);
+        document.getElementById('hipPop').innerHTML = Math.floor(Conf.hipPop[Conf.hipPop.length - 1]);
+        document.getElementById('artPop').innerHTML = Math.floor(Conf.artPop[Conf.artPop.length - 1]);
+        document.getElementById('popExecTotal').innerHTML = Conf.pop[Conf.pop.length - 1];
 
         var demoInput = [
-        [[Game.tossAdults[Game.tossAdults.length - 1]], electricBlue, TRANS.tosserAdult],
-        [[Game.hipAdults[Game.hipAdults.length - 1]], green, TRANS.hipstieAdult],
-        [[Game.artAdults[Game.artAdults.length - 1]], orange, TRANS.artieAdult],
-        [[Game.tossStudents[Game.tossStudents.length - 1]], electricBlue, TRANS.tosserStudent],
-        [[Game.hipStudents[Game.hipStudents.length - 1]], green, TRANS.hipstieStudent],
-        [[Game.artStudents[Game.artStudents.length - 1]], orange, TRANS.artieStudent],
-        [[Game.tossBabies[Game.tossBabies.length - 1]], darkBlue, TRANS.tosserInfant],
-        [[Game.hipBabies[Game.hipBabies.length - 1]], green, TRANS.hipstieInfant],
-        [[Game.artBabies[Game.artBabies.length - 1]], orange, TRANS.artieInfant]
+        [[Conf.tossAdults[Conf.tossAdults.length - 1]], electricBlue, TRANS.tosserAdult],
+        [[Conf.hipAdults[Conf.hipAdults.length - 1]], green, TRANS.hipstieAdult],
+        [[Conf.artAdults[Conf.artAdults.length - 1]], orange, TRANS.artieAdult],
+        [[Conf.tossStudents[Conf.tossStudents.length - 1]], electricBlue, TRANS.tosserStudent],
+        [[Conf.hipStudents[Conf.hipStudents.length - 1]], green, TRANS.hipstieStudent],
+        [[Conf.artStudents[Conf.artStudents.length - 1]], orange, TRANS.artieStudent],
+        [[Conf.tossBabies[Conf.tossBabies.length - 1]], darkBlue, TRANS.tosserInfant],
+        [[Conf.hipBabies[Conf.hipBabies.length - 1]], green, TRANS.hipstieInfant],
+        [[Conf.artBabies[Conf.artBabies.length - 1]], orange, TRANS.artieInfant]
         ];
         drawGraph('bar', 'demographics', demoInput);
 
-        var sdfInput = [[Game.housing, electricBlue, TRANS.housing],[Game.sdf, red, TRANS.sdf]];
+        var sdfInput = [[Conf.housing, electricBlue, TRANS.housing],[Conf.sdf, red, TRANS.sdf]];
         drawGraph('pie', 'homeless', sdfInput);
-        document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
-        document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
+        document.getElementById('housingVal').innerHTML = Conf.housing[Conf.housing.length - 1];
+        document.getElementById('homelessVal').innerHTML = Conf.sdf[Conf.sdf.length - 1];
 
-        var employedInput = [[[Game.employed[Game.employed.length - 1]], electricBlue, TRANS.employed],[[Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1]], red, TRANS.unemployed]];
+        var employedInput = [[[Conf.employed[Conf.employed.length - 1]], electricBlue, TRANS.employed],[[Conf.pop[Conf.pop.length - 1] - Conf.employed[Conf.employed.length - 1]], red, TRANS.unemployed]];
         drawGraph('pie', 'employment', employedInput);
-        document.getElementById('employmentVal').innerHTML = Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1];
+        document.getElementById('employmentVal').innerHTML = Conf.pop[Conf.pop.length - 1] - Conf.employed[Conf.employed.length - 1];
 
-        var crimeInput = [[Game.crime, red, TRANS.crime]];
+        var crimeInput = [[Conf.crime, red, TRANS.crime]];
         drawGraph('line', 'crime', crimeInput, true);
-        document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
+        document.getElementById('crimeVal').innerHTML = Conf.crime[Conf.crime.length - 1];
 
-        var energyInput = [[Game.energy, electricBlue, TRANS.energy]];
+        var energyInput = [[Conf.energy, electricBlue, TRANS.energy]];
         drawGraph('line', 'energy', energyInput, true);
-        document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
+        document.getElementById('energyVal').innerHTML = Conf.energy[Conf.energy.length - 1];
 
-        var airInUse = Math.floor((Game.tossPop[Game.tossPop.length - 1] + Game.hipPop[Game.hipPop.length - 1])/10);
-        var freeAir = Game.air[Game.air.length - 1] - airInUse;
+        var airInUse = Math.floor((Conf.tossPop[Conf.tossPop.length - 1] + Conf.hipPop[Conf.hipPop.length - 1])/10);
+        var freeAir = Conf.air[Conf.air.length - 1] - airInUse;
         if(freeAir < 0){
             freeAir = 0;
         }
@@ -2563,53 +2561,53 @@ function execReview() {
             [[airInUse], grey, TRANS.airInUse],
             [[freeAir], electricBlue, TRANS.airAvailable]];
         drawGraph('pie', 'air', airInput);
-        document.getElementById('airVal').innerHTML = Game.air[Game.air.length - 1];
+        document.getElementById('airVal').innerHTML = Conf.air[Conf.air.length - 1];
 
-        var foodInput = [[Game.food, green, TRANS.food]];
+        var foodInput = [[Conf.food, green, TRANS.food]];
         drawGraph('line', 'food', foodInput, true);
-        document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
+        document.getElementById('foodVal').innerHTML = Conf.food[Conf.food.length - 1];
 
-        var freeStorage = Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1];
+        var freeStorage = Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1];
         var storageInput = [
             [[freeStorage], electricBlue, TRANS.freeStorage],
-            [[Game.inStorage[Game.inStorage.length -1] - Game.food[Game.food.length - 1]], brown, TRANS.resourceStorage],
-            [[Game.food[Game.food.length - 1]], green, TRANS.food]];
+            [[Conf.inStorage[Conf.inStorage.length -1] - Conf.food[Conf.food.length - 1]], brown, TRANS.resourceStorage],
+            [[Conf.food[Conf.food.length - 1]], green, TRANS.food]];
         drawGraph('pie', 'storage', storageInput);
         document.getElementById('storageVal').innerHTML = freeStorage;
 
         //The resources Table...
-        document.getElementById('aluminiumOreList').innerHTML = sanity(Game.ores[0]) + sanity(Game.ores[1]) + sanity(Game.ores[2]);
-        document.getElementById('calciumOreList').innerHTML = sanity(Game.ores[3]);
-        document.getElementById('copperOreList').innerHTML = sanity(Game.ores[4]) + sanity(Game.ores[5]) + sanity(Game.ores[6]);
-        document.getElementById('goldOreList').innerHTML = sanity(Game.ores[7]) + sanity(Game.ores[8]);
-        document.getElementById('ironOreList').innerHTML = sanity(Game.ores[9]) + sanity(Game.ores[10]) + sanity(Game.ores[11]) + sanity(Game.ores[12]);
-        document.getElementById('leadOreList').innerHTML = sanity(Game.ores[13]) + sanity(Game.ores[14]);
-        document.getElementById('magnesiumOreList').innerHTML = sanity(Game.ores[15]) + sanity(Game.ores[16]);
-        document.getElementById('mercuryOreList').innerHTML = sanity(Game.ores[17]) + sanity(Game.ores[18]);
-        document.getElementById('phosphorousOreList').innerHTML = sanity(Game.ores[19]) + sanity(Game.ores[20]);
-        document.getElementById('potassiumOreList').innerHTML = sanity(Game.ores[21]) + sanity(Game.ores[22]);
-        document.getElementById('silverOreList').innerHTML = sanity(Game.ores[23]);
-        document.getElementById('sodiumOreList').innerHTML = sanity(Game.ores[24]) + sanity(Game.ores[25]);
-        document.getElementById('tinOreList').innerHTML = sanity(Game.ores[26]) + sanity(Game.ores[27]);
-        document.getElementById('zincOreList').innerHTML = sanity(Game.ores[28]) + sanity(Game.ores[29]);
+        document.getElementById('aluminiumOreList').innerHTML = sanity(Conf.ores[0]) + sanity(Conf.ores[1]) + sanity(Conf.ores[2]);
+        document.getElementById('calciumOreList').innerHTML = sanity(Conf.ores[3]);
+        document.getElementById('copperOreList').innerHTML = sanity(Conf.ores[4]) + sanity(Conf.ores[5]) + sanity(Conf.ores[6]);
+        document.getElementById('goldOreList').innerHTML = sanity(Conf.ores[7]) + sanity(Conf.ores[8]);
+        document.getElementById('ironOreList').innerHTML = sanity(Conf.ores[9]) + sanity(Conf.ores[10]) + sanity(Conf.ores[11]) + sanity(Conf.ores[12]);
+        document.getElementById('leadOreList').innerHTML = sanity(Conf.ores[13]) + sanity(Conf.ores[14]);
+        document.getElementById('magnesiumOreList').innerHTML = sanity(Conf.ores[15]) + sanity(Conf.ores[16]);
+        document.getElementById('mercuryOreList').innerHTML = sanity(Conf.ores[17]) + sanity(Conf.ores[18]);
+        document.getElementById('phosphorousOreList').innerHTML = sanity(Conf.ores[19]) + sanity(Conf.ores[20]);
+        document.getElementById('potassiumOreList').innerHTML = sanity(Conf.ores[21]) + sanity(Conf.ores[22]);
+        document.getElementById('silverOreList').innerHTML = sanity(Conf.ores[23]);
+        document.getElementById('sodiumOreList').innerHTML = sanity(Conf.ores[24]) + sanity(Conf.ores[25]);
+        document.getElementById('tinOreList').innerHTML = sanity(Conf.ores[26]) + sanity(Conf.ores[27]);
+        document.getElementById('zincOreList').innerHTML = sanity(Conf.ores[28]) + sanity(Conf.ores[29]);
 
-        document.getElementById('aluminiumProcList').innerHTML = sanity(Game.procOres[0]);
-        document.getElementById('calciumProcList').innerHTML = sanity(Game.procOres[1]);
-        document.getElementById('copperProcList').innerHTML = sanity(Game.procOres[2]);
-        document.getElementById('goldProcList').innerHTML = sanity(Game.procOres[3]);
-        document.getElementById('ironProcList').innerHTML = sanity(Game.procOres[4]);
-        document.getElementById('leadProcList').innerHTML = sanity(Game.procOres[5]);
-        document.getElementById('magnesiumProcList').innerHTML = sanity(Game.procOres[6]);
-        document.getElementById('mercuryProcList').innerHTML = sanity(Game.procOres[7]);
-        document.getElementById('phosphorousProcList').innerHTML = sanity(Game.procOres[8]);
-        document.getElementById('potassiumProcList').innerHTML = sanity(Game.procOres[9]);
-        document.getElementById('silverProcList').innerHTML = sanity(Game.procOres[10]);
-        document.getElementById('sodiumProcList').innerHTML = sanity(Game.procOres[11]);
-        document.getElementById('tinProcList').innerHTML = sanity(Game.procOres[12]);
-        document.getElementById('zincProcList').innerHTML = sanity(Game.procOres[13]);
+        document.getElementById('aluminiumProcList').innerHTML = sanity(Conf.procOres[0]);
+        document.getElementById('calciumProcList').innerHTML = sanity(Conf.procOres[1]);
+        document.getElementById('copperProcList').innerHTML = sanity(Conf.procOres[2]);
+        document.getElementById('goldProcList').innerHTML = sanity(Conf.procOres[3]);
+        document.getElementById('ironProcList').innerHTML = sanity(Conf.procOres[4]);
+        document.getElementById('leadProcList').innerHTML = sanity(Conf.procOres[5]);
+        document.getElementById('magnesiumProcList').innerHTML = sanity(Conf.procOres[6]);
+        document.getElementById('mercuryProcList').innerHTML = sanity(Conf.procOres[7]);
+        document.getElementById('phosphorousProcList').innerHTML = sanity(Conf.procOres[8]);
+        document.getElementById('potassiumProcList').innerHTML = sanity(Conf.procOres[9]);
+        document.getElementById('silverProcList').innerHTML = sanity(Conf.procOres[10]);
+        document.getElementById('sodiumProcList').innerHTML = sanity(Conf.procOres[11]);
+        document.getElementById('tinProcList').innerHTML = sanity(Conf.procOres[12]);
+        document.getElementById('zincProcList').innerHTML = sanity(Conf.procOres[13]);
 
         //Keep this at the end to draw the legends
-        Game.fresh = false;
+        Conf.fresh = false;
     }
 
 }
@@ -2621,52 +2619,52 @@ function execReview() {
 * @param {bool} [bool] Tells mapFit() if the window has been resized or not
 */
 function mapFit(bool) {
-    var quarterHeight = Math.floor(Game.destinationHeight * 0.25);
+    var quarterHeight = Math.floor(Conf.destinationHeight * 0.25);
     if(bool) {
         var overlay = document.getElementById('mPanOverlay');
         var mainMap = document.getElementById('mainPanel');
 
         //Nasty stuff... hence we use the if to touch this as little as possible
-        overlay.width = window.innerWidth + Game.destinationWidth;
+        overlay.width = window.innerWidth + Conf.destinationWidth;
         overlay.height = window.innerHeight + quarterHeight * 2;
         overlay.style.top = -quarterHeight*2 + 'px';
-        overlay.style.left = -Game.destinationWidth / 2 + 'px';
-        mainMap.width = window.innerWidth + Game.destinationWidth; //Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
+        overlay.style.left = -Conf.destinationWidth / 2 + 'px';
+        mainMap.width = window.innerWidth + Conf.destinationWidth; //Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
         mainMap.height = window.innerHeight + quarterHeight * 2;
         mainMap.style.top = -quarterHeight*2 + 'px';
-        mainMap.style.left = -Game.destinationWidth / 2 + 'px';
+        mainMap.style.left = -Conf.destinationWidth / 2 + 'px';
         document.body.style.width = window.innerWidth + 'px';
         document.body.style.height = window.innerHeight + 'px';
     }
-    Game.xLimit = Math.ceil(Game.mPanCanvas.width / Game.destinationWidth);
-    Game.yLimit = Math.ceil(Game.mPanCanvas.height / (quarterHeight * 3));
-    Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-    drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc);
+    Conf.xLimit = Math.ceil(Conf.mPanCanvas.width / Conf.destinationWidth);
+    Conf.yLimit = Math.ceil(Conf.mPanCanvas.height / (quarterHeight * 3));
+    Conf.mPanLoc.clearRect(0, 0, Conf.mPanCanvas.width, Conf.mPanCanvas.height);
+    drawTile(0, getTile('x'), getTile('y'), Conf.tileHighlight, Conf.mPanLoc);
 
     //Messy stuff to handle if I try to zoom out of the map...
-    if(Game.retY - Game.yLimit / 2 < 0) {
-        Game.retY = Math.floor(Game.retY - (Game.retY - Game.yLimit / 2));
-    } else if(Game.retY + Game.yLimit / 2 > Game.radarRad * 2) {
-        Game.retY = Math.floor(Game.retY - Game.yLimit / 2);
+    if(Conf.retY - Conf.yLimit / 2 < 0) {
+        Conf.retY = Math.floor(Conf.retY - (Conf.retY - Conf.yLimit / 2));
+    } else if(Conf.retY + Conf.yLimit / 2 > Conf.radarRad * 2) {
+        Conf.retY = Math.floor(Conf.retY - Conf.yLimit / 2);
     }
-    if(Game.retX - Game.xLimit / 2 < 0) {
-        Game.retX = Math.floor(Game.retX - (Game.retX - Game.xLimit / 2));
-    } else if(Game.retX + Game.xLimit / 2 > Game.radarRad * 2) {
-        Game.retX = Math.floor(Game.retX - Game.xLimit / 2);
+    if(Conf.retX - Conf.xLimit / 2 < 0) {
+        Conf.retX = Math.floor(Conf.retX - (Conf.retX - Conf.xLimit / 2));
+    } else if(Conf.retX + Conf.xLimit / 2 > Conf.radarRad * 2) {
+        Conf.retX = Math.floor(Conf.retX - Conf.xLimit / 2);
     }
-    if(Game.yLimit % 2 === 0) {
-        Game.yLimit += 1;
-    }
-
-    Game.yShift = Math.round(Game.yLimit / 2);
-
-    if(Game.yShift % 2 === 0) {
-        Game.yShift += 1;
-        Game.yLimit += 2;
+    if(Conf.yLimit % 2 === 0) {
+        Conf.yLimit += 1;
     }
 
-    if(Game.retY % 2 !== 0) {
-        Game.retY += 1;
+    Conf.yShift = Math.round(Conf.yLimit / 2);
+
+    if(Conf.yShift % 2 === 0) {
+        Conf.yShift += 1;
+        Conf.yLimit += 2;
+    }
+
+    if(Conf.retY % 2 !== 0) {
+        Conf.retY += 1;
     }
     drawRadar();
     drawLoc();
@@ -2677,41 +2675,41 @@ function mapFit(bool) {
  * populates the sidebar with those buildings
  */
 function checkBuildings() {
-    for(var thing = 0; thing < Game.buildings.length; thing++) {
-        var idString = Game.buildings[thing][0];
+    for(var thing = 0; thing < Conf.buildings.length; thing++) {
+        var idString = Conf.buildings[thing][0];
         var elem = document.getElementById(idString);
         elem.classList.remove('menu_selected');
-        if(Game.buildings[thing][1]) {
+        if(Conf.buildings[thing][1]) {
             elem.classList.add('menu_show');
             elem.classList.remove('menu_hide');
-            switch(Game.buildings[thing][2]) {
+            switch(Conf.buildings[thing][2]) {
             case 0:
-                if(Game.level === 0) {
+                if(Conf.level === 0) {
                     elem.classList.add('active');
-                    document.getElementById(Game.buildings[thing][0]).onclick = construct;
+                    document.getElementById(Conf.buildings[thing][0]).onclick = construct;
                 } else {
                     elem.classList.remove('active');
-                    document.getElementById(Game.buildings[thing][0]).onclick = null;
+                    document.getElementById(Conf.buildings[thing][0]).onclick = null;
                 }
                 break;
             case 1:
-                if(Game.level > 0) {
+                if(Conf.level > 0) {
                     elem.classList.add('active');
-                    document.getElementById(Game.buildings[thing][0]).onclick = construct;
+                    document.getElementById(Conf.buildings[thing][0]).onclick = construct;
                 } else {
                     elem.classList.remove('active');
-                    document.getElementById(Game.buildings[thing][0]).onclick = null;
+                    document.getElementById(Conf.buildings[thing][0]).onclick = null;
                 }
                 break;
             default:
                 elem.classList.add('active');
-                document.getElementById(Game.buildings[thing][0]).onclick = construct;
+                document.getElementById(Conf.buildings[thing][0]).onclick = construct;
             }
         } else {
             elem.classList.remove('menu_show');
             elem.classList.add('menu_hide');
-            if(Game.clickedOn === idString) {
-                Game.clickedOn = 'none';
+            if(Conf.clickedOn === idString) {
+                Conf.clickedOn = 'none';
                 document.body.style.cursor = "url('images/pointers/pointer.png'), default";
             }
         }
@@ -2726,8 +2724,8 @@ function checkBuildings() {
 */
 function checkRobots() {
     //TODO: clean all this shit up
-    for(var r2d2 in Game.robotsList) {
-        var wallE = Game.robotsList[r2d2];
+    for(var r2d2 in Conf.robotsList) {
+        var wallE = Conf.robotsList[r2d2];
         var idString = wallE[2];
         var c3po = document.getElementById(idString);
         c3po.classList.remove('menu_selected');
@@ -2736,7 +2734,7 @@ function checkRobots() {
             c3po.classList.remove('menu_hide');
             switch(wallE[4]) {
             case 0:
-                if(Game.level === 0) {
+                if(Conf.level === 0) {
                     c3po.classList.add('active');
                     c3po.onclick = construct;
                 } else {
@@ -2745,7 +2743,7 @@ function checkRobots() {
                 }
                 break;
             case 1:
-                if(Game.level > 0) {
+                if(Conf.level > 0) {
                     c3po.classList.add('active');
                     c3po.onclick = construct;
                 } else {
@@ -2761,8 +2759,8 @@ function checkRobots() {
                 c3po.classList.remove('active');
                 c3po.onclick = null;
                 //document.getElementById(wallE[2]).classList.add('menu_available');
-                if(Game.clickedOn === idString) {
-                    Game.clickedOn = 'none';
+                if(Conf.clickedOn === idString) {
+                    Conf.clickedOn = 'none';
                     //document.getElementById(wallE[2]).classList.remove('menu_available');
                     document.body.style.cursor = "url('images/pointers/pointer.png'), default";
                 }
@@ -2773,16 +2771,16 @@ function checkRobots() {
         }
     }
     //special case for digger
-    if(Game.robotsList[1][1] - Game.robotsList[1][0] <= 1) {
-        var rob = document.getElementById(Game.robotsList[1][2]);
+    if(Conf.robotsList[1][1] - Conf.robotsList[1][0] <= 1) {
+        var rob = document.getElementById(Conf.robotsList[1][2]);
         rob.classList.remove('active');
         rob.onclick = null;
         //rob.style.background = '#000';
-        if(Game.clickedOn === 'digger' || (Game.clickedOn === 'cavernDigger' && Game.robotsList[1][1] - Game.robotsList[1][0] === 0)) {
-            Game.clickedOn = 'none';
+        if(Conf.clickedOn === 'digger' || (Conf.clickedOn === 'cavernDigger' && Conf.robotsList[1][1] - Conf.robotsList[1][0] === 0)) {
+            Conf.clickedOn = 'none';
             document.body.style.cursor = "url('images/pointers/pointer.png'), default";
         }
-        if(Game.robotsList[1][1] - Game.robotsList[1][0] === 0) {
+        if(Conf.robotsList[1][1] - Conf.robotsList[1][0] === 0) {
             var cavDig = document.getElementById('cavernDigger');
             cavDig.classList.remove('active');
             cavDig.onclick = null;
@@ -2798,7 +2796,7 @@ function checkRobots() {
  * @param  {int} newLevel the level we would change to
  */
 function changeLevel(newLevel) {
-    Game.level = parseInt(newLevel, 10);
+    Conf.level = parseInt(newLevel, 10);
     checkBuildings();
     drawRadar();
 }
@@ -2811,8 +2809,8 @@ function changeLevel(newLevel) {
  */
 function reCount(which) {
     var count = function(id, numID, index) {
-            document.getElementById(id).style.height = ((Game.robotsList[index][1] - Game.robotsList[index][0]) / Game.robotsList[index][1]) * 100 + '%';
-            document.getElementById(numID).innerHTML = TRANS.available + (Game.robotsList[index][1] - Game.robotsList[index][0]);
+            document.getElementById(id).style.height = ((Conf.robotsList[index][1] - Conf.robotsList[index][0]) / Conf.robotsList[index][1]) * 100 + '%';
+            document.getElementById(numID).innerHTML = TRANS.available + (Conf.robotsList[index][1] - Conf.robotsList[index][0]);
         };
     switch(which) {
     case 'dozer':
@@ -2879,9 +2877,9 @@ function resize(e) {
  */
 function mainLoop() {
     var N = 22; //Number of animation frames from 0 e.g. N=1 is the same as having two images which swap...
-    Game.augment ? Game.animate += 1 : Game.animate -= 1;
-    if(Game.animate === 0 || Game.animate === N) {
-        Game.augment ? Game.augment = false : Game.augment = true;
+    Conf.augment ? Conf.animate += 1 : Conf.animate -= 1;
+    if(Conf.animate === 0 || Conf.animate === N) {
+        Conf.augment ? Conf.augment = false : Conf.augment = true;
     }
 }
 
@@ -2959,23 +2957,23 @@ function runConsole(text){
             break;
         case TRANS.level:
             if(input[1] >= 0 || input[1] <= 4){
-                Game.level = parseInt(input[1], 10);
+                Conf.level = parseInt(input[1], 10);
                 checkBuildings();
                 drawRadar();
-                document.getElementById('slider').value = Game.level;
+                document.getElementById('slider').value = Conf.level;
             } else {
                 consoleErr(input[1], 'value', input[0], TRANS.integer, 0, 4);
             }
             break;
         case TRANS.home:
-            if(Game.home){
-                jump(true, Game.home[0], Game.home[1], 0);
+            if(Conf.home){
+                jump(true, Conf.home[0], Conf.home[1], 0);
             } else {
                 printConsole(TRANS.setDown);
             }
             break;
         case TRANS.seed:
-            printConsole(Game.inputSeed);
+            printConsole(Conf.inputSeed);
             break;
         case TRANS.zoom:
             if(input[1] >= 1 || input[1] <= 6){
@@ -3056,38 +3054,38 @@ function keypressed(e) {
             drawRadar();
             break;
         case 48:
-            Game.level = 0;
+            Conf.level = 0;
             checkBuildings();
             drawRadar();
-            document.getElementById('slider').value = Game.level;
+            document.getElementById('slider').value = Conf.level;
             break;
         case 49:
-            Game.level = 1;
+            Conf.level = 1;
             checkBuildings();
             drawRadar();
-            document.getElementById('slider').value = Game.level;
+            document.getElementById('slider').value = Conf.level;
             break;
         case 50:
-            Game.level = 2;
+            Conf.level = 2;
             checkBuildings();
             drawRadar();
-            document.getElementById('slider').value = Game.level;
+            document.getElementById('slider').value = Conf.level;
             break;
         case 51:
-            Game.level = 3;
+            Conf.level = 3;
             checkBuildings();
             drawRadar();
-            document.getElementById('slider').value = Game.level;
+            document.getElementById('slider').value = Conf.level;
             break;
         case 52:
-            Game.level = 4;
+            Conf.level = 4;
             checkBuildings();
             drawRadar();
-            document.getElementById('slider').value = Game.level;
+            document.getElementById('slider').value = Conf.level;
             break;
         case 27:
-            document.getElementById(Game.clickedOn).classList.add('menu_available');
-            Game.clickedOn = 'none';
+            document.getElementById(Conf.clickedOn).classList.add('menu_available');
+            Conf.clickedOn = 'none';
             document.body.style.cursor = "url('images/pointers/pointer.png'), default";
             break;
         case 77:
@@ -3191,8 +3189,8 @@ function getMousePos(canvas, evt) {
     }
 
     // return relative mouse position
-    Game.mouseX = evt.clientX - left + window.pageXOffset + Game.destinationWidth / 2;
-    Game.mouseY = evt.clientY - top + window.pageYOffset;
+    Conf.mouseX = evt.clientX - left + window.pageXOffset + Conf.destinationWidth / 2;
+    Conf.mouseY = evt.clientY - top + window.pageYOffset;
 }
 
 /**
@@ -3201,36 +3199,36 @@ function getMousePos(canvas, evt) {
  * @param  {string} dir is the direction to move
  */
 function move(dir) {
-    var upY = Game.retY - 2;
-    var downY = Game.retY + 2;
-    var leftX = Game.retX - 1;
-    var rightX = Game.retX + 1;
+    var upY = Conf.retY - 2;
+    var downY = Conf.retY + 2;
+    var leftX = Conf.retX - 1;
+    var rightX = Conf.retX + 1;
     switch(dir) {
     case 'up':
-        if(upY >= (Game.yLimit / 2)) {
-            Game.retY = upY;
+        if(upY >= (Conf.yLimit / 2)) {
+            Conf.retY = upY;
         }
         break;
     case 'down':
-        if(downY <= (Game.radarRad * 2) - (Game.yLimit / 2)) {
-            Game.retY = downY;
+        if(downY <= (Conf.radarRad * 2) - (Conf.yLimit / 2)) {
+            Conf.retY = downY;
         }
         break;
     case 'left':
-        if(leftX >= (Game.xLimit / 2)) {
-            Game.retX = leftX;
+        if(leftX >= (Conf.xLimit / 2)) {
+            Conf.retX = leftX;
         }
         break;
     case 'right':
-        if(leftX < (Game.radarRad * 2) - (Game.xLimit / 2) - 2) {
-            Game.retX = rightX;
+        if(leftX < (Conf.radarRad * 2) - (Conf.xLimit / 2) - 2) {
+            Conf.retX = rightX;
         }
         break;
     case 'level':
-        Game.level === 4 ? Game.level = 0 : Game.level += 1;
+        Conf.level === 4 ? Conf.level = 0 : Conf.level += 1;
         checkBuildings();
         drawRadar();
-        document.getElementById('slider').value = Game.level;
+        document.getElementById('slider').value = Conf.level;
         break;
     default:
         break;
@@ -3285,7 +3283,7 @@ function adjacent(x, y, index) {
 function wetTest(yxArrayIn, level) {
     var yxArray = yxArrayIn.slice(0);
     for(var i = 0; i < 6; i++) {
-        if(Game.map[level][adjacent(yxArray[1], yxArray[0], i)[0]][adjacent(yxArray[1], yxArray[0], i)[1]].kind === 4) {
+        if(Conf.map[level][adjacent(yxArray[1], yxArray[0], i)[0]][adjacent(yxArray[1], yxArray[0], i)[1]].kind === 4) {
             return true;
         }
     }
@@ -3303,16 +3301,16 @@ function getTile(axis) {
     var x, y, yDiff, xDiff, left, right;
 
     //set the general cases
-    y = Math.floor(Game.mouseY / (Game.destinationHeight * 0.75));
+    y = Math.floor(Conf.mouseY / (Conf.destinationHeight * 0.75));
 
-    y % 2 !== 0 ? x = Math.floor((Game.mouseX - Game.destinationWidth / 2) / Game.destinationWidth) : x = Math.floor(Game.mouseX / Game.destinationWidth);
+    y % 2 !== 0 ? x = Math.floor((Conf.mouseX - Conf.destinationWidth / 2) / Conf.destinationWidth) : x = Math.floor(Conf.mouseX / Conf.destinationWidth);
 
     //corner case code
-    yDiff = (Game.mouseY / (Game.destinationHeight * 0.75)) - y;
+    yDiff = (Conf.mouseY / (Conf.destinationHeight * 0.75)) - y;
     if(yDiff < 0.33) { //If we're in the top third of the reference rectangle
         //tells which intermediate block we're in...
         if(y % 2 !== 0) {
-            xDiff = ((Game.mouseX - Game.destinationWidth / 2) / Game.destinationWidth - x);
+            xDiff = ((Conf.mouseX - Conf.destinationWidth / 2) / Conf.destinationWidth - x);
             //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
             //Are we on the left or right hand side of the top third?
             if(xDiff < 0.5) {
@@ -3329,7 +3327,7 @@ function getTile(axis) {
             }
 
         } else {
-            xDiff = (Game.mouseX / Game.destinationWidth - x);
+            xDiff = (Conf.mouseX / Conf.destinationWidth - x);
             if(xDiff < 0.5) {
                 left = 0.5 - xDiff;
                 if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
@@ -3363,12 +3361,12 @@ function getTile(axis) {
  */
 function jump(bool, x, y, level) {
     if(bool){
-        Game.retX = x + 1;
-        Game.retY = y + 2;
-        Game.level = level;
+        Conf.retX = x + 1;
+        Conf.retY = y + 2;
+        Conf.level = level;
     } else {
-        Game.retX = Math.floor(Game.mouseX - Game.destinationWidth / 2);
-        Game.retY = Game.mouseY - 20;
+        Conf.retX = Math.floor(Conf.mouseX - Conf.destinationWidth / 2);
+        Conf.retY = Conf.mouseY - 20;
     }
     mapFit();
     drawLoc();
@@ -3383,13 +3381,13 @@ function jump(bool, x, y, level) {
 * @returns {bool} Whether the point is in communications range or not
 */
 function inRange(x, y){
-    for(var tower = 0; tower < Game.commTowers.length; tower++){
-        var radius = 75 - Game.level*10;
-        var thisTower = Game.mapTiles[0][Game.commTowers[tower][1]][Game.commTowers[tower][0]].kind;
+    for(var tower = 0; tower < Conf.commTowers.length; tower++){
+        var radius = 75 - Conf.level*10;
+        var thisTower = Conf.mapTiles[0][Conf.commTowers[tower][1]][Conf.commTowers[tower][0]].kind;
         if(thisTower === 210 || thisTower === 237){
             radius -= 25;
         }
-        if(Tools.distance(Game.commTowers[tower][0], Game.commTowers[tower][1], x, y) <= radius){
+        if(Tools.distance(Conf.commTowers[tower][0], Conf.commTowers[tower][1], x, y) <= radius){
             return true;
         }
     }
@@ -3404,8 +3402,8 @@ function inRange(x, y){
  * Draws the radar properly
  */
 function drawRadar() {
-    Game.radar.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
-    var radarPixels = Game.radar.createImageData(Game.radarRad * 2, Game.radarRad * 2);
+    Conf.radar.clearRect(0, 0, Conf.radarRad * 2, Conf.radarRad * 2);
+    var radarPixels = Conf.radar.createImageData(Conf.radarRad * 2, Conf.radarRad * 2);
     var options = ["aluminiumRadarOpt","calciumRadarOpt","copperRadarOpt","goldRadarOpt","ironRadarOpt","leadRadarOpt","magnesiumRadarOpt","mercuryRadarOpt","phosphorousRadarOpt","potassiumRadarOpt","silverRadarOpt","sodiumRadarOpt","tinRadarOpt","zincRadarOpt"];
     var surfaceColor = [
         [212, 197, 174, 255],
@@ -3427,8 +3425,8 @@ function drawRadar() {
         for(var y = 0; y < radarPixels.height; y++) {
             // Index of the pixel in the array
             var idx = (x + y * radarPixels.width) * 4;
-            var kind = Game.map[Game.level][y][x].kind;
-            var resourceOnTile = Game.map[Game.level][y][x].resources;
+            var kind = Conf.map[Conf.level][y][x].kind;
+            var resourceOnTile = Conf.map[Conf.level][y][x].resources;
             //TODO: Clean up this awful for!
             for(var i = 0; i < 4; i++) {
                 if(kind < 4 && kind >= 0) {
@@ -3440,12 +3438,12 @@ function drawRadar() {
                 } else if(kind > 13 && kind < 17) {
                     radarPixels.data[idx + i] = ugColor[kind - 14][i];
                 } else if(kind === 4) {
-                    Game.level !== 0 ? radarPixels.data[idx + i] = ugColor[4][i] : radarPixels.data[idx + i] = surfaceColor[4][i];
+                    Conf.level !== 0 ? radarPixels.data[idx + i] = ugColor[4][i] : radarPixels.data[idx + i] = surfaceColor[4][i];
                 } else {
                     radarPixels.data[idx + i] = other[i];
                 }
                 for(var j = 0; j < options.length; j++){
-                    if(Game.map[Game.level][y][x].mineable && document.getElementById(options[j]).checked){
+                    if(Conf.map[Conf.level][y][x].mineable && document.getElementById(options[j]).checked){
                         var ore = resourceRef(j, 0);
                         for(var k = 0; k < ore.length; k++){
                             if(resourceOnTile[ore[k]]){
@@ -3457,23 +3455,23 @@ function drawRadar() {
             }
         }
     }
-    Game.radar.putImageData(radarPixels, 0, 0);
-    for(var tower = 0; tower < Game.commTowers.length; tower++){
-        var radius = 75 - Game.level*10;
-        var thisTower = Game.mapTiles[0][Game.commTowers[tower][1]][Game.commTowers[tower][0]].kind;
+    Conf.radar.putImageData(radarPixels, 0, 0);
+    for(var tower = 0; tower < Conf.commTowers.length; tower++){
+        var radius = 75 - Conf.level*10;
+        var thisTower = Conf.mapTiles[0][Conf.commTowers[tower][1]][Conf.commTowers[tower][0]].kind;
         if(thisTower === 210 || thisTower === 237){
             radius -= 25;
         }
-        Game.radar.beginPath();
-        Game.radar.strokeStyle = '#BD222A';
-        Game.radar.lineWidth = 0.3;
-        Game.radar.arc(Game.commTowers[tower][0], Game.commTowers[tower][1], radius, 0, Math.PI*2, true);
-        Game.radar.stroke();
-        Game.radar.closePath();
+        Conf.radar.beginPath();
+        Conf.radar.strokeStyle = '#BD222A';
+        Conf.radar.lineWidth = 0.3;
+        Conf.radar.arc(Conf.commTowers[tower][0], Conf.commTowers[tower][1], radius, 0, Math.PI*2, true);
+        Conf.radar.stroke();
+        Conf.radar.closePath();
     }
-    Game.level === 0 ? Game.radar.fillStyle = "#000000" : Game.radar.fillStyle = "#ffffff";
-    Game.radar.font = "14px Arial";
-    Game.radar.fillText('Depth: ' + Game.level * 50 + 'm', 215, 298);
+    Conf.level === 0 ? Conf.radar.fillStyle = "#000000" : Conf.radar.fillStyle = "#ffffff";
+    Conf.radar.font = "14px Arial";
+    Conf.radar.fillText('Depth: ' + Conf.level * 50 + 'm', 215, 298);
 }
 
 
@@ -3541,16 +3539,16 @@ function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, 
     var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
     sourceWidth = 216; //original tile width
     sourceHeight = 252; //original tile height
-    destinationY = Math.floor(tilePosY * Game.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
+    destinationY = Math.floor(tilePosY * Conf.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
     if(tilePosY % 2 === 0) { //if the row is even...
-        destinationX = Math.floor(tilePosX * Game.destinationWidth - Game.destinationWidth / 2); //we set its X normally
+        destinationX = Math.floor(tilePosX * Conf.destinationWidth - Conf.destinationWidth / 2); //we set its X normally
     } else { //if it’s odd though
-        destinationX = Math.floor(tilePosX * Game.destinationWidth); //we need a little bit of displacement
+        destinationX = Math.floor(tilePosX * Conf.destinationWidth); //we need a little bit of displacement
     }
-    animateIt ? sourceX = Game.animate * sourceWidth : sourceX = 0;
+    animateIt ? sourceX = Conf.animate * sourceWidth : sourceX = 0;
     sourceX += sourceWidth * modX;
     sourceY = (tileType * sourceHeight) + (sourceHeight * modY);
-    destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Game.destinationWidth, Game.destinationHeight);
+    destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Conf.destinationWidth, Conf.destinationHeight);
 }
 
 
@@ -3563,25 +3561,25 @@ function drawZoomMap() {
     var y, x, tileKind;
     mainLoop();
     requestAnimationFrame(drawZoomMap);
-    Game.mPanLoc.clearRect(0, 0, Game.mPanCanvas.width, Game.mPanCanvas.height);
-    if(Game.highlight) {
-        drawTile(0, getTile('x'), getTile('y'), Game.tileHighlight, Game.mPanLoc, false, 0, 0);
+    Conf.mPanLoc.clearRect(0, 0, Conf.mPanCanvas.width, Conf.mPanCanvas.height);
+    if(Conf.highlight) {
+        drawTile(0, getTile('x'), getTile('y'), Conf.tileHighlight, Conf.mPanLoc, false, 0, 0);
     }
-    for(y = 0; y < Game.yLimit; y++) {
+    for(y = 0; y < Conf.yLimit; y++) {
         x = 0;
-        while(x <= Game.xLimit) {
-            if(typeof Game.mapTiles[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind === "number"){
-                tileKind = Game.mapTiles[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind;
+        while(x <= Conf.xLimit) {
+            if(typeof Conf.mapTiles[Conf.level][Conf.retY - Conf.yShift + y][(Conf.retX - Math.round(Conf.xLimit / 2)) + x].kind === "number"){
+                tileKind = Conf.mapTiles[Conf.level][Conf.retY - Conf.yShift + y][(Conf.retX - Math.round(Conf.xLimit / 2)) + x].kind;
             } else {
-                tileKind = Game.map[Game.level][Game.retY - Game.yShift + y][(Game.retX - Math.round(Game.xLimit / 2)) + x].kind;
+                tileKind = Conf.map[Conf.level][Conf.retY - Conf.yShift + y][(Conf.retX - Math.round(Conf.xLimit / 2)) + x].kind;
             }
 
             if(tileKind < 100) {
-                drawTile(tileKind, x, y, Game.spritesheet, Game.mPanel, false, 10, 3);
+                drawTile(tileKind, x, y, Conf.spritesheet, Conf.mPanel, false, 10, 3);
             } else if(tileKind >= 200) {
-                drawTile(tileKind - 200, x, y, Game.spritesheet, Game.mPanel, false, 0, 4);
+                drawTile(tileKind - 200, x, y, Conf.spritesheet, Conf.mPanel, false, 0, 4);
             } else {
-                drawTile(tileKind - 100, x, y, Game.spritesheet, Game.mPanel, true, 0, 0);
+                drawTile(tileKind - 100, x, y, Conf.spritesheet, Conf.mPanel, true, 0, 0);
             }
             x++;
         }
@@ -3594,17 +3592,17 @@ function drawZoomMap() {
  * draws the current location on the small radar map
  */
 function drawLoc() {
-    Game.radarLoc.clearRect(0, 0, Game.radarRad * 2, Game.radarRad * 2);
-    Game.radarLoc.beginPath();
-    Game.radarLoc.fillRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
-    Game.radarLoc.fillStyle = 'rgba(255,251,229,0.3)';
-    Game.radarLoc.fill();
-    Game.radarLoc.closePath();
-    Game.radarLoc.beginPath();
-    Game.radarLoc.strokeRect(Game.retX - (Game.xLimit / 2), Game.retY - (Game.yLimit / 2), Game.xLimit, Game.yLimit);
-    Game.radarLoc.strokeStyle = '#BD222A';
-    Game.radarLoc.stroke();
-    Game.radarLoc.closePath();
+    Conf.radarLoc.clearRect(0, 0, Conf.radarRad * 2, Conf.radarRad * 2);
+    Conf.radarLoc.beginPath();
+    Conf.radarLoc.fillRect(Conf.retX - (Conf.xLimit / 2), Conf.retY - (Conf.yLimit / 2), Conf.xLimit, Conf.yLimit);
+    Conf.radarLoc.fillStyle = 'rgba(255,251,229,0.3)';
+    Conf.radarLoc.fill();
+    Conf.radarLoc.closePath();
+    Conf.radarLoc.beginPath();
+    Conf.radarLoc.strokeRect(Conf.retX - (Conf.xLimit / 2), Conf.retY - (Conf.yLimit / 2), Conf.xLimit, Conf.yLimit);
+    Conf.radarLoc.strokeStyle = '#BD222A';
+    Conf.radarLoc.stroke();
+    Conf.radarLoc.closePath();
 }
 
 
@@ -3648,11 +3646,11 @@ function rightClicked(content) {
 * @returns {Object} Document Fragment to append
 */
 function contextContent(content) {
-    var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
-    var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
-    console.log(Game.level + ' ' + x + ' ' + y);
-    var tile = Game.map[Game.level][y][x];
-    var construct = Game.mapTiles[Game.level][y][x];
+    var y = Conf.retY - Math.round(Conf.yLimit / 2) + getTile('y');
+    var x = Conf.retX - Math.round(Conf.xLimit / 2) + getTile('x');
+    console.log(Conf.level + ' ' + x + ' ' + y);
+    var tile = Conf.map[Conf.level][y][x];
+    var construct = Conf.mapTiles[Conf.level][y][x];
     var resources = false;
     var frag = document.createDocumentFragment();
     var spacer = document.createElement('br');
@@ -3715,10 +3713,10 @@ function contextContent(content) {
                 resources = true;
             }
             var item = document.createElement('li');
-            item.innerHTML = Game.resourceArray[i][0] + ': ' + resourceList[i] + 't';
+            item.innerHTML = Conf.resourceArray[i][0] + ': ' + resourceList[i] + 't';
             var nameIndent = document.createElement('ul');
             var name = document.createElement('li');
-            name.innerHTML = Game.resourceArray[i][1];
+            name.innerHTML = Conf.resourceArray[i][1];
             nameIndent.appendChild(name);
             item.appendChild(nameIndent);
             listedResources.appendChild(item);
@@ -3969,12 +3967,12 @@ function resourceNeededList(building, getRec, recycling){
             var which = resourcesNeeded[resource][0];
             var amount = resourcesNeeded[resource][1];
             var item = document.createElement('li');
-            if(Game.procOres[which] >= amount){
+            if(Conf.procOres[which] >= amount){
                 item.classList.add('green');
             } else {
                 item.classList.add('red');
             }
-            item.innerHTML = amount + ' ' + Game.resourceNames[which];
+            item.innerHTML = amount + ' ' + Conf.resourceNames[which];
             required.appendChild(item);
         }
         frag.appendChild(required);
@@ -3997,21 +3995,21 @@ function requisition(arr){//TODO set up recycling here
     var resourceCheck = false;
     var count = 0;
     for(var j = 0; j < arr.length; j++){
-        if(Game.procOres[arr[j][0]] >= arr[j][1]){
+        if(Conf.procOres[arr[j][0]] >= arr[j][1]){
             count += 1;
         }
     }
     if(count === arr.length){
         resourceCheck = true;
         for(var k = 0; k < arr.length; k++){
-            Game.procOres[arr[k][0]] -= arr[k][1];
+            Conf.procOres[arr[k][0]] -= arr[k][1];
         }
         execReview();
     } else {
         var shortage = TRANS.resourceShortage;
         for(var s = 1; s < arr.length; s++){
-            if(Game.procOres[arr[s][0]] < arr[s][1]){
-                shortage += Game.resourceNames[arr[s][0]] + ", ";
+            if(Conf.procOres[arr[s][0]] < arr[s][1]){
+                shortage += Conf.resourceNames[arr[s][0]] + ", ";
             }
         }
         printConsole(shortage.substring(0,shortage.length - 2)); //removes the space and comma
@@ -4031,9 +4029,9 @@ function requisition(arr){//TODO set up recycling here
 function checkConnection(y, x) {
     var connected = false;
     for(var j = 0; j < 6; j++) {
-        if(Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]] && 
-           (Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 211 || 
-           Game.mapTiles[Game.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 204)) {
+        if(Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]] && 
+           (Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 211 || 
+           Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 204)) {
             connected = true;
         }
     }
@@ -4048,12 +4046,12 @@ function checkConnection(y, x) {
  * @param {bool} direction If true, action takes place, if not, will ask for confirmation
  */
 function clicked(direction) {
-    var y = Game.retY - Math.round(Game.yLimit / 2) + getTile('y');
-    var x = Game.retX - Math.round(Game.xLimit / 2) + getTile('x');
+    var y = Conf.retY - Math.round(Conf.yLimit / 2) + getTile('y');
+    var x = Conf.retX - Math.round(Conf.xLimit / 2) + getTile('x');
     //var kind;
     console.log('x: ' + x + '  y: ' + y);
-    var hex = Game.mapTiles[Game.level][y][x];
-    var tile = Game.map[Game.level][y][x];
+    var hex = Conf.mapTiles[Conf.level][y][x];
+    var tile = Conf.map[Conf.level][y][x];
     var lowerTile, upperTile;
     var confirmBot = function(botText){
         var frag = document.createDocumentFragment();
@@ -4072,19 +4070,19 @@ function clicked(direction) {
     };
 
 
-    if(Game.level < 5) {
-        lowerTile = Game.map[Game.level + 1][y][x];
+    if(Conf.level < 5) {
+        lowerTile = Conf.map[Conf.level + 1][y][x];
     }
-    if(Game.level > 0) {
-        upperTile = Game.map[Game.level - 1][y][x];
+    if(Conf.level > 0) {
+        upperTile = Conf.map[Conf.level - 1][y][x];
     }
-    switch(Game.clickedOn) {
+    switch(Conf.clickedOn) {
     case 'lander':
-        if(wetTest([y,x],Game.level)){
+        if(wetTest([y,x],Conf.level)){
             printConsole(TRANS.onWater);
         } else {
-            Game.mapTiles[Game.level][y][x] = bobTheBuilder(210, x, y, Game.level);
-            Game.home = [x,y];
+            Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(210, x, y, Conf.level);
+            Conf.home = [x,y];
             for(var j = 0; j < 6; j++) {
                 var tempY = adjacent(x, y, j)[0];
                 var tempX = adjacent(x, y, j)[1];
@@ -4092,29 +4090,29 @@ function clicked(direction) {
                 case 1:
                 case 3:
                 case 5:
-                    Game.mapTiles[0][tempY][tempX] = bobTheBuilder(211, tempX, tempY, Game.level);
+                    Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(211, tempX, tempY, Conf.level);
                     break;
                 case 0:
-                    Game.mapTiles[0][tempY][tempX] = bobTheBuilder(235, tempX, tempY, Game.level);
+                    Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(235, tempX, tempY, Conf.level);
                     break;
                 case 2:
-                    Game.mapTiles[0][tempY][tempX] = bobTheBuilder(203, tempX, tempY, Game.level);
+                    Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(203, tempX, tempY, Conf.level);
                     break;
                 case 4:
-                    Game.mapTiles[0][tempY][tempX] = bobTheBuilder(237, tempX, tempY, Game.level);
-                    Game.commTowers.push([tempX, tempY]);
+                    Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(237, tempX, tempY, Conf.level);
+                    Conf.commTowers.push([tempX, tempY]);
                     break;
                 default:
                     console.log("The eagle most definitely has *not* landed");
                 }
             }
-            Game.buildings[37][1] = false;
+            Conf.buildings[37][1] = false;
             var buildable = [0, 3, 8, 11, 17, 23, 25, 27, 32, 34, 35, 36];
             for(var ref in buildable) {
-                Game.buildings[buildable[ref]][1] = true;
+                Conf.buildings[buildable[ref]][1] = true;
             }
-            for(var i = 0; i < Game.robotsList.length; i++) {
-                Game.robotsList[i][3] = true;
+            for(var i = 0; i < Conf.robotsList.length; i++) {
+                Conf.robotsList[i][3] = true;
             }
             checkBuildings();
             execReview();
@@ -4135,7 +4133,7 @@ function clicked(direction) {
             } else if(!inRange(x, y)){
                 printConsole(TRANS.outOfRange);
             } else {
-                Game.mapTiles[Game.level][y][x] = bobTheBuilder(100, x, y, Game.level);
+                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(100, x, y, Conf.level);
             }
         }
         break;
@@ -4148,28 +4146,28 @@ function clicked(direction) {
             };
         } else {
             //tile.digDown(x, y, lowerTile);
-            var DBelow = Game.mapTiles[Game.level + 1];
+            var DBelow = Conf.mapTiles[Conf.level + 1];
             if(!checkConnection(y,x)){
                 printConsole(TRANS.noConnection);
-            } else if(wetTest([y, x], Game.level + 1)){
+            } else if(wetTest([y, x], Conf.level + 1)){
                 printConsole(TRANS.onWater);
             } else if((hex && hex.kind >= 100) || (DBelow[y][x] && DBelow[y][x].kind >= 100)){
                 printConsole(TRANS.buildingPresent);
             } else if((hex.kind > 3 && hex.kind < 9) || hex.kind > 11) {
                 printConsole(TRANS.noDig);
-            } else if(Game.level === 4){
+            } else if(Conf.level === 4){
                 printConsole(TRANS.lastLevel);
             } else if(!inRange(x, y)){
                 printConsole(TRANS.outOfRange);
             } else {
-                Game.mapTiles[Game.level][y][x] = bobTheBuilder(101, x, y, Game.level, true);
-                DBelow[y][x] = bobTheBuilder(101, x, y, Game.level + 1, true);
+                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level, true);
+                DBelow[y][x] = bobTheBuilder(101, x, y, Conf.level + 1, true);
                 for(var k = 0; k < 6; k++) {
                     var belowAdj = DBelow[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]];
-                    if((belowAdj.exists && (belowAdj.kind >= 100 || belowAdj[1].kind < 4)) || Game.map[Game.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]].kind === 4 || wetTest([adjacent(x, y, k)[0], adjacent(x, y, k)[1]], Game.level + 1)) {
+                    if((belowAdj.exists && (belowAdj.kind >= 100 || belowAdj[1].kind < 4)) || Conf.map[Conf.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]].kind === 4 || wetTest([adjacent(x, y, k)[0], adjacent(x, y, k)[1]], Conf.level + 1)) {
                         //do nothing
                     } else {
-                        Game.mapTiles[Game.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Game.level + 1);
+                        Conf.mapTiles[Conf.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Conf.level + 1);
                     }
                 }
             }
@@ -4183,20 +4181,20 @@ function clicked(direction) {
                 document.getElementById('confirmBuild').onclick = null;
             };
         } else {
-            if(wetTest([y, x], Game.level)){
+            if(wetTest([y, x], Conf.level)){
                 printConsole(TRANS.onWater);
-            } else if((hex && hex.kind > 3) || Game.level === 0 || (hex.kind > 2 && hex.kind < 9) || hex.kind > 11) {
+            } else if((hex && hex.kind > 3) || Conf.level === 0 || (hex.kind > 2 && hex.kind < 9) || hex.kind > 11) {
                 printConsole(TRANS.noCavern);
             } else if(!inRange(x, y)){
                 printConsole(TRANS.outOfRange);
             } else {
-                Game.mapTiles[Game.level][y][x] = bobTheBuilder(101, x, y, Game.level);
+                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level);
                 for(var z = 0; z < 6; z++) {
-                    var around = Game.mapTiles[Game.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
-                    if((around && (around.kind >= 100 || around.kind < 4)) || Game.map[Game.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]].kind < 4 || wetTest([adjacent(x, y, z)[0], adjacent(x, y, z)[1]], Game.level + 1)) {
+                    var around = Conf.mapTiles[Conf.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
+                    if((around && (around.kind >= 100 || around.kind < 4)) || Conf.map[Conf.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]].kind < 4 || wetTest([adjacent(x, y, z)[0], adjacent(x, y, z)[1]], Conf.level + 1)) {
                         //do nothing
                     } else {
-                        Game.mapTiles[Game.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Game.level);
+                        Conf.mapTiles[Conf.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Conf.level);
                     }
                 }
             }
@@ -4210,27 +4208,27 @@ function clicked(direction) {
                 document.getElementById('confirmBuild').onclick = null;
             };
         } else {
-            if(wetTest([y, x], Game.level + 1)){
+            if(wetTest([y, x], Conf.level + 1)){
                 printConsole(TRANS.onWater);
             } else if(hex && hex.kind !== 221 && hex.kind >= 100) {
                 printConsole(TRANS.noMine);
-            } else if(Game.level !== 0 && (!hex || hex && hex.kind !== 221)){
+            } else if(Conf.level !== 0 && (!hex || hex && hex.kind !== 221)){
                 printConsole(TRANS.noMine);
-            } else if(Game.level === 4) {
+            } else if(Conf.level === 4) {
                 printConsole(TRANS.lastLevel);
             } else if(!inRange(x, y)){
                 printConsole(TRANS.outOfRange);
             } else {
-                Game.mapTiles[Game.level][y][x] = bobTheBuilder(102, x, y, Game.level, true);
-                Game.mapTiles[Game.level + 1][y][x] = bobTheBuilder(102102, x, y, Game.level + 1, true);
+                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(102, x, y, Conf.level, true);
+                Conf.mapTiles[Conf.level + 1][y][x] = bobTheBuilder(102102, x, y, Conf.level + 1, true);
                 for(var m = 0; m < 6; m++) {
                     var mineY = adjacent(x, y, m)[0];
                     var mineX = adjacent(x, y, m)[1];
-                    if(Game.map[Game.level][mineY][mineX].mineable) {
-                        Game.mapTiles[Game.level][mineY][mineX] = bobTheBuilder(102102, mineX, mineY, Game.level, false);
+                    if(Conf.map[Conf.level][mineY][mineX].mineable) {
+                        Conf.mapTiles[Conf.level][mineY][mineX] = bobTheBuilder(102102, mineX, mineY, Conf.level, false);
                     }
-                    if(Game.map[Game.level + 1][mineY][mineX].mineable) {
-                        Game.mapTiles[Game.level + 1][mineY][mineX] = bobTheBuilder(102102, mineX, mineY, Game.level + 1, false);
+                    if(Conf.map[Conf.level + 1][mineY][mineX].mineable) {
+                        Conf.mapTiles[Conf.level + 1][mineY][mineX] = bobTheBuilder(102102, mineX, mineY, Conf.level + 1, false);
                     }
                 }
             }
@@ -4245,7 +4243,7 @@ function clicked(direction) {
             };
         } else {
             if(hex && hex.kind >= 200){
-                recycle(hex.kind, x, y, Game.level);
+                recycle(hex.kind, x, y, Conf.level);
             } else {
                 printConsole(TRANS.noRecycle);
             }
@@ -4254,16 +4252,16 @@ function clicked(direction) {
         break;
     default:
         if(!direction){
-            rightClicked(resourceNeededList(Game.clickedOn));
+            rightClicked(resourceNeededList(Conf.clickedOn));
             if(document.getElementById('confirmBuild')){
                 document.getElementById('confirmBuild').onclick = function(){
                     clicked(true);
                     document.getElementById('confirmBuild').onclick = null;
                 };}
         } else {
-            if((checkConnection(y, x) || Game.clickedOn === 'commarray' || Game.clickedOn === 'commarray2') && hex && hex.kind === 3) {
-                if(resourceNeededList(Game.clickedOn, true)){
-                    Game.mapTiles[Game.level][y][x] = bobTheBuilder(getBuildingRef(Game.clickedOn), x, y, Game.level);
+            if((checkConnection(y, x) || Conf.clickedOn === 'commarray' || Conf.clickedOn === 'commarray2') && hex && hex.kind === 3) {
+                if(resourceNeededList(Conf.clickedOn, true)){
+                    Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(getBuildingRef(Conf.clickedOn), x, y, Conf.level);
                 }
             } else {
                 !checkConnection(y, x) ? printConsole(TRANS.noConnection) : printConsole(TRANS.notPrepared);
@@ -4434,16 +4432,16 @@ function getBuildingRef(reference){
 */
 function construct() {
     var identity = this.id;
-    if(Game.clickedOn === identity) {
-        document.getElementById(Game.clickedOn).classList.remove('menu_selected');
-        Game.clickedOn = 'none';
+    if(Conf.clickedOn === identity) {
+        document.getElementById(Conf.clickedOn).classList.remove('menu_selected');
+        Conf.clickedOn = 'none';
         document.body.style.cursor = "url('images/pointers/pointer.png'), default";
     } else {
-        if(Game.clickedOn !== 'none') {
-            document.getElementById(Game.clickedOn).classList.remove('menu_selected');
+        if(Conf.clickedOn !== 'none') {
+            document.getElementById(Conf.clickedOn).classList.remove('menu_selected');
         }
         document.getElementById(identity).classList.add('menu_selected');
-        Game.clickedOn = identity; /**TODO : Update this to be the primary key listener*/
+        Conf.clickedOn = identity; /**TODO : Update this to be the primary key listener*/
         switch(identity) {
         case 'dozer':
             document.body.style.cursor = "url('images/pointers/dozer.png'), default";
