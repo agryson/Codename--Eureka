@@ -1,30 +1,46 @@
 /**
-* Module for everything we need to manage save games, load games etc.
-* @module
+* Moduled namespace, exposing everything we need to manage save games, load games etc.
+* @namespace FileIO
 */
-var Disk = (function(){
+var FileIO = (function(){
     var fs = null;
     var publicFunctions = {};
-    /**
-    * Opens or creates a persistent local file system
-    */
-    publicFunctions.openfs = function(){
-        window.webkitRequestFileSystem(window.PERSISTENT, 50*1024*1024 /*50MB*/, success, errorHandler);
-    };
 
     /**
     * Success handler, assigning the filesystem to something we can use and then
     * starts loading any existing games
     * @param {DOMFileSystem} filesystem The filesystem passed in from openfs()
+    * @memberOf FileIO
+    * @private
     */
-    var success = function(filesystem){
+    var _success = function(filesystem){
         fs = filesystem;
-        Disk.loadList();
+        FileIO.loadList();
+    };
+
+    /**
+    * Prints appropriate error information to console, if any
+    * @param {FileError} Error Error thrown
+    * @memberOf FileIO
+    * @private
+    */
+    var _errorHandler = function(e) {
+      console.log(e.name + ' : ' + e.message);
+    };
+
+    /**
+    * Opens or creates a persistent local file system
+    * @memberOf FileIO
+    * @function openfs
+    */
+    publicFunctions.openfs = function(){
+        window.webkitRequestFileSystem(window.PERSISTENT, 50*1024*1024 /*50MB*/, _success, _errorHandler);
     };
 
     /**
     * Fills the list of loadable games from the file system
-    * @constructor
+    * @memberOf FileIO
+    * @function loadList
     */
     publicFunctions.loadList = function(){
         var dirReader = fs.root.createReader();
@@ -41,10 +57,11 @@ var Disk = (function(){
                     entries = entries.concat(toArray(results));
                     readEntries();
                 }
-            }, errorHandler);
+            }, _errorHandler);
         };
 
         /**
+        * Takes the FileEntry object and returns it as an array
         * @param {FileEntry} list FileEntry object (basically an array representing
         * a list of save games)
         * @return {array} Returns an array of FileEntry objects
@@ -112,7 +129,7 @@ var Disk = (function(){
                         document.getElementById('confirmDeleteTxt').innerHTML = TRANS.confirmDelete + ' "' + nameIn + '"';
                         document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
                         document.getElementById('deleteOK').onclick = function(){
-                            Disk.deleteGame(nameIn);
+                            FileIO.deleteGame(nameIn);
                             document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
                             document.getElementById('deleteOK').onclick = null;
                         };
@@ -132,18 +149,22 @@ var Disk = (function(){
 
     /**
     * Deletes the game from the filesystem
+    * @memberOf FileIO
+    * @function deleteGame
     * @param {string} name The name of the save game to delete
     */
     publicFunctions.deleteGame = function(name){
         fs.root.getFile(name, {create: false}, function(fileEntry) {fileEntry.remove(function() {
                 console.log(name + ' has been removed.');
-                Disk.loadList();
-            }, errorHandler);
-        }, errorHandler);
+                FileIO.loadList();
+            }, _errorHandler);
+        }, _errorHandler);
     };
 
     /**
     * Saves the game to filesystem
+    * @memberOf FileIO
+    * @function saveGame
     * @param {Object} Game Game object to save
     */
     publicFunctions.saveGame = function(Game){
@@ -156,13 +177,15 @@ var Disk = (function(){
                     console.log('File write failed: ' + e.toString());
                 };
                 fileWriter.write(buildSave(Game));
-            }, errorHandler);
-        }, errorHandler);
+            }, _errorHandler);
+        }, _errorHandler);
     };
 
     /**
     * Manages game loads, assigning the values to their proper places, effectively 
     * taking a fresh config and overwriting with the saved values
+    * @memberOf FileIO
+    * @function loadGame
     * @param {Object} Game Game object (default) that will be loaded onto
     */
     publicFunctions.loadGame = function(Game){
@@ -229,12 +252,14 @@ var Disk = (function(){
                     jump(true, Game.home[0], Game.home[1], 0);
                 };
                 reader.readAsText(file);
-            }, errorHandler);
-        }, errorHandler);
+            }, _errorHandler);
+        }, _errorHandler);
     };
 
     /**
     * Creates the appropriate format to save
+    * @memberOf FileIO
+    * @function buildSave
     * @param {Object} Game Game object to be saved
     * @return {blob} The save game JSON, blobbified
     */
@@ -291,11 +316,7 @@ var Disk = (function(){
     };
 
     /**
-    * Prints appropriate error information to console, if any
-    * @param {FileError} Error Error thrown
+    * Exposed functions
     */
-    var errorHandler = function(e) {
-      console.log(e.name + ' : ' + e.message);
-    };
     return publicFunctions;
 })();

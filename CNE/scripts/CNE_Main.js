@@ -1981,7 +1981,7 @@ function flush(elem){
  * Initialize the game
  */
 window.onload = function init() {
-    Disk.openfs();
+    FileIO.openfs();
     if(!document.webkitHidden){
         Music.play();
     }
@@ -2043,7 +2043,7 @@ function eavesdrop() {
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
         flush(document.getElementById('consoleContent'));
-        Disk.loadList();
+        FileIO.loadList();
     };
     document.getElementById('login').onclick = function() {
         Game = new Conf();
@@ -2418,7 +2418,7 @@ function advanceTurn(turns){
             saneStats();
             if(turns === 1){
                 reCount('all');
-                Disk.saveGame(Game);
+                FileIO.saveGame(Game);
                 execReview();
                 fillResearchPanel('overview');
                 //setResearchClickers(researchPanel);
