@@ -2,6 +2,7 @@
  * The default configuration constructor. A new Conf() will instantiate all the 
  * main variables with their default values.
  * @constructor
+ * @todo Turn this into a namespace, no need for it to be a function
  */
 function Conf() {
     /**
