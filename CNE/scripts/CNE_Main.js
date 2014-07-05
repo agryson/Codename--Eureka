@@ -1,7 +1,6 @@
 /*jslint node: true */
 "use strict"; //this will break everything if there's any errors... that's a good thing
 var Game; //Global so I can get at it from other scripts...
-var Music = new Playlist();
 //var saveList = [];
 
 //Nice map: 1363032002367
@@ -2063,11 +2062,11 @@ function eavesdrop() {
         }
     };
     document.getElementById('popupVolume').onchange = function(){
-        Music.changeVolume(document.getElementById('popupVolume').value);
+        Music.setVolume(document.getElementById('popupVolume').value);
         document.getElementById('settingsVolume').value = document.getElementById('popupVolume').value;
     };
     document.getElementById('settingsVolume').onchange = function(){
-        Music.changeVolume(document.getElementById('settingsVolume').value);
+        Music.setVolume(document.getElementById('settingsVolume').value);
         document.getElementById('popupVolume').value = document.getElementById('settingsVolume').value;
     };
     //:Sound
@@ -2452,82 +2451,6 @@ function pageVisHandler() {
   } else {
     Music.play();
   }
-}
-
-
-
-/**
-* All of the music functions
-* @constructor
-*/
-function Playlist(){
-    /**
-    * Toggles music on or off
-    */
-    this.toggleMusic = function(){
-        if(!this.musicOn) {
-            this.musicOn = true;
-            this.play();
-        } else {
-            this.musicOn = false;
-            this.pause();
-        }
-    };
-    this.musicOn = true;
-    /**
-    * Pauses music
-    */
-    this.pause = function() {
-        currentTrack.pause();
-    };
-    /**
-    * Plays music
-    */
-    this.play = function() {
-        currentTrack.volume = volume;
-        this.musicOn ? currentTrack.play() : currentTrack.pause();
-    };
-    /**
-    * Sets volume to provided value
-    * @param {int} val Desired volume level
-    */
-    this.changeVolume = function(val){
-        currentTrack.volume = val;
-        volume = val;
-    };
-    var volume = 0.1;
-    var track0 = new Audio('sound/Virus-Cured_Clearside.mp3');
-    var track1 = new Audio('sound/Gone_Clearside.mp3');
-    var track2 = new Audio('sound/Shapeless_Clearside.mp3');
-    var track3 = new Audio('sound/Coma_Clearside.mp3');
-    var currentTrack = track0;
-
-    //Sounds
-    track0.addEventListener('ended', function() {
-        this.currentTime = 0;
-        track1.volume = volume;
-        currentTrack = track1;
-        track1.play();
-    }, false);
-    track1.addEventListener('ended', function() {
-        this.currentTime = 0;
-        track2.volume = volume;
-        currentTrack = track2;
-        track2.play();
-    }, false);
-    track2.addEventListener('ended', function() {
-        this.currentTime = 0;
-        track3.volume = volume;
-        currentTrack = track3;
-        track3.play();
-    }, false);
-    track3.addEventListener('ended', function() {
-        this.currentTime = 0;
-        track0.volume = volume;
-        currentTrack = track0;
-        track0.play();
-    }, false);
-    //!Sounds
 }
 
 
