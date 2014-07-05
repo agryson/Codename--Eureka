@@ -114,8 +114,8 @@ function NewGame(){
     var generateRivers = function(iterations) {
       var x, y;
       for(var i = 0; i < iterations; i++) {
-        x = randGen(Game.radarRad * 2, 0, true);
-        y = randGen(Game.radarRad * 2, 0, true);
+        x = Tools.randomGenerator(Game.radarRad * 2, 0, true);
+        y = Tools.randomGenerator(Game.radarRad * 2, 0, true);
         if(Game.map[0][y][x].kind === 2 || Game.map[0][y][x].kind === 1) {
           slide(x, y);
         } else {
@@ -229,15 +229,15 @@ function NewGame(){
       [150, 90, 20, 40]//Calamine", "Zinc (Zn)"
         ];
       var limit = (Game.radarRad * 2) - 1;
-      var x = randGen(Game.radarRad * 2, 0, true);
-      var y = randGen(Game.radarRad * 2, 0, true);
+      var x = Tools.randomGenerator(Game.radarRad * 2, 0, true);
+      var y = Tools.randomGenerator(Game.radarRad * 2, 0, true);
       var sameAbove = false;
       for(var i = 0; i < resourceArray.length; i++) {
         if(Game.level === 0 || Game.map[Game.level - 1][y][x].resources[i]){
         for(var iter = 0; iter < resourceArray[i][3]; iter++) {
             var testAltitude = map[y][x].altitude;
             if(testAltitude < (resourceArray[i][0] + (Game.level*6)) && testAltitude > resourceArray[i][1] && x > 0 && x < limit && y < limit && y > 0 && map[y][x].kind !== 4) {
-              map[y][x].resources[i] = randGen(resourceArray[i][2], 1, true);
+              map[y][x].resources[i] = Tools.randomGenerator(resourceArray[i][2], 1, true);
               map[y][x].mineable = true;
               //if we haven't already, update the texture to show resources
               if(map[y][x].kind < 8){
@@ -248,7 +248,7 @@ function NewGame(){
                 var tempX = adjacent(x, y, count)[1];
                 var tempY = adjacent(x, y, count)[0];
                 if(map[tempY][tempX].kind !== 4 && (tempY != check[0] && tempX != check[1])) {
-                  map[tempY][tempX].resources[i] = randGen(resourceArray[i][2], 1, true);
+                  map[tempY][tempX].resources[i] = Tools.randomGenerator(resourceArray[i][2], 1, true);
                   map[tempY][tempX].mineable = true;
                   //if we haven't already, update the texture to show resources
                   if(map[tempY][tempX].kind < 8){
@@ -256,18 +256,18 @@ function NewGame(){
                   }
                 }
               }
-              x < Game.radarRad * 2 - 1 && x > 0 ? x = check[1] : x = randGen(Game.radarRad * 2, 0, true);
-              y < Game.radarRad * 2 - 1 && y > 0 ? y = check[0] : y = randGen(Game.radarRad * 2, 0, true);
+              x < Game.radarRad * 2 - 1 && x > 0 ? x = check[1] : x = Tools.randomGenerator(Game.radarRad * 2, 0, true);
+              y < Game.radarRad * 2 - 1 && y > 0 ? y = check[0] : y = Tools.randomGenerator(Game.radarRad * 2, 0, true);
             } else {
               iter -= 1;
-              x = randGen(Game.radarRad * 2, 0, true);
-              y = randGen(Game.radarRad * 2, 0, true);
+              x = Tools.randomGenerator(Game.radarRad * 2, 0, true);
+              y = Tools.randomGenerator(Game.radarRad * 2, 0, true);
             }
           }
           } else {
             i -= 1;
-            x = randGen(Game.radarRad * 2, 0, true);
-            y = randGen(Game.radarRad * 2, 0, true);
+            x = Tools.randomGenerator(Game.radarRad * 2, 0, true);
+            y = Tools.randomGenerator(Game.radarRad * 2, 0, true);
           }
       }
     };

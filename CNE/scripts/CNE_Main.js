@@ -466,7 +466,7 @@ function nextTurn(x, y, level) {
                 count = processingLimit;
             }
             while(count > 0) {
-                var pick = randGen(available.length, 0);
+                var pick = Tools.randomGenerator(available.length, 0);
                 if(Game.ores[available[pick]] > 0) {
                     Game.ores[available[pick]] -= 1;
                     switch(available[pick]) {
@@ -1776,7 +1776,7 @@ function fillResearchPanel(ident){
         frag.appendChild(content);
         //get a reference to the research topic and add a button if it's studyable
     }
-    flush(document.getElementById('researchPanel'));
+    Tools.flush(document.getElementById('researchPanel'));
     document.getElementById('researchPanel').appendChild(frag);
 
     if(topicList){
@@ -1927,7 +1927,7 @@ function listLabs(ident){
         noActive.innerHTML = TRANS.none;
         frag.appendChild(noActive);
     }
-    flush(document.getElementById('researchPanel'));
+    Tools.flush(document.getElementById('researchPanel'));
     document.getElementById('researchPanel').appendChild(frag);
 
     for(var s = 0; s < studyList.length; s++){
@@ -1957,21 +1957,6 @@ function listLabs(ident){
             };
             obj.addEventListener('click', objFn, false);
         })();
-    }
-}
-
-
-
-/**
-* Given a container element, will unhook all of the child elements (Chrome should 
-* then remove the orphaned click listeners during garbage collection)
-* @param {HTMLElement} Element to flush out
-* @todo Confirm that Chrome removes orphaned click listeners
-*/
-function flush(elem){
-    //afaik, chrome will remove orphaned event listeners
-    while (elem.lastChild) {
-        elem.removeChild(elem.firstChild);
     }
 }
 
@@ -2042,7 +2027,7 @@ function eavesdrop() {
         settings.classList.add('global_container_hidden');
         radarOptCont.classList.add('global_container_hidden');
         document.getElementById('console').classList.remove('console_open');
-        flush(document.getElementById('consoleContent'));
+        Tools.flush(document.getElementById('consoleContent'));
         FileIO.loadList();
     };
     document.getElementById('login').onclick = function() {
@@ -2886,23 +2871,6 @@ function checkRobots() {
 
 
 /**
- * Generates a random number, from a base value from 0 to num-1
- * @param  {int} num is the modifier
- * @param  {int} min is the base value
- * @param {bool} [seeded] Whether the generated number should use the game's seed
- * @return {int} The random number
- */
-function randGen(num, min, seeded) {
-    if(seeded){
-        return Math.floor(Game.rng.random() * num) + min;
-    } else {
-        return Math.floor(Math.random() * num) + min;
-    }
-}
-
-
-
-/**
  * Changes level from an input (slider etc.)
  * @param  {int} newLevel the level we would change to
  */
@@ -3401,36 +3369,6 @@ function wetTest(yxArrayIn, level) {
     return false;
 }
 
-/**
- * Returns the distance between two points
- * @param  {int} x1 First point's X coordinate
- * @param  {int} y1 First point's Y coordinate 
- * @param  {int} x2 Second point's X coordinate
- * @param  {int} y2 Second point's Y coordinate
- * @return {float} The distance (in same units as provided)
- */
-function distance(x1, y1, x2, y2) {
-    return Math.round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
-}
-
-/**
- * Random walk function for "clumpy" randomness
- * @return {int}
- */
-function randWalk() {
-    var walk = Math.floor(Math.random() * 3);
-    switch(walk) {
-    case 0:
-        return -1;
-    case 1:
-        return 0;
-    case 2:
-        return 1;
-    default:
-        break;
-    }
-}
-
 
 
 /**
@@ -3528,7 +3466,7 @@ function inRange(x, y){
         if(thisTower === 210 || thisTower === 237){
             radius -= 25;
         }
-        if(distance(Game.commTowers[tower][0], Game.commTowers[tower][1], x, y) <= radius){
+        if(Tools.distance(Game.commTowers[tower][0], Game.commTowers[tower][1], x, y) <= radius){
             return true;
         }
     }
@@ -3764,12 +3702,12 @@ function rightClicked(content) {
             popFrame.style.opacity = '0';
             setTimeout(function(){
                 popFrame.style.display = 'none';
-                flush(pop);
+                Tools.flush(pop);
             }, 200);
             popFrame.removeEventListener('mouseout', hide);
         }
     };
-    flush(pop);
+    Tools.flush(pop);
     pop.appendChild(contextContent(content));
     popFrame.style.top = event.clientY - 25 + 'px';
     popFrame.style.left = event.clientX - 10 + 'px';
@@ -3867,19 +3805,6 @@ function contextContent(content) {
     //!resources
     return frag;
 }
-
-
-
-/**
-* Inserts the provided string into the provided index
-* @param {int} index Index at which to insert the string
-* @param {string} string The string to insert
-* @returns {string} Modified string
-*/
-String.prototype.insert = function(index, string) {
-    if(index > 0) return this.slice(0, index) + string + this.slice(index);
-    else return string + this;
-};
 
 
 

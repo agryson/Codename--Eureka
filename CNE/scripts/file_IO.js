@@ -102,7 +102,7 @@ var FileIO = (function(){
                 del.innerHTML = '&#215;';
                 fragment.appendChild(del);
             });
-            flush(document.getElementById('chooseSave'));
+            Tools.flush(document.getElementById('chooseSave'));
             document.getElementById('chooseSave').appendChild(fragment);
             for(var j = 0; j < ids.length; j++){
                 //I've discovered closure! wow...
@@ -247,7 +247,7 @@ var FileIO = (function(){
                     fillResearchMenu();
                     drawRadar();
                     Game.turnNum.innerHTML = TRANS.weekCounter + Game.turn;
-                    flush(document.getElementById('consoleContent'));
+                    Tools.flush(document.getElementById('consoleContent'));
                     printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Game.turn);
                     jump(true, Game.home[0], Game.home[1], 0);
                 };
