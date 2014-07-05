@@ -323,7 +323,7 @@ function NewGame(){
             createMap(l + 1);
         }, 200);
     } else {
-        Disk.loadGame(Game.inputSeed);
+        Disk.loadGame(Game);
         generateRivers(40);
         mapFit(true);
         drawZoomMap();
