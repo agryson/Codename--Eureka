@@ -14,7 +14,7 @@ function NewGame(){
  */
   this.getSeed = function() {
     var input = document.getElementById('seed').value;
-    Lang = new Language(input);
+    planetName = input;
     var popup = document.getElementById("popupContainer");
     var seedString = '';
     var seeder;
@@ -63,19 +63,19 @@ function NewGame(){
       var message = document.getElementById('loadMessage');
       switch(incrementer) {
       case 1:
-        message.innerHTML = Lang.engage;
+        message.innerHTML = TRANS.engage;
         break;
       case 2:
-        message.innerHTML = Lang.warp11;
+        message.innerHTML = TRANS.warp11;
         break;
       case 3:
-        message.innerHTML = Lang.orbit;
+        message.innerHTML = TRANS.orbit;
         break;
       case 4:
-        message.innerHTML = Lang.probes;
+        message.innerHTML = TRANS.probes;
         break;
       case 5:
-        message.innerHTML = Lang.houston;
+        message.innerHTML = TRANS.houston;
         break;
       default:
         message.innerHTML = '';
@@ -140,7 +140,7 @@ function NewGame(){
           Game.map[0][y][x].kind !== 4) {
         Game.map[0][y][x].kind = 4;
         Game.map[0][y][x].diggable = false;
-        Game.map[0][y][x].ref = changeName(Lang.water, Game.map[0][y][x].ref);
+        Game.map[0][y][x].ref = changeName(TRANS.water, Game.map[0][y][x].ref);
         var lowest = [adjacent(x, y, randIndex)[1], adjacent(x, y, randIndex)[0]]; //x, y
         for(var j = 0; j < 6; j++) {
           if(x > 1 && x < (Game.radarRad * 2) - 1 && 
@@ -174,16 +174,16 @@ function NewGame(){
 
       if(altitude >= high) {
         map.kind = 2 + increment;
-        map.ref = map.ref.insert(0, Lang.mountaineous + ' ');
+        map.ref = map.ref.insert(0, TRANS.mountaineous + ' ');
       } else if(altitude >= med) {
         map.kind = 1 + increment;
-        map.ref = map.ref.insert(0, Lang.rough + ' ');
+        map.ref = map.ref.insert(0, TRANS.rough + ' ');
       } else if(altitude >= low) {
         map.kind = 0 + increment;
-        map.ref = map.ref.insert(0, Lang.smooth + ' ');
+        map.ref = map.ref.insert(0, TRANS.smooth + ' ');
       } else {
         map.kind = 4;
-        map.ref = map.ref.insert(0, Lang.water + ' ');
+        map.ref = map.ref.insert(0, TRANS.water + ' ');
       }
       level === 0 && map.kind !== 4 ? map.diggable = true : map.diggable = false;
       level === 0 ? map.UG = false : map.UG = true;

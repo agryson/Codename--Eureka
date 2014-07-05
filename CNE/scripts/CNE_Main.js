@@ -1,7 +1,6 @@
 /*jslint node: true */
 "use strict"; //this will break everything if there's any errors... that's a good thing
 var Game; //Global so I can get at it from other scripts...
-var Lang = new Language('Gliese 581d');
 var Music = new Playlist();
 var Disk = new GameDisk();
 //var saveList = [];
@@ -139,7 +138,7 @@ function Construction() {
     * @memberof Construction
     * @member {array} future
     */
-    this.future = [3, Lang.prepared];
+    this.future = [3, TRANS.prepared];
     /**
     * @memberof Construction
     * @member {int} robot
@@ -279,7 +278,7 @@ function nextTurn(x, y, level) {
             }
             if(!stillMining) {
                 tile.mining = false;
-                Game.mapTiles[level][y][x].ref = changeName(Lang.minedOut, Game.mapTiles[level][y][x].ref);
+                Game.mapTiles[level][y][x].ref = changeName(TRANS.minedOut, Game.mapTiles[level][y][x].ref);
             }
         }
         //TODO: will surely need to fix this after ...
@@ -579,7 +578,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
         o.kind = 100;
         o.position = [level, x, y];
         if(kind >= 200 && kind < 300) {
-            o.ref = changeName(Lang.building + Game.buildings[kind - 200][3], Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.building + Game.buildings[kind - 200][3], Game.map[level][y][x].ref);
         }
         console.log(kind);
         switch(kind) {
@@ -587,8 +586,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
         case 100:
             o.vital = true;
             o.buildTime = eta(2);
-            o.future = [3, Lang.prepared];
-            o.ref = changeName(Lang.preparing, Game.map[level][y][x].ref);
+            o.future = [3, TRANS.prepared];
+            o.ref = changeName(TRANS.preparing, Game.map[level][y][x].ref);
             o.robot = 0;
             Game.robotsList[0][0] += 1;
             reCount('dozer');
@@ -598,9 +597,9 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.kind = kind;
             o.buildTime = eta(2);
             if(builderBot) {
-                o.future = [204, Lang.building];
+                o.future = [204, TRANS.building];
             }
-            o.ref = changeName(Lang.digging, Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.digging, Game.map[level][y][x].ref);
             o.robot = 1;
             Game.robotsList[1][0] += 1;
             reCount('digger');
@@ -609,9 +608,9 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.vital = true;
             o.kind = 8;
             o.buildTime = eta(3);
-            o.future = [Game.map[level][y][x].kind - 5, Lang.cavern];
+            o.future = [Game.map[level][y][x].kind - 5, TRANS.cavern];
             o.kind = 8;
-            o.ref = changeName(Lang.diggingCavern, Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.diggingCavern, Game.map[level][y][x].ref);
             reCount('cavernDigger');
             break;
 
@@ -620,9 +619,9 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.kind = kind;
             o.buildTime = eta(3);
             if(builderBot) {
-                o.future = [221, Lang.building];
+                o.future = [221, TRANS.building];
             }
-            o.ref = changeName(Lang.mining, Game.map[level][y][x].ref);
+            o.ref = changeName(TRANS.mining, Game.map[level][y][x].ref);
             o.mining = true;
             o.robot = 3;
             Game.robotsList[3][0] += 1;
@@ -634,14 +633,14 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.kind = Game.map[level][y][x].kind;
             if(Game.map[level][y][x].kind > 8 || builderBot) {
                 if(builderBot) {
-                    o.future = [221, Lang.building];
+                    o.future = [221, TRANS.building];
                 } else {
-                    o.future = [o.kind, Lang.mining];
+                    o.future = [o.kind, TRANS.mining];
                 }
-                o.ref = changeName(Lang.mining, Game.map[level][y][x].ref);
+                o.ref = changeName(TRANS.mining, Game.map[level][y][x].ref);
                 o.mining = true;
             } else if(level > 0) {
-                o.future = [Game.map[level][y][x].kind - 5, Lang.cavern];
+                o.future = [Game.map[level][y][x].kind - 5, TRANS.cavern];
                 o.kind = Game.map[level][y][x].kind - 5;
             }
             break;
@@ -662,7 +661,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 2;
             o.waste = 2;
             o.storage = 15;
-            o.future = [kind, Lang.agri];
+            o.future = [kind, TRANS.agri];
             o.employees = 2;
             break;
         case 201:
@@ -677,7 +676,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 1;
             o.waste = 1;
             o.storage = 20;
-            o.future = [kind, Lang.agri2];
+            o.future = [kind, TRANS.agri2];
             o.employees = 1;
             break;
         case 202:
@@ -690,7 +689,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 3;
             o.waste = 1;
             o.storage = 15;
-            o.future = [kind, Lang.airport];
+            o.future = [kind, TRANS.airport];
             o.employees = 1;
             break;
         case 203:
@@ -704,7 +703,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 2;
             o.storage = 2;
             o.air = 100;
-            o.future = [kind, Lang.arp];
+            o.future = [kind, TRANS.arp];
             o.employees = 2;
             break;
         case 204:
@@ -714,7 +713,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.health = 50;
             o.energy = -5;
             o.storage = 1;
-            o.future = [kind, Lang.airlift];
+            o.future = [kind, TRANS.airlift];
             break;
         case 205:
             //barracks
@@ -726,7 +725,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = -5;
             o.waste = 5;
             o.storage = 5;
-            o.future = [kind, Lang.barracks];
+            o.future = [kind, TRANS.barracks];
             o.employees = 2;
             break;
         case 206:
@@ -740,7 +739,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = -15;
             o.waste = 2;
             o.storage = 2;
-            o.future = [kind, Lang.civprot];
+            o.future = [kind, TRANS.civprot];
             o.employees = 3;
             break;
         case 207:
@@ -754,7 +753,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = -30;
             o.waste = 1;
             o.storage = 3;
-            o.future = [kind, Lang.civprot2];
+            o.future = [kind, TRANS.civprot2];
             o.employees = 1;
             break;
         case 208:
@@ -765,7 +764,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.hipMorale = -3;
             o.crime = 1;
             o.storage = 2;
-            o.future = [kind, Lang.commarray];
+            o.future = [kind, TRANS.commarray];
             break;
         case 209:
             //comm array 2
@@ -778,7 +777,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.artMorale = 2;
             o.crime = 2;
             o.storage = 2;
-            o.future = [kind, Lang.commarray2];
+            o.future = [kind, TRANS.commarray2];
             break;
         case 210:
             //command
@@ -792,7 +791,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = -3;
             o.waste = 1;
             o.storage = 10;
-            o.future = [kind, Lang.command];
+            o.future = [kind, TRANS.command];
             o.employees = 3;
             break;
         case 211:
@@ -802,7 +801,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.health = 20;
             o.energy = -1;
             o.storage = 1;
-            o.future = [kind, Lang.connector];
+            o.future = [kind, TRANS.connector];
             break;
         case 212:
             // drone factory
@@ -816,7 +815,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 2;
             o.waste = 5;
             o.storage = 30;
-            o.future = [kind, Lang.dronefab];
+            o.future = [kind, TRANS.dronefab];
             o.employees = 3;
             break;
         case 213:
@@ -831,7 +830,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 3;
             o.waste = 8;
             o.storage = 5;
-            o.future = [kind, Lang.chernobyl];
+            o.future = [kind, TRANS.chernobyl];
             o.employees = 3;
             break;
         case 214:
@@ -845,7 +844,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.artMorale = 5;
             o.waste = 3;
             o.storage = 5;
-            o.future = [kind, Lang.tokamak];
+            o.future = [kind, TRANS.tokamak];
             o.employees = 2;
             break;
         case 215:
@@ -860,7 +859,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 3;
             o.waste = 5;
             o.storage = 30;
-            o.future = [kind, Lang.genfab];
+            o.future = [kind, TRANS.genfab];
             o.employees = 3;
             break;
         case 216:
@@ -873,7 +872,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.hipMorale = 5;
             o.artMorale = 5;
             o.storage = 2;
-            o.future = [kind, Lang.geotherm];
+            o.future = [kind, TRANS.geotherm];
             o.employees = 2;
             break;
         case 217:
@@ -890,7 +889,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 3;
             o.storage = 10;
             o.housing = 30;
-            o.future = [kind, Lang.hab];
+            o.future = [kind, TRANS.hab];
             o.employees = 1;
             break;
         case 218:
@@ -907,7 +906,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 2;
             o.storage = 10;
             o.housing = 40;
-            o.future = [kind, Lang.hab2];
+            o.future = [kind, TRANS.hab2];
             o.employees = 1;
             break;
         case 219:
@@ -924,7 +923,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.storage = 15;
             o.housing = 50;
-            o.future = [kind, Lang.hab3];
+            o.future = [kind, TRANS.hab3];
             o.employees = 1;
             break;
         case 220:
@@ -938,7 +937,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 2;
             o.waste = 5;
             o.storage = 5;
-            o.future = [kind, Lang.er];
+            o.future = [kind, TRANS.er];
             o.employees = 3;
             break;
         case 221:
@@ -953,7 +952,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.waste = 1;
             o.mining = true;
             o.storage = 20;
-            o.future = [kind, Lang.mine];
+            o.future = [kind, TRANS.mine];
             break;
         case 222:
             // nursery
@@ -968,7 +967,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 2;
             o.waste = 3;
             o.storage = 2;
-            o.future = [kind, Lang.nursery];
+            o.future = [kind, TRANS.nursery];
             o.employees = 1;
             break;
         case 223:
@@ -982,7 +981,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 5;
             o.waste = 2;
             o.storage = 50;
-            o.future = [kind, Lang.oreproc];
+            o.future = [kind, TRANS.oreproc];
             o.employees = 2;
             break;
         case 224:
@@ -996,7 +995,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 5;
             o.waste = 2;
             o.storage = 50;
-            o.future = [kind, Lang.rec];
+            o.future = [kind, TRANS.rec];
             o.employees = 2;
             break;
         case 225:
@@ -1010,7 +1009,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 3;
             o.waste = -25;
             o.storage = 30;
-            o.future = [kind, Lang.recycler];
+            o.future = [kind, TRANS.recycler];
             o.employees = 1;
             break;
         case 226:
@@ -1026,7 +1025,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 15;
             o.waste = 10;
             o.storage = 5;
-            o.future = [kind, Lang.clichy];
+            o.future = [kind, TRANS.clichy];
             o.employees = 2;
             break;
         case 227:
@@ -1040,7 +1039,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 2;
             o.waste = 5;
             o.storage = 2;
-            o.future = [kind, Lang.research];
+            o.future = [kind, TRANS.research];
             o.employees = 3;
             break;
         case 228:
@@ -1054,7 +1053,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 1;
             o.waste = 3;
             o.storage = 3;
-            o.future = [kind, Lang.research2];
+            o.future = [kind, TRANS.research2];
             o.employees = 3;
             break;
         case 229:
@@ -1066,7 +1065,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 4;
             o.hipMorale = 8;
             o.artMorale = 4;
-            o.future = [kind, Lang.solar];
+            o.future = [kind, TRANS.solar];
             break;
         case 230:
             // space port
@@ -1079,7 +1078,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 5;
             o.waste = 2;
             o.storage = 20;
-            o.future = [kind, Lang.space];
+            o.future = [kind, TRANS.space];
             o.employees = 2;
             break;
         case 231:
@@ -1090,7 +1089,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 5;
             o.waste = 1;
             o.storage = 15;
-            o.future = [kind, Lang.stasis];
+            o.future = [kind, TRANS.stasis];
             o.employees = 1;
             break;
         case 232:
@@ -1104,7 +1103,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 3;
             o.waste = 1;
             o.storage = 1000;
-            o.future = [kind, Lang.store];
+            o.future = [kind, TRANS.store];
             o.employees = 1;
             break;
         case 233:
@@ -1118,7 +1117,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = -2;
             o.waste = 2;
             o.storage = 3;
-            o.future = [kind, Lang.uni];
+            o.future = [kind, TRANS.uni];
             o.employees = 2;
             break;
         case 234:
@@ -1132,7 +1131,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 3;
             o.waste = 1;
             o.storage = 150;
-            o.future = [kind, Lang.warehouse];
+            o.future = [kind, TRANS.warehouse];
             o.employees = 1;
             break;
         case 235:
@@ -1144,7 +1143,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.tossMorale = 2;
             o.hipMorale = 4;
             o.artMorale = 2;
-            o.future = [kind, Lang.windfarm];
+            o.future = [kind, TRANS.windfarm];
             o.employees = 1;
             break;
         case 236:
@@ -1159,7 +1158,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.crime = 3;
             o.waste = 2;
             o.storage = 5;
-            o.future = [kind, Lang.workshop];
+            o.future = [kind, TRANS.workshop];
             o.employees = 2;
             break;
         case 237:
@@ -1170,8 +1169,8 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.health = 70;
             o.storage = 50;
             o.energy = 60;
-            o.future = [kind, Lang.lander];
-            o.ref = changeName(Lang.lander, Game.map[level][y][x].ref);
+            o.future = [kind, TRANS.lander];
+            o.ref = changeName(TRANS.lander, Game.map[level][y][x].ref);
             break;
         default:
             console.log("Bob can't build it... :( " + kind);
@@ -1179,7 +1178,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
         }
         return o;
     } else {
-        printConsole(Lang.onWater);
+        printConsole(TRANS.onWater);
     }
 }
 
@@ -1254,13 +1253,13 @@ function recycle(kind, x, y, level){
                 if(Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1] >= recovered[j][1]){
                     Game.procOres[recovered[j][0]] += recovered[j][1];
                 } else {
-                    printConsole(Lang.recycleFailure);
+                    printConsole(TRANS.recycleFailure);
                 }
             }
         }
     }
     if(!recycled){
-        printConsole(Lang.noRecyclers);
+        printConsole(TRANS.noRecyclers);
     }
     execReview();
 }
@@ -1344,7 +1343,7 @@ function GameDisk(){
         var listResults = function(list){
             var fragment = document.createDocumentFragment();
             var title = document.createElement('span');
-            title.innerHTML = Lang.saves;
+            title.innerHTML = TRANS.saves;
             fragment.appendChild(title);
             var ids = [];
             var rmIds = [];
@@ -1396,7 +1395,7 @@ function GameDisk(){
                     var rmObjFn = function(){
                         var nameIn = document.getElementById(rmId).value;
                         document.getElementById('deleteOK').value = nameIn;
-                        document.getElementById('confirmDeleteTxt').innerHTML = Lang.confirmDelete + ' "' + nameIn + '"';
+                        document.getElementById('confirmDeleteTxt').innerHTML = TRANS.confirmDelete + ' "' + nameIn + '"';
                         document.getElementById('confirmDelete').classList.toggle('delete_toast_visible');
                         document.getElementById('deleteOK').onclick = function(){
                             Disk.deleteGame(nameIn);
@@ -1515,9 +1514,9 @@ function GameDisk(){
                     execReview();
                     fillResearchMenu();
                     drawRadar();
-                    Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
+                    Game.turnNum.innerHTML = TRANS.weekCounter + Game.turn;
                     flush(document.getElementById('consoleContent'));
-                    printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
+                    printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Game.turn);
                     jump(true, Game.home[0], Game.home[1], 0);
                 };
                 reader.readAsText(file);
@@ -1736,44 +1735,44 @@ function Param() {
     * @member {array} buildings
     */
     this.buildings = [
-        ["agri", false, 0, Lang.agri], //
-        ["agri2", false, 0, Lang.agri2],
-        ["airport", false, 0, Lang.airport],
-        ["arp", false, 2, Lang.arp], //
-        ["airlift", false, 2, Lang.airlift], //
-        ["barracks", false, 1, Lang.barracks],
-        ["civprot", false, 2, Lang.civprot],
-        ["civprot2", false, 2, Lang.civprot2],
-        ["commarray", false, 0, Lang.commarray], //
-        ["commarray2", false, 0, Lang.commarray2],
-        ["command", false, 2, Lang.command], //
-        ["connector", false, 2, Lang.connector], //
-        ["dronefab", false, 0, Lang.dronefab],
-        ["chernobyl", false, 0, Lang.chernobyl],
-        ["tokamak", false, 0, Lang.tokamak],
-        ["genfab", false, 0, Lang.genfab], //
-        ["geotherm", false, 1, Lang.geotherm],
-        ["hab", false, 1, Lang.hab], //
-        ["hab2", false, 1, Lang.hab2],
-        ["hab3", false, 1, Lang.hab3],
-        ["er", false, 1, Lang.er],
-        ["mine", false, 2, Lang.mine],
-        ["nursery", false, 1, Lang.nursery],
-        ["oreproc", false, 0, Lang.oreproc], //
-        ["rec", false, 1, Lang.rec],
-        ["recycling", false, 0, Lang.recycling],
-        ["clichy", false, 1, Lang.clichy], //
-        ["research", false, 2, Lang.research], //
-        ["research2", false, 2, Lang.research2],
-        ["solar", false, 0, Lang.solar],
-        ["space", false, 0, Lang.space],
-        ["stasis", false, 1, Lang.stasis],
-        ["store", false, 2, Lang.store], //
-        ["uni", false, 1, Lang.uni],
-        ["warehouse", false, 2, Lang.warehouse], //
-        ["windfarm", false, 0, Lang.windfarm], //
-        ["workshop", false, 1, Lang.workshop], //
-        ["lander", true, 0, Lang.lander]
+        ["agri", false, 0, TRANS.agri], //
+        ["agri2", false, 0, TRANS.agri2],
+        ["airport", false, 0, TRANS.airport],
+        ["arp", false, 2, TRANS.arp], //
+        ["airlift", false, 2, TRANS.airlift], //
+        ["barracks", false, 1, TRANS.barracks],
+        ["civprot", false, 2, TRANS.civprot],
+        ["civprot2", false, 2, TRANS.civprot2],
+        ["commarray", false, 0, TRANS.commarray], //
+        ["commarray2", false, 0, TRANS.commarray2],
+        ["command", false, 2, TRANS.command], //
+        ["connector", false, 2, TRANS.connector], //
+        ["dronefab", false, 0, TRANS.dronefab],
+        ["chernobyl", false, 0, TRANS.chernobyl],
+        ["tokamak", false, 0, TRANS.tokamak],
+        ["genfab", false, 0, TRANS.genfab], //
+        ["geotherm", false, 1, TRANS.geotherm],
+        ["hab", false, 1, TRANS.hab], //
+        ["hab2", false, 1, TRANS.hab2],
+        ["hab3", false, 1, TRANS.hab3],
+        ["er", false, 1, TRANS.er],
+        ["mine", false, 2, TRANS.mine],
+        ["nursery", false, 1, TRANS.nursery],
+        ["oreproc", false, 0, TRANS.oreproc], //
+        ["rec", false, 1, TRANS.rec],
+        ["recycling", false, 0, TRANS.recycling],
+        ["clichy", false, 1, TRANS.clichy], //
+        ["research", false, 2, TRANS.research], //
+        ["research2", false, 2, TRANS.research2],
+        ["solar", false, 0, TRANS.solar],
+        ["space", false, 0, TRANS.space],
+        ["stasis", false, 1, TRANS.stasis],
+        ["store", false, 2, TRANS.store], //
+        ["uni", false, 1, TRANS.uni],
+        ["warehouse", false, 2, TRANS.warehouse], //
+        ["windfarm", false, 0, TRANS.windfarm], //
+        ["workshop", false, 1, TRANS.workshop], //
+        ["lander", true, 0, TRANS.lander]
     ];
     /**
      * List of robots with following syntax:
@@ -1940,36 +1939,36 @@ function Param() {
     * @member {array} resourceArray
     */
     this.resourceArray = [  
-        [Lang.bauxite, Lang.aluminium],
-        [Lang.corundum, Lang.aluminium],
-        [Lang.kryolite, Lang.aluminium],
-        [Lang.limestone, Lang.calcium],
-        [Lang.copperPyrite, Lang.copper],
-        [Lang.copperGlance, Lang.copper],
-        [Lang.malachite, Lang.copper],
-        [Lang.calverite, Lang.gold],
-        [Lang.sylvanite, Lang.gold],
-        [Lang.haematite, Lang.iron],
-        [Lang.magnetite, Lang.iron],
-        [Lang.ironPyrite, Lang.iron],
-        [Lang.siderite, Lang.iron],
-        [Lang.galena, Lang.lead],
-        [Lang.anglesite, Lang.lead],
-        [Lang.dolomite, Lang.magnesium],
-        [Lang.karnalite, Lang.magnesium],
-        [Lang.cinnabar, Lang.mercury],
-        [Lang.calomel, Lang.mercury],
-        [Lang.phosphorite, Lang.phosphorous],
-        [Lang.floreapetite, Lang.phosphorous],
-        [Lang.saltPeter, Lang.potassium],
-        [Lang.karnalite, Lang.potassium],
-        [Lang.silverGlance, Lang.silver],
-        [Lang.sodiumCarbonate, Lang.sodium],
-        [Lang.rockSalt, Lang.sodium],
-        [Lang.tinPyrites, Lang.tin],
-        [Lang.cassiterite, Lang.tin],
-        [Lang.zincBlende, Lang.zinc],
-        [Lang.calamine, Lang.zinc]
+        [TRANS.bauxite, TRANS.aluminium],
+        [TRANS.corundum, TRANS.aluminium],
+        [TRANS.kryolite, TRANS.aluminium],
+        [TRANS.limestone, TRANS.calcium],
+        [TRANS.copperPyrite, TRANS.copper],
+        [TRANS.copperGlance, TRANS.copper],
+        [TRANS.malachite, TRANS.copper],
+        [TRANS.calverite, TRANS.gold],
+        [TRANS.sylvanite, TRANS.gold],
+        [TRANS.haematite, TRANS.iron],
+        [TRANS.magnetite, TRANS.iron],
+        [TRANS.ironPyrite, TRANS.iron],
+        [TRANS.siderite, TRANS.iron],
+        [TRANS.galena, TRANS.lead],
+        [TRANS.anglesite, TRANS.lead],
+        [TRANS.dolomite, TRANS.magnesium],
+        [TRANS.karnalite, TRANS.magnesium],
+        [TRANS.cinnabar, TRANS.mercury],
+        [TRANS.calomel, TRANS.mercury],
+        [TRANS.phosphorite, TRANS.phosphorous],
+        [TRANS.floreapetite, TRANS.phosphorous],
+        [TRANS.saltPeter, TRANS.potassium],
+        [TRANS.karnalite, TRANS.potassium],
+        [TRANS.silverGlance, TRANS.silver],
+        [TRANS.sodiumCarbonate, TRANS.sodium],
+        [TRANS.rockSalt, TRANS.sodium],
+        [TRANS.tinPyrites, TRANS.tin],
+        [TRANS.cassiterite, TRANS.tin],
+        [TRANS.zincBlende, TRANS.zinc],
+        [TRANS.calamine, TRANS.zinc]
     ];
 
     /**
@@ -1995,7 +1994,7 @@ function Param() {
     * @memberof Param
     * @member {array} resourceNames
     */
-    this.resourceNames = [Lang.aluminium, Lang.calcium, Lang.copper, Lang.gold, Lang.iron, Lang.lead, Lang.magnesium, Lang.mercury, Lang.phosphorous, Lang.potassium, Lang.silver, Lang.sodium, Lang.tin, Lang.zinc];
+    this.resourceNames = [TRANS.aluminium, TRANS.calcium, TRANS.copper, TRANS.gold, TRANS.iron, TRANS.lead, TRANS.magnesium, TRANS.mercury, TRANS.phosphorous, TRANS.potassium, TRANS.silver, TRANS.sodium, TRANS.tin, TRANS.zinc];
     //Map generation vars
     /**
     * The string from which to seed the map
@@ -2383,7 +2382,7 @@ function saneStats(){
     if(airAvailable <= 0){
         Game.air[Game.air.length - 1] = 0;
         Game.noAir += 50;
-        printConsole(Lang.noAir);
+        printConsole(TRANS.noAir);
     } else {
         Game.noAir = 0;
     }
@@ -2613,7 +2612,7 @@ function fillResearchMenu(){
             var tier0 = document.getElementById(source[i][0]);
             if(!tier0.classList.contains('research_active')){
                 tier0.classList.add('research_active');
-                tier0.innerHTML = Lang[source[i][0]];
+                tier0.innerHTML = TRANS[source[i][0]];
                 tier0.onclick = clickedResearch;
             }
             //Tier1
@@ -2622,7 +2621,7 @@ function fillResearchMenu(){
                     var tier1 = document.getElementById(source[i][2][j][0]);
                     if(!tier1.classList.contains('research_active')){
                         tier1.classList.add('research_active');
-                        tier1.innerHTML = Lang[source[i][2][j][0]];
+                        tier1.innerHTML = TRANS[source[i][2][j][0]];
                         console.log(source[i][2][j][0]);
                         tier1.onclick = clickedResearch;
                     }
@@ -2632,7 +2631,7 @@ function fillResearchMenu(){
                             var tier2 = document.getElementById(source[i][2][j][2][k][0]);
                             if(!tier2.classList.contains('research_active')){
                                 tier2.classList.add('research_active');
-                                tier2.innerHTML = Lang[source[i][2][j][2][k][0]];
+                                tier2.innerHTML = TRANS[source[i][2][j][2][k][0]];
                                 tier2.onclick = clickedResearch;
                             }
                             //Tier3
@@ -2640,7 +2639,7 @@ function fillResearchMenu(){
                                 if(source[i][2][j][2][k][3] === 0){
                                     var tier3 = document.getElementById(source[i][2][j][2][k][2][l][0]);
                                     if(!tier3.classList.contains('research_active')){
-                                        tier3.innerHTML = Lang[source[i][2][j][2][k][2][l][0]];
+                                        tier3.innerHTML = TRANS[source[i][2][j][2][k][2][l][0]];
                                         tier3.onclick = clickedResearch;
                                     }
                                 }
@@ -2679,10 +2678,10 @@ function fillResearchPanel(ident){
     var topicList = false;
     if(ident === 'overview'){
         var title = document.createElement('h2');
-        title.innerHTML = Lang.overview;
+        title.innerHTML = TRANS.overview;
         frag.appendChild(title);
         var activeLabs = document.createElement('h3');
-        activeLabs.innerHTML = Lang.active;
+        activeLabs.innerHTML = TRANS.active;
         frag.appendChild(activeLabs);
         var noActive = true;
         for(var i = 0; i < Game.researchLabs.length; i++){
@@ -2697,9 +2696,9 @@ function fillResearchPanel(ident){
                 ref.innerHTML = Game.mapTiles[lab[0]][lab[1]][lab[2]].ref;
                 var current = document.createElement('p');
                 if(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic === 'noResearch'){
-                    current.innerHTML = Lang.currentResearch + ' ' + Lang.none;
+                    current.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
                 } else {
-                    current.innerHTML = Lang.currentResearch + ' ' + Lang[Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
+                    current.innerHTML = TRANS.currentResearch + ' ' + TRANS[Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
                 }
                 var progressBar = document.createElement('div');
                 progressBar.classList.add('research_bar_frame');
@@ -2713,11 +2712,11 @@ function fillResearchPanel(ident){
         }
         if(noActive){
             noActive = document.createElement('h4');
-            noActive.innerHTML = Lang.none;
+            noActive.innerHTML = TRANS.none;
             frag.appendChild(noActive);
         }
         var available = document.createElement('h3');
-        available.innerHTML = Lang.availableLabs;
+        available.innerHTML = TRANS.availableLabs;
         frag.appendChild(available);
         var noAvailable = true;
         for(var j = 0; j < Game.researchLabs.length; j++){
@@ -2731,7 +2730,7 @@ function fillResearchPanel(ident){
                 var refFree = document.createElement('p');
                 refFree.innerHTML = Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
                 var currentNone = document.createElement('p');
-                currentNone.innerHTML = Lang.currentResearch + ' ' + Lang.none;
+                currentNone.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
                 itemFree.appendChild(imgFree);
                 itemFree.appendChild(refFree);
                 itemFree.appendChild(currentNone);
@@ -2740,7 +2739,7 @@ function fillResearchPanel(ident){
         }
         if(noAvailable){
             noAvailable = document.createElement('h4');
-            noAvailable.innerHTML = Lang.none;
+            noAvailable.innerHTML = TRANS.none;
             frag.appendChild(noAvailable);
         }
     } else {
@@ -2751,7 +2750,7 @@ function fillResearchPanel(ident){
             btn.id = 'research' + ident;
             btn.classList.add('smoky_glass');
             btn.classList.add('main_pointer');
-            btn.innerHTML = Lang.study + ' ' + Lang[ident];
+            btn.innerHTML = TRANS.study + ' ' + TRANS[ident];
             frag.appendChild(btn);
         }
         var progressBar2 = document.createElement('div');
@@ -2759,7 +2758,7 @@ function fillResearchPanel(ident){
         progressBar2.classList.add('research_progress_' + researchProgress(ident));
         frag.appendChild(progressBar2);
         var content = document.createElement('span');
-        content.innerHTML = Lang[ident + 'Content'];
+        content.innerHTML = TRANS[ident + 'Content'];
         frag.appendChild(content);
         //get a reference to the research topic and add a button if it's studyable
     }
@@ -2838,7 +2837,7 @@ function listLabs(ident){
     var studyList = [];
     var cancelList = [];
     var available = document.createElement('h3');
-    available.innerHTML = Lang.availableLabs;
+    available.innerHTML = TRANS.availableLabs;
     frag.appendChild(available);
     var noAvailable = true;
     for(var j = 0; j < Game.researchLabs.length; j++){
@@ -2853,15 +2852,15 @@ function listLabs(ident){
             refFree.innerHTML = Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
             var current = document.createElement('p');
             if(Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
-                current.innerHTML = Lang.currentResearch + ' ' + Lang.none;
+                current.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
             } else {
-                current.innerHTML = Lang.currentResearch + ' ' + Lang[Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic];
+                current.innerHTML = TRANS.currentResearch + ' ' + TRANS[Game.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic];
             }
             var studyBtn = document.createElement('button');
             studyBtn.id = 'studyBtn' + j;
             studyBtn.classList.add('green_glass');
             studyBtn.classList.add('main_pointer');
-            studyBtn.innerHTML = Lang.study + ' ' + Lang[ident];
+            studyBtn.innerHTML = TRANS.study + ' ' + TRANS[ident];
             studyList.push(['studyBtn' + j, freeLab]);
             itemFree.appendChild(studyBtn);
             itemFree.appendChild(imgFree);
@@ -2872,12 +2871,12 @@ function listLabs(ident){
     }
     if(noAvailable){
         noAvailable = document.createElement('h4');
-        noAvailable.innerHTML = Lang.none;
+        noAvailable.innerHTML = TRANS.none;
         frag.appendChild(noAvailable);
     }
 
     var activeLabs = document.createElement('h3');
-    activeLabs.innerHTML = Lang.active;
+    activeLabs.innerHTML = TRANS.active;
     frag.appendChild(activeLabs);
     var noActive = true;
     for(var i = 0; i < Game.researchLabs.length; i++){
@@ -2891,13 +2890,13 @@ function listLabs(ident){
             var ref = document.createElement('p');
             ref.innerHTML = Game.mapTiles[lab[0]][lab[1]][lab[2]].ref;
             var current2 = document.createElement('p');
-            current2.innerHTML = Lang.currentResearch + ' ' + Lang[Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
+            current2.innerHTML = TRANS.currentResearch + ' ' + TRANS[Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
             var progressBar = document.createElement('div');
             progressBar.classList.add('research_bar_frame');
             progressBar.classList.add('research_progress_' + researchProgress(Game.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
             var cancelBtn = document.createElement('button');
             cancelBtn.id = 'cancelBtn' + i;
-            cancelBtn.innerHTML = Lang.stopResearch;
+            cancelBtn.innerHTML = TRANS.stopResearch;
             cancelBtn.classList.add('red_glass');
             cancelBtn.classList.add('main_pointer');
             cancelList.push(['cancelBtn' + i, lab]);
@@ -2911,7 +2910,7 @@ function listLabs(ident){
     }
     if(noActive){
         noActive = document.createElement('h4');
-        noActive.innerHTML = Lang.none;
+        noActive.innerHTML = TRANS.none;
         frag.appendChild(noActive);
     }
     flush(document.getElementById('researchPanel'));
@@ -3399,7 +3398,7 @@ function advanceTurn(turns){
                 }
             }
             if(Game.energy[Game.energy.length - 1] <= 10) {
-                printConsole(Lang.noPower);
+                printConsole(TRANS.noPower);
                 Game.blackout = 30;
             }
             saneStats();
@@ -3411,12 +3410,12 @@ function advanceTurn(turns){
                 //setResearchClickers(researchPanel);
                 fillResearchMenu();
                 drawRadar();
-                Game.turnNum.innerHTML = Lang.weekCounter + Game.turn;
+                Game.turnNum.innerHTML = TRANS.weekCounter + Game.turn;
                 document.getElementById('consoleContent').innerHTML = '';
-                printConsole(Lang.itIsNow + ' ' + Lang.week + ' ' + Game.turn);
+                printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Game.turn);
             }
         } else {
-            printConsole(Lang.setDown);
+            printConsole(TRANS.setDown);
         }
         turns -=1;
     }
@@ -3588,7 +3587,7 @@ function execReview() {
     };
 
     if(!Game.buildings[37][1]) {
-        var moraleInput = [[Game.tossMorale, electricBlue, Lang.tosser],[Game.hipMorale, green, Lang.hipstie],[Game.artMorale, orange, Lang.artie]];
+        var moraleInput = [[Game.tossMorale, electricBlue, TRANS.tosser],[Game.hipMorale, green, TRANS.hipstie],[Game.artMorale, orange, TRANS.artie]];
         drawGraph('line', 'morale', moraleInput, true);
         document.getElementById('tossMorale').innerHTML = (Game.tossMorale[Game.tossMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('hipMorale').innerHTML = (Game.hipMorale[Game.hipMorale.length - 1] / 10).toFixed(1) + '%';
@@ -3596,7 +3595,7 @@ function execReview() {
         var moraleAverage = ((Game.tossMorale[Game.tossMorale.length - 1] + Game.hipMorale[Game.hipMorale.length - 1] + Game.artMorale[Game.artMorale.length - 1]) / 3);
         document.getElementById('moraleAverage').innerHTML = (moraleAverage / 10).toFixed(1) + '%';
 
-        var popInput = [[Game.tossPop, electricBlue, Lang.tosser],[Game.hipPop, green, Lang.hipstie],[Game.artPop, orange, Lang.artie],[Game.pop, white, Lang.population]];
+        var popInput = [[Game.tossPop, electricBlue, TRANS.tosser],[Game.hipPop, green, TRANS.hipstie],[Game.artPop, orange, TRANS.artie],[Game.pop, white, TRANS.population]];
         drawGraph('line', 'population', popInput, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Game.tossPop[Game.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Game.hipPop[Game.hipPop.length - 1]);
@@ -3604,32 +3603,32 @@ function execReview() {
         document.getElementById('popExecTotal').innerHTML = Game.pop[Game.pop.length - 1];
 
         var demoInput = [
-        [[Game.tossAdults[Game.tossAdults.length - 1]], electricBlue, Lang.tosserAdult],
-        [[Game.hipAdults[Game.hipAdults.length - 1]], green, Lang.hipstieAdult],
-        [[Game.artAdults[Game.artAdults.length - 1]], orange, Lang.artieAdult],
-        [[Game.tossStudents[Game.tossStudents.length - 1]], electricBlue, Lang.tosserStudent],
-        [[Game.hipStudents[Game.hipStudents.length - 1]], green, Lang.hipstieStudent],
-        [[Game.artStudents[Game.artStudents.length - 1]], orange, Lang.artieStudent],
-        [[Game.tossBabies[Game.tossBabies.length - 1]], darkBlue, Lang.tosserInfant],
-        [[Game.hipBabies[Game.hipBabies.length - 1]], green, Lang.hipstieInfant],
-        [[Game.artBabies[Game.artBabies.length - 1]], orange, Lang.artieInfant]
+        [[Game.tossAdults[Game.tossAdults.length - 1]], electricBlue, TRANS.tosserAdult],
+        [[Game.hipAdults[Game.hipAdults.length - 1]], green, TRANS.hipstieAdult],
+        [[Game.artAdults[Game.artAdults.length - 1]], orange, TRANS.artieAdult],
+        [[Game.tossStudents[Game.tossStudents.length - 1]], electricBlue, TRANS.tosserStudent],
+        [[Game.hipStudents[Game.hipStudents.length - 1]], green, TRANS.hipstieStudent],
+        [[Game.artStudents[Game.artStudents.length - 1]], orange, TRANS.artieStudent],
+        [[Game.tossBabies[Game.tossBabies.length - 1]], darkBlue, TRANS.tosserInfant],
+        [[Game.hipBabies[Game.hipBabies.length - 1]], green, TRANS.hipstieInfant],
+        [[Game.artBabies[Game.artBabies.length - 1]], orange, TRANS.artieInfant]
         ];
         drawGraph('bar', 'demographics', demoInput);
 
-        var sdfInput = [[Game.housing, electricBlue, Lang.housing],[Game.sdf, red, Lang.sdf]];
+        var sdfInput = [[Game.housing, electricBlue, TRANS.housing],[Game.sdf, red, TRANS.sdf]];
         drawGraph('pie', 'homeless', sdfInput);
         document.getElementById('housingVal').innerHTML = Game.housing[Game.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Game.sdf[Game.sdf.length - 1];
 
-        var employedInput = [[[Game.employed[Game.employed.length - 1]], electricBlue, Lang.employed],[[Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1]], red, Lang.unemployed]];
+        var employedInput = [[[Game.employed[Game.employed.length - 1]], electricBlue, TRANS.employed],[[Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1]], red, TRANS.unemployed]];
         drawGraph('pie', 'employment', employedInput);
         document.getElementById('employmentVal').innerHTML = Game.pop[Game.pop.length - 1] - Game.employed[Game.employed.length - 1];
 
-        var crimeInput = [[Game.crime, red, Lang.crime]];
+        var crimeInput = [[Game.crime, red, TRANS.crime]];
         drawGraph('line', 'crime', crimeInput, true);
         document.getElementById('crimeVal').innerHTML = Game.crime[Game.crime.length - 1];
 
-        var energyInput = [[Game.energy, electricBlue, Lang.energy]];
+        var energyInput = [[Game.energy, electricBlue, TRANS.energy]];
         drawGraph('line', 'energy', energyInput, true);
         document.getElementById('energyVal').innerHTML = Game.energy[Game.energy.length - 1];
 
@@ -3639,20 +3638,20 @@ function execReview() {
             freeAir = 0;
         }
         var airInput = [
-            [[airInUse], grey, Lang.airInUse],
-            [[freeAir], electricBlue, Lang.airAvailable]];
+            [[airInUse], grey, TRANS.airInUse],
+            [[freeAir], electricBlue, TRANS.airAvailable]];
         drawGraph('pie', 'air', airInput);
         document.getElementById('airVal').innerHTML = Game.air[Game.air.length - 1];
 
-        var foodInput = [[Game.food, green, Lang.food]];
+        var foodInput = [[Game.food, green, TRANS.food]];
         drawGraph('line', 'food', foodInput, true);
         document.getElementById('foodVal').innerHTML = Game.food[Game.food.length - 1];
 
         var freeStorage = Game.storageCap[Game.storageCap.length - 1] - Game.inStorage[Game.inStorage.length - 1];
         var storageInput = [
-            [[freeStorage], electricBlue, Lang.freeStorage],
-            [[Game.inStorage[Game.inStorage.length -1] - Game.food[Game.food.length - 1]], brown, Lang.resourceStorage],
-            [[Game.food[Game.food.length - 1]], green, Lang.food]];
+            [[freeStorage], electricBlue, TRANS.freeStorage],
+            [[Game.inStorage[Game.inStorage.length -1] - Game.food[Game.food.length - 1]], brown, TRANS.resourceStorage],
+            [[Game.food[Game.food.length - 1]], green, TRANS.food]];
         drawGraph('pie', 'storage', storageInput);
         document.getElementById('storageVal').innerHTML = freeStorage;
 
@@ -3908,7 +3907,7 @@ function changeLevel(newLevel) {
 function reCount(which) {
     var count = function(id, numID, index) {
             document.getElementById(id).style.height = ((Game.robotsList[index][1] - Game.robotsList[index][0]) / Game.robotsList[index][1]) * 100 + '%';
-            document.getElementById(numID).innerHTML = Lang.available + (Game.robotsList[index][1] - Game.robotsList[index][0]);
+            document.getElementById(numID).innerHTML = TRANS.available + (Game.robotsList[index][1] - Game.robotsList[index][0]);
         };
     switch(which) {
     case 'dozer':
@@ -4018,15 +4017,15 @@ function printConsole(text){
 */
 function consoleErr(text, err, command, fix, lwrLimit, uprLimit){
     if(err === 'value'){
-        var errText = text + ' ' + Lang.valueErr + ' "' + command + '"' + ', ' + fix;
+        var errText = text + ' ' + TRANS.valueErr + ' "' + command + '"' + ', ' + fix;
         if(lwrLimit){
-            errText += ' ' + Lang.between + ' ' + lwrLimit + ' ' + Lang.and + ' ' + uprLimit;
+            errText += ' ' + TRANS.between + ' ' + lwrLimit + ' ' + TRANS.and + ' ' + uprLimit;
         }
         printConsole(errText);
     } else if(err === 'command') {
-        printConsole('"' + text + '"' + ' ' + Lang.commandErr);
+        printConsole('"' + text + '"' + ' ' + TRANS.commandErr);
     } else {
-        printConsole(text + ' ' + Lang.consoleInputErr);
+        printConsole(text + ' ' + TRANS.consoleInputErr);
     }
 }
 
@@ -4043,63 +4042,63 @@ function runConsole(text){
 
     //switch(text)
     switch(input[0]){
-        case Lang.advance: //advance multiple turns
+        case TRANS.advance: //advance multiple turns
             if(!isNaN(input[1])){
                 advanceTurn(input[1]);
             } else {
-                consoleErr(input[1], 'value', input[0], Lang.integer);
+                consoleErr(input[1], 'value', input[0], TRANS.integer);
             }
             break;
-        case Lang.hello:
-            printConsole(Lang.world);
+        case TRANS.hello:
+            printConsole(TRANS.world);
             break;
-        case Lang.level:
+        case TRANS.level:
             if(input[1] >= 0 || input[1] <= 4){
                 Game.level = parseInt(input[1], 10);
                 checkBuildings();
                 drawRadar();
                 document.getElementById('slider').value = Game.level;
             } else {
-                consoleErr(input[1], 'value', input[0], Lang.integer, 0, 4);
+                consoleErr(input[1], 'value', input[0], TRANS.integer, 0, 4);
             }
             break;
-        case Lang.home:
+        case TRANS.home:
             if(Game.home){
                 jump(true, Game.home[0], Game.home[1], 0);
             } else {
-                printConsole(Lang.setDown);
+                printConsole(TRANS.setDown);
             }
             break;
-        case Lang.seed:
+        case TRANS.seed:
             printConsole(Game.inputSeed);
             break;
-        case Lang.zoom:
+        case TRANS.zoom:
             if(input[1] >= 1 || input[1] <= 6){
                 document.getElementById('zoom').value = input[1];
                 zoom(input[1]);
             } else {
-                consoleErr(input[1], 'value', input[0], Lang.integer, 1, 6);
+                consoleErr(input[1], 'value', input[0], TRANS.integer, 1, 6);
             }
             break;
-        case Lang.help:
+        case TRANS.help:
             switch(input[1]){
-                case Lang.advance:
-                    printConsole(Lang.advanceMan);
+                case TRANS.advance:
+                    printConsole(TRANS.advanceMan);
                     break;
-                case Lang.hello:
-                    printConsole(Lang.helloMan);
+                case TRANS.hello:
+                    printConsole(TRANS.helloMan);
                     break;
-                case Lang.level:
-                    printConsole(Lang.levelMan);
+                case TRANS.level:
+                    printConsole(TRANS.levelMan);
                     break;
-                case Lang.home:
-                    printConsole(Lang.home);
+                case TRANS.home:
+                    printConsole(TRANS.home);
                     break;
-                case Lang.seed:
-                    printConsole(Lang.seedMan);
+                case TRANS.seed:
+                    printConsole(TRANS.seedMan);
                     break;
                 default:
-                    printConsole(Lang.helpMan);
+                    printConsole(TRANS.helpMan);
             }
             break;
         default:
@@ -4797,12 +4796,12 @@ function contextContent(content) {
     if(typeof construct.kind === 'number' && construct.kind === 100) {
         var buildTime = document.createElement('span');
         var buildString = '';
-        buildString += Lang.buildTime + (construct.buildTime + 1) + " ";
+        buildString += TRANS.buildTime + (construct.buildTime + 1) + " ";
         //This next part is too language specific methinks
         if(construct.buildTime >= 1) {
-            buildString += Lang.weeks;
+            buildString += TRANS.weeks;
         }else{
-            buildString += Lang.week;
+            buildString += TRANS.week;
         }
         buildTime.innerHTML = buildString;
         frag.appendChild(buildTime);
@@ -4817,8 +4816,8 @@ function contextContent(content) {
     if(construct.exists && construct.shutdown) {
         var power = document.createElement('span');
         var down = document.createElement('span');
-        power.innerHTML = Lang.noPower;
-        down.innerHTML = Lang.shutdown;
+        power.innerHTML = TRANS.noPower;
+        down.innerHTML = TRANS.shutdown;
         frag.appendChild(power);
         frag.appendChild(spacer);
         frag.appendChild(down);
@@ -4836,7 +4835,7 @@ function contextContent(content) {
         if(resourceList[i] > 0) {
             if(!resources) {
                 var resourceTitle = document.createElement('h3');
-                resourceTitle.innerHTML = Lang.resources;
+                resourceTitle.innerHTML = TRANS.resources;
                 frag.appendChild(resourceTitle);
                 resources = true;
             }
@@ -4898,187 +4897,187 @@ function resourceNeededList(building, getRec, recycling){
             //Buildings
     case 'agri':
         //agridome
-        future = Lang.agri;
+        future = TRANS.agri;
         resourcesNeeded = [[0,2],[1,1],[4,1],[9, 1]];
         break;
     case 'agri2':
         //advanced agridome
-        future = Lang.agri2;
+        future = TRANS.agri2;
         resourcesNeeded = [[0,1],[1,1],[8,1],[9, 1]];
         break;
     case 'airport':
         //airport
-        future = Lang.airport;
+        future = TRANS.airport;
         resourcesNeeded = [[2,1],[4,2],[12, 1]];
         break;
     case 'arp':
         //arp
-        future = Lang.arp;
+        future = TRANS.arp;
         resourcesNeeded = [[0,2],[4,1],[12, 1],[13,1]];
         break;
     case 'airlift':
         //airshaft
-        future = Lang.airlift;
+        future = TRANS.airlift;
         resourcesNeeded = [[0,1]];
         break;
     case 'barracks':
         //barracks
-        future = Lang.barracks;
+        future = TRANS.barracks;
         resourcesNeeded = [[4,2],[12, 1]];
         break;
     case 'civprot':
         //civil protection
-        future = Lang.civprot;
+        future = TRANS.civprot;
         resourcesNeeded = [[4,2],[12, 1]];
         break;
     case 'civprot2':
         //civil protection 2
-        future = Lang.civprot2;
+        future = TRANS.civprot2;
         resourcesNeeded = [[2,1],[4,2],[12, 1]];
         break;
     case 'commarray':
         //comm array
-        future = Lang.commarray;
+        future = TRANS.commarray;
         resourcesNeeded = [[0,2],[2,2],[4,1]];
         break;
     case 'commarray2':
         //comm array 2
-        future = Lang.commarray2;
+        future = TRANS.commarray2;
         resourcesNeeded = [[0,2],[2,1],[12, 1],[13,1]];
         break;
     case 'command':
         //command
-        future = Lang.command;
+        future = TRANS.command;
         resourcesNeeded = [[0,2],[2,1],[4,1],[5, 1],[10,1],[12,1],[13,1]];
         break;
     case 'connector':
         // connector
-        future = Lang.connector;
+        future = TRANS.connector;
         resourcesNeeded = [[4,1]];
         break;
     case 'dronefab':
         // drone factory
-        future = Lang.dronefab;
+        future = TRANS.dronefab;
         resourcesNeeded = [[0,1],[2,1],[4,1],[5, 1],[6,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
         break;
     case 'chernobyl':
         // fission
-        future = Lang.chernobyl;
+        future = TRANS.chernobyl;
         resourcesNeeded = [[0,1],[2,2],[4,2],[5, 3],[7,1],[11,2],[12,1],[13,1]];
         break;
     case 'tokamak':
         // fusion
-        future = Lang.tokamak;
+        future = TRANS.tokamak;
         resourcesNeeded = [[0,2],[2,2],[3,1],[4, 1],[5,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
         break;
     case 'genfab':
         // factory
-        future = Lang.genfab;
+        future = TRANS.genfab;
         resourcesNeeded = [[0,1],[2,1],[4,1],[12, 1]];
         break;
     case 'geotherm':
         // geothermal
-        future = Lang.geotherm;
+        future = TRANS.geotherm;
         resourcesNeeded = [[0,1],[2,1],[4,1]];
         break;
     case 'hab':
         // habitat
-        future = Lang.hab;
+        future = TRANS.hab;
         resourcesNeeded = [[2,1],[4,1],[5, 1],[12,1]];
         break;
     case 'hab2':
         // habitat 2
-        future = Lang.hab2;
+        future = TRANS.hab2;
         resourcesNeeded = [[2,1],[3,1],[4,1],[5,1],[12, 1]];
         break;
     case 'hab3':
         // habitat 3
-        future = Lang.hab3;
+        future = TRANS.hab3;
         resourcesNeeded = [[0,1],[2,1],[3,1],[5,1],[10,1],[12, 1]];
         break;
     case 'er':
         // hospital
-        future = Lang.er;
+        future = TRANS.er;
         resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[5,2],[6,1],[10,1],[11,1],[12, 1],[13,1]];
         break;
     case 'mine':
         // mine
-        future = Lang.mine;
+        future = TRANS.mine;
         resourcesNeeded = [[4,1]];
         break;
     case 'nursery':
         // nursery
-        future = Lang.nursery;
+        future = TRANS.nursery;
         resourcesNeeded = [[0,1],[1,1],[2,1],[4,1],[6,1],[10,1],[11,1],[12, 1],[13,1]];
         break;
     case 'oreproc':
         // ore processor
-        future = Lang.oreproc;
+        future = TRANS.oreproc;
         resourcesNeeded = [[2,1],[4,2]];
         break;
     case 'rec':
         // recreation center
-        future = Lang.rec;
+        future = TRANS.rec;
         resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
         break;
     case 'recycling':
         // recycler
-        future = Lang.recycler;
+        future = TRANS.recycler;
         resourcesNeeded = [[2,1],[4,1],[8,1],[12, 1]];
         break;
     case 'clichy':
         // red light district
-        future = Lang.clichy;
+        future = TRANS.clichy;
         resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
         break;
     case 'research':
         // research center
-        future = Lang.research;
+        future = TRANS.research;
         resourcesNeeded = [[0,1],[1, 1],[2,2],[3,1],[4,1],[5,1],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
         break;
     case 'research2':
         // research 2
-        future = Lang.research2;
+        future = TRANS.research2;
         resourcesNeeded = [[0,1],[2,2],[3,2],[4,1],[5,2],[6,1],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2]];
         break;
     case 'solar':
         // solar farm
-        future = Lang.solar;
+        future = TRANS.solar;
         resourcesNeeded = [[0,1],[2,1],[3,1],[7,1],[8,1],[13, 1]];
         break;
     case 'space':
         // space port
-        future = Lang.space;
+        future = TRANS.space;
         resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
         break;
     case 'stasis':
         // stasis block
-        future = Lang.stasis;
+        future = TRANS.stasis;
         resourcesNeeded = [[0,4],[1, 1],[2,3],[3,2],[4,3],[5,2],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
         break;
     case 'store':
         // Storage Tanks
-        future = Lang.store;
+        future = TRANS.store;
         resourcesNeeded = [[4,1]];
         break;
     case 'uni':
         // University
-        future = Lang.uni;
+        future = TRANS.uni;
         resourcesNeeded = [[0,1],[1,2],[2,1],[4,1],[6,1],[7,1],[9,1],[10,1],[11,1]];
         break;
     case 'warehouse':
         // warehouse
-        future = Lang.warehouse;
+        future = TRANS.warehouse;
         resourcesNeeded = [[0,1],[4,1]];
         break;
     case 'windfarm':
         // windfarm
-        future = Lang.windfarm;
+        future = TRANS.windfarm;
         resourcesNeeded = [[0,1],[2,1],[4,1],[5,1]];
         break;
     case 'workshop':
         // workshop
-        future = Lang.workshop;
+        future = TRANS.workshop;
         resourcesNeeded = [[0,1],[2,1],[4,2],[5,1],[12, 1]];
         break;
     default:
@@ -5097,11 +5096,11 @@ function resourceNeededList(building, getRec, recycling){
         need.classList.add('smoky_glass');
         need.classList.add('main_pointer');
         need.classList.add('context_button');
-        need.innerHTML = Lang.confirmBuild;
+        need.innerHTML = TRANS.confirmBuild;
         frag.appendChild(spacer);
         frag.appendChild(need);
         var title = document.createElement('h3');
-        title.innerHTML = Lang.resourcesNeeded + ' (' + future + ')';
+        title.innerHTML = TRANS.resourcesNeeded + ' (' + future + ')';
         frag.appendChild(title);
         var required = document.createElement('ul');
         for(var resource = 0; resource < resourcesNeeded.length; resource++){
@@ -5147,7 +5146,7 @@ function requisition(arr){//TODO set up recycling here
         }
         execReview();
     } else {
-        var shortage = Lang.resourceShortage;
+        var shortage = TRANS.resourceShortage;
         for(var s = 1; s < arr.length; s++){
             if(Game.procOres[arr[s][0]] < arr[s][1]){
                 shortage += Game.resourceNames[arr[s][0]] + ", ";
@@ -5220,7 +5219,7 @@ function clicked(direction) {
     switch(Game.clickedOn) {
     case 'lander':
         if(wetTest([y,x],Game.level)){
-            printConsole(Lang.onWater);
+            printConsole(TRANS.onWater);
         } else {
             Game.mapTiles[Game.level][y][x] = bobTheBuilder(210, x, y, Game.level);
             Game.home = [x,y];
@@ -5262,7 +5261,7 @@ function clicked(direction) {
         break;
     case 'dozer':
         if(!direction) {
-            rightClicked(confirmBot(Lang.confirmDoze));
+            rightClicked(confirmBot(TRANS.confirmDoze));
             document.getElementById('confirmBuild').onclick = function(){
                 console.log('how many times?');
                 clicked(true);
@@ -5270,9 +5269,9 @@ function clicked(direction) {
             };
         } else {
             if((hex && (hex.kind < 200 && hex.kind > 2)) || (typeof hex.kind !== 'number' && tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
-                printConsole(Lang.noDoze);
+                printConsole(TRANS.noDoze);
             } else if(!inRange(x, y)){
-                printConsole(Lang.outOfRange);
+                printConsole(TRANS.outOfRange);
             } else {
                 Game.mapTiles[Game.level][y][x] = bobTheBuilder(100, x, y, Game.level);
             }
@@ -5280,7 +5279,7 @@ function clicked(direction) {
         break;
     case 'digger':
         if(!direction) {
-            rightClicked(confirmBot(Lang.confirmDig));
+            rightClicked(confirmBot(TRANS.confirmDig));
             document.getElementById('confirmBuild').onclick = function(){
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
@@ -5289,17 +5288,17 @@ function clicked(direction) {
             //tile.digDown(x, y, lowerTile);
             var DBelow = Game.mapTiles[Game.level + 1];
             if(!checkConnection(y,x)){
-                printConsole(Lang.noConnection);
+                printConsole(TRANS.noConnection);
             } else if(wetTest([y, x], Game.level + 1)){
-                printConsole(Lang.onWater);
+                printConsole(TRANS.onWater);
             } else if((hex && hex.kind >= 100) || (DBelow[y][x] && DBelow[y][x].kind >= 100)){
-                printConsole(Lang.buildingPresent);
+                printConsole(TRANS.buildingPresent);
             } else if((hex.kind > 3 && hex.kind < 9) || hex.kind > 11) {
-                printConsole(Lang.noDig);
+                printConsole(TRANS.noDig);
             } else if(Game.level === 4){
-                printConsole(Lang.lastLevel);
+                printConsole(TRANS.lastLevel);
             } else if(!inRange(x, y)){
-                printConsole(Lang.outOfRange);
+                printConsole(TRANS.outOfRange);
             } else {
                 Game.mapTiles[Game.level][y][x] = bobTheBuilder(101, x, y, Game.level, true);
                 DBelow[y][x] = bobTheBuilder(101, x, y, Game.level + 1, true);
@@ -5316,18 +5315,18 @@ function clicked(direction) {
         break;
     case 'cavernDigger':
         if(!direction) {
-            rightClicked(confirmBot(Lang.confirmDigCavern));
+            rightClicked(confirmBot(TRANS.confirmDigCavern));
             document.getElementById('confirmBuild').onclick = function(){
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
             };
         } else {
             if(wetTest([y, x], Game.level)){
-                printConsole(Lang.onWater);
+                printConsole(TRANS.onWater);
             } else if((hex && hex.kind > 3) || Game.level === 0 || (hex.kind > 2 && hex.kind < 9) || hex.kind > 11) {
-                printConsole(Lang.noCavern);
+                printConsole(TRANS.noCavern);
             } else if(!inRange(x, y)){
-                printConsole(Lang.outOfRange);
+                printConsole(TRANS.outOfRange);
             } else {
                 Game.mapTiles[Game.level][y][x] = bobTheBuilder(101, x, y, Game.level);
                 for(var z = 0; z < 6; z++) {
@@ -5343,22 +5342,22 @@ function clicked(direction) {
         break;
     case 'miner':
         if(!direction) {
-            rightClicked(confirmBot(Lang.confirmMine));
+            rightClicked(confirmBot(TRANS.confirmMine));
             document.getElementById('confirmBuild').onclick = function(){
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
             };
         } else {
             if(wetTest([y, x], Game.level + 1)){
-                printConsole(Lang.onWater);
+                printConsole(TRANS.onWater);
             } else if(hex && hex.kind !== 221 && hex.kind >= 100) {
-                printConsole(Lang.noMine);
+                printConsole(TRANS.noMine);
             } else if(Game.level !== 0 && (!hex || hex && hex.kind !== 221)){
-                printConsole(Lang.noMine);
+                printConsole(TRANS.noMine);
             } else if(Game.level === 4) {
-                printConsole(Lang.lastLevel);
+                printConsole(TRANS.lastLevel);
             } else if(!inRange(x, y)){
-                printConsole(Lang.outOfRange);
+                printConsole(TRANS.outOfRange);
             } else {
                 Game.mapTiles[Game.level][y][x] = bobTheBuilder(102, x, y, Game.level, true);
                 Game.mapTiles[Game.level + 1][y][x] = bobTheBuilder(102102, x, y, Game.level + 1, true);
@@ -5377,7 +5376,7 @@ function clicked(direction) {
         break;
     case 'recycler':
         if(!direction) {
-            rightClicked(confirmBot(Lang.confirmRecycle));
+            rightClicked(confirmBot(TRANS.confirmRecycle));
             document.getElementById('confirmBuild').onclick = function(){
                 clicked(true);
                 document.getElementById('confirmBuild').onclick = null;
@@ -5386,7 +5385,7 @@ function clicked(direction) {
             if(hex && hex.kind >= 200){
                 recycle(hex.kind, x, y, Game.level);
             } else {
-                printConsole(Lang.noRecycle);
+                printConsole(TRANS.noRecycle);
             }
         }
         //TODO: add recycle code
@@ -5405,7 +5404,7 @@ function clicked(direction) {
                     Game.mapTiles[Game.level][y][x] = bobTheBuilder(getBuildingRef(Game.clickedOn), x, y, Game.level);
                 }
             } else {
-                !checkConnection(y, x) ? printConsole(Lang.noConnection) : printConsole(Lang.notPrepared);
+                !checkConnection(y, x) ? printConsole(TRANS.noConnection) : printConsole(TRANS.notPrepared);
             }
         }
     }

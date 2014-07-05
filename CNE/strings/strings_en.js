@@ -1,371 +1,370 @@
 /**
-* @constructor
-* @param {string} planetName The desired name for the planet
+* Language strings, changing this file, and index.html will change the language everywhere
+* @global
 */
-function Language(planetName){
+var TRANS = {
 	//Custom names etc.
-	this.planet = planetName;
 	//Notifications
-	this.noDig = "You can\'t dig here";
-	this.noCavern = "You can\'t dig a cavern here";
-	this.noDoze = "You can\'t prepare this terrain";
-	this.noMine = "You can\'t mine here. Ensure a mine is in place or that no buildings or drones are present";
-	this.noRecycle = "Nothing to be recycled here";
-	this.noConnection = "No adjacent connector node";
-	this.notPrepared = "This terrain has not been prepared";
-	this.buildingPresent = "You can\'t dig here, buildings or drones are present";
-	this.onWater = "FLOOD WARNING!";
-	this.lastLevel = "You can't go any deeper than this";
-	this.setDown = "Please choose your landing zone first..";
-	this.resourceShortage = "Resources missing: ";
-	this.outOfRange = "Out of communications range";
-	this.noAir = "WARNING: Air Shortage!";
-	this.noRecyclers = "No functioning " + this.recycling + "'s available";
-	this.recycleFailure = "Resources lost due to storage shortage";
+	noDig : "You can\'t dig here",
+	noCavern : "You can\'t dig a cavern here",
+	noDoze : "You can\'t prepare this terrain",
+	noMine : "You can\'t mine here. Ensure a mine is in place or that no buildings or drones are present",
+	noRecycle : "Nothing to be recycled here",
+	noConnection : "No adjacent connector node",
+	notPrepared : "This terrain has not been prepared",
+	buildingPresent : "You can\'t dig here, buildings or drones are present",
+	onWater : "FLOOD WARNING!",
+	lastLevel : "You can't go any deeper than this",
+	setDown : "Please choose your landing zone first..",
+	resourceShortage : "Resources missing: ",
+	outOfRange : "Out of communications range",
+	noAir : "WARNING: Air Shortage!",
+	noRecyclers : "No functioning Recycling Centers available",
+	recycleFailure : "Resources lost due to storage shortage",
 
-	this.engage = 'Engage!';
-	this.warp11 = 'Going to Warp 11';
-	this.orbit = 'Entering Orbit';
-	this.probes = 'Dropping probes';
-	this.houston = 'Calling Houston...';
+	engage : 'Engage!',
+	warp11 : 'Going to Warp 11',
+	orbit : 'Entering Orbit',
+	probes : 'Dropping probes',
+	houston : 'Calling Houston...',
 
 	//Actions and references
-	this.preparing = "Preparing";
-	this.digging = "Digging";
-	this.diggingCavern = "Digging cavern";
-	this.mining = "Mining";
-	this.recyclingAction = "Recycling";
-	this.buildTime = "Build time remaining: ";
-	this.building = "Building: ";
-	this.week = "week";
-	this.weeks = "weeks";
-	this.resources = "Resources:";
-	this.noPower = "WARNING: Power Shortage!";
-	this.shutdown = "Building shut down";
-	this.resourcesNeeded = "Required Resources:";
-	this.weekCounter = "Week: ";
-	this.saves = "Saved Games:";
-	this.confirmDelete = "Are you sure you want to delete";
-	this.available = "Available: ";
+	preparing : "Preparing",
+	digging : "Digging",
+	diggingCavern : "Digging cavern",
+	mining : "Mining",
+	recyclingAction : "Recycling",
+	buildTime : "Build time remaining: ",
+	building : "Building: ",
+	week : "week",
+	weeks : "weeks",
+	resources : "Resources:",
+	noPower : "WARNING: Power Shortage!",
+	shutdown : "Building shut down",
+	resourcesNeeded : "Required Resources:",
+	weekCounter : "Week: ",
+	saves : "Saved Games:",
+	confirmDelete : "Are you sure you want to delete",
+	available : "Available: ",
 
 	//Stats
-	this.artie = "ArtIe";
-	this.hipstie = "Hipstie";
-	this.tosser = "TOSSer";
-	this.artieInfant = "ArtIe Infant";
-	this.hipstieInfant = "Hipstie Infant";
-	this.tosserInfant = "TOSSer Infant";
-	this.artieStudent = "ArtIe Student";
-	this.hipstieStudent = "Hipstie Student";
-	this.tosserStudent = "TOSSer Student";
-	this.artieAdult = "ArtIe Adult";
-	this.hipstieAdult = "Hipstie Adult";
-	this.tosserAdult = "TOSSer Adult";
-	this.population = "Total Population";
-	this.housing = "Housing";
-	this.sdf = "Homeless";
-	this.crime = "Crime";
-	this.energy = "Energy";
-	this.food = "Food";
-	this.freeStorage = "Available Storage";
-	this.resourceStorage = "Resources";
-	this.airAvailable = "Fresh Air";
-	this.airInUse = "Air Consumption";
-	this.employed = "Employed";
-	this.unemployed = "Unemployed";
+	artie : "ArtIe",
+	hipstie : "Hipstie",
+	tosser : "TOSSer",
+	artieInfant : "ArtIe Infant",
+	hipstieInfant : "Hipstie Infant",
+	tosserInfant : "TOSSer Infant",
+	artieStudent : "ArtIe Student",
+	hipstieStudent : "Hipstie Student",
+	tosserStudent : "TOSSer Student",
+	artieAdult : "ArtIe Adult",
+	hipstieAdult : "Hipstie Adult",
+	tosserAdult : "TOSSer Adult",
+	population : "Total Population",
+	housing : "Housing",
+	sdf : "Homeless",
+	crime : "Crime",
+	energy : "Energy",
+	food : "Food",
+	freeStorage : "Available Storage",
+	resourceStorage : "Resources",
+	airAvailable : "Fresh Air",
+	airInUse : "Air Consumption",
+	employed : "Employed",
+	unemployed : "Unemployed",
 
 	//Terminal
-	this.valueErr = "is not a valid value for";
-	this.commandErr = "is not a recognized command";
-	this.integer = "try a number";
-	this.itIsNow = "it is now";
-	this.between = "between";
-	this.and = "and";
-	this.advance = "advance";
-	this.hello = "hello";
-	this.world = "world";
-	this.level = "level";
-	this.home = "home";
-	this.help = "help";
-    this.seed = "password";
-	this.zoom = "zoom";
+	valueErr : "is not a valid value for",
+	commandErr : "is not a recognized command",
+	integer : "try a number",
+	itIsNow : "it is now",
+	between : "between",
+	and : "and",
+	advance : "advance",
+	hello : "hello",
+	world : "world",
+	level : "level",
+	home : "home",
+	help : "help",
+    seed : "password",
+	zoom : "zoom",
 
 
-	this.advanceMan = "advance: (e.g. 'advance 5') Will advance the number of turns given";
-    this.helloMan = "hello: (e.g. 'hello') Will say hello to the world";
-    this.levelMan = "level: (e.g. 'level 2') Will move to the level given (level 0 -> level 4)";
-    this.homeMan = "home: (e.g. 'home') Will center the map's position on the Lander";
-    this.seedMan = "password: (e.g. 'password') Will print your dashboard password. Please don't write it down on your desk...";
-    this.zoomMan = "zoom: (e.g. 'zoom 3') Will zoom the map to the level given (zoom 1 -> zoom 6)";
-    this.helpMan = "Available commands: <br>|" + this.advance + '|    |' + this.hello + '|    |' + this.level + '|    |' + this.home + '|    |' + this.seed + '|<br>Use "help" + command to learn more. (e.g. "help advance")';
+	advanceMan : "advance: (e.g. 'advance 5') Will advance the number of turns given",
+	helloMan : "hello: (e.g. 'hello') Will say hello to the world",
+	levelMan : "level: (e.g. 'level 2') Will move to the level given (level 0 -> level 4)",
+	homeMan : "home: (e.g. 'home') Will center the map's position on the Lander",
+	seedMan : "password: (e.g. 'password') Will print your dashboard password. Please don't write it down on your desk...",
+	zoomMan : "zoom: (e.g. 'zoom 3') Will zoom the map to the level given (zoom 1 -> zoom 6)",
+	helpMan : "Available commands: <br>|advance|    |hello|    |level|    |home|    |password|<br>Use \"help\" + command to learn more. (e.g. \"help advance\")",
 
 	//Confirmations
-	this.confirmMine = "Mine here";
-	this.confirmDoze = "Prepare this zone";
-	this.confirmDig = "Dig airshaft";
-	this.confirmDigCavern = "Dig cavern here";
-	this.confirmRecycle = "Recycle this construction?";
-	this.undo = "Cancel order";
-	this.confirmBuild = "Build";
+	confirmMine : "Mine here",
+	confirmDoze : "Prepare this zone",
+	confirmDig : "Dig airshaft",
+	confirmDigCavern : "Dig cavern here",
+	confirmRecycle : "Recycle this construction?",
+	undo : "Cancel order",
+	confirmBuild : "Build",
 
 	//Terrain types
-	this.smooth = "Smooth";
-	this.rough = "Rough";
-	this.mountaineous = "Mountaineous";
-	this.prepared = "Prepared";
-	this.cavern = "Cavern";
-	this.water = "Water";
-	this.minedOut = "Mined Out";
+	smooth : "Smooth",
+	rough : "Rough",
+	mountaineous : "Mountaineous",
+	prepared : "Prepared",
+	cavern : "Cavern",
+	water : "Water",
+	minedOut : "Mined Out",
 
 	//Buildings
-	this.lander = "Lander";
-	this.agri = "Agri-Dome";
-	this.agri2 = "Advanced Agri-Dome";
-	this.airport = "Airport";
-	this.arp = "ARP";
-	this.airlift = "Airshaft";
-	this.barracks = "Barracks";
-	this.civprot = "Civil Protection";
-	this.civprot2 = "Advanced Civil Protection";
-	this.command = "Command Center";
-	this.commarray = "Comm Array";
-	this.commarray2 = "Advanced Comm Array";
-	this.connector = "Connector Node";
-	this.dronefab = "Drone Factory";
-	this.chernobyl = "Nuclear Reactor (Fission)";
-	this.tokamak = "Nuclear Reactor (Fusion)";
-	this.genfab = "Factory";
-	this.geotherm = "Geothermal Generator";
-	this.hab = "Habitat";
-	this.hab2 = "Advanced Habitat";
-	this.hab3 = "<em>Really</em> Advanced Habitat";
-	this.er = "Hospital";
-	this.mine = "Mine";
-	this.nursery = "Nursery";
-	this.oreproc = "Ore Processor";
-	this.rec = "Recreation Center";
-	this.recycling = "Recycling Center";
-	this.clichy = "Red Light District";
-	this.research = "Research Center";
-	this.research2 = "Advanced Research lab";
-	this.solar = "Solar Farm";
-	this.space = "Spaceport";
-	this.stasis = "Stasis Block";
-	this.store = "Storage Tanks";
-	this.uni = "University";
-	this.warehouse = "Warehouse";
-	this.windfarm = "Wind Farm";
-	this.workshop = "Workshop";
+	lander : "Lander",
+	agri : "Agri-Dome",
+	agri2 : "Advanced Agri-Dome",
+	airport : "Airport",
+	arp : "ARP",
+	airlift : "Airshaft",
+	barracks : "Barracks",
+	civprot : "Civil Protection",
+	civprot2 : "Advanced Civil Protection",
+	command : "Command Center",
+	commarray : "Comm Array",
+	commarray2 : "Advanced Comm Array",
+	connector : "Connector Node",
+	dronefab : "Drone Factory",
+	chernobyl : "Nuclear Reactor (Fission)",
+	tokamak : "Nuclear Reactor (Fusion)",
+	genfab : "Factory",
+	geotherm : "Geothermal Generator",
+	hab : "Habitat",
+	hab2 : "Advanced Habitat",
+	hab3 : "<em>Really</em> Advanced Habitat",
+	er : "Hospital",
+	mine : "Mine",
+	nursery : "Nursery",
+	oreproc : "Ore Processor",
+	rec : "Recreation Center",
+	recycling : "Recycling Center",
+	clichy : "Red Light District",
+	research : "Research Center",
+	research2 : "Advanced Research lab",
+	solar : "Solar Farm",
+	space : "Spaceport",
+	stasis : "Stasis Block",
+	store : "Storage Tanks",
+	uni : "University",
+	warehouse : "Warehouse",
+	windfarm : "Wind Farm",
+	workshop : "Workshop",
 
 	//Resources
-	this.bauxite = "Bauxite";
-	this.corundum = "Corundum";
-	this.kryolite = "Kryolite";
-	this.limestone = "Limestone";
-	this.copperPyrite = "Copper Pyrite";
-	this.copperGlance = "Copper Glance";
-	this.malachite = "Malachite";
-	this.calverite = "Calverite";
-	this.sylvanite = "Sylvanite";
-	this.haematite = "Haematite";
-	this.magnetite = "Magnetite";
-	this.ironPyrite = "Iron Pyrite";
-	this.siderite = "Siderite";
-	this.galena = "Galena";
-	this.anglesite = "Anglesite";
-	this.dolomite = "Dolomite";
-	this.karnalite = "Karnalite";
-	this.cinnabar = "Cinnabar";
-	this.calomel = "Calomel";
-	this.phosphorite = "Phosphorite";
-	this.floreapetite = "Floreapetite";
-	this.saltPeter = "Salt Petre";
-	this.silverGlance = "Silver Glance";
-	this.sodiumCarbonate = "Sodium Carbonate";
-	this.rockSalt = "Rock Salt";
-	this.tinPyrites = "Tin Pyrites";
-	this.cassiterite = "Cassiterite";
-	this.zincBlende = "Zinc Blende";
-	this.calamine = "Calamine";
+	bauxite : "Bauxite",
+	corundum : "Corundum",
+	kryolite : "Kryolite",
+	limestone : "Limestone",
+	copperPyrite : "Copper Pyrite",
+	copperGlance : "Copper Glance",
+	malachite : "Malachite",
+	calverite : "Calverite",
+	sylvanite : "Sylvanite",
+	haematite : "Haematite",
+	magnetite : "Magnetite",
+	ironPyrite : "Iron Pyrite",
+	siderite : "Siderite",
+	galena : "Galena",
+	anglesite : "Anglesite",
+	dolomite : "Dolomite",
+	karnalite : "Karnalite",
+	cinnabar : "Cinnabar",
+	calomel : "Calomel",
+	phosphorite : "Phosphorite",
+	floreapetite : "Floreapetite",
+	saltPeter : "Salt Petre",
+	silverGlance : "Silver Glance",
+	sodiumCarbonate : "Sodium Carbonate",
+	rockSalt : "Rock Salt",
+	tinPyrites : "Tin Pyrites",
+	cassiterite : "Cassiterite",
+	zincBlende : "Zinc Blende",
+	calamine : "Calamine",
 
 	//Processed resources
-	this.aluminium = "Aluminium (Al)";
-	this.calcium = "Calcium (Ca)";
-	this.copper = "Copper (Cu)";
-	this.gold = "Gold (Au)";
-	this.iron = "Iron (Fe)";
-	this.lead = "Lead (Pb)";
-	this.magnesium = "Magnesium (Mg)";
-	this.mercury = "Mercury (Hg)";
-	this.phosphorous = "Phosphorous (P)";
-	this.potassium = "Potassium (K)";
-	this.silver = "Silver (Ag)";
-	this.sodium = "Sodium (Na)";
-	this.tin = "Tin (Sn)";
-	this.zinc = "Zinc (Zn)";
+	aluminium : "Aluminium (Al)",
+	calcium : "Calcium (Ca)",
+	copper : "Copper (Cu)",
+	gold : "Gold (Au)",
+	iron : "Iron (Fe)",
+	lead : "Lead (Pb)",
+	magnesium : "Magnesium (Mg)",
+	mercury : "Mercury (Hg)",
+	phosphorous : "Phosphorous (P)",
+	potassium : "Potassium (K)",
+	silver : "Silver (Ag)",
+	sodium : "Sodium (Na)",
+	tin : "Tin (Sn)",
+	zinc : "Zinc (Zn)",
 
 	//Research
-	this.availableLabs = "Available Laboratories:";
-	this.currentResearch = "Current research topic:";
-	this.active = "Active Labs:";
-	this.noResearch = "None";
-	this.chooseLab = "Choose a laboratory to study";
-	this.studyingThis = "Labs currently studying";
-	this.researched = "Researched";
-	this.overview = "Overview";
-	this.none = "None";
-	this.study = "Study";
-	this.stopResearch = "Stop Research";
+	availableLabs : "Available Laboratories:",
+	currentResearch : "Current research topic:",
+	active : "Active Labs:",
+	noResearch : "None",
+	chooseLab : "Choose a laboratory to study",
+	studyingThis : "Labs currently studying",
+	researched : "Researched",
+	overview : "Overview",
+	none : "None",
+	study : "Study",
+	stopResearch : "Stop Research",
 
 	//Research Topics
-	this.engineering = "Engineering";
-	this.agriculturalEngineering = "Agricultural Engineering";
-	this.hydroponics = "Hydroponics";
-	this.noSoilFarming = "Soilless Farming";
-	this.xtremeTempAgriculture = "Extreme Temperature Agriculture";
-	this.electricalEngineering = "Electrical Engineering";
-	this.commTech = "Communications Technology";
-	this.pcbDesign = "PCB Design";
-	this.processors = "Processors";
-	this.robotics = "Robotics";
-	this.geneticEngineering = "Genetic Engineering";
-	this.animalGenetics = "Animal Genetics";
-	this.horticulturalGenetics = "Horticultural Genetics";
-	this.humanGenetics = "Human Genetics";
-	this.longevityResearch = "Longevity Research";
-	this.mechanicalEngineering = "Mechanical Engineering";
-	this.massProduction = "Mass Production Techniques";
-	this.mechatronics = "Mechatronics";
-	this.plm = "Product Lifecycle Management";
-	this.softwareEngineering = "Software Engineering";
-	this.ai = "Artificial Intelligence";
-	this.culturalSensitivity = "Cultural Sensitivity Programming";
-	this.imageProcessing = "Image Processing";
-	this.naturalLanguage = "Natural Language Processing";
-	this.neuralNetworks = "Neural Networks";
-	this.science = "General Science";
-	this.physics = "Physics";
-	this.experimentalPhysics = "Experimental Physics";
-	this.advancedMaterials = "Advanced Materials";
-	this.compositieMaterials = "Composite Materials";
-	this.selfHealingMaterials = "Self-Healing Materials";
-	this.conductivePolymers = "Conductive Polymers";
-	this.opticalMaterials = "Optical Materials";
-	this.nanotech = "Nanotechnology";
-	this.bioNeutralNano = "Biologically Neutral Nanomachines";
-	this.ggam = "Grey Goo Avoidance Measures";
-	this.nanoFab = "Nanofabrication";
-	this.theoreticalPhysics = "Theoretical Physics";
-	this.astronomy = "Astronomy";
-	this.meteorology = "Meteorology";
-	this.nuclearPhysics = "Nuclear Physics";
-	this.geoEngineering = "Geo-engineering";
-	this.terraforming = "Terraforming";
-	this.weatherControl = "Weather control";
-	this.chemistry = "Chemistry";
-	this.organicChemistry = "Organic Chemistry";
-	this.polymers = "Polymers";
-	this.physicalChemistry = "Physical Chemistry";
-	this.oreProcessing = "Ore Processing";
-	this.metallurgy = "Metallurgy";
-	this.pharmaceuticalChemistry = "Pharmaceutical Chemistry";
-	this.herbicides = "Herbicides";
-	this.medicines = "Medicines";
-	this.biology = "Biology";
-	this.anatomy = "Anatomy";
-	this.horticulture = "Horticulture";
-	this.physiology = "Physiology";
-	this.radiationEffects = "Radiation Effects";
-	this.lowGravEffects = "Low-gravity Effects";
-	this.medicine = "Medicine";
-	this.oncology = "Oncology";
-	this.orthopaedics = "Orthopaedics";
-	this.paedeatrics = "Paedeatrics";
-	this.placebos = "Placebos";
-	this.traditional = "Traditional Medicine";
-	this.arts = "Arts";
-	this.sociology = "Sociology";
-	this.socialPolicy = "Social Policy";
-	this.politicalScience = "Political Science";
-	this.culturalRelations = "Cultural Relations";
-	this.philosophy = "Philosophy";
-	this.ethics = "Ethics";
-	this.scientificTheory = "Scientific Theory";
-	this.classicalPhilosophy = "Classical Philosophy";
+	engineering : "Engineering",
+	agriculturalEngineering : "Agricultural Engineering",
+	hydroponics : "Hydroponics",
+	noSoilFarming : "Soilless Farming",
+	xtremeTempAgriculture : "Extreme Temperature Agriculture",
+	electricalEngineering : "Electrical Engineering",
+	commTech : "Communications Technology",
+	pcbDesign : "PCB Design",
+	processors : "Processors",
+	robotics : "Robotics",
+	geneticEngineering : "Genetic Engineering",
+	animalGenetics : "Animal Genetics",
+	horticulturalGenetics : "Horticultural Genetics",
+	humanGenetics : "Human Genetics",
+	longevityResearch : "Longevity Research",
+	mechanicalEngineering : "Mechanical Engineering",
+	massProduction : "Mass Production Techniques",
+	mechatronics : "Mechatronics",
+	plm : "Product Lifecycle Management",
+	softwareEngineering : "Software Engineering",
+	ai : "Artificial Intelligence",
+	culturalSensitivity : "Cultural Sensitivity Programming",
+	imageProcessing : "Image Processing",
+	naturalLanguage : "Natural Language Processing",
+	neuralNetworks : "Neural Networks",
+	science : "General Science",
+	physics : "Physics",
+	experimentalPhysics : "Experimental Physics",
+	advancedMaterials : "Advanced Materials",
+	compositieMaterials : "Composite Materials",
+	selfHealingMaterials : "Self-Healing Materials",
+	conductivePolymers : "Conductive Polymers",
+	opticalMaterials : "Optical Materials",
+	nanotech : "Nanotechnology",
+	bioNeutralNano : "Biologically Neutral Nanomachines",
+	ggam : "Grey Goo Avoidance Measures",
+	nanoFab : "Nanofabrication",
+	theoreticalPhysics : "Theoretical Physics",
+	astronomy : "Astronomy",
+	meteorology : "Meteorology",
+	nuclearPhysics : "Nuclear Physics",
+	geoEngineering : "Geo-engineering",
+	terraforming : "Terraforming",
+	weatherControl : "Weather control",
+	chemistry : "Chemistry",
+	organicChemistry : "Organic Chemistry",
+	polymers : "Polymers",
+	physicalChemistry : "Physical Chemistry",
+	oreProcessing : "Ore Processing",
+	metallurgy : "Metallurgy",
+	pharmaceuticalChemistry : "Pharmaceutical Chemistry",
+	herbicides : "Herbicides",
+	medicines : "Medicines",
+	biology : "Biology",
+	anatomy : "Anatomy",
+	horticulture : "Horticulture",
+	physiology : "Physiology",
+	radiationEffects : "Radiation Effects",
+	lowGravEffects : "Low-gravity Effects",
+	medicine : "Medicine",
+	oncology : "Oncology",
+	orthopaedics : "Orthopaedics",
+	paedeatrics : "Paedeatrics",
+	placebos : "Placebos",
+	traditional : "Traditional Medicine",
+	arts : "Arts",
+	sociology : "Sociology",
+	socialPolicy : "Social Policy",
+	politicalScience : "Political Science",
+	culturalRelations : "Cultural Relations",
+	philosophy : "Philosophy",
+	ethics : "Ethics",
+	scientificTheory : "Scientific Theory",
+	classicalPhilosophy : "Classical Philosophy",
 
 	//Research Content!
-	this.engineeringContent = "<h1>" + this.engineering + "</h1><p>While the ship's library contains a plethora of information on engineering, researching Engineering aids the colony in overcoming the limitations specific to " + this.planet + ".</p><p>These include how to optimize resource use in construction, fabrication and other processes. Studying Engineering is an important first step in improving overall efficiency and production.</p>";
-	this.agriculturalEngineeringContent = "<h1>" + this.agriculturalEngineering + "</h1><p>" + this.planet + " is relatively hospitable to life with gravity, atmospheric pressure and temperatures within the required norms but there are specific challenges that need to be overcome.</p><p>High radiation in sunlight, non-optimal spectrum for photosynthesis and issues of mineral balance with limited resources are just some of the challenges that this research program seeks to address.</p>";
-	this.hydroponicsContent = "<h1>" + this.hydroponics + "</h1><p>Given the lack of microbial life, " + this.planet + " lacks an important element in farming: soil. This research program seeks to address this by optimizing hydroponics for " + this.planet + "'s particular limitations such as the processing required to obtain water free of radiation and salts.</p><p>This program should also reduce production pressures on the colony's agri-domes by reducing barriers to entry for colony members to farm in their apartments on a small scale.</p>";
-	this.noSoilFarmingContent = "<h1>" + this.noSoilFarming + "</h1><p>The lack of microbes and humus in " + this.planet + "'s glassy sands and clays makes farming quite difficult. As a result, the colony needs to look into the options available such as expanded clay and other growth mediums.</p><p>Hydroponics and soilless farming go hand in hand, the prior focusing on optimizing the mineral mixes and water purity, while this program seeks to render the physical medium more conducive to farming (rather than just the chemical components).</p>";
-	this.xtremeTempAgricultureContent = "<h1>" + this.xtremeTempAgriculture + "</h1><p>While " + this.planet + " does sit in the right temperature range, these temperatures can vary dramatically in a few hours leading to particuar challenges in agriculture.</p><p>This research program seeks to address this and other related challenges through a combination of crop strain selection and physical temperature balancing through heat reservoirs and tweaks to growth media.</p>";
-	this.electricalEngineeringContent = "<h1>" + this.electricalEngineering + "</h1><p>The rather \"Wild West\" style equipment that we're forced to improvise with has rendered much of our electrical engineering techniques rather redundant.</p><p>This research program seeks to standardize and industrialize many of our current processes to improve efficiency and production rates.</p>";
-	this.commTechContent = "<h1>" + this.commTech + "</h1><p>High interference and various atmospheric effects have greatly reduced our communication range.</p><p>This research program seeks to address these problems by studying how to overcome interference in the most economic ways possible given the materials available.</p>";
-	this.pcbDesignContent = "<h1>" + this.pcbDesign + "</h1><p>Our hardware, particularly electronics are much more shortlived here on " + this.planet + ". This research program aims to investigate changes to how we put these components together could improve longevity.</p><p>By defining best practices (through rigorous testing) to PCB design, such as the effects of placing certain components in such a way as to shield more fragile componenets from radiation or dust we hope to greatly improve efficiency and parts longevity.</p>";
-	this.processorsContent = "<h1>" + this.processors + "</h1><p>While we have all the information we could want on how to build fantastic processors in pristine lab conditions, we actually don't have much of the equipment necessary to avail of these advanced fabrication techniques.</p><p>This research program will seek to adapt these techniques to local needs such as improved hardening against radiation, improved temperature density due to air cooling problems with amount of dust on " + this.planet + "</p>";
-	this.roboticsContent = "Robotics Content goes here....";
-	this.geneticEngineeringContent = "Genetic Engineering Content goes here....";
-	this.animalGeneticsContent = "Animal Genetics Content goes here....";
-	this.horticulturalGeneticsContent = "Horticultural Genetics Content goes here....";
-	this.humanGeneticsContent = "Human Genetics Content goes here....";
-	this.longevityResearchContent = "Longevity Research Content goes here....";
-	this.mechanicalEngineeringContent = "Mechanical Engineering Content goes here....";
-	this.massProductionContent = "Mass Production Techniques Content goes here....";
-	this.mechatronicsContent = "Mechatronics Content goes here....";
-	this.plmContent = "Product Lifecycle Management Content goes here....";
-	this.softwareEngineeringContent = "Software Engineering Content goes here....";
-	this.aiContent = "Artificial Intelligence Content goes here....";
-	this.culturalSensitivityContent = "Cultural Sensitivity Programming Content goes here....";
-	this.imageProcessingContent = "Image Processing Content goes here....";
-	this.naturalLanguageContent = "Natural Language Processing Content goes here....";
-	this.neuralNetworksContent = "Neural Networks Content goes here....";
-	this.scienceContent = "<h1>General Science</h1><p>Science is more than just facts and figures, it's a process that until now has only been undertaken in the Sol system. We need to perform basic measurements and calibrations here on " + this.planet + " to ensure that future research can be trusted and that there are no unexpected surprises down the road.</p>";
-	this.physicsContent = "Physics Content goes here....";
-	this.experimentalPhysicsContent = "Experimental Physics Content goes here....";
-	this.advancedMaterialsContent = "Advanced Materials Content goes here....";
-	this.compositieMaterialsContent = "Composite Materials Content goes here....";
-	this.selfHealingMaterialsContent = "Self-Healing Materials Content goes here....";
-	this.conductivePolymersContent = "Conductive Polymers Content goes here....";
-	this.opticalMaterialsContent = "Optical Materials Content goes here....";
-	this.nanotechContent = "Nanotechnology Content goes here....";
-	this.bioNeutralNanoContent = "Biologically Neutral Nanomachines Content goes here....";
-	this.ggamContent = "Grey Goo Avoidance Measures Content goes here....";
-	this.nanoFabContent = "Nanofabrication Content goes here....";
-	this.theoreticalPhysicsContent = "Theoretical Physics Content goes here....";
-	this.astronomyContent = "Astronomy Content goes here....";
-	this.meteorologyContent = "Meteorology Content goes here....";
-	this.nuclearPhysicsContent = "Nuclear Physics Content goes here....";
-	this.geoEngineeringContent = "Geo-engineering Content goes here....";
-	this.terraformingContent = "Terraforming Content goes here....";
-	this.weatherControlContent = "Weather control Content goes here....";
-	this.chemistryContent = "Chemistry Content goes here....";
-	this.organicChemistryContent = "Organic Chemistry Content goes here....";
-	this.polymersContent = "Polymers Content goes here....";
-	this.physicalChemistryContent = "Physical Chemistry Content goes here....";
-	this.oreProcessingContent = "Ore Processing Content goes here....";
-	this.metallurgyContent = "Metallurgy Content goes here....";
-	this.pharmaceuticalChemistryContent = "Pharmaceutical Chemistry Content goes here....";
-	this.herbicidesContent = "Herbicides Content goes here....";
-	this.medicinesContent = "Medicines Content goes here....";
-	this.biologyContent = "Biology Content goes here....";
-	this.anatomyContent = "Anatomy Content goes here....";
-	this.horticultureContent = "Horticulture Content goes here....";
-	this.physiologyContent = "Physiology Content goes here....";
-	this.radiationEffectsContent = "Radiation Effects Content goes here....";
-	this.lowGravEffectsContent = "Low-gravity Effects Content goes here....";
-	this.medicineContent = "Medicine Content goes here....";
-	this.oncologyContent = "Oncology Content goes here....";
-	this.orthopaedicsContent = "<h1>Orthopaedics</h1>While our local gravity and diets are relatively similar to what we were used to back on Sol 3 (apart from the dramatic increase in pineapple consumption), there are several factors we need to look into to improve skeletal health over the long-term.</p><p>Through the study of orthopaedics, we believe that we will be able to improve longevity and functional lifespan as well as overall health. This pertains not only to the elderly, but also to the colony members native to " + this.planet + ", who are also in a high risk group for bone density problems. </p>";
-	this.paedeatricsContent = "Paedeatrics Content goes here....";
-	this.placebosContent = "Placebos Content goes here....";
-	this.traditionalContent = "Traditional Medicine Content goes here....";
-	this.artsContent = "<h1>Arts</h1><p>The mix of TOSSer, Hipstie and ArtIe populations brings with it deep metaphysical and sociological questions that need to be answered. By studying these questions and opening up a structured debate on these topics, we can improve the quality of life for all members of the colony.</p>";
-	this.sociologyContent = "Sociology Content goes here....";
-	this.socialPolicyContent = "Social Policy Content goes here....";
-	this.politicalScienceContent = "Political Science Content goes here....";
-	this.culturalRelationsContent = "Cultural Relations Content goes here....";
-	this.philosophyContent = "Philosophy Content goes here....";
-	this.ethicsContent = "Ethics Content goes here....";
-	this.scientificTheoryContent = "Scientific Theory Content goes here....";
-	this.classicalPhilosophyContent = "Classical Philosophy Content goes here....";
+	engineeringContent : "<h1>Engineering</h1><p>While the ship's library contains a plethora of information on engineering, researching Engineering aids the colony in overcoming the limitations specific to Gliese 581d.</p><p>These include how to optimize resource use in construction, fabrication and other processes. Studying Engineering is an important first step in improving overall efficiency and production.</p>",
+	agriculturalEngineeringContent : "<h1>Agricultural Engineering</h1><p>Gliese 581d is relatively hospitable to life with gravity, atmospheric pressure and temperatures within the required norms but there are specific challenges that need to be overcome.</p><p>High radiation in sunlight, non-optimal spectrum for photosynthesis and issues of mineral balance with limited resources are just some of the challenges that this research program seeks to address.</p>",
+	hydroponicsContent : "<h1>Hydroponics</h1><p>Given the lack of microbial life, we lack an important element in farming: soil. This research program seeks to address this by optimizing hydroponics for Gliese 581d's particular limitations such as the processing required to obtain water free of radiation and salts.</p><p>This program should also reduce production pressures on the colony's agri-domes by reducing barriers to entry for colony members to farm in their apartments on a small scale.</p>",
+	noSoilFarmingContent : "<h1>Soilless Farming</h1><p>The lack of microbes and humus in Gliese 581d's glassy sands and clays makes farming quite difficult. As a result, the colony needs to look into the options available such as expanded clay and other growth mediums.</p><p>Hydroponics and soilless farming go hand in hand, the prior focusing on optimizing the mineral mixes and water purity, while this program seeks to render the physical medium more conducive to farming (rather than just the chemical components).</p>",
+	xtremeTempAgricultureContent : "<h1>Exteme Temperature Agriculture</h1><p>While Gliese 581d does sit in the right temperature range, these temperatures can vary dramatically in a few hours leading to particuar challenges in agriculture.</p><p>This research program seeks to address this and other related challenges through a combination of crop strain selection and physical temperature balancing through heat reservoirs and tweaks to growth media.</p>",
+	electricalEngineeringContent : "<h1>Electrical Engineering</h1><p>The rather \"Wild West\" style equipment that we're forced to improvise with has rendered much of our electrical engineering techniques rather redundant.</p><p>This research program seeks to standardize and industrialize many of our current processes to improve efficiency and production rates.</p>",
+	commTechContent : "<h1>Communications Technology</h1><p>High interference and various atmospheric effects have greatly reduced our communication range.</p><p>This research program seeks to address these problems by studying how to overcome interference in the most economic ways possible given the materials available.</p>",
+	pcbDesignContent : "<h1>PCB Design</h1><p>Our hardware, particularly electronics are much more shortlived here on Gliese 581d. This research program aims to investigate changes to how we put these components together could improve longevity.</p><p>By defining best practices (through rigorous testing) to PCB design, such as the effects of placing certain components in such a way as to shield more fragile componenets from radiation or dust we hope to greatly improve efficiency and parts longevity.</p>",
+	processorsContent : "<h1>Processors</h1><p>While we have all the information we could want on how to build fantastic processors in pristine lab conditions, we actually don't have much of the equipment necessary to avail of these advanced fabrication techniques.</p><p>This research program will seek to adapt these techniques to local needs such as improved hardening against radiation, improved temperature density due to air cooling problems with amount of dust on Gliese 581d</p>",
+	roboticsContent : "Robotics Content goes here....",
+	geneticEngineeringContent : "Genetic Engineering Content goes here....",
+	animalGeneticsContent : "Animal Genetics Content goes here....",
+	horticulturalGeneticsContent : "Horticultural Genetics Content goes here....",
+	humanGeneticsContent : "Human Genetics Content goes here....",
+	longevityResearchContent : "Longevity Research Content goes here....",
+	mechanicalEngineeringContent : "Mechanical Engineering Content goes here....",
+	massProductionContent : "Mass Production Techniques Content goes here....",
+	mechatronicsContent : "Mechatronics Content goes here....",
+	plmContent : "Product Lifecycle Management Content goes here....",
+	softwareEngineeringContent : "Software Engineering Content goes here....",
+	aiContent : "Artificial Intelligence Content goes here....",
+	culturalSensitivityContent : "Cultural Sensitivity Programming Content goes here....",
+	imageProcessingContent : "Image Processing Content goes here....",
+	naturalLanguageContent : "Natural Language Processing Content goes here....",
+	neuralNetworksContent : "Neural Networks Content goes here....",
+	scienceContent : "<h1>General Science</h1><p>Science is more than just facts and figures, it's a process that until now has only been undertaken in the Sol system. We need to perform basic measurements and calibrations here on Gliese 581d to ensure that future research can be trusted and that there are no unexpected surprises down the road.</p>",
+	physicsContent : "Physics Content goes here....",
+	experimentalPhysicsContent : "Experimental Physics Content goes here....",
+	advancedMaterialsContent : "Advanced Materials Content goes here....",
+	compositieMaterialsContent : "Composite Materials Content goes here....",
+	selfHealingMaterialsContent : "Self-Healing Materials Content goes here....",
+	conductivePolymersContent : "Conductive Polymers Content goes here....",
+	opticalMaterialsContent : "Optical Materials Content goes here....",
+	nanotechContent : "Nanotechnology Content goes here....",
+	bioNeutralNanoContent : "Biologically Neutral Nanomachines Content goes here....",
+	ggamContent : "Grey Goo Avoidance Measures Content goes here....",
+	nanoFabContent : "Nanofabrication Content goes here....",
+	theoreticalPhysicsContent : "Theoretical Physics Content goes here....",
+	astronomyContent : "Astronomy Content goes here....",
+	meteorologyContent : "Meteorology Content goes here....",
+	nuclearPhysicsContent : "Nuclear Physics Content goes here....",
+	geoEngineeringContent : "Geo-engineering Content goes here....",
+	terraformingContent : "Terraforming Content goes here....",
+	weatherControlContent : "Weather control Content goes here....",
+	chemistryContent : "Chemistry Content goes here....",
+	organicChemistryContent : "Organic Chemistry Content goes here....",
+	polymersContent : "Polymers Content goes here....",
+	physicalChemistryContent : "Physical Chemistry Content goes here....",
+	oreProcessingContent : "Ore Processing Content goes here....",
+	metallurgyContent : "Metallurgy Content goes here....",
+	pharmaceuticalChemistryContent : "Pharmaceutical Chemistry Content goes here....",
+	herbicidesContent : "Herbicides Content goes here....",
+	medicinesContent : "Medicines Content goes here....",
+	biologyContent : "Biology Content goes here....",
+	anatomyContent : "Anatomy Content goes here....",
+	horticultureContent : "Horticulture Content goes here....",
+	physiologyContent : "Physiology Content goes here....",
+	radiationEffectsContent : "Radiation Effects Content goes here....",
+	lowGravEffectsContent : "Low-gravity Effects Content goes here....",
+	medicineContent : "Medicine Content goes here....",
+	oncologyContent : "Oncology Content goes here....",
+	orthopaedicsContent : "<h1>Orthopaedics</h1>While our local gravity and diets are relatively similar to what we were used to back on Sol 3 (apart from the dramatic increase in pineapple consumption), there are several factors we need to look into to improve skeletal health over the long-term.</p><p>Through the study of orthopaedics, we believe that we will be able to improve longevity and functional lifespan as well as overall health. This pertains not only to the elderly, but also to the colony members native to Gliese 581d, who are also in a high risk group for bone density problems. </p>",
+	paedeatricsContent : "Paedeatrics Content goes here....",
+	placebosContent : "Placebos Content goes here....",
+	traditionalContent : "Traditional Medicine Content goes here....",
+	artsContent : "<h1>Arts</h1><p>The mix of TOSSer, Hipstie and ArtIe populations brings with it deep metaphysical and sociological questions that need to be answered. By studying these questions and opening up a structured debate on these topics, we can improve the quality of life for all members of the colony.</p>",
+	sociologyContent : "Sociology Content goes here....",
+	socialPolicyContent : "Social Policy Content goes here....",
+	politicalScienceContent : "Political Science Content goes here....",
+	culturalRelationsContent : "Cultural Relations Content goes here....",
+	philosophyContent : "Philosophy Content goes here....",
+	ethicsContent : "Ethics Content goes here....",
+	scientificTheoryContent : "Scientific Theory Content goes here....",
+	classicalPhilosophyContent : "Classical Philosophy Content goes here...."
 }
