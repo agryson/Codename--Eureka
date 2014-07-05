@@ -176,7 +176,7 @@ var FileIO = (function(){
                 fileWriter.onerror = function(e){
                     console.log('File write failed: ' + e.toString());
                 };
-                fileWriter.write(buildSave(Game));
+                fileWriter.write(_buildSave(Game));
             }, _errorHandler);
         }, _errorHandler);
     };
@@ -259,11 +259,12 @@ var FileIO = (function(){
     /**
     * Creates the appropriate format to save
     * @memberOf FileIO
+    * @private
     * @function buildSave
     * @param {Object} Game Game object to be saved
     * @return {blob} The save game JSON, blobbified
     */
-    var buildSave = function(Game){
+    var _buildSave = function(Game){
         var saveData = [
         Game.turn,
         Game.mapTiles,
