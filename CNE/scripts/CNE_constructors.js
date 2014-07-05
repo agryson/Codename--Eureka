@@ -36,12 +36,13 @@ function Construction() {
     this.buildTime = -1;
     /**
     * Age of the building (increments each turn)
+    * @todo Incrementer function should be in this construction
     * @memberof Construction
     * @member {int} age
     */
     this.age = 0;
     /**
-    * Health of the cosntruction (level of maintenance) from 0 to 100
+    * Health of the construction (level of maintenance) from 0 to 100
     * @memberof Construction
     * @member {int} health
     */
@@ -53,7 +54,7 @@ function Construction() {
     */
     this.energy = 0;
     /**
-    * Food teh construction generates or consumes
+    * Food the construction generates or consumes
     * @memberof Construction
     * @member {int} food
     */
@@ -89,7 +90,7 @@ function Construction() {
     */
     this.crime = 0;
     /**
-    * Waste produced ro remvoed by ths construction
+    * Waste produced or removed by ths construction
     * @memberof Construction
     * @member {int} waste
     */
@@ -119,7 +120,7 @@ function Construction() {
     */
     this.artPop = 0;
     /**
-    * Housign provided by this construction
+    * Housing provided by this construction
     * @memberof Construction
     * @member {int} housing
     */
@@ -137,7 +138,7 @@ function Construction() {
     */
     this.ores = [];
     /**
-    * The future type of this construction (will overwrite this.kind)
+    * The future type of this construction (will overwrite {@link Construction#kind})
     * @memberof Construction
     * @member {array} future
     */
@@ -154,13 +155,13 @@ function Construction() {
     this.mining = false;
     /**
     * Whether this construction is vital to colony survival or not 
+    * (used to prioritize building shutdown in the event of energy or employee shortages)
     * @memberof Construction
     * @member {bool} vital
     */
     this.vital = false;
     /**
     * Whether or not the construction has been shut down or not
-    * (used to prioritize building shutdown in the event of energy or employee shortages)
     * @memberof Construction
     * @member {bool} shutdown
     */
