@@ -1,10 +1,6 @@
-/*jslint node: true */
 "use strict"; //this will break everything if there's any errors... that's a good thing
 //var saveList = [];
-
 //Nice map: 1363032002367
-//CONSTRUCTORS**********************************************************************************************
-/*Define our Constructors*/
 
 /**
 * Calculates what the state of the given tile should be in the next turn, setting 
@@ -1070,37 +1066,6 @@ function Terrain() {
     */
 }
 
-
-
-/**
-* Recycles the provided tile, recovering the resources if any recycler buildings
-* are available, printing status to the in game console
-* @param {int} kind The type of building to recycle
-* @param {int} x X coordinate of tile to recycle
-* @param {int} y Y coordinate of tile to recycle
-* @param {int} level Level on which to recycle
-*/
-function recycle(kind, x, y, level){
-    var recycled = false;
-    for(var i = 0; i < Conf.recyclerList.length; i++){
-        if(!Conf.mapTiles[Conf.recyclerList[i][2]][Conf.recyclerList[i][1]][Conf.recyclerList[i][0]][1].shutdown && !recycled){
-            recycled = true;
-            Conf.mapTiles[level][y][x][1] = bobTheBuilder(103, x, y, level);
-            var recovered = resourceNeededList(getBuildingRef(kind), false, true);
-            for(var j = 0; j < recovered.length; j++){
-                if(Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1] >= recovered[j][1]){
-                    Conf.procOres[recovered[j][0]] += recovered[j][1];
-                } else {
-                    printConsole(TRANS.recycleFailure);
-                }
-            }
-        }
-    }
-    if(!recycled){
-        printConsole(TRANS.noRecyclers);
-    }
-    execReview();
-}
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
 
@@ -2871,7 +2836,7 @@ function keypressed(e) {
             default:
                 console.log('in the console' + e.keyCode);
         }
-    } else if(Game) {
+    } else if(Conf) {
         switch(e.keyCode) {
         case 8: //prevent backspace from fupping up my day
             if(document.activeElement !== document.getElementById('seed')){

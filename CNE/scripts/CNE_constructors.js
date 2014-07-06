@@ -11,11 +11,11 @@ function Construction() {
     */
     this.ref = "";
     /**
-    * Position on the map
+    * Position on the map: Level, x-position, y-position
     * @memberof Construction
-    * @member {array} Position [y, x]
+    * @member {array} Position [level, x, y]
     */
-    this.position = [150, 150];
+    this.position = [0, 150, 150];
     /**
     * The construction type
     * @memberof Construction
@@ -90,7 +90,7 @@ function Construction() {
     */
     this.crime = 0;
     /**
-    * Waste produced or removed by ths construction
+    * Waste produced or removed by this construction
     * @memberof Construction
     * @member {int} waste
     */
@@ -138,7 +138,7 @@ function Construction() {
     */
     this.ores = [];
     /**
-    * The future type of this construction (will overwrite {@link Construction#kind})
+    * The future type of this construction (will overwrite {@link Construction.kind})
     * @memberof Construction
     * @member {array} future
     */
@@ -172,4 +172,33 @@ function Construction() {
     * @member {string} researchTopic
     */
     this.researchTopic = 'noResearch';
+
+    /**
+    * Recycles the provided tile, recovering the resources if any recycler buildings
+    * are available, printing status to the in game console
+    */
+    this.recycle = function(){
+        var level = this.position[0];
+        var x = this.position[1];
+        var y = this.position[2];
+        var recycled = false;
+        for(var i = 0; i < Conf.recyclerList.length; i++){
+            if(!Conf.mapTiles[Conf.recyclerList[i][2]][Conf.recyclerList[i][1]][Conf.recyclerList[i][0]][1].shutdown && !recycled){
+                recycled = true;
+                Conf.mapTiles[level][y][x][1] = bobTheBuilder(103, x, y, level);
+                var recovered = resourceNeededList(this.kind, false, true);
+                for(var j = 0; j < recovered.length; j++){
+                    if(Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1] >= recovered[j][1]){
+                        Conf.procOres[recovered[j][0]] += recovered[j][1];
+                    } else {
+                        printConsole(TRANS.recycleFailure);
+                    }
+                }
+            }
+        }
+        if(!recycled){
+            printConsole(TRANS.noRecyclers);
+        }
+        execReview();
+    }
 }
