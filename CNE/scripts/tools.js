@@ -6,6 +6,27 @@
 var Tools = (function(){
 	var toolbox = {
 		/**
+		* For a provided array, will return an array fo the max and min values
+		* @param {array} arrayIn Array to find the max/min values of
+		* @returns {array} The max/min values <tt>[max,min]</tt> 
+		*/
+		getMaxMin: function(arrayIn){
+		    var max = 0;
+		    var min = 1000000;
+		    var maxTest, minTest;
+		    for(var i = 0; i < arrayIn.length; i++){
+		        maxTest = Math.max.apply(null,arrayIn[i]);
+		        minTest = Math.min.apply(null,arrayIn[i]);
+		        if(maxTest > max){max = maxTest;}
+		        if(minTest < min){min = minTest;}
+		        if(min < 0){min = 0;}
+		    }
+		    max = Math.ceil(1 + max/50) * 50;
+		    min = Math.floor(min/50) * 50;
+		    return [max, min];
+		},
+		
+		/**
 		* Given a container element, will unhook all of the child elements (Chrome should 
 		* then remove the orphaned click listeners during garbage collection), thus 
 		* "flushing" the container

@@ -240,8 +240,8 @@ var FileIO = (function(){
                     Conf.leisure = saveDataOut[42];
                     //Add code that gets read data and make Game equal to it...
                     Conf.buildings[37][1] = false;
-                    checkBuildings();
-                    checkRobots();
+                    CneTools.checkBuildings();
+                    CneTools.checkRobots();
                     reCount('all');
                     execReview();
                     fillResearchMenu();

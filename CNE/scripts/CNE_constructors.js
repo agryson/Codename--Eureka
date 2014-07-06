@@ -1,4 +1,53 @@
 /**
+* The main object for a tile, tracking its kind, and state, initially empty 
+* apart from resources
+* @constructor
+*/
+function Terrain() {
+    /**
+    * Array that stores the list of resources. This is the only instantiated 
+    * property to save on memory
+    * @memberof Terrain
+    * @member {array} resources
+    */
+    this.resources = [];
+    /**
+    * Kind of tile. Possible values are: 
+    * - 0=Smooth
+    * - 1=Rough
+    * - 2=Mountainous
+    * - 3=Prepared/MinedOut
+    * - 4=Water
+    * - 5=constructionAnimation
+    *
+    * @memberof Terrain 
+    * @member {int} kind
+    */
+    /**
+    * @memberof Terrain 
+    * @member {int} altitude 
+    */
+    /**
+    * Helper variable that tells us if the tile is subterranean or not
+    * @memberof Terrain 
+    * @member {bool} UG
+    */
+    /**
+    * Stores the number of turns that are left to become a tile of the desired kind
+    * @memberof Terrain 
+    * @member {int} turns
+    */
+    /**
+    * @memberof Terrain 
+    * @member {bool} diggable
+    */
+    /**
+    * @memberof Terrain 
+    * @member {string} ref
+    */
+}
+
+/**
 * Constructor for constructions! Any building that is placed on the map will 
 * have these variables at its disposal
 * @constructor

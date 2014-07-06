@@ -59,7 +59,7 @@ function nextTurn(x, y, level) {
         } else if(tile.buildTime === 0) {
             tile.ores = Conf.map[level][y][x].resources;
             tile.buildTime = -1;
-            Conf.mapTiles[level][y][x].ref = changeName(tile.future[1], Conf.map[level][y][x].ref);
+            Conf.mapTiles[level][y][x].ref = CneTools.changeName(tile.future[1], Conf.map[level][y][x].ref);
             tile.exists = true;
             Conf.storageCap[Conf.storageCap.length - 1] += tile.storage;
             Conf.energy[Conf.energy.length - 1] += tile.energy;
@@ -112,7 +112,7 @@ function nextTurn(x, y, level) {
             }
             if(!stillMining) {
                 tile.mining = false;
-                Conf.mapTiles[level][y][x].ref = changeName(TRANS.minedOut, Conf.mapTiles[level][y][x].ref);
+                Conf.mapTiles[level][y][x].ref = CneTools.changeName(TRANS.minedOut, Conf.mapTiles[level][y][x].ref);
             }
         }
         //TODO: will surely need to fix this after ...
@@ -412,7 +412,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
         o.kind = 100;
         o.position = [level, x, y];
         if(kind >= 200 && kind < 300) {
-            o.ref = changeName(TRANS.building + Conf.buildings[kind - 200][3], Conf.map[level][y][x].ref);
+            o.ref = CneTools.changeName(TRANS.building + Conf.buildings[kind - 200][3], Conf.map[level][y][x].ref);
         }
         console.log(kind);
         switch(kind) {
@@ -421,7 +421,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.vital = true;
             o.buildTime = eta(2);
             o.future = [3, TRANS.prepared];
-            o.ref = changeName(TRANS.preparing, Conf.map[level][y][x].ref);
+            o.ref = CneTools.changeName(TRANS.preparing, Conf.map[level][y][x].ref);
             o.robot = 0;
             Conf.robotsList[0][0] += 1;
             reCount('dozer');
@@ -433,7 +433,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             if(builderBot) {
                 o.future = [204, TRANS.building];
             }
-            o.ref = changeName(TRANS.digging, Conf.map[level][y][x].ref);
+            o.ref = CneTools.changeName(TRANS.digging, Conf.map[level][y][x].ref);
             o.robot = 1;
             Conf.robotsList[1][0] += 1;
             reCount('digger');
@@ -444,7 +444,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.buildTime = eta(3);
             o.future = [Conf.map[level][y][x].kind - 5, TRANS.cavern];
             o.kind = 8;
-            o.ref = changeName(TRANS.diggingCavern, Conf.map[level][y][x].ref);
+            o.ref = CneTools.changeName(TRANS.diggingCavern, Conf.map[level][y][x].ref);
             reCount('cavernDigger');
             break;
 
@@ -455,7 +455,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             if(builderBot) {
                 o.future = [221, TRANS.building];
             }
-            o.ref = changeName(TRANS.mining, Conf.map[level][y][x].ref);
+            o.ref = CneTools.changeName(TRANS.mining, Conf.map[level][y][x].ref);
             o.mining = true;
             o.robot = 3;
             Conf.robotsList[3][0] += 1;
@@ -471,7 +471,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
                 } else {
                     o.future = [o.kind, TRANS.mining];
                 }
-                o.ref = changeName(TRANS.mining, Conf.map[level][y][x].ref);
+                o.ref = CneTools.changeName(TRANS.mining, Conf.map[level][y][x].ref);
                 o.mining = true;
             } else if(level > 0) {
                 o.future = [Conf.map[level][y][x].kind - 5, TRANS.cavern];
@@ -1004,7 +1004,7 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
             o.storage = 50;
             o.energy = 60;
             o.future = [kind, TRANS.lander];
-            o.ref = changeName(TRANS.lander, Conf.map[level][y][x].ref);
+            o.ref = CneTools.changeName(TRANS.lander, Conf.map[level][y][x].ref);
             break;
         default:
             console.log("Bob can't build it... :( " + kind);
@@ -1016,55 +1016,6 @@ function bobTheBuilder(kind, x, y, level, builderBot) {
     }
 }
 
-
-
-/**
-* The main object for a tile, tracking its kind, and state, initially empty 
-* apart from resources
-* @constructor
-*/
-function Terrain() {
-    /**
-    * Array that stores the list of resources. This is the only instantiated 
-    * property to save on memory
-    * @memberof Terrain
-    * @member {array} resources
-    */
-    this.resources = [];
-    /**
-    * Kind of tile. Possible values are: 
-    * - 0=Smooth
-    * - 1=Rough
-    * - 2=Mountainous
-    * - 3=Prepared/MinedOut
-    * - 4=Water
-    * - 5=constructionAnimation
-    *
-    * @memberof Terrain 
-    * @member {int} kind
-    */
-    /**
-    * @memberof Terrain 
-    * @member {int} altitude 
-    */
-    /**
-    * @memberof Terrain 
-    * @member {int} UG
-    */
-    /**
-    * Stores the number of turns that are left to become a tile of the desired kind
-    * @memberof Terrain 
-    * @member {int} turns
-    */
-    /**
-    * @memberof Terrain 
-    * @member {bool} diggable
-    */
-    /**
-    * @memberof Terrain 
-    * @member {int} ref
-    */
-}
 
 
 //GENERAL SETUP AND TOOLS**********************************************************************************************
@@ -1207,213 +1158,6 @@ function saneStats(){
 
     Conf.sdf[Conf.sdf.length - 1] = Conf.pop[Conf.pop.length - 1] - Math.floor(Conf.housing[Conf.housing.length - 1]);
 
-}
-
-
-
-/**
-* Draws all graphs and charts for the statistics panel
-* @param {string} type The type of chart. Valid values are <tt>line</tt>, <tt>pie</tt> & <tt>bar</tt>
-* @param {string} outputId The id of the canvas to draw to
-* @param {array} sourceData The array of data to plot
-* @param {bool} [from0] If true, forces y-axis to start from 0 rather than adapting to the data given
-* @todo make this a proper little library, it's too specific right now
-*/
-function drawGraph(type, outputId, sourceData, from0) {
-    var can = document.getElementById(outputId);
-    var con = document.getElementById(outputId).getContext('2d');
-    var canW = parseInt(can.width, 10);
-    var canH = parseInt(can.height, 10);
-    con.clearRect(0, 0, canW, canH);
-    //Get our max and min values from the input data
-    var sourceClean = [];
-    for(var m = 0; m < sourceData.length; m++){
-        if(document.getElementById("10Week").checked && Conf.turn >= 10){
-            sourceClean.push(sourceData[m][0].slice(-11));
-        } else {
-            sourceClean.push(sourceData[m][0]);
-        }
-    }
-    var maxMin = getMaxMin(sourceClean);
-    var maxi = maxMin[0];
-    var mini = maxMin[1];
-    if(from0){
-        mini = 0;
-    }
-
-    /**
-    * Returns our highest data point so we can scale the axes
-    * @param {array} arr Data to be processed
-    * @returns {int} Index of the max data point
-    */
-    var max = function(arr) {
-            var mem = 0;
-            for(var i = 0; i < arr.length; i++) {
-                if(arr[i] > arr[mem]) {
-                    mem = i;
-                }
-            }
-            return mem;
-        };
-
-    /**
-    * Returns our lowest data point so we can scale the axes
-    * @param {array} arr Data to be processed
-    * @returns {int} Index of the min data point
-    */
-    var min = function(arr) {
-            var mem = 0;
-            for(var i = 0; i < arr.length; i++) {
-                if(arr[i] < arr[mem]) {
-                    mem = i;
-                }
-            }
-            return mem;
-        };
-
-
-
-    /**
-    * Returns data normalized to the given axis
-    * @param {int} val The index of the datapoint to normalize
-    * @param {array} arr The dataset to look in
-    * @param {int} axis The length of the axis in pixels to normalise to
-    * @returns {int} The normalized data
-    */
-    var normal = function(val, arr, axis) {
-            var out = (arr[val] - mini) / (maxi - mini);
-            return out * axis;
-        };
-
-
-    if(type === 'line'){
-        for(var n = 0; n < sourceData.length; n++){
-            var sepX = Math.floor(canW / sourceData[n][0].length);
-            var tenOnly = 0;
-            var tenLimit = sourceData[n][0].length - 1;
-            var sepY = Math.floor(canH / sourceData[max(sourceData[n][0])]);
-            if(document.getElementById("10Week").checked && Conf.turn >= 10){
-                sepX = Math.floor(canW / 10);
-                sepY = Math.floor(canH / sourceData[max(sourceData[n][0].slice(-11))]);
-                tenOnly = sourceData[n][0].length - 11;
-                tenLimit = 11;
-            }
-            var colour = sourceData[n][1];
-            //Lines
-            con.beginPath();
-            con.lineCap = 'round';
-            con.lineJoin = 'round';
-            con.moveTo(0, canH - normal(tenOnly, sourceData[n][0], canH));
-            for(var k = 1; k <= tenLimit; k++) {
-                var recent = k;
-                if(document.getElementById("10Week").checked && Conf.turn >= 10){
-                    recent = sourceData[n][0].length - (11 - k);
-                }
-                con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0], canH));
-                con.arc(k * sepX, canH - normal(recent, sourceData[n][0], canH), 1, 0, Math.PI*2);
-            }
-            con.strokeStyle = '#000';
-            con.lineWidth = 3;
-            con.stroke();
-            con.strokeStyle = colour;
-            con.lineWidth = 2;
-            con.stroke();
-            con.closePath();
-        }
-        con.beginPath();
-        con.strokeStyle = 'rgba(255,255,255,0.02)';
-        con.lineWidth = 1;
-        con.lineCap = 'butt';
-        con.moveTo(5, Math.floor(canH - normal(0, [0], canH)));
-        con.lineTo(canW - 5, Math.floor(canH - normal(0, [0], canH)));
-        con.strokeStyle = 'rgba(255,255,255,0.08)';
-        for(var grad = 0; grad <= 10; grad++) {
-            con.moveTo(5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)], canH)));
-            con.lineTo(canW - 5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)], canH)));
-        }
-        con.stroke();
-        con.fillStyle = '#D9F7FF';
-        con.font = "14px Arial";
-        con.fillText(maxi, 5, 14);
-        con.fillText(mini + (maxi - mini)/2, 5, Math.floor(canH/2));
-        con.fillText(mini, 5, canH - 2);
-        con.closePath();
-
-    } else if(type === 'pie'){
-        var topVal = 0;
-        var topValRef;
-        var radius = Math.floor(canH / 2.1);
-        var center = [canW / 2, canH / 2];
-        var fillPie = function(start, stop, colour){
-            con.beginPath();
-            con.fillStyle = colour;
-            con.moveTo(center[0], center[1]);
-            con.arc(center[0], center[1], radius, start, stop);
-            con.lineTo(center[0], center[1]);
-            con.fill();
-            con.strokeStyle = '#222';
-            con.lineWidth = 1;
-            con.stroke();
-            con.closePath();
-        };
-
-        var nextStart = 0;
-        var total = 0;
-        for(var sum = 0; sum < sourceData.length; sum++){
-            total += sourceData[sum][0][sourceData[sum][0].length - 1];
-        }
-        for(var f = 0; f < sourceData.length; f++){
-            var current = sourceData[f][0][sourceData[f][0].length - 1];
-            if(current > 0){
-                fillPie(nextStart, nextStart + (Math.PI*2)*(current / total), sourceData[f][1]);
-                nextStart += (Math.PI*2)*(current / total);
-            }
-        }
-    } else if(type === 'bar') {
-        var barWidth = ((canH - 20) / sourceData.length) * 3;
-        var startX;
-        var startY;
-        for(var bar = 0; bar < sourceData.length; bar ++){
-            if(bar % 3 ===  0){
-                startX = 10;
-                startY = canH - (sourceData.length - bar)*barWidth/3 - 15;
-                if(bar > 0){
-                    startY += 5*bar/3;
-                }
-            }
-            con.fillStyle = sourceData[bar][1];
-            con.strokeStyle = '#222';
-            con.fillRect(startX/2, startY, (normal(0, sourceData[bar][0], canW))/2, barWidth);
-            con.strokeRect(startX/2, startY, (normal(0, sourceData[bar][0], canW))/2, barWidth);
-            startX += normal(0, sourceData[bar][0], canW);
-        }
-    } else {
-        console.log("Lies, lies and damned statistics" + sourceData);
-    }
-    //Legend, we only draw it once
-    if(Conf.fresh){
-        var canL = document.getElementById(outputId + 'Legend');
-        var conL = canL.getContext('2d');
-        conL.clearRect(0, 0, canW, canH);
-        var legendLeft = 15;
-        var legendTop = 5;
-        var legendBottom = 20;
-        for(var legend = 0; legend < sourceData.length; legend++){
-            conL.beginPath();
-            conL.strokeStyle = '#000';
-            conL.lineWidth = 0.5;
-            conL.fillStyle = sourceData[legend][1];
-            conL.fillRect(legendLeft, legendTop, 10, 10);
-            conL.strokeRect(legendLeft, legendTop, 10, 10);
-            legendTop += 15;
-            conL.closePath();
-            conL.beginPath();
-            conL.fillStyle = '#D9F7FF';
-            conL.font = "14px Arial";
-            conL.fillText(sourceData[legend][2], legendLeft + 20, legendTop - 5);
-            conL.closePath();
-        }
-    }
 }
 
 
@@ -1771,414 +1515,10 @@ function listLabs(ident){
  */
 window.onload = function init() {
     FileIO.openfs();
-    if(!document.webkitHidden){
+    if(!document.hidden){
         Music.play();
     }
-    eavesdrop();
 };
-
-
-
-/**
-* Wrapper function for all the main click listeners
-*/
-function eavesdrop() {
-    document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
-    //Start Screen
-    document.getElementById('maxIt').onclick = function(){
-        if(document.getElementById('maxIt').classList.contains('full_screen_small')){
-            //Dudes - Capital 'S' here but not in the request? WTF?
-            document.webkitCancelFullScreen();
-            document.getElementById('fullScreen').checked = false;
-        } else {
-            document.body.webkitRequestFullscreen();
-            document.getElementById('fullScreen').checked = true;
-        }
-        document.getElementById('maxIt').classList.toggle('full_screen_small');
-    };
-    document.getElementById("closeGame").onclick = function(){
-        window.close();
-    };
-
-    document.getElementById('fullScreen').onclick = function(){
-        if(document.getElementById('maxIt').classList.contains('full_screen_small')){
-            //Dudes - Capital 'S' here but not in the request? WTF?
-            document.webkitCancelFullScreen();
-        } else {
-            document.body.webkitRequestFullscreen();
-        }
-        document.getElementById('maxIt').classList.toggle('full_screen_small');
-    };
-
-    document.getElementById('quitGame').onclick = function(){
-        document.getElementById('thumb').style.WebkitTransform = 'translate(-220px, 0)';
-        document.getElementById('loadMessage').innerHTML = '';
-        document.getElementById('seed').value = '';
-        document.getElementById('login').disabled = false;
-        document.getElementById("popupContainer").classList.remove('popup_container_invisible');
-        document.getElementById("popupContainer").classList.remove('popup_container_hidden');
-        if(!exec.classList.contains('exec_hidden')){
-            menu(exec, execButton, 'exec_hidden');
-        }
-        for(var i = 0; i < Conf.robotsList.length; i++) {
-            Conf.robotsList[i][3] = false;
-        }
-        Conf.reset();
-        document.getElementById('statsContainer').classList.add('exec_hidden');
-        document.getElementById('researchContainer').classList.add('exec_hidden');
-        document.getElementById('messageContainer').classList.add('exec_hidden');
-        document.getElementById('guideContainer').classList.add('exec_hidden');
-        settings.classList.add('global_container_hidden');
-        radarOptCont.classList.add('global_container_hidden');
-        document.getElementById('console').classList.remove('console_open');
-        Tools.flush(document.getElementById('consoleContent'));
-        FileIO.loadList();
-    };
-    document.getElementById('login').onclick = function() {
-        var Generator = new NewGame();
-        checkBuildings();
-        reCount('all');
-        Generator.getSeed();
-    };
-    document.getElementById('seed').onfocus = function(){
-        document.getElementById('chooseSave').classList.add('drop_down_open');
-    };
-    document.getElementById('seed').onblur = function(){
-        document.getElementById('chooseSave').classList.remove('drop_down_open');
-    };
-    //!Start Screen
-    //Sound
-    //TODO: change this to a more standardized box
-    document.getElementById('musicOptionViz').onclick = function() {
-        Music.toggleMusic();
-        if(document.getElementById('popupMusic').checked){
-            document.getElementById('popupMusic').checked = false;
-        } else {
-            document.getElementById('popupMusic').checked = true;
-        }
-    };
-    document.getElementById('popupMusic').onclick = function(){
-        Music.toggleMusic();
-        if(document.getElementById('musicOptionViz').checked){
-            document.getElementById('musicOptionViz').checked = false;
-        } else {
-            document.getElementById('musicOptionViz').checked = true;
-        }
-    };
-    document.getElementById('popupVolume').onchange = function(){
-        Music.setVolume(document.getElementById('popupVolume').value);
-        document.getElementById('settingsVolume').value = document.getElementById('popupVolume').value;
-    };
-    document.getElementById('settingsVolume').onchange = function(){
-        Music.setVolume(document.getElementById('settingsVolume').value);
-        document.getElementById('popupVolume').value = document.getElementById('settingsVolume').value;
-    };
-    //:Sound
-    //Left Menu
-    document.getElementById('leftMenuSlider').onmousedown = function() {
-        leftMenuResize(true);
-    };
-    document.getElementById('leftMenuSlider').onmouseup = function() {
-        leftMenuResize(false);
-    };
-    //!Left Menu
-    //Canvas Map
-    var mainMap = document.getElementById('mPanOverlay');
-    mainMap.onmousemove = function(evt) {
-        getMousePos(Conf.mPanCanvas, evt, true); //tracker
-        document.getElementById('console').classList.remove('console_open');
-        document.getElementById('consoleInput').blur();
-    };
-    mainMap.onmouseover = function() {
-        Conf.highlight = true;
-    };
-    mainMap.onmouseout = function() {
-        Conf.mPanLoc.clearRect(0, 0, document.width, document.height + 50);
-    };
-    mainMap.onclick = function() {
-        clicked();
-    };
-    //should consider having zoom on the radar instead of the main map or storing the retX retY for a second or two
-    var blocked = false;
-    /**
-    * Catches mousewheel event, and zooms map appropriately
-    * @param {event} event Caught mousewheel event
-    */
-    mainMap.onmousewheel = function(event) {
-        event.preventDefault();
-        var zoomPos = document.getElementById('zoom');
-        var zoomMax = document.getElementById('zoom').max;
-        var val = parseInt(zoomPos.value, 10);
-        var setRet = function() {
-                blocked = true;
-                setTimeout(function() {
-                    blocked = false;
-                }, 500);
-                Conf.retY = Conf.retY - Math.round(Conf.yLimit / 2) + getTile('y') + 2;
-                Conf.retX = Conf.retX - Math.round(Conf.xLimit / 2) + getTile('x');
-            };
-        if(event.wheelDelta > 0 && val < zoomMax) {
-            if(!blocked) {
-                setRet();
-            }
-            zoom(val + 1);
-            zoomPos.value = val + 1;
-        } else if(event.wheelDelta < 0 && val > 1) {
-            if(!blocked) {
-                setRet();
-            }
-            zoom(val - 1);
-            zoomPos.value = val - 1;
-        }
-        return false;
-    };
-    //!Canvas Map
-    //Level Slider
-    var levelSlider = document.getElementById('slider');
-    levelSlider.onchange = function() {
-        changeLevel(levelSlider.value);
-    };
-    //!Level Slider
-    window.onresize = function() {
-        mapFit(true);
-    };
-    var radar = document.getElementById('radarContainer');
-    var radarBtnContainer = document.getElementById('radarBtnContainer');
-    var radarButton = document.getElementById('radarButton');
-    radarBtnContainer.onclick = function() {
-        menu(radar, radarButton, 'radar_hidden');
-    };
-    radar.onmouseout = function() {
-        if(radar.classList.contains('radar_hidden')) {
-            radar.classList.remove('menu_visible');
-            radar.classList.add('menu_hidden');
-        }
-    };
-    radar.onmouseover = function() {
-        if(radar.classList.contains('radar_hidden')) {
-            radar.classList.remove('menu_hidden');
-            radar.classList.add('menu_visible');
-        }
-        Conf.mPanLoc.clearRect(0, 0, Conf.mPanCanvas.width, Conf.mPanCanvas.height);
-    };
-    var radarMap = document.getElementById('mapOverlay');
-    radarMap.onclick = function(evt) {
-        getMousePos(Conf.radarCanvas, evt);
-        Conf.highlight = false;
-        jump();
-    };
-    radarMap.onmouseover = function() {
-        Conf.highlight = false;
-    };
-    radarMap.onmouseout = function() {
-        Conf.radarCanvas.onmousemove = null;
-    };
-    window.oncontextmenu = function(ev) {
-        ev.preventDefault();
-        //ev.stopPropagation();
-        if(Conf.highlight) {
-            rightClicked();
-        }
-        return false;
-    };
-
-    document.getElementById('allRadarOpt').onclick = function(){
-        var option = document.getElementById('allRadarOpt').checked;
-        document.getElementById("aluminiumRadarOpt").checked = option;
-        document.getElementById("calciumRadarOpt").checked = option;
-        document.getElementById("copperRadarOpt").checked = option;
-        document.getElementById("goldRadarOpt").checked = option;
-        document.getElementById("ironRadarOpt").checked = option;
-        document.getElementById("leadRadarOpt").checked = option;
-        document.getElementById("magnesiumRadarOpt").checked = option;
-        document.getElementById("mercuryRadarOpt").checked = option;
-        document.getElementById("phosphorousRadarOpt").checked = option;
-        document.getElementById("potassiumRadarOpt").checked = option;
-        document.getElementById("silverRadarOpt").checked = option;
-        document.getElementById("sodiumRadarOpt").checked = option;
-        document.getElementById("tinRadarOpt").checked = option;
-        document.getElementById("zincRadarOpt").checked = option;
-        drawRadar();
-    };
-
-    document.getElementById('10Week').onclick = function(){
-        execReview();
-    };
-
-    document.getElementById("aluminiumRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("calciumRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("copperRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("goldRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("ironRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("leadRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("magnesiumRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("mercuryRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("phosphorousRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("potassiumRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("silverRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("sodiumRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("tinRadarOpt").onclick = function(){
-        drawRadar();
-    };
-    document.getElementById("zincRadarOpt").onclick = function(){
-        drawRadar();
-    };
-
-    //Executive Drop-Down Menu
-    var exec = document.getElementById('execDropDown');
-    var execBtnContainer = document.getElementById('execBtnContainer');
-    var execButton = document.getElementById('execButton');
-    execBtnContainer.onclick = function() {
-        menu(exec, execButton, 'exec_hidden');
-        document.getElementById('statsContainer').classList.add('exec_hidden');
-        document.getElementById('researchContainer').classList.add('exec_hidden');
-        document.getElementById('messageContainer').classList.add('exec_hidden');
-        document.getElementById('guideContainer').classList.add('exec_hidden');
-    };
-    var seeStats = document.getElementById('seeStats');
-    var seeMessages = document.getElementById('seeMessages');
-    var seeResearch = document.getElementById('seeResearch');
-    var seeGuide = document.getElementById('seeGuide');
-
-    var statBack = document.getElementById('statBack');
-    var messagesBack = document.getElementById('messagesBack');
-    var researchBack = document.getElementById('researchBack');
-    var guideBack = document.getElementById('guideBack');
-
-    var ovwTab = document.getElementById('overview');
-    var populationTab = document.getElementById('populationTab');
-    var systemsTab = document.getElementById('systemsTab');
-    var resourcesTab = document.getElementById('resourcesTab');
-
-    seeStats.onclick = function(){
-        document.getElementById('statsContainer').classList.remove('exec_hidden');
-    };
-    statBack.onclick = function(){
-        document.getElementById('statsContainer').classList.add('exec_hidden');
-    };
-    seeMessages.onclick = function(){
-        document.getElementById('messageContainer').classList.remove('exec_hidden');
-    };
-    messagesBack.onclick = function(){
-        document.getElementById('messageContainer').classList.add('exec_hidden');
-    };
-    seeResearch.onclick = function(){
-        fillResearchMenu();
-        document.getElementById('researchContainer').classList.remove('exec_hidden');
-    };
-    researchBack.onclick = function(){
-        document.getElementById('researchContainer').classList.add('exec_hidden');
-    };
-    seeGuide.onclick = function(){
-        document.getElementById('guideContainer').classList.remove('exec_hidden');
-    };
-    guideBack.onclick = function(){
-        document.getElementById('guideContainer').classList.add('exec_hidden');
-    };
-
-    ovwTab.onclick = function() {
-        populationTab.classList.add('stat_hidden');
-        systemsTab.classList.add('stat_hidden');
-        resourcesTab.classList.add('stat_hidden');
-    };
-
-    populationTab.onclick = function() {
-        if(populationTab.classList.contains('stat_hidden')) { //itself and everything to the left
-            populationTab.classList.remove('stat_hidden');
-        } else if(!systemsTab.classList.contains('stat_hidden')) { //the one on the right and right of that
-            systemsTab.classList.add('stat_hidden');
-            resourcesTab.classList.add('stat_hidden');
-        } else { //just itself
-            populationTab.classList.add('stat_hidden');
-        }
-    };
-
-    systemsTab.onclick = function() {
-        if(systemsTab.classList.contains('stat_hidden')) {
-            populationTab.classList.remove('stat_hidden');
-            systemsTab.classList.remove('stat_hidden');
-        } else if(!resourcesTab.classList.contains('stat_hidden')) {
-            resourcesTab.classList.add('stat_hidden');
-        } else {
-            systemsTab.classList.add('stat_hidden');
-        }
-    };
-
-    resourcesTab.onclick = function() {
-        if(resourcesTab.classList.contains('stat_hidden')) {
-            populationTab.classList.remove('stat_hidden');
-            systemsTab.classList.remove('stat_hidden');
-            resourcesTab.classList.remove('stat_hidden');
-        } else {
-            resourcesTab.classList.add('stat_hidden');
-        }
-    };
-
-    document.getElementById('globalReport').onclick = function() {
-        menu(exec, execButton, 'exec_hidden');
-    };
-
-
-    //!Executive Drop Down
-    //
-    //Console
-    document.getElementById('console').onclick = function() {
-        document.getElementById('console').classList.toggle('console_open');
-    };
-    //!Console
-    //Global Menu
-    var settings = document.getElementById('settingsContainer');
-    var setBtn = document.getElementById('settings');
-    var radarOptCont = document.getElementById('radarOptContainer');
-    var radarOpt = document.getElementById('radarOpt');
-    setBtn.onclick = function() {
-        if(settings.classList.contains('global_container_hidden')){
-            settings.classList.remove('global_container_hidden');
-            radarOptCont.classList.remove('global_container_hidden');
-        } else {
-            settings.classList.add('global_container_hidden');
-        }
-    };
-    radarOpt.onclick = function() {
-        if(settings.classList.contains('global_container_hidden')){
-            radarOptCont.classList.toggle('global_container_hidden');
-        } else {
-            settings.classList.add('global_container_hidden');
-        }
-    };
-
-    document.getElementById('turn').onclick = function() {
-        advanceTurn(1);
-    };
-    document.getElementById('zoom').onchange = function() {
-        var zoomLevel = document.getElementById('zoom').value;
-        zoom(zoomLevel);
-    };
-}
 
 
 
@@ -2206,7 +1546,7 @@ function advanceTurn(turns){
             saneStats();
             if(turns === 1){
                 reCount('all');
-                FileIO.saveGame(Game);
+                FileIO.saveGame(Conf);
                 execReview();
                 fillResearchPanel('overview');
                 //setResearchClickers(researchPanel);
@@ -2226,7 +1566,7 @@ function advanceTurn(turns){
 
 
 /**
-* Manages the openign and closing of menus
+* Manages the opening and closing of menus
 * @param {HTMLElement} containerIn Container containing the menu to show or hide
 * @param {HTMLElement} buttonIn Button for the container
 * @param {string} hideClass Class that determines visibility of the container
@@ -2260,41 +1600,6 @@ function pageVisHandler() {
 
 
 /**
-* Sets the map's zoom to provided zoom level
-* @param {int} zoomLevel The level of zoom that's needed
-*/
-function zoom(zoomLevel) {
-    Conf.destinationWidth = zoomLevel * 6 * 6;
-    Conf.destinationHeight = zoomLevel * 7 * 6;
-    mapFit();
-}
-
-
-
-/**
-* For a provided array, will return an array fo the max and min values
-* @param {array} arrayIn Array to find the max/min values of
-* @returns {array} The max/min values <tt>[max,min]</tt> 
-*/
-function getMaxMin(arrayIn){
-    var max = 0;
-    var min = 1000000;
-    var maxTest, minTest;
-    for(var i = 0; i < arrayIn.length; i++){
-        maxTest = Math.max.apply(null,arrayIn[i]);
-        minTest = Math.min.apply(null,arrayIn[i]);
-        if(maxTest > max){max = maxTest;}
-        if(minTest < min){min = minTest;}
-        if(min < 0){min = 0;}
-    }
-    max = Math.ceil(1 + max/50) * 50;
-    min = Math.floor(min/50) * 50;
-    return [max, min];
-}
-
-
-
-/**
 * Opens the Executive Review panel, coloring in all of the statistics when we need them
 */
 function execReview() {
@@ -2314,7 +1619,7 @@ function execReview() {
 
     if(!Conf.buildings[37][1]) {
         var moraleInput = [[Conf.tossMorale, electricBlue, TRANS.tosser],[Conf.hipMorale, green, TRANS.hipstie],[Conf.artMorale, orange, TRANS.artie]];
-        drawGraph('line', 'morale', moraleInput, true);
+        CneTools.drawGraph('line', 'morale', moraleInput, true);
         document.getElementById('tossMorale').innerHTML = (Conf.tossMorale[Conf.tossMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('hipMorale').innerHTML = (Conf.hipMorale[Conf.hipMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('artMorale').innerHTML = (Conf.artMorale[Conf.artMorale.length - 1] / 10).toFixed(1) + '%';
@@ -2322,7 +1627,7 @@ function execReview() {
         document.getElementById('moraleAverage').innerHTML = (moraleAverage / 10).toFixed(1) + '%';
 
         var popInput = [[Conf.tossPop, electricBlue, TRANS.tosser],[Conf.hipPop, green, TRANS.hipstie],[Conf.artPop, orange, TRANS.artie],[Conf.pop, white, TRANS.population]];
-        drawGraph('line', 'population', popInput, true);
+        CneTools.drawGraph('line', 'population', popInput, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Conf.tossPop[Conf.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Conf.hipPop[Conf.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Conf.artPop[Conf.artPop.length - 1]);
@@ -2339,23 +1644,23 @@ function execReview() {
         [[Conf.hipBabies[Conf.hipBabies.length - 1]], green, TRANS.hipstieInfant],
         [[Conf.artBabies[Conf.artBabies.length - 1]], orange, TRANS.artieInfant]
         ];
-        drawGraph('bar', 'demographics', demoInput);
+        CneTools.drawGraph('bar', 'demographics', demoInput);
 
         var sdfInput = [[Conf.housing, electricBlue, TRANS.housing],[Conf.sdf, red, TRANS.sdf]];
-        drawGraph('pie', 'homeless', sdfInput);
+        CneTools.drawGraph('pie', 'homeless', sdfInput);
         document.getElementById('housingVal').innerHTML = Conf.housing[Conf.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Conf.sdf[Conf.sdf.length - 1];
 
         var employedInput = [[[Conf.employed[Conf.employed.length - 1]], electricBlue, TRANS.employed],[[Conf.pop[Conf.pop.length - 1] - Conf.employed[Conf.employed.length - 1]], red, TRANS.unemployed]];
-        drawGraph('pie', 'employment', employedInput);
+        CneTools.drawGraph('pie', 'employment', employedInput);
         document.getElementById('employmentVal').innerHTML = Conf.pop[Conf.pop.length - 1] - Conf.employed[Conf.employed.length - 1];
 
         var crimeInput = [[Conf.crime, red, TRANS.crime]];
-        drawGraph('line', 'crime', crimeInput, true);
+        CneTools.drawGraph('line', 'crime', crimeInput, true);
         document.getElementById('crimeVal').innerHTML = Conf.crime[Conf.crime.length - 1];
 
         var energyInput = [[Conf.energy, electricBlue, TRANS.energy]];
-        drawGraph('line', 'energy', energyInput, true);
+        CneTools.drawGraph('line', 'energy', energyInput, true);
         document.getElementById('energyVal').innerHTML = Conf.energy[Conf.energy.length - 1];
 
         var airInUse = Math.floor((Conf.tossPop[Conf.tossPop.length - 1] + Conf.hipPop[Conf.hipPop.length - 1])/10);
@@ -2366,11 +1671,11 @@ function execReview() {
         var airInput = [
             [[airInUse], grey, TRANS.airInUse],
             [[freeAir], electricBlue, TRANS.airAvailable]];
-        drawGraph('pie', 'air', airInput);
+        CneTools.drawGraph('pie', 'air', airInput);
         document.getElementById('airVal').innerHTML = Conf.air[Conf.air.length - 1];
 
         var foodInput = [[Conf.food, green, TRANS.food]];
-        drawGraph('line', 'food', foodInput, true);
+        CneTools.drawGraph('line', 'food', foodInput, true);
         document.getElementById('foodVal').innerHTML = Conf.food[Conf.food.length - 1];
 
         var freeStorage = Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1];
@@ -2378,7 +1683,7 @@ function execReview() {
             [[freeStorage], electricBlue, TRANS.freeStorage],
             [[Conf.inStorage[Conf.inStorage.length -1] - Conf.food[Conf.food.length - 1]], brown, TRANS.resourceStorage],
             [[Conf.food[Conf.food.length - 1]], green, TRANS.food]];
-        drawGraph('pie', 'storage', storageInput);
+        CneTools.drawGraph('pie', 'storage', storageInput);
         document.getElementById('storageVal').innerHTML = freeStorage;
 
         //The resources Table...
@@ -2421,195 +1726,6 @@ function execReview() {
 
 
 /**
-* Fits the map to the screen
-* @param {bool} [bool] Tells mapFit() if the window has been resized or not
-*/
-function mapFit(bool) {
-    var quarterHeight = Math.floor(Conf.destinationHeight * 0.25);
-    if(bool) {
-        var overlay = document.getElementById('mPanOverlay');
-        var mainMap = document.getElementById('mainPanel');
-
-        //Nasty stuff... hence we use the if to touch this as little as possible
-        overlay.width = window.innerWidth + Conf.destinationWidth;
-        overlay.height = window.innerHeight + quarterHeight * 2;
-        overlay.style.top = -quarterHeight*2 + 'px';
-        overlay.style.left = -Conf.destinationWidth / 2 + 'px';
-        mainMap.width = window.innerWidth + Conf.destinationWidth; //Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
-        mainMap.height = window.innerHeight + quarterHeight * 2;
-        mainMap.style.top = -quarterHeight*2 + 'px';
-        mainMap.style.left = -Conf.destinationWidth / 2 + 'px';
-        document.body.style.width = window.innerWidth + 'px';
-        document.body.style.height = window.innerHeight + 'px';
-    }
-    Conf.xLimit = Math.ceil(Conf.mPanCanvas.width / Conf.destinationWidth);
-    Conf.yLimit = Math.ceil(Conf.mPanCanvas.height / (quarterHeight * 3));
-    Conf.mPanLoc.clearRect(0, 0, Conf.mPanCanvas.width, Conf.mPanCanvas.height);
-    drawTile(0, getTile('x'), getTile('y'), Conf.tileHighlight, Conf.mPanLoc);
-
-    //Messy stuff to handle if I try to zoom out of the map...
-    if(Conf.retY - Conf.yLimit / 2 < 0) {
-        Conf.retY = Math.floor(Conf.retY - (Conf.retY - Conf.yLimit / 2));
-    } else if(Conf.retY + Conf.yLimit / 2 > Conf.radarRad * 2) {
-        Conf.retY = Math.floor(Conf.retY - Conf.yLimit / 2);
-    }
-    if(Conf.retX - Conf.xLimit / 2 < 0) {
-        Conf.retX = Math.floor(Conf.retX - (Conf.retX - Conf.xLimit / 2));
-    } else if(Conf.retX + Conf.xLimit / 2 > Conf.radarRad * 2) {
-        Conf.retX = Math.floor(Conf.retX - Conf.xLimit / 2);
-    }
-    if(Conf.yLimit % 2 === 0) {
-        Conf.yLimit += 1;
-    }
-
-    Conf.yShift = Math.round(Conf.yLimit / 2);
-
-    if(Conf.yShift % 2 === 0) {
-        Conf.yShift += 1;
-        Conf.yLimit += 2;
-    }
-
-    if(Conf.retY % 2 !== 0) {
-        Conf.retY += 1;
-    }
-    drawRadar();
-    drawLoc();
-}
-
-/**
- * Checks which buildings are available to the player and
- * populates the sidebar with those buildings
- */
-function checkBuildings() {
-    for(var thing = 0; thing < Conf.buildings.length; thing++) {
-        var idString = Conf.buildings[thing][0];
-        var elem = document.getElementById(idString);
-        elem.classList.remove('menu_selected');
-        if(Conf.buildings[thing][1]) {
-            elem.classList.add('menu_show');
-            elem.classList.remove('menu_hide');
-            switch(Conf.buildings[thing][2]) {
-            case 0:
-                if(Conf.level === 0) {
-                    elem.classList.add('active');
-                    document.getElementById(Conf.buildings[thing][0]).onclick = construct;
-                } else {
-                    elem.classList.remove('active');
-                    document.getElementById(Conf.buildings[thing][0]).onclick = null;
-                }
-                break;
-            case 1:
-                if(Conf.level > 0) {
-                    elem.classList.add('active');
-                    document.getElementById(Conf.buildings[thing][0]).onclick = construct;
-                } else {
-                    elem.classList.remove('active');
-                    document.getElementById(Conf.buildings[thing][0]).onclick = null;
-                }
-                break;
-            default:
-                elem.classList.add('active');
-                document.getElementById(Conf.buildings[thing][0]).onclick = construct;
-            }
-        } else {
-            elem.classList.remove('menu_show');
-            elem.classList.add('menu_hide');
-            if(Conf.clickedOn === idString) {
-                Conf.clickedOn = 'none';
-                document.body.style.cursor = "url('images/pointers/pointer.png'), default";
-            }
-        }
-    }
-    checkRobots();
-}
-
-
-
-/**
-* Manages what robots are available for the given context in the menu
-*/
-function checkRobots() {
-    //TODO: clean all this shit up
-    for(var r2d2 in Conf.robotsList) {
-        var wallE = Conf.robotsList[r2d2];
-        var idString = wallE[2];
-        var c3po = document.getElementById(idString);
-        c3po.classList.remove('menu_selected');
-        if(wallE[3]) {
-            c3po.classList.add('menu_show');
-            c3po.classList.remove('menu_hide');
-            switch(wallE[4]) {
-            case 0:
-                if(Conf.level === 0) {
-                    c3po.classList.add('active');
-                    c3po.onclick = construct;
-                } else {
-                    c3po.classList.remove('active');
-                    c3po.onclick = null;
-                }
-                break;
-            case 1:
-                if(Conf.level > 0) {
-                    c3po.classList.add('active');
-                    c3po.onclick = construct;
-                } else {
-                    c3po.classList.remove('active');
-                    c3po.onclick = null;
-                }
-                break;
-            default:
-                c3po.classList.add('active');
-                c3po.onclick = construct;
-            }
-            if(wallE[1] - wallE[0] === 0) {
-                c3po.classList.remove('active');
-                c3po.onclick = null;
-                //document.getElementById(wallE[2]).classList.add('menu_available');
-                if(Conf.clickedOn === idString) {
-                    Conf.clickedOn = 'none';
-                    //document.getElementById(wallE[2]).classList.remove('menu_available');
-                    document.body.style.cursor = "url('images/pointers/pointer.png'), default";
-                }
-            }
-        } else {
-            c3po.classList.remove('menu_show');
-            c3po.classList.add('menu_hide');
-        }
-    }
-    //special case for digger
-    if(Conf.robotsList[1][1] - Conf.robotsList[1][0] <= 1) {
-        var rob = document.getElementById(Conf.robotsList[1][2]);
-        rob.classList.remove('active');
-        rob.onclick = null;
-        //rob.style.background = '#000';
-        if(Conf.clickedOn === 'digger' || (Conf.clickedOn === 'cavernDigger' && Conf.robotsList[1][1] - Conf.robotsList[1][0] === 0)) {
-            Conf.clickedOn = 'none';
-            document.body.style.cursor = "url('images/pointers/pointer.png'), default";
-        }
-        if(Conf.robotsList[1][1] - Conf.robotsList[1][0] === 0) {
-            var cavDig = document.getElementById('cavernDigger');
-            cavDig.classList.remove('active');
-            cavDig.onclick = null;
-            //cavDig.style.background = '#000';
-        }
-    }
-}
-
-
-
-/**
- * Changes level from an input (slider etc.)
- * @param  {int} newLevel the level we would change to
- */
-function changeLevel(newLevel) {
-    Conf.level = parseInt(newLevel, 10);
-    checkBuildings();
-    drawRadar();
-}
-
-
-
-/**
  * Recounts the number of bots available and updates the counter bars appropriately
  * @param  {string} which The type of robot we're dealing with
  */
@@ -2642,7 +1758,7 @@ function reCount(which) {
     default:
         console.log("Wait, I've lost count of the drones... " + which);
     }
-    checkRobots();
+    CneTools.checkRobots();
 }
 
 /**
@@ -2764,7 +1880,7 @@ function runConsole(text){
         case TRANS.level:
             if(input[1] >= 0 || input[1] <= 4){
                 Conf.level = parseInt(input[1], 10);
-                checkBuildings();
+                CneTools.checkBuildings();
                 drawRadar();
                 document.getElementById('slider').value = Conf.level;
             } else {
@@ -2784,7 +1900,7 @@ function runConsole(text){
         case TRANS.zoom:
             if(input[1] >= 1 || input[1] <= 6){
                 document.getElementById('zoom').value = input[1];
-                zoom(input[1]);
+                CneTools.zoom(input[1]);
             } else {
                 consoleErr(input[1], 'value', input[0], TRANS.integer, 1, 6);
             }
@@ -2861,31 +1977,31 @@ function keypressed(e) {
             break;
         case 48:
             Conf.level = 0;
-            checkBuildings();
+            CneTools.checkBuildings();
             drawRadar();
             document.getElementById('slider').value = Conf.level;
             break;
         case 49:
             Conf.level = 1;
-            checkBuildings();
+            CneTools.checkBuildings();
             drawRadar();
             document.getElementById('slider').value = Conf.level;
             break;
         case 50:
             Conf.level = 2;
-            checkBuildings();
+            CneTools.checkBuildings();
             drawRadar();
             document.getElementById('slider').value = Conf.level;
             break;
         case 51:
             Conf.level = 3;
-            checkBuildings();
+            CneTools.checkBuildings();
             drawRadar();
             document.getElementById('slider').value = Conf.level;
             break;
         case 52:
             Conf.level = 4;
-            checkBuildings();
+            CneTools.checkBuildings();
             drawRadar();
             document.getElementById('slider').value = Conf.level;
             break;
@@ -3032,7 +2148,7 @@ function move(dir) {
         break;
     case 'level':
         Conf.level === 4 ? Conf.level = 0 : Conf.level += 1;
-        checkBuildings();
+        CneTools.checkBuildings();
         drawRadar();
         document.getElementById('slider').value = Conf.level;
         break;
@@ -3174,31 +2290,11 @@ function jump(bool, x, y, level) {
         Conf.retX = Math.floor(Conf.mouseX - Conf.destinationWidth / 2);
         Conf.retY = Conf.mouseY - 20;
     }
-    mapFit();
+    CneTools.mapFit();
     drawLoc();
 }
 
 
-
-/**
-* Determines if a point is within communications range of the colony or not
-* @param {int} x X coordinate of point to test
-* @param {int} y Y coordinate of point to test
-* @returns {bool} Whether the point is in communications range or not
-*/
-function inRange(x, y){
-    for(var tower = 0; tower < Conf.commTowers.length; tower++){
-        var radius = 75 - Conf.level*10;
-        var thisTower = Conf.mapTiles[0][Conf.commTowers[tower][1]][Conf.commTowers[tower][0]].kind;
-        if(thisTower === 210 || thisTower === 237){
-            radius -= 25;
-        }
-        if(Tools.distance(Conf.commTowers[tower][0], Conf.commTowers[tower][1], x, y) <= radius){
-            return true;
-        }
-    }
-    return false;
-}
 
 //MAPS**********************************************************************************
 
@@ -3250,7 +2346,7 @@ function drawRadar() {
                 }
                 for(var j = 0; j < options.length; j++){
                     if(Conf.map[Conf.level][y][x].mineable && document.getElementById(options[j]).checked){
-                        var ore = resourceRef(j, 0);
+                        var ore = CneTools.resourceRef(j, 0);
                         for(var k = 0; k < ore.length; k++){
                             if(resourceOnTile[ore[k]]){
                                 radarPixels.data[idx + i] = other[i];
@@ -3278,54 +2374,6 @@ function drawRadar() {
     Conf.level === 0 ? Conf.radar.fillStyle = "#000000" : Conf.radar.fillStyle = "#ffffff";
     Conf.radar.font = "14px Arial";
     Conf.radar.fillText('Depth: ' + Conf.level * 50 + 'm', 215, 298);
-}
-
-
-
-/**
-* Cross references the indexes of processed minerals to their ores
-* @param {int} ref 
-* @param {int} dir 'Direction' of the conversion: (0 processed -> ore; 1 ore -> processed
-* @returns {array} 
-* @todo dir seems redundant here
-*/
-function resourceRef(ref,dir){
-    //dir should tell us if we're going from ore to processed or processed to ore
-    //0 is from processed to ore
-    //1 is from ore to processed
-    //ref is the reference
-    switch(ref){
-        case 0:
-            return [0,1,2];
-        case 1:
-            return [3];
-        case 2:
-            return [4,5,6];
-        case 3:
-            return [7,8];
-        case 4:
-            return [9,10,11,12];
-        case 5:
-            return [13,14];
-        case 6:
-            return [15,16];
-        case 7:
-            return [17,18];
-        case 8:
-            return [19,20];
-        case 9:
-            return [21,22];
-        case 10:
-            return [23];
-        case 11:
-            return [24,25];
-        case 12:
-            return [26,27];
-        case 13:
-            return [28,29];
-        default:
-            console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + ref + " " + dir);
-    }
 }
 
 
@@ -3531,18 +2579,6 @@ function contextContent(content) {
     frag.appendChild(listedResources);
     //!resources
     return frag;
-}
-
-
-
-/**
-* Given two strings, will return a modified version (for tile references)
-* @param {string} string String to be placed at begginning of modified string
-* @param {string} orig Original string
-* @returns {string} Returns <tt>string</tt> + " #" + the first word after # in <tt>orig</tt>
-*/
-function changeName(string, orig) {
-    return string + ' #' + orig.split('#')[1];
 }
 
 
@@ -3827,26 +2863,6 @@ function requisition(arr){//TODO set up recycling here
 
 
 /**
-* Checks connectivity of the provided tile with the colony (on the current level)
-* @param {int} y Y coordinate to check
-* @param {int} x X coordinate to check
-* @returns {bool} Connected or not
-*/
-function checkConnection(y, x) {
-    var connected = false;
-    for(var j = 0; j < 6; j++) {
-        if(Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]] && 
-           (Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 211 || 
-           Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 204)) {
-            connected = true;
-        }
-    }
-    return connected;
-}
-
-
-
-/**
  * Performs the appropriate actions for the tile that is clicked upon depending on 
  * the construction or robot chosen
  * @param {bool} direction If true, action takes place, if not, will ask for confirmation
@@ -3920,7 +2936,7 @@ function clicked(direction) {
             for(var i = 0; i < Conf.robotsList.length; i++) {
                 Conf.robotsList[i][3] = true;
             }
-            checkBuildings();
+            CneTools.checkBuildings();
             execReview();
             drawRadar();
         }
@@ -3936,7 +2952,7 @@ function clicked(direction) {
         } else {
             if((hex && (hex.kind < 200 && hex.kind > 2)) || (typeof hex.kind !== 'number' && tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
                 printConsole(TRANS.noDoze);
-            } else if(!inRange(x, y)){
+            } else if(!CneTools.inRange(x, y)){
                 printConsole(TRANS.outOfRange);
             } else {
                 Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(100, x, y, Conf.level);
@@ -3953,7 +2969,7 @@ function clicked(direction) {
         } else {
             //tile.digDown(x, y, lowerTile);
             var DBelow = Conf.mapTiles[Conf.level + 1];
-            if(!checkConnection(y,x)){
+            if(!CneTools.checkConnection(y,x)){
                 printConsole(TRANS.noConnection);
             } else if(wetTest([y, x], Conf.level + 1)){
                 printConsole(TRANS.onWater);
@@ -3963,7 +2979,7 @@ function clicked(direction) {
                 printConsole(TRANS.noDig);
             } else if(Conf.level === 4){
                 printConsole(TRANS.lastLevel);
-            } else if(!inRange(x, y)){
+            } else if(!CneTools.inRange(x, y)){
                 printConsole(TRANS.outOfRange);
             } else {
                 Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level, true);
@@ -3991,7 +3007,7 @@ function clicked(direction) {
                 printConsole(TRANS.onWater);
             } else if((hex && hex.kind > 3) || Conf.level === 0 || (hex.kind > 2 && hex.kind < 9) || hex.kind > 11) {
                 printConsole(TRANS.noCavern);
-            } else if(!inRange(x, y)){
+            } else if(!CneTools.inRange(x, y)){
                 printConsole(TRANS.outOfRange);
             } else {
                 Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level);
@@ -4022,7 +3038,7 @@ function clicked(direction) {
                 printConsole(TRANS.noMine);
             } else if(Conf.level === 4) {
                 printConsole(TRANS.lastLevel);
-            } else if(!inRange(x, y)){
+            } else if(!CneTools.inRange(x, y)){
                 printConsole(TRANS.outOfRange);
             } else {
                 Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(102, x, y, Conf.level, true);
@@ -4065,12 +3081,12 @@ function clicked(direction) {
                     document.getElementById('confirmBuild').onclick = null;
                 };}
         } else {
-            if((checkConnection(y, x) || Conf.clickedOn === 'commarray' || Conf.clickedOn === 'commarray2') && hex && hex.kind === 3) {
+            if((CneTools.checkConnection(y, x) || Conf.clickedOn === 'commarray' || Conf.clickedOn === 'commarray2') && hex && hex.kind === 3) {
                 if(resourceNeededList(Conf.clickedOn, true)){
                     Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(getBuildingRef(Conf.clickedOn), x, y, Conf.level);
                 }
             } else {
-                !checkConnection(y, x) ? printConsole(TRANS.noConnection) : printConsole(TRANS.notPrepared);
+                !CneTools.checkConnection(y, x) ? printConsole(TRANS.noConnection) : printConsole(TRANS.notPrepared);
             }
         }
     }

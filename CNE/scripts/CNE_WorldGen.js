@@ -140,7 +140,7 @@ function NewGame(){
           Conf.map[0][y][x].kind !== 4) {
         Conf.map[0][y][x].kind = 4;
         Conf.map[0][y][x].diggable = false;
-        Conf.map[0][y][x].ref = changeName(TRANS.water, Conf.map[0][y][x].ref);
+        Conf.map[0][y][x].ref = CneTools.changeName(TRANS.water, Conf.map[0][y][x].ref);
         var lowest = [adjacent(x, y, randIndex)[1], adjacent(x, y, randIndex)[0]]; //x, y
         for(var j = 0; j < 6; j++) {
           if(x > 1 && x < (Conf.radarRad * 2) - 1 && 
@@ -325,7 +325,7 @@ function NewGame(){
     } else {
         FileIO.loadGame(Conf);
         generateRivers(40);
-        mapFit(true);
+        CneTools.mapFit(true);
         drawZoomMap();
         drawRadar();
         drawLoc();
