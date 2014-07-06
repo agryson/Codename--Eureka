@@ -1520,51 +1520,6 @@ window.onload = function init() {
     }
 };
 
-
-
-/**
-* Advances the game by a given number of turns
-* @param {int} turns Number of turns to advance by
-*/
-function advanceTurn(turns){
-    while(turns > 0){
-        if(!Conf.buildings[37][1]) {
-            var x;
-            var y;
-            setStats();
-            for(y = 0; y < Conf.radarRad * 2; y++) {
-                for(x = 0; x < Conf.radarRad * 2; x++) {
-                    for(var l = 0; l < 5; l++) {
-                        nextTurn(x, y, l);
-                    }
-                }
-            }
-            if(Conf.energy[Conf.energy.length - 1] <= 10) {
-                printConsole(TRANS.noPower);
-                Conf.blackout = 30;
-            }
-            saneStats();
-            if(turns === 1){
-                reCount('all');
-                FileIO.saveGame(Conf);
-                execReview();
-                fillResearchPanel('overview');
-                //setResearchClickers(researchPanel);
-                fillResearchMenu();
-                Display.drawRadar();
-                Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
-                document.getElementById('consoleContent').innerHTML = '';
-                printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
-            }
-        } else {
-            printConsole(TRANS.setDown);
-        }
-        turns -=1;
-    }
-}
-
-
-
 /**
 * Manages the opening and closing of menus
 * @param {HTMLElement} containerIn Container containing the menu to show or hide
@@ -1854,10 +1809,8 @@ function consoleErr(text, err, command, fix, lwrLimit, uprLimit){
     }
 }
 
-
-
 /**
-* Parses the proveded string and runs appropriate command ro throws appropriate error
+* Parses the provided string and runs appropriate command ro throws appropriate error
 * @param {string} text The text to parse and run
 */
 function runConsole(text){
@@ -1869,7 +1822,7 @@ function runConsole(text){
     switch(input[0]){
         case TRANS.advance: //advance multiple turns
             if(!isNaN(input[1])){
-                advanceTurn(input[1]);
+                CneTools.skipTurns(input[1]);
             } else {
                 consoleErr(input[1], 'value', input[0], TRANS.integer);
             }

@@ -198,7 +198,7 @@ var Interface = (function(){
         ev.preventDefault();
         //ev.stopPropagation();
         if(Conf.highlight) {
-            Interface.rightClick();
+            rightClick();
         }
         return false;
     };
@@ -393,7 +393,7 @@ var Interface = (function(){
     };
 
     document.getElementById('turn').onclick = function() {
-        advanceTurn(1);
+        CneTools.skipTurns(1);
     };
     document.getElementById('zoom').onchange = function() {
         var zoomLevel = document.getElementById('zoom').value;
@@ -403,6 +403,8 @@ var Interface = (function(){
     /**
      * Performs the appropriate actions for the tile that is clicked upon depending on 
      * the construction or robot chosen
+     * @private
+     * @memberOf Interface
      * @param {bool} direction If true, action takes place, if not, will ask for confirmation
      */
     function clicked(direction) {
@@ -481,7 +483,7 @@ var Interface = (function(){
             break;
         case 'dozer':
             if(!direction) {
-                Interface.rightClick(confirmBot(TRANS.confirmDoze));
+                rightClick(confirmBot(TRANS.confirmDoze));
                 document.getElementById('confirmBuild').onclick = function(){
                     console.log('how many times?');
                     clicked(true);
@@ -499,7 +501,7 @@ var Interface = (function(){
             break;
         case 'digger':
             if(!direction) {
-                Interface.rightClick(confirmBot(TRANS.confirmDig));
+                rightClick(confirmBot(TRANS.confirmDig));
                 document.getElementById('confirmBuild').onclick = function(){
                     clicked(true);
                     document.getElementById('confirmBuild').onclick = null;
@@ -535,7 +537,7 @@ var Interface = (function(){
             break;
         case 'cavernDigger':
             if(!direction) {
-                Interface.rightClick(confirmBot(TRANS.confirmDigCavern));
+                rightClick(confirmBot(TRANS.confirmDigCavern));
                 document.getElementById('confirmBuild').onclick = function(){
                     clicked(true);
                     document.getElementById('confirmBuild').onclick = null;
@@ -562,7 +564,7 @@ var Interface = (function(){
             break;
         case 'miner':
             if(!direction) {
-                Interface.rightClick(confirmBot(TRANS.confirmMine));
+                rightClick(confirmBot(TRANS.confirmMine));
                 document.getElementById('confirmBuild').onclick = function(){
                     clicked(true);
                     document.getElementById('confirmBuild').onclick = null;
@@ -596,7 +598,7 @@ var Interface = (function(){
             break;
         case 'recycler':
             if(!direction) {
-                Interface.rightClick(confirmBot(TRANS.confirmRecycle));
+                rightClick(confirmBot(TRANS.confirmRecycle));
                 document.getElementById('confirmBuild').onclick = function(){
                     clicked(true);
                     document.getElementById('confirmBuild').onclick = null;
@@ -612,7 +614,7 @@ var Interface = (function(){
             break;
         default:
             if(!direction){
-                Interface.rightClick(Resources.required(Conf.clickedOn));
+                rightClick(Resources.required(Conf.clickedOn));
                 if(document.getElementById('confirmBuild')){
                     document.getElementById('confirmBuild').onclick = function(){
                         clicked(true);
@@ -635,6 +637,7 @@ var Interface = (function(){
      * Depending on the key pressed, changes the reference reticule
      * and then redraws the maps and radar
      * @private
+     * @memberOf Interface
      * @param  {string} dir is the direction to move
      */
     function move(dir) {
@@ -678,6 +681,8 @@ var Interface = (function(){
     
     /**
     * Upon right click, creates the context menu
+    * @memberOf Interface
+    * @private
     * @param {string} content The content for the right click menu in html
     */
     function rightClick(content) {
@@ -709,6 +714,8 @@ var Interface = (function(){
     var controls = {};
     /**
      * Generic keyboard listener
+     * @memberOf Interface
+     * @method keydown
      * @param  {Event} e The event passed in upon key press
      */
     controls.keydown = function(e) {
@@ -851,7 +858,7 @@ var Interface = (function(){
                 }
                 break;
             case 13: //enter (next turn)
-                advanceTurn(1);
+                CneTools.skipTurns(1);
                 break;
             case 84: //t terminal
                 document.getElementById('consoleInput').focus();

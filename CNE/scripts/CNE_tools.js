@@ -334,5 +334,46 @@ var CneTools = {
 	    // return relative mouse position
 	    Conf.mouseX = evt.clientX - left + window.pageXOffset + Conf.destinationWidth / 2;
 	    Conf.mouseY = evt.clientY - top + window.pageYOffset;
+	},
+
+	/**
+	* Advances the game by a given number of turns
+	* @param {int} turns Number of turns to advance by
+	*/
+	skipTurns: function(turns){
+	    while(turns > 0){
+	        if(!Conf.buildings[37][1]) {
+	            var x;
+	            var y;
+	            setStats();
+	            for(y = 0; y < Conf.radarRad * 2; y++) {
+	                for(x = 0; x < Conf.radarRad * 2; x++) {
+	                    for(var l = 0; l < 5; l++) {
+	                        nextTurn(x, y, l);
+	                    }
+	                }
+	            }
+	            if(Conf.energy[Conf.energy.length - 1] <= 10) {
+	                printConsole(TRANS.noPower);
+	                Conf.blackout = 30;
+	            }
+	            saneStats();
+	            if(turns === 1){
+	                reCount('all');
+	                FileIO.saveGame(Conf);
+	                execReview();
+	                fillResearchPanel('overview');
+	                //setResearchClickers(researchPanel);
+	                fillResearchMenu();
+	                Display.drawRadar();
+	                Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
+	                document.getElementById('consoleContent').innerHTML = '';
+	                printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
+	            }
+	        } else {
+	            printConsole(TRANS.setDown);
+	        }
+	        turns -=1;
+	    }
 	}
 }

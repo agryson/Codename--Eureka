@@ -3,10 +3,9 @@
 * One big wrapper for everything needed to create the maps, resources rivers etc.
 * or to load them and regenerate from the seed (we save memory through 
 * procedural generation)
+* @constructor
 */
 function NewGame(){
-
-
 
 /**
  * Parses the seed before passing it to the world generator
