@@ -1823,7 +1823,7 @@ function eavesdrop() {
         for(var i = 0; i < Conf.robotsList.length; i++) {
             Conf.robotsList[i][3] = false;
         }
-        Game = null;
+        Conf.reset();
         document.getElementById('statsContainer').classList.add('exec_hidden');
         document.getElementById('researchContainer').classList.add('exec_hidden');
         document.getElementById('messageContainer').classList.add('exec_hidden');
