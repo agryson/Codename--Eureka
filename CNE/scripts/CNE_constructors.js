@@ -235,7 +235,7 @@ function Construction() {
             if(!Conf.mapTiles[Conf.recyclerList[i][2]][Conf.recyclerList[i][1]][Conf.recyclerList[i][0]][1].shutdown && !recycled){
                 recycled = true;
                 Conf.mapTiles[level][y][x][1] = bobTheBuilder(103, x, y, level);
-                var recovered = resourceNeededList(this.kind, false, true);
+                var recovered = Resources.required(this.kind, false, true);
                 for(var j = 0; j < recovered.length; j++){
                     if(Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1] >= recovered[j][1]){
                         Conf.procOres[recovered[j][0]] += recovered[j][1];

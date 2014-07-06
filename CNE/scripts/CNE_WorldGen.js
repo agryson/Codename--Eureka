@@ -31,7 +31,7 @@ function NewGame(){
     }
 
     if(typeof seeder === 'number') {
-      document.onkeydown = keypressed; //keyboard listener
+      document.onkeydown = Interface.keydown;
       setTimeout(function() {
         Conf.rng = new MersenneTwister(seeder);
         Conf.noise = new ClassicalNoise(Conf.rng);
@@ -141,14 +141,14 @@ function NewGame(){
         Conf.map[0][y][x].kind = 4;
         Conf.map[0][y][x].diggable = false;
         Conf.map[0][y][x].ref = CneTools.changeName(TRANS.water, Conf.map[0][y][x].ref);
-        var lowest = [adjacent(x, y, randIndex)[1], adjacent(x, y, randIndex)[0]]; //x, y
+        var lowest = [CneTools.adjacent(x, y, randIndex)[1], CneTools.adjacent(x, y, randIndex)[0]]; //x, y
         for(var j = 0; j < 6; j++) {
           if(x > 1 && x < (Conf.radarRad * 2) - 1 && 
               y < (Conf.radarRad * 2) - 1 && 
               y > 1 && 
-              Conf.map[0][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].altitude < Conf.map[0][lowest[1]][lowest[0]].altitude) {
-            lowest[1] = adjacent(x, y, j)[0];
-            lowest[0] = adjacent(x, y, j)[1];
+              Conf.map[0][CneTools.adjacent(x, y, j)[0]][CneTools.adjacent(x, y, j)[1]].altitude < Conf.map[0][lowest[1]][lowest[0]].altitude) {
+            lowest[1] = CneTools.adjacent(x, y, j)[0];
+            lowest[0] = CneTools.adjacent(x, y, j)[1];
           }
         }
         slide(lowest[0], lowest[1]);
@@ -245,8 +245,8 @@ function NewGame(){
               }
               var check = sameLevel(map, x, y, i);
               for(var count = 0; count < 6; count++) {
-                var tempX = adjacent(x, y, count)[1];
-                var tempY = adjacent(x, y, count)[0];
+                var tempX = CneTools.adjacent(x, y, count)[1];
+                var tempY = CneTools.adjacent(x, y, count)[0];
                 if(map[tempY][tempX].kind !== 4 && (tempY != check[0] && tempX != check[1])) {
                   map[tempY][tempX].resources[i] = Tools.randomGenerator(resourceArray[i][2], 1, true);
                   map[tempY][tempX].mineable = true;
@@ -286,14 +286,14 @@ function NewGame(){
     var sameLevel = function(map, x, y, i) {
       var current = map[y][x].altitude;
       var randIndex = Math.floor(Conf.rng.random() * 6);
-      var closest = [adjacent(x, y, randIndex)[0], adjacent(x, y, randIndex)[1]];
-      var next = map[adjacent(x, y, randIndex)[0]][adjacent(x, y, randIndex)[1]].altitude;
+      var closest = [CneTools.adjacent(x, y, randIndex)[0], CneTools.adjacent(x, y, randIndex)[1]];
+      var next = map[CneTools.adjacent(x, y, randIndex)[0]][CneTools.adjacent(x, y, randIndex)[1]].altitude;
       for(var count = 0; count < 6; count++) {
-        var nextTest = map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]].altitude;
+        var nextTest = map[CneTools.adjacent(x, y, count)[0]][CneTools.adjacent(x, y, count)[1]].altitude;
         if(Math.abs(next - current) > Math.abs(nextTest - current) &&
-             !map[adjacent(x, y, count)[0]][adjacent(x, y, count)[1]].resources[i]) {
+             !map[CneTools.adjacent(x, y, count)[0]][CneTools.adjacent(x, y, count)[1]].resources[i]) {
           next = nextTest;
-          closest = [adjacent(x, y, count)[0], adjacent(x, y, count)[1]];
+          closest = [CneTools.adjacent(x, y, count)[0], CneTools.adjacent(x, y, count)[1]];
         }
       }
       return closest;
@@ -325,10 +325,10 @@ function NewGame(){
     } else {
         FileIO.loadGame(Conf);
         generateRivers(40);
-        CneTools.mapFit(true);
-        drawZoomMap();
-        drawRadar();
-        drawLoc();
+        Display.resizeMap(true);
+        Display.drawMap();
+        Display.drawRadar();
+        Display.drawReticule();
         document.getElementById("popupContainer").classList.add('popup_container_invisible');
         setTimeout(function(){
           document.getElementById("popupContainer").classList.add('popup_container_hidden');

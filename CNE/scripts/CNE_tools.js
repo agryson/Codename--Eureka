@@ -5,277 +5,6 @@
 var CneTools = {
 
 	/**
-	* Sets the map's zoom to provided zoom level
-	* @param {int} zoomLevel The level of zoom that's needed
-	*/
-	zoom: function(zoomLevel) {
-	    Conf.destinationWidth = zoomLevel * 6 * 6;
-	    Conf.destinationHeight = zoomLevel * 7 * 6;
-	    CneTools.mapFit();
-	},
-
-	/**
-	* Draws all graphs and charts for the statistics panel
-	* @param {string} type The type of chart. Valid values are <tt>line</tt>, <tt>pie</tt> & <tt>bar</tt>
-	* @param {string} outputId The id of the canvas to draw to
-	* @param {array} sourceData The array of data to plot
-	* @param {bool} [from0] If true, forces y-axis to start from 0 rather than adapting to the data given
-	* @todo This should be generalized and then moved into tools.js
-	*/
-	drawGraph: function(type, outputId, sourceData, from0) {
-	    var can = document.getElementById(outputId);
-	    var con = document.getElementById(outputId).getContext('2d');
-	    var canW = parseInt(can.width, 10);
-	    var canH = parseInt(can.height, 10);
-	    con.clearRect(0, 0, canW, canH);
-	    //Get our max and min values from the input data
-	    var sourceClean = [];
-	    for(var m = 0; m < sourceData.length; m++){
-	        if(document.getElementById("10Week").checked && Conf.turn >= 10){
-	            sourceClean.push(sourceData[m][0].slice(-11));
-	        } else {
-	            sourceClean.push(sourceData[m][0]);
-	        }
-	    }
-	    var maxMin = Tools.getMaxMin(sourceClean);
-	    var maxi = maxMin[0];
-	    var mini = maxMin[1];
-	    if(from0){
-	        mini = 0;
-	    }
-
-	    /**
-	    * Returns our highest data point so we can scale the axes
-	    * @param {array} arr Data to be processed
-	    * @returns {int} Index of the max data point
-	    */
-	    var max = function(arr) {
-	            var mem = 0;
-	            for(var i = 0; i < arr.length; i++) {
-	                if(arr[i] > arr[mem]) {
-	                    mem = i;
-	                }
-	            }
-	            return mem;
-	        };
-
-	    /**
-	    * Returns our lowest data point so we can scale the axes
-	    * @param {array} arr Data to be processed
-	    * @returns {int} Index of the min data point
-	    */
-	    var min = function(arr) {
-	            var mem = 0;
-	            for(var i = 0; i < arr.length; i++) {
-	                if(arr[i] < arr[mem]) {
-	                    mem = i;
-	                }
-	            }
-	            return mem;
-	        };
-
-
-
-	    /**
-	    * Returns data normalized to the given axis
-	    * @param {int} val The index of the datapoint to normalize
-	    * @param {array} arr The dataset to look in
-	    * @param {int} axis The length of the axis in pixels to normalise to
-	    * @returns {int} The normalized data
-	    */
-	    var normal = function(val, arr, axis) {
-	            var out = (arr[val] - mini) / (maxi - mini);
-	            return out * axis;
-	        };
-
-
-	    if(type === 'line'){
-	        for(var n = 0; n < sourceData.length; n++){
-	            var sepX = Math.floor(canW / sourceData[n][0].length);
-	            var tenOnly = 0;
-	            var tenLimit = sourceData[n][0].length - 1;
-	            var sepY = Math.floor(canH / sourceData[max(sourceData[n][0])]);
-	            if(document.getElementById("10Week").checked && Conf.turn >= 10){
-	                sepX = Math.floor(canW / 10);
-	                sepY = Math.floor(canH / sourceData[max(sourceData[n][0].slice(-11))]);
-	                tenOnly = sourceData[n][0].length - 11;
-	                tenLimit = 11;
-	            }
-	            var colour = sourceData[n][1];
-	            //Lines
-	            con.beginPath();
-	            con.lineCap = 'round';
-	            con.lineJoin = 'round';
-	            con.moveTo(0, canH - normal(tenOnly, sourceData[n][0], canH));
-	            for(var k = 1; k <= tenLimit; k++) {
-	                var recent = k;
-	                if(document.getElementById("10Week").checked && Conf.turn >= 10){
-	                    recent = sourceData[n][0].length - (11 - k);
-	                }
-	                con.lineTo(k * sepX, canH - normal(recent, sourceData[n][0], canH));
-	                con.arc(k * sepX, canH - normal(recent, sourceData[n][0], canH), 1, 0, Math.PI*2);
-	            }
-	            con.strokeStyle = '#000';
-	            con.lineWidth = 3;
-	            con.stroke();
-	            con.strokeStyle = colour;
-	            con.lineWidth = 2;
-	            con.stroke();
-	            con.closePath();
-	        }
-	        con.beginPath();
-	        con.strokeStyle = 'rgba(255,255,255,0.02)';
-	        con.lineWidth = 1;
-	        con.lineCap = 'butt';
-	        con.moveTo(5, Math.floor(canH - normal(0, [0], canH)));
-	        con.lineTo(canW - 5, Math.floor(canH - normal(0, [0], canH)));
-	        con.strokeStyle = 'rgba(255,255,255,0.08)';
-	        for(var grad = 0; grad <= 10; grad++) {
-	            con.moveTo(5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)], canH)));
-	            con.lineTo(canW - 5, Math.floor(canH - normal(0, [maxi - maxi * (grad / 10)], canH)));
-	        }
-	        con.stroke();
-	        con.fillStyle = '#D9F7FF';
-	        con.font = "14px Arial";
-	        con.fillText(maxi, 5, 14);
-	        con.fillText(mini + (maxi - mini)/2, 5, Math.floor(canH/2));
-	        con.fillText(mini, 5, canH - 2);
-	        con.closePath();
-
-	    } else if(type === 'pie'){
-	        var topVal = 0;
-	        var topValRef;
-	        var radius = Math.floor(canH / 2.1);
-	        var center = [canW / 2, canH / 2];
-	        var fillPie = function(start, stop, colour){
-	            con.beginPath();
-	            con.fillStyle = colour;
-	            con.moveTo(center[0], center[1]);
-	            con.arc(center[0], center[1], radius, start, stop);
-	            con.lineTo(center[0], center[1]);
-	            con.fill();
-	            con.strokeStyle = '#222';
-	            con.lineWidth = 1;
-	            con.stroke();
-	            con.closePath();
-	        };
-
-	        var nextStart = 0;
-	        var total = 0;
-	        for(var sum = 0; sum < sourceData.length; sum++){
-	            total += sourceData[sum][0][sourceData[sum][0].length - 1];
-	        }
-	        for(var f = 0; f < sourceData.length; f++){
-	            var current = sourceData[f][0][sourceData[f][0].length - 1];
-	            if(current > 0){
-	                fillPie(nextStart, nextStart + (Math.PI*2)*(current / total), sourceData[f][1]);
-	                nextStart += (Math.PI*2)*(current / total);
-	            }
-	        }
-	    } else if(type === 'bar') {
-	        var barWidth = ((canH - 20) / sourceData.length) * 3;
-	        var startX;
-	        var startY;
-	        for(var bar = 0; bar < sourceData.length; bar ++){
-	            if(bar % 3 ===  0){
-	                startX = 10;
-	                startY = canH - (sourceData.length - bar)*barWidth/3 - 15;
-	                if(bar > 0){
-	                    startY += 5*bar/3;
-	                }
-	            }
-	            con.fillStyle = sourceData[bar][1];
-	            con.strokeStyle = '#222';
-	            con.fillRect(startX/2, startY, (normal(0, sourceData[bar][0], canW))/2, barWidth);
-	            con.strokeRect(startX/2, startY, (normal(0, sourceData[bar][0], canW))/2, barWidth);
-	            startX += normal(0, sourceData[bar][0], canW);
-	        }
-	    } else {
-	        console.log("Lies, lies and damned statistics" + sourceData);
-	    }
-	    //Legend, we only draw it once
-	    if(Conf.fresh){
-	        var canL = document.getElementById(outputId + 'Legend');
-	        var conL = canL.getContext('2d');
-	        conL.clearRect(0, 0, canW, canH);
-	        var legendLeft = 15;
-	        var legendTop = 5;
-	        var legendBottom = 20;
-	        for(var legend = 0; legend < sourceData.length; legend++){
-	            conL.beginPath();
-	            conL.strokeStyle = '#000';
-	            conL.lineWidth = 0.5;
-	            conL.fillStyle = sourceData[legend][1];
-	            conL.fillRect(legendLeft, legendTop, 10, 10);
-	            conL.strokeRect(legendLeft, legendTop, 10, 10);
-	            legendTop += 15;
-	            conL.closePath();
-	            conL.beginPath();
-	            conL.fillStyle = '#D9F7FF';
-	            conL.font = "14px Arial";
-	            conL.fillText(sourceData[legend][2], legendLeft + 20, legendTop - 5);
-	            conL.closePath();
-	        }
-	    }
-	},
-
-	/**
-	* Fits the map to the screen
-	* @param {bool} [bool] Tells CneTools.mapFit(() if the window has been resized or not
-	*/
-	mapFit: function(bool) {
-	    var quarterHeight = Math.floor(Conf.destinationHeight * 0.25);
-	    if(bool) {
-	        var overlay = document.getElementById('mPanOverlay');
-	        var mainMap = document.getElementById('mainPanel');
-
-	        //Nasty stuff... hence we use the if to touch this as little as possible
-	        overlay.width = window.innerWidth + Conf.destinationWidth;
-	        overlay.height = window.innerHeight + quarterHeight * 2;
-	        overlay.style.top = -quarterHeight*2 + 'px';
-	        overlay.style.left = -Conf.destinationWidth / 2 + 'px';
-	        mainMap.width = window.innerWidth + Conf.destinationWidth; //Maybe avoid using screen, as we're not *certain* we'll be fullscreen, even if that's the permission we'll ask for
-	        mainMap.height = window.innerHeight + quarterHeight * 2;
-	        mainMap.style.top = -quarterHeight*2 + 'px';
-	        mainMap.style.left = -Conf.destinationWidth / 2 + 'px';
-	        document.body.style.width = window.innerWidth + 'px';
-	        document.body.style.height = window.innerHeight + 'px';
-	    }
-	    Conf.xLimit = Math.ceil(Conf.mPanCanvas.width / Conf.destinationWidth);
-	    Conf.yLimit = Math.ceil(Conf.mPanCanvas.height / (quarterHeight * 3));
-	    Conf.mPanLoc.clearRect(0, 0, Conf.mPanCanvas.width, Conf.mPanCanvas.height);
-	    drawTile(0, getTile('x'), getTile('y'), Conf.tileHighlight, Conf.mPanLoc);
-
-	    //Messy stuff to handle if I try to zoom out of the map...
-	    if(Conf.retY - Conf.yLimit / 2 < 0) {
-	        Conf.retY = Math.floor(Conf.retY - (Conf.retY - Conf.yLimit / 2));
-	    } else if(Conf.retY + Conf.yLimit / 2 > Conf.radarRad * 2) {
-	        Conf.retY = Math.floor(Conf.retY - Conf.yLimit / 2);
-	    }
-	    if(Conf.retX - Conf.xLimit / 2 < 0) {
-	        Conf.retX = Math.floor(Conf.retX - (Conf.retX - Conf.xLimit / 2));
-	    } else if(Conf.retX + Conf.xLimit / 2 > Conf.radarRad * 2) {
-	        Conf.retX = Math.floor(Conf.retX - Conf.xLimit / 2);
-	    }
-	    if(Conf.yLimit % 2 === 0) {
-	        Conf.yLimit += 1;
-	    }
-
-	    Conf.yShift = Math.round(Conf.yLimit / 2);
-
-	    if(Conf.yShift % 2 === 0) {
-	        Conf.yShift += 1;
-	        Conf.yLimit += 2;
-	    }
-
-	    if(Conf.retY % 2 !== 0) {
-	        Conf.retY += 1;
-	    }
-	    drawRadar();
-	    drawLoc();
-	},
-
-	/**
 	 * Checks which buildings are available to the player and
 	 * populates the sidebar with those buildings
 	 */
@@ -394,8 +123,6 @@ var CneTools = {
 	    }
 	},
 
-
-
 	/**
 	 * Changes level from an input (slider etc.)
 	 * @param  {int} newLevel the level we would change to
@@ -404,7 +131,7 @@ var CneTools = {
 	changeLevel: function(newLevel) {
 	    Conf.level = parseInt(newLevel, 10);
 	    CneTools.checkBuildings();
-	    drawRadar();
+	    Display.drawRadar();
 	},
 
 	/**
@@ -426,52 +153,27 @@ var CneTools = {
 	    }
 	    return false;
 	},
-
+	
 	/**
-	* Cross references the indexes of processed minerals to their ores
-	* @param {int} ref 
-	* @param {int} dir 'Direction' of the conversion: (0 processed -> ore; 1 ore -> processed
-	* @returns {array} 
-	* @todo dir seems redundant here, also, this should be in a "resources" namespace 
-	*/
-	resourceRef: function(ref,dir){
-	    //dir should tell us if we're going from ore to processed or processed to ore
-	    //0 is from processed to ore
-	    //1 is from ore to processed
-	    //ref is the reference
-	    switch(ref){
-	        case 0:
-	            return [0,1,2];
-	        case 1:
-	            return [3];
-	        case 2:
-	            return [4,5,6];
-	        case 3:
-	            return [7,8];
-	        case 4:
-	            return [9,10,11,12];
-	        case 5:
-	            return [13,14];
-	        case 6:
-	            return [15,16];
-	        case 7:
-	            return [17,18];
-	        case 8:
-	            return [19,20];
-	        case 9:
-	            return [21,22];
-	        case 10:
-	            return [23];
-	        case 11:
-	            return [24,25];
-	        case 12:
-	            return [26,27];
-	        case 13:
-	            return [28,29];
-	        default:
-	            console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + ref + " " + dir);
-	    }
-	},
+     * Moves the map to the provided location. Defaults to the mapped 
+     * coordinates of the mouse pointer
+     * @param {bool} [bool] Force a jump to a particular spot (see other parameters)
+     * @param {int} [x] X coordinate for where the map was clicked
+     * @param {int} [y] Y coordinate for where the map was clicked
+     * @param {int} [level] The level the player is on
+     */
+    moveTo: function(bool, x, y, level) {
+        if(bool){
+            Conf.retX = x + 1;
+            Conf.retY = y + 2;
+            Conf.level = level;
+        } else {
+            Conf.retX = Math.floor(Conf.mouseX - Conf.destinationWidth / 2);
+            Conf.retY = Conf.mouseY - 20;
+        }
+        Display.resizeMap();
+        Display.drawReticule();
+    },
 
 	/**
 	* Given two strings, will return a modified version (for tile references)
@@ -492,12 +194,145 @@ var CneTools = {
 	checkConnection: function(y, x) {
 	    var connected = false;
 	    for(var j = 0; j < 6; j++) {
-	        if(Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]] && 
-	           (Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 211 || 
-	           Conf.mapTiles[Conf.level][adjacent(x, y, j)[0]][adjacent(x, y, j)[1]].kind === 204)) {
+	        if(Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, j)[0]][CneTools.adjacent(x, y, j)[1]] && 
+	           (Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, j)[0]][CneTools.adjacent(x, y, j)[1]].kind === 211 || 
+	           Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, j)[0]][CneTools.adjacent(x, y, j)[1]].kind === 204)) {
 	            connected = true;
 	        }
 	    }
 	    return connected;
+	},
+
+	/**
+	 * Returns the adjacent tile reference in y and x (inverted for historical reasons)
+	 * @param  {int} x X coordiante for tile we want to get the adjacent tiles for
+	 * @param  {int} y Y coordiante for tile we want to get the adjacent tiles for
+	 * @param  {int} index Which tile are we checking? 0 for top left then count up
+	 * clockwise
+	 * @return {array} The coordinates for the tile at the provided index
+	 */
+	adjacent: function(x, y, index) {
+	    if(y % 2 === 0) {
+	        index += 6;
+	    }
+	    switch(index) {
+	    case 0:
+	        return [y + 1, x - 1];
+	    case 1:
+	    case 6:
+	        return [y + 1, x];
+	    case 2:
+	    case 8:
+	        return [y, x + 1];
+	    case 3:
+	    case 10:
+	        return [y - 1, x];
+	    case 4:
+	        return [y - 1, x - 1];
+	    case 5:
+	    case 11:
+	        return [y, x - 1];
+	    case 7:
+	        return [y + 1, x + 1];
+	    case 9:
+	        return [y - 1, x + 1];
+	    default:
+	        console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
+	    }
+	},
+
+	/**
+	 * Checks if any adjacent tiles are wet
+	 * @param  {array} yxArrayIn is an array of the y & x coordinates of the tile to test
+	 * @param  {int} level provides the level to test on
+	 * @return {boolean} Wet or not
+	 */
+	isWet: function(yxArrayIn, level) {
+	    var yxArray = yxArrayIn.slice(0);
+	    for(var i = 0; i < 6; i++) {
+	        if(Conf.map[level][CneTools.adjacent(yxArray[1], yxArray[0], i)[0]][CneTools.adjacent(yxArray[1], yxArray[0], i)[1]].kind === 4) {
+	            return true;
+	        }
+	    }
+	    return false;
+	},
+
+	/**
+	 * Gets the x or y value for the currently moused over tile
+	 * @param  {string} The axis we want the coordinate of
+	 * @return {int} The coordinate for desired axis
+	 */
+	getTile: function(axis) {
+	    var x, y, yDiff, xDiff, left, right;
+
+	    //set the general cases
+	    y = Math.floor(Conf.mouseY / (Conf.destinationHeight * 0.75));
+
+	    y % 2 !== 0 ? x = Math.floor((Conf.mouseX - Conf.destinationWidth / 2) / Conf.destinationWidth) : x = Math.floor(Conf.mouseX / Conf.destinationWidth);
+
+	    //corner case code
+	    yDiff = (Conf.mouseY / (Conf.destinationHeight * 0.75)) - y;
+	    if(yDiff < 0.33) { //If we're in the top third of the reference rectangle
+	        //tells which intermediate block we're in...
+	        if(y % 2 !== 0) {
+	            xDiff = ((Conf.mouseX - Conf.destinationWidth / 2) / Conf.destinationWidth - x);
+	            //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
+	            //Are we on the left or right hand side of the top third?
+	            if(xDiff < 0.5) {
+	                left = 0.5 - xDiff; //Adjust to get the opposite length of the 60° internal angle
+	                if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) { //I multiply by 10 so that I'm not dealing with numbers less than 1
+	                    y -= 1; //change the reference appropriately
+	                }
+	            } else { //rinse repeat for all cases
+	                right = xDiff - 0.5;
+	                if(right * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
+	                    y -= 1;
+	                    x += 1;
+	                }
+	            }
+
+	        } else {
+	            xDiff = (Conf.mouseX / Conf.destinationWidth - x);
+	            if(xDiff < 0.5) {
+	                left = 0.5 - xDiff;
+	                if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
+	                    y -= 1;
+	                    x -= 1;
+	                }
+	            } else {
+	                right = xDiff - 0.5;
+	                if(right * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
+	                    y -= 1;
+	                }
+	            }
+	        }
+
+	    }
+	    if(axis === 'x') { //return the appropriate tile axis reference
+	        return x;
+	    } else {
+	        return y;
+	    }
+	},
+
+	/**
+	 * Gets the mouse position on the main canvas
+	 * @param  {Object} canvas
+	 * @param  {Event} evt
+	 */
+	mouse: function(canvas, evt) {
+	    // get canvas position
+	    var obj = canvas;
+	    var top = 0;
+	    var left = 0;
+	    while(obj && obj.tagName != 'BODY') {
+	        top += obj.offsetTop - 10;
+	        left += obj.offsetLeft;
+	        obj = obj.offsetParent;
+	    }
+
+	    // return relative mouse position
+	    Conf.mouseX = evt.clientX - left + window.pageXOffset + Conf.destinationWidth / 2;
+	    Conf.mouseY = evt.clientY - top + window.pageYOffset;
 	}
 }

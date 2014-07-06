@@ -245,11 +245,11 @@ var FileIO = (function(){
                     reCount('all');
                     execReview();
                     fillResearchMenu();
-                    drawRadar();
+                    Display.drawRadar();
                     Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
                     Tools.flush(document.getElementById('consoleContent'));
                     printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
-                    jump(true, Conf.home[0], Conf.home[1], 0);
+                    CneTools.moveTo(true, Conf.home[0], Conf.home[1], 0);
                 };
                 reader.readAsText(file);
             }, _errorHandler);

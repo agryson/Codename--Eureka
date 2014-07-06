@@ -14,7 +14,7 @@ function nextTurn(x, y, level) {
 
     var checkMine = function(xIn, yIn, levelIn) {
         for(var i = 0; i < 6; i++) {
-            if(Conf.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]] && Conf.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]].kind === 221 && !Conf.mapTiles[levelIn][adjacent(xIn, yIn, i)[0]][adjacent(xIn, yIn, i)[1]].shutdown) {
+            if(Conf.mapTiles[levelIn][CneTools.adjacent(xIn, yIn, i)[0]][CneTools.adjacent(xIn, yIn, i)[1]] && Conf.mapTiles[levelIn][CneTools.adjacent(xIn, yIn, i)[0]][CneTools.adjacent(xIn, yIn, i)[1]].kind === 221 && !Conf.mapTiles[levelIn][CneTools.adjacent(xIn, yIn, i)[0]][CneTools.adjacent(xIn, yIn, i)[1]].shutdown) {
                 return true;
             }
         }
@@ -1551,7 +1551,7 @@ function advanceTurn(turns){
                 fillResearchPanel('overview');
                 //setResearchClickers(researchPanel);
                 fillResearchMenu();
-                drawRadar();
+                Display.drawRadar();
                 Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
                 document.getElementById('consoleContent').innerHTML = '';
                 printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
@@ -1619,7 +1619,7 @@ function execReview() {
 
     if(!Conf.buildings[37][1]) {
         var moraleInput = [[Conf.tossMorale, electricBlue, TRANS.tosser],[Conf.hipMorale, green, TRANS.hipstie],[Conf.artMorale, orange, TRANS.artie]];
-        CneTools.drawGraph('line', 'morale', moraleInput, true);
+        Display.drawGraph('line', 'morale', moraleInput, true);
         document.getElementById('tossMorale').innerHTML = (Conf.tossMorale[Conf.tossMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('hipMorale').innerHTML = (Conf.hipMorale[Conf.hipMorale.length - 1] / 10).toFixed(1) + '%';
         document.getElementById('artMorale').innerHTML = (Conf.artMorale[Conf.artMorale.length - 1] / 10).toFixed(1) + '%';
@@ -1627,7 +1627,7 @@ function execReview() {
         document.getElementById('moraleAverage').innerHTML = (moraleAverage / 10).toFixed(1) + '%';
 
         var popInput = [[Conf.tossPop, electricBlue, TRANS.tosser],[Conf.hipPop, green, TRANS.hipstie],[Conf.artPop, orange, TRANS.artie],[Conf.pop, white, TRANS.population]];
-        CneTools.drawGraph('line', 'population', popInput, true);
+        Display.drawGraph('line', 'population', popInput, true);
         document.getElementById('tossPop').innerHTML = Math.floor(Conf.tossPop[Conf.tossPop.length - 1]);
         document.getElementById('hipPop').innerHTML = Math.floor(Conf.hipPop[Conf.hipPop.length - 1]);
         document.getElementById('artPop').innerHTML = Math.floor(Conf.artPop[Conf.artPop.length - 1]);
@@ -1644,23 +1644,23 @@ function execReview() {
         [[Conf.hipBabies[Conf.hipBabies.length - 1]], green, TRANS.hipstieInfant],
         [[Conf.artBabies[Conf.artBabies.length - 1]], orange, TRANS.artieInfant]
         ];
-        CneTools.drawGraph('bar', 'demographics', demoInput);
+        Display.drawGraph('bar', 'demographics', demoInput);
 
         var sdfInput = [[Conf.housing, electricBlue, TRANS.housing],[Conf.sdf, red, TRANS.sdf]];
-        CneTools.drawGraph('pie', 'homeless', sdfInput);
+        Display.drawGraph('pie', 'homeless', sdfInput);
         document.getElementById('housingVal').innerHTML = Conf.housing[Conf.housing.length - 1];
         document.getElementById('homelessVal').innerHTML = Conf.sdf[Conf.sdf.length - 1];
 
         var employedInput = [[[Conf.employed[Conf.employed.length - 1]], electricBlue, TRANS.employed],[[Conf.pop[Conf.pop.length - 1] - Conf.employed[Conf.employed.length - 1]], red, TRANS.unemployed]];
-        CneTools.drawGraph('pie', 'employment', employedInput);
+        Display.drawGraph('pie', 'employment', employedInput);
         document.getElementById('employmentVal').innerHTML = Conf.pop[Conf.pop.length - 1] - Conf.employed[Conf.employed.length - 1];
 
         var crimeInput = [[Conf.crime, red, TRANS.crime]];
-        CneTools.drawGraph('line', 'crime', crimeInput, true);
+        Display.drawGraph('line', 'crime', crimeInput, true);
         document.getElementById('crimeVal').innerHTML = Conf.crime[Conf.crime.length - 1];
 
         var energyInput = [[Conf.energy, electricBlue, TRANS.energy]];
-        CneTools.drawGraph('line', 'energy', energyInput, true);
+        Display.drawGraph('line', 'energy', energyInput, true);
         document.getElementById('energyVal').innerHTML = Conf.energy[Conf.energy.length - 1];
 
         var airInUse = Math.floor((Conf.tossPop[Conf.tossPop.length - 1] + Conf.hipPop[Conf.hipPop.length - 1])/10);
@@ -1671,11 +1671,11 @@ function execReview() {
         var airInput = [
             [[airInUse], grey, TRANS.airInUse],
             [[freeAir], electricBlue, TRANS.airAvailable]];
-        CneTools.drawGraph('pie', 'air', airInput);
+        Display.drawGraph('pie', 'air', airInput);
         document.getElementById('airVal').innerHTML = Conf.air[Conf.air.length - 1];
 
         var foodInput = [[Conf.food, green, TRANS.food]];
-        CneTools.drawGraph('line', 'food', foodInput, true);
+        Display.drawGraph('line', 'food', foodInput, true);
         document.getElementById('foodVal').innerHTML = Conf.food[Conf.food.length - 1];
 
         var freeStorage = Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1];
@@ -1683,7 +1683,7 @@ function execReview() {
             [[freeStorage], electricBlue, TRANS.freeStorage],
             [[Conf.inStorage[Conf.inStorage.length -1] - Conf.food[Conf.food.length - 1]], brown, TRANS.resourceStorage],
             [[Conf.food[Conf.food.length - 1]], green, TRANS.food]];
-        CneTools.drawGraph('pie', 'storage', storageInput);
+        Display.drawGraph('pie', 'storage', storageInput);
         document.getElementById('storageVal').innerHTML = freeStorage;
 
         //The resources Table...
@@ -1881,7 +1881,7 @@ function runConsole(text){
             if(input[1] >= 0 || input[1] <= 4){
                 Conf.level = parseInt(input[1], 10);
                 CneTools.checkBuildings();
-                drawRadar();
+                Display.drawRadar();
                 document.getElementById('slider').value = Conf.level;
             } else {
                 consoleErr(input[1], 'value', input[0], TRANS.integer, 0, 4);
@@ -1889,7 +1889,7 @@ function runConsole(text){
             break;
         case TRANS.home:
             if(Conf.home){
-                jump(true, Conf.home[0], Conf.home[1], 0);
+                CneTools.moveTo(true, Conf.home[0], Conf.home[1], 0);
             } else {
                 printConsole(TRANS.setDown);
             }
@@ -1900,7 +1900,7 @@ function runConsole(text){
         case TRANS.zoom:
             if(input[1] >= 1 || input[1] <= 6){
                 document.getElementById('zoom').value = input[1];
-                CneTools.zoom(input[1]);
+                Display.zoom(input[1]);
             } else {
                 consoleErr(input[1], 'value', input[0], TRANS.integer, 1, 6);
             }
@@ -1932,576 +1932,14 @@ function runConsole(text){
     document.getElementById('console').classList.add('console_open');
 }
 
-
-
-/**
- * Generic keyboard listener
- * @param  {Event} e The event passed in upon key press
- */
-function keypressed(e) {
-    if(document.activeElement === document.getElementById('consoleInput')){
-        switch(e.keyCode){
-            case 13: //enter
-                runConsole(document.getElementById('consoleInput').value);
-                break;
-            case 27:
-                document.getElementById('consoleInput').blur();
-                document.getElementById('consoleInput').value = '';
-                document.getElementById('console').classList.remove('console_open');
-                break;
-            default:
-                console.log('in the console' + e.keyCode);
-        }
-    } else if(Conf) {
-        switch(e.keyCode) {
-        case 8: //prevent backspace from fupping up my day
-            if(document.activeElement !== document.getElementById('seed')){
-                e.preventDefault();
-            }
-            break;
-        case 38:
-            move('up');
-            break;
-        case 40:
-            move('down');
-            break;
-        case 37:
-            move('left');
-            break;
-        case 39:
-            move('right');
-            break;
-        case 76:
-            move('level'); //changes level
-            drawRadar();
-            break;
-        case 48:
-            Conf.level = 0;
-            CneTools.checkBuildings();
-            drawRadar();
-            document.getElementById('slider').value = Conf.level;
-            break;
-        case 49:
-            Conf.level = 1;
-            CneTools.checkBuildings();
-            drawRadar();
-            document.getElementById('slider').value = Conf.level;
-            break;
-        case 50:
-            Conf.level = 2;
-            CneTools.checkBuildings();
-            drawRadar();
-            document.getElementById('slider').value = Conf.level;
-            break;
-        case 51:
-            Conf.level = 3;
-            CneTools.checkBuildings();
-            drawRadar();
-            document.getElementById('slider').value = Conf.level;
-            break;
-        case 52:
-            Conf.level = 4;
-            CneTools.checkBuildings();
-            drawRadar();
-            document.getElementById('slider').value = Conf.level;
-            break;
-        case 27:
-            document.getElementById(Conf.clickedOn).classList.add('menu_available');
-            Conf.clickedOn = 'none';
-            document.body.style.cursor = "url('images/pointers/pointer.png'), default";
-            break;
-        case 77:
-            menu(document.getElementById('radarContainer'), document.getElementById('radarButton'), 'radar_hidden');
-            break;
-        case 69:
-            document.getElementById('statsContainer').classList.add('exec_hidden');
-            document.getElementById('researchContainer').classList.add('exec_hidden');
-            document.getElementById('messageContainer').classList.add('exec_hidden');
-            document.getElementById('guideContainer').classList.add('exec_hidden');
-            menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            break;
-        case 83://s (statistics)
-            document.getElementById('researchContainer').classList.add('exec_hidden');
-            document.getElementById('messageContainer').classList.add('exec_hidden');
-            document.getElementById('guideContainer').classList.add('exec_hidden');
-            if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            }
-            if(document.getElementById('statsContainer').classList.contains('exec_hidden')){
-                document.getElementById('statsContainer').classList.remove('exec_hidden');
-            } else {
-                document.getElementById('statsContainer').classList.add('exec_hidden');
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            }
-            break;
-        case 82://r (research)
-            fillResearchPanel('overview');
-            document.getElementById('statsContainer').classList.add('exec_hidden');
-            document.getElementById('messageContainer').classList.add('exec_hidden');
-            document.getElementById('guideContainer').classList.add('exec_hidden');
-            if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            }
-            if(document.getElementById('researchContainer').classList.contains('exec_hidden')){
-                document.getElementById('researchContainer').classList.remove('exec_hidden');
-            } else {
-                document.getElementById('researchContainer').classList.add('exec_hidden');
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            }
-            break;
-        case 71://g (guide)
-            document.getElementById('statsContainer').classList.add('exec_hidden');
-            document.getElementById('researchContainer').classList.add('exec_hidden');
-            document.getElementById('messageContainer').classList.add('exec_hidden');
-            if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            }
-            if(document.getElementById('guideContainer').classList.contains('exec_hidden')){
-                document.getElementById('guideContainer').classList.remove('exec_hidden');
-            } else {
-                document.getElementById('guideContainer').classList.add('exec_hidden');
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            }
-            break;
-        case 67://c (communiqués)
-            document.getElementById('statsContainer').classList.add('exec_hidden');
-            document.getElementById('researchContainer').classList.add('exec_hidden');
-            document.getElementById('guideContainer').classList.add('exec_hidden');
-            if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            }
-            if(document.getElementById('messageContainer').classList.contains('exec_hidden')){
-                document.getElementById('messageContainer').classList.remove('exec_hidden');
-            } else {
-                document.getElementById('messageContainer').classList.add('exec_hidden');
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
-            }
-            break;
-        case 13: //enter (next turn)
-            advanceTurn(1);
-            break;
-        case 84: //t terminal
-            document.getElementById('consoleInput').focus();
-            setTimeout(function(){
-                document.getElementById('consoleInput').value = '';
-            }, 10);
-            document.getElementById('console').classList.add('console_open');
-            break;
-        default:
-            console.log("Uhm... that key doesn't do anything... " + e.keyCode);
-        }
-    }
-    //I need to find and kill backspace - not appropriate for a chrome packaged game...
-}
-
-/**
- * Gets the mouse position on the main canvas
- * @param  {Object} canvas
- * @param  {Event} evt
- */
-function getMousePos(canvas, evt) {
-    // get canvas position
-    var obj = canvas;
-    var top = 0;
-    var left = 0;
-    while(obj && obj.tagName != 'BODY') {
-        top += obj.offsetTop - 10;
-        left += obj.offsetLeft;
-        obj = obj.offsetParent;
-    }
-
-    // return relative mouse position
-    Conf.mouseX = evt.clientX - left + window.pageXOffset + Conf.destinationWidth / 2;
-    Conf.mouseY = evt.clientY - top + window.pageYOffset;
-}
-
-/**
- * Depending on the key pressed, changes the reference reticule
- *and then redraws the maps and radar
- * @param  {string} dir is the direction to move
- */
-function move(dir) {
-    var upY = Conf.retY - 2;
-    var downY = Conf.retY + 2;
-    var leftX = Conf.retX - 1;
-    var rightX = Conf.retX + 1;
-    switch(dir) {
-    case 'up':
-        if(upY >= (Conf.yLimit / 2)) {
-            Conf.retY = upY;
-        }
-        break;
-    case 'down':
-        if(downY <= (Conf.radarRad * 2) - (Conf.yLimit / 2)) {
-            Conf.retY = downY;
-        }
-        break;
-    case 'left':
-        if(leftX >= (Conf.xLimit / 2)) {
-            Conf.retX = leftX;
-        }
-        break;
-    case 'right':
-        if(leftX < (Conf.radarRad * 2) - (Conf.xLimit / 2) - 2) {
-            Conf.retX = rightX;
-        }
-        break;
-    case 'level':
-        Conf.level === 4 ? Conf.level = 0 : Conf.level += 1;
-        CneTools.checkBuildings();
-        drawRadar();
-        document.getElementById('slider').value = Conf.level;
-        break;
-    default:
-        break;
-    }
-    drawLoc();
-}
-
-/**
- * Returns the adjacent tile reference in y and x (inverted for historical reasons)
- * @param  {int} x X coordiante for tile we want to get the adjacent tiles for
- * @param  {int} y Y coordiante for tile we want to get the adjacent tiles for
- * @param  {int} index Which tile are we checking? 0 for top left then count up
- * clockwise
- * @return {array} The coordinates for the tile at the provided index
- */
-function adjacent(x, y, index) {
-    if(y % 2 === 0) {
-        index += 6;
-    }
-    switch(index) {
-    case 0:
-        return [y + 1, x - 1];
-    case 1:
-    case 6:
-        return [y + 1, x];
-    case 2:
-    case 8:
-        return [y, x + 1];
-    case 3:
-    case 10:
-        return [y - 1, x];
-    case 4:
-        return [y - 1, x - 1];
-    case 5:
-    case 11:
-        return [y, x - 1];
-    case 7:
-        return [y + 1, x + 1];
-    case 9:
-        return [y - 1, x + 1];
-    default:
-        console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
-    }
-}
-
-/**
- * Checks if any adjacent tiles are wet
- * @param  {array} yxArrayIn is an array of the y & x coordinates of the tile to test
- * @param  {int} level provides the level to test on
- * @return {boolean} Wet or not
- */
-function wetTest(yxArrayIn, level) {
-    var yxArray = yxArrayIn.slice(0);
-    for(var i = 0; i < 6; i++) {
-        if(Conf.map[level][adjacent(yxArray[1], yxArray[0], i)[0]][adjacent(yxArray[1], yxArray[0], i)[1]].kind === 4) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-
-/**
- * Gets the x or y value for the currently moused over tile
- * @param  {string} The axis we want the coordinate of
- * @return {int} The coordinate for desired axis
- */
-function getTile(axis) {
-    var x, y, yDiff, xDiff, left, right;
-
-    //set the general cases
-    y = Math.floor(Conf.mouseY / (Conf.destinationHeight * 0.75));
-
-    y % 2 !== 0 ? x = Math.floor((Conf.mouseX - Conf.destinationWidth / 2) / Conf.destinationWidth) : x = Math.floor(Conf.mouseX / Conf.destinationWidth);
-
-    //corner case code
-    yDiff = (Conf.mouseY / (Conf.destinationHeight * 0.75)) - y;
-    if(yDiff < 0.33) { //If we're in the top third of the reference rectangle
-        //tells which intermediate block we're in...
-        if(y % 2 !== 0) {
-            xDiff = ((Conf.mouseX - Conf.destinationWidth / 2) / Conf.destinationWidth - x);
-            //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
-            //Are we on the left or right hand side of the top third?
-            if(xDiff < 0.5) {
-                left = 0.5 - xDiff; //Adjust to get the opposite length of the 60° internal angle
-                if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) { //I multiply by 10 so that I'm not dealing with numbers less than 1
-                    y -= 1; //change the reference appropriately
-                }
-            } else { //rinse repeat for all cases
-                right = xDiff - 0.5;
-                if(right * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
-                    y -= 1;
-                    x += 1;
-                }
-            }
-
-        } else {
-            xDiff = (Conf.mouseX / Conf.destinationWidth - x);
-            if(xDiff < 0.5) {
-                left = 0.5 - xDiff;
-                if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
-                    y -= 1;
-                    x -= 1;
-                }
-            } else {
-                right = xDiff - 0.5;
-                if(right * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
-                    y -= 1;
-                }
-            }
-        }
-
-    }
-    if(axis === 'x') { //return the appropriate tile axis reference
-        return x;
-    } else {
-        return y;
-    }
-}
-
-
-
-/**
- * When the radar is clicked, moves the map to that location
- * @param {bool} [bool] Force a jump to a particular spot (see other parameters)
- * @param {int} [x] X coordinate for where the map was clicked
- * @param {int} [y] Y coordinate for where the map was clicked
- * @param {int} [level] The level the player is on
- */
-function jump(bool, x, y, level) {
-    if(bool){
-        Conf.retX = x + 1;
-        Conf.retY = y + 2;
-        Conf.level = level;
-    } else {
-        Conf.retX = Math.floor(Conf.mouseX - Conf.destinationWidth / 2);
-        Conf.retY = Conf.mouseY - 20;
-    }
-    CneTools.mapFit();
-    drawLoc();
-}
-
-
-
-//MAPS**********************************************************************************
-
-
-
-/**
- * Draws the radar properly
- */
-function drawRadar() {
-    Conf.radar.clearRect(0, 0, Conf.radarRad * 2, Conf.radarRad * 2);
-    var radarPixels = Conf.radar.createImageData(Conf.radarRad * 2, Conf.radarRad * 2);
-    var options = ["aluminiumRadarOpt","calciumRadarOpt","copperRadarOpt","goldRadarOpt","ironRadarOpt","leadRadarOpt","magnesiumRadarOpt","mercuryRadarOpt","phosphorousRadarOpt","potassiumRadarOpt","silverRadarOpt","sodiumRadarOpt","tinRadarOpt","zincRadarOpt"];
-    var surfaceColor = [
-        [212, 197, 174, 255],
-        [201, 179, 165, 255],
-        [211, 206, 203, 255],
-        [0, 132, 0, 255],
-        [108, 168, 204, 255]
-    ]; //rgba of terrain 0,1,2,3,4
-    var ugColor = [
-        [112, 97, 74, 255],
-        [101, 79, 65, 255],
-        [111, 106, 103, 255],
-        [0, 32, 0, 255],
-        [8, 68, 104, 255]
-    ]; //rgba of terrain 0,1,2,3,4
-    var other = [0, 180, 0, 255];
-
-    for(var x = 0; x < radarPixels.width; x++) {
-        for(var y = 0; y < radarPixels.height; y++) {
-            // Index of the pixel in the array
-            var idx = (x + y * radarPixels.width) * 4;
-            var kind = Conf.map[Conf.level][y][x].kind;
-            var resourceOnTile = Conf.map[Conf.level][y][x].resources;
-            //TODO: Clean up this awful for!
-            for(var i = 0; i < 4; i++) {
-                if(kind < 4 && kind >= 0) {
-                    radarPixels.data[idx + i] = surfaceColor[kind][i];
-                } else if(kind < 13 && kind >= 9){
-                    radarPixels.data[idx + i] = surfaceColor[kind - 9][i];
-                }else if(kind > 4 && kind < 8) {
-                    radarPixels.data[idx + i] = ugColor[kind - 5][i];
-                } else if(kind > 13 && kind < 17) {
-                    radarPixels.data[idx + i] = ugColor[kind - 14][i];
-                } else if(kind === 4) {
-                    Conf.level !== 0 ? radarPixels.data[idx + i] = ugColor[4][i] : radarPixels.data[idx + i] = surfaceColor[4][i];
-                } else {
-                    radarPixels.data[idx + i] = other[i];
-                }
-                for(var j = 0; j < options.length; j++){
-                    if(Conf.map[Conf.level][y][x].mineable && document.getElementById(options[j]).checked){
-                        var ore = CneTools.resourceRef(j, 0);
-                        for(var k = 0; k < ore.length; k++){
-                            if(resourceOnTile[ore[k]]){
-                                radarPixels.data[idx + i] = other[i];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    Conf.radar.putImageData(radarPixels, 0, 0);
-    for(var tower = 0; tower < Conf.commTowers.length; tower++){
-        var radius = 75 - Conf.level*10;
-        var thisTower = Conf.mapTiles[0][Conf.commTowers[tower][1]][Conf.commTowers[tower][0]].kind;
-        if(thisTower === 210 || thisTower === 237){
-            radius -= 25;
-        }
-        Conf.radar.beginPath();
-        Conf.radar.strokeStyle = '#BD222A';
-        Conf.radar.lineWidth = 0.3;
-        Conf.radar.arc(Conf.commTowers[tower][0], Conf.commTowers[tower][1], radius, 0, Math.PI*2, true);
-        Conf.radar.stroke();
-        Conf.radar.closePath();
-    }
-    Conf.level === 0 ? Conf.radar.fillStyle = "#000000" : Conf.radar.fillStyle = "#ffffff";
-    Conf.radar.font = "14px Arial";
-    Conf.radar.fillText('Depth: ' + Conf.level * 50 + 'm', 215, 298);
-}
-
-
-
-/**
- * Accepts the kind of tile to draw, the x column number and the y column number, then draws it
- * @param {int} tileType  Type of tile to draw
- * @param {int} tilePosX  Tile's x coordinate
- * @param {int} tilePosY  Tile's y coordinate
- * @param {Object} source The image object to get sprite from.(Probably {@link Conf#tileHighlight} or {@link Conf#spritesheet})
- * @param {Object} destination The canvas context to draw the images to
- * @param {bool} animateIt Whether or not the sprite is animated
- * @param {int} modX From 0, move to the modXth sprite
- * @param {int} modY From 0, move to the modYth sprite
- */
-function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, modX, modY) {
-    var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
-    sourceWidth = 216; //original tile width
-    sourceHeight = 252; //original tile height
-    destinationY = Math.floor(tilePosY * Conf.destinationWidth * 0.86); //shift it, the number here is a constant that depends on the hexagon deformation
-    if(tilePosY % 2 === 0) { //if the row is even...
-        destinationX = Math.floor(tilePosX * Conf.destinationWidth - Conf.destinationWidth / 2); //we set its X normally
-    } else { //if it’s odd though
-        destinationX = Math.floor(tilePosX * Conf.destinationWidth); //we need a little bit of displacement
-    }
-    animateIt ? sourceX = Conf.animate * sourceWidth : sourceX = 0;
-    sourceX += sourceWidth * modX;
-    sourceY = (tileType * sourceHeight) + (sourceHeight * modY);
-    destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Conf.destinationWidth, Conf.destinationHeight);
-}
-
-
-
-
-/**
- * Draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
- */
-function drawZoomMap() {
-    var y, x, tileKind;
-    mainLoop();
-    requestAnimationFrame(drawZoomMap);
-    Conf.mPanLoc.clearRect(0, 0, Conf.mPanCanvas.width, Conf.mPanCanvas.height);
-    if(Conf.highlight) {
-        drawTile(0, getTile('x'), getTile('y'), Conf.tileHighlight, Conf.mPanLoc, false, 0, 0);
-    }
-    for(y = 0; y < Conf.yLimit; y++) {
-        x = 0;
-        while(x <= Conf.xLimit) {
-            if(typeof Conf.mapTiles[Conf.level][Conf.retY - Conf.yShift + y][(Conf.retX - Math.round(Conf.xLimit / 2)) + x].kind === "number"){
-                tileKind = Conf.mapTiles[Conf.level][Conf.retY - Conf.yShift + y][(Conf.retX - Math.round(Conf.xLimit / 2)) + x].kind;
-            } else {
-                tileKind = Conf.map[Conf.level][Conf.retY - Conf.yShift + y][(Conf.retX - Math.round(Conf.xLimit / 2)) + x].kind;
-            }
-
-            if(tileKind < 100) {
-                drawTile(tileKind, x, y, Conf.spritesheet, Conf.mPanel, false, 10, 3);
-            } else if(tileKind >= 200) {
-                drawTile(tileKind - 200, x, y, Conf.spritesheet, Conf.mPanel, false, 0, 4);
-            } else {
-                drawTile(tileKind - 100, x, y, Conf.spritesheet, Conf.mPanel, true, 0, 0);
-            }
-            x++;
-        }
-    }
-}
-
-
-
-/**
- * draws the current location on the small radar map
- */
-function drawLoc() {
-    Conf.radarLoc.clearRect(0, 0, Conf.radarRad * 2, Conf.radarRad * 2);
-    Conf.radarLoc.beginPath();
-    Conf.radarLoc.fillRect(Conf.retX - (Conf.xLimit / 2), Conf.retY - (Conf.yLimit / 2), Conf.xLimit, Conf.yLimit);
-    Conf.radarLoc.fillStyle = 'rgba(255,251,229,0.3)';
-    Conf.radarLoc.fill();
-    Conf.radarLoc.closePath();
-    Conf.radarLoc.beginPath();
-    Conf.radarLoc.strokeRect(Conf.retX - (Conf.xLimit / 2), Conf.retY - (Conf.yLimit / 2), Conf.xLimit, Conf.yLimit);
-    Conf.radarLoc.strokeStyle = '#BD222A';
-    Conf.radarLoc.stroke();
-    Conf.radarLoc.closePath();
-}
-
-
-
-/**
-* Upon right click, creates the context menu
-* @param {string} content The content for the right click menu in html
-*/
-function rightClicked(content) {
-    //TODO : Make context menu appear on the correct side relative to mouse position near screen edges
-    var popFrame = document.getElementById('contextMenuWrapper');
-    var pop = document.getElementById('contextMenu');
-    /**
-    * @param {Event} e Upon detecting a mouseout, hides and cleans up the menu
-    */
-    var hide = function(e) {
-        if(((e.relatedTarget || e.toElement) === popFrame.nextElementSibling) || ((event.relatedTarget || event.toElement) == popFrame.parentNode)){
-            popFrame.style.opacity = '0';
-            setTimeout(function(){
-                popFrame.style.display = 'none';
-                Tools.flush(pop);
-            }, 200);
-            popFrame.removeEventListener('mouseout', hide);
-        }
-    };
-    Tools.flush(pop);
-    pop.appendChild(contextContent(content));
-    popFrame.style.top = event.clientY - 25 + 'px';
-    popFrame.style.left = event.clientX - 10 + 'px';
-    popFrame.style.display = 'inline-block';
-    popFrame.style.opacity = '1';
-    popFrame.addEventListener('mouseout', hide, false);
-
-}
-
-
-
 /**
 * Once a right click menu has been created, returns the HTML fragment to to be appended
 * @param {string} content Html content to put into the right click menu
 * @returns {Object} Document Fragment to append
 */
 function contextContent(content) {
-    var y = Conf.retY - Math.round(Conf.yLimit / 2) + getTile('y');
-    var x = Conf.retX - Math.round(Conf.xLimit / 2) + getTile('x');
+    var y = Conf.retY - Math.round(Conf.yLimit / 2) + CneTools.getTile('y');
+    var x = Conf.retX - Math.round(Conf.xLimit / 2) + CneTools.getTile('x');
     console.log(Conf.level + ' ' + x + ' ' + y);
     var tile = Conf.map[Conf.level][y][x];
     var construct = Conf.mapTiles[Conf.level][y][x];
@@ -2581,522 +2019,9 @@ function contextContent(content) {
     return frag;
 }
 
-
-
 /**
-* Provides the list of materials needed, either as a directly usable array, a 
-* boolean value representing availability or as a Document Fragment for use in 
-* the context menu
-* @param {string} building The building to get list for
-* @param {bool} getRec If true, will try to requisition the required materials, returning success or failure
-* @param {bool} recycling If true, will simply get the array of materials needed for a construction
-* @returns {(array|bool|Object)} Array of materials needed | Success or failure of requisition | Document Fragment listing material availability
-*/
-function resourceNeededList(building, getRec, recycling){
-    var resourcesNeeded;
-    var future;
-    switch(building) {
-            //Buildings
-    case 'agri':
-        //agridome
-        future = TRANS.agri;
-        resourcesNeeded = [[0,2],[1,1],[4,1],[9, 1]];
-        break;
-    case 'agri2':
-        //advanced agridome
-        future = TRANS.agri2;
-        resourcesNeeded = [[0,1],[1,1],[8,1],[9, 1]];
-        break;
-    case 'airport':
-        //airport
-        future = TRANS.airport;
-        resourcesNeeded = [[2,1],[4,2],[12, 1]];
-        break;
-    case 'arp':
-        //arp
-        future = TRANS.arp;
-        resourcesNeeded = [[0,2],[4,1],[12, 1],[13,1]];
-        break;
-    case 'airlift':
-        //airshaft
-        future = TRANS.airlift;
-        resourcesNeeded = [[0,1]];
-        break;
-    case 'barracks':
-        //barracks
-        future = TRANS.barracks;
-        resourcesNeeded = [[4,2],[12, 1]];
-        break;
-    case 'civprot':
-        //civil protection
-        future = TRANS.civprot;
-        resourcesNeeded = [[4,2],[12, 1]];
-        break;
-    case 'civprot2':
-        //civil protection 2
-        future = TRANS.civprot2;
-        resourcesNeeded = [[2,1],[4,2],[12, 1]];
-        break;
-    case 'commarray':
-        //comm array
-        future = TRANS.commarray;
-        resourcesNeeded = [[0,2],[2,2],[4,1]];
-        break;
-    case 'commarray2':
-        //comm array 2
-        future = TRANS.commarray2;
-        resourcesNeeded = [[0,2],[2,1],[12, 1],[13,1]];
-        break;
-    case 'command':
-        //command
-        future = TRANS.command;
-        resourcesNeeded = [[0,2],[2,1],[4,1],[5, 1],[10,1],[12,1],[13,1]];
-        break;
-    case 'connector':
-        // connector
-        future = TRANS.connector;
-        resourcesNeeded = [[4,1]];
-        break;
-    case 'dronefab':
-        // drone factory
-        future = TRANS.dronefab;
-        resourcesNeeded = [[0,1],[2,1],[4,1],[5, 1],[6,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
-        break;
-    case 'chernobyl':
-        // fission
-        future = TRANS.chernobyl;
-        resourcesNeeded = [[0,1],[2,2],[4,2],[5, 3],[7,1],[11,2],[12,1],[13,1]];
-        break;
-    case 'tokamak':
-        // fusion
-        future = TRANS.tokamak;
-        resourcesNeeded = [[0,2],[2,2],[3,1],[4, 1],[5,1],[7,1],[10,1],[11,1],[12,1],[13,1]];
-        break;
-    case 'genfab':
-        // factory
-        future = TRANS.genfab;
-        resourcesNeeded = [[0,1],[2,1],[4,1],[12, 1]];
-        break;
-    case 'geotherm':
-        // geothermal
-        future = TRANS.geotherm;
-        resourcesNeeded = [[0,1],[2,1],[4,1]];
-        break;
-    case 'hab':
-        // habitat
-        future = TRANS.hab;
-        resourcesNeeded = [[2,1],[4,1],[5, 1],[12,1]];
-        break;
-    case 'hab2':
-        // habitat 2
-        future = TRANS.hab2;
-        resourcesNeeded = [[2,1],[3,1],[4,1],[5,1],[12, 1]];
-        break;
-    case 'hab3':
-        // habitat 3
-        future = TRANS.hab3;
-        resourcesNeeded = [[0,1],[2,1],[3,1],[5,1],[10,1],[12, 1]];
-        break;
-    case 'er':
-        // hospital
-        future = TRANS.er;
-        resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[5,2],[6,1],[10,1],[11,1],[12, 1],[13,1]];
-        break;
-    case 'mine':
-        // mine
-        future = TRANS.mine;
-        resourcesNeeded = [[4,1]];
-        break;
-    case 'nursery':
-        // nursery
-        future = TRANS.nursery;
-        resourcesNeeded = [[0,1],[1,1],[2,1],[4,1],[6,1],[10,1],[11,1],[12, 1],[13,1]];
-        break;
-    case 'oreproc':
-        // ore processor
-        future = TRANS.oreproc;
-        resourcesNeeded = [[2,1],[4,2]];
-        break;
-    case 'rec':
-        // recreation center
-        future = TRANS.rec;
-        resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
-        break;
-    case 'recycling':
-        // recycler
-        future = TRANS.recycler;
-        resourcesNeeded = [[2,1],[4,1],[8,1],[12, 1]];
-        break;
-    case 'clichy':
-        // red light district
-        future = TRANS.clichy;
-        resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
-        break;
-    case 'research':
-        // research center
-        future = TRANS.research;
-        resourcesNeeded = [[0,1],[1, 1],[2,2],[3,1],[4,1],[5,1],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
-        break;
-    case 'research2':
-        // research 2
-        future = TRANS.research2;
-        resourcesNeeded = [[0,1],[2,2],[3,2],[4,1],[5,2],[6,1],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2]];
-        break;
-    case 'solar':
-        // solar farm
-        future = TRANS.solar;
-        resourcesNeeded = [[0,1],[2,1],[3,1],[7,1],[8,1],[13, 1]];
-        break;
-    case 'space':
-        // space port
-        future = TRANS.space;
-        resourcesNeeded = [[0,1],[2,1],[3,1],[4,1],[7,1],[10,1],[12, 1]];
-        break;
-    case 'stasis':
-        // stasis block
-        future = TRANS.stasis;
-        resourcesNeeded = [[0,4],[1, 1],[2,3],[3,2],[4,3],[5,2],[6,2],[7,1],[8,1],[9,1],[10,1],[11,2],[12,2],[13,2]];
-        break;
-    case 'store':
-        // Storage Tanks
-        future = TRANS.store;
-        resourcesNeeded = [[4,1]];
-        break;
-    case 'uni':
-        // University
-        future = TRANS.uni;
-        resourcesNeeded = [[0,1],[1,2],[2,1],[4,1],[6,1],[7,1],[9,1],[10,1],[11,1]];
-        break;
-    case 'warehouse':
-        // warehouse
-        future = TRANS.warehouse;
-        resourcesNeeded = [[0,1],[4,1]];
-        break;
-    case 'windfarm':
-        // windfarm
-        future = TRANS.windfarm;
-        resourcesNeeded = [[0,1],[2,1],[4,1],[5,1]];
-        break;
-    case 'workshop':
-        // workshop
-        future = TRANS.workshop;
-        resourcesNeeded = [[0,1],[2,1],[4,2],[5,1],[12, 1]];
-        break;
-    default:
-        console.log("What are you talking about?... :( " + building);
-        return false;
-    }
-    if(recycling){
-        return resourcesNeeded;
-    } else if(getRec) {
-        return(requisition(resourcesNeeded));
-    } else {
-        var frag = document.createDocumentFragment();
-        var spacer = document.createElement('br');
-        var need = document.createElement('button');
-        need.id = 'confirmBuild';
-        need.classList.add('smoky_glass');
-        need.classList.add('main_pointer');
-        need.classList.add('context_button');
-        need.innerHTML = TRANS.confirmBuild;
-        frag.appendChild(spacer);
-        frag.appendChild(need);
-        var title = document.createElement('h3');
-        title.innerHTML = TRANS.resourcesNeeded + ' (' + future + ')';
-        frag.appendChild(title);
-        var required = document.createElement('ul');
-        for(var resource = 0; resource < resourcesNeeded.length; resource++){
-            var which = resourcesNeeded[resource][0];
-            var amount = resourcesNeeded[resource][1];
-            var item = document.createElement('li');
-            if(Conf.procOres[which] >= amount){
-                item.classList.add('green');
-            } else {
-                item.classList.add('red');
-            }
-            item.innerHTML = amount + ' ' + Conf.resourceNames[which];
-            required.appendChild(item);
-        }
-        frag.appendChild(required);
-        console.log(frag);
-        return frag;
-    }
-}
-
-
-
-/**
-* Depending on availability, will take the resources indicated. If not all the 
-* resources are available, it wil print the missing resources to the in-game
-* console
-* @param {array} arr Array of materials to requisition
-* @returns {bool} Success or not
-* @todo This function should probably handle recycling as well
-*/
-function requisition(arr){//TODO set up recycling here
-    var resourceCheck = false;
-    var count = 0;
-    for(var j = 0; j < arr.length; j++){
-        if(Conf.procOres[arr[j][0]] >= arr[j][1]){
-            count += 1;
-        }
-    }
-    if(count === arr.length){
-        resourceCheck = true;
-        for(var k = 0; k < arr.length; k++){
-            Conf.procOres[arr[k][0]] -= arr[k][1];
-        }
-        execReview();
-    } else {
-        var shortage = TRANS.resourceShortage;
-        for(var s = 1; s < arr.length; s++){
-            if(Conf.procOres[arr[s][0]] < arr[s][1]){
-                shortage += Conf.resourceNames[arr[s][0]] + ", ";
-            }
-        }
-        printConsole(shortage.substring(0,shortage.length - 2)); //removes the space and comma
-    }
-    return resourceCheck;
-
-}
-
-
-
-/**
- * Performs the appropriate actions for the tile that is clicked upon depending on 
- * the construction or robot chosen
- * @param {bool} direction If true, action takes place, if not, will ask for confirmation
- */
-function clicked(direction) {
-    var y = Conf.retY - Math.round(Conf.yLimit / 2) + getTile('y');
-    var x = Conf.retX - Math.round(Conf.xLimit / 2) + getTile('x');
-    //var kind;
-    console.log('x: ' + x + '  y: ' + y);
-    var hex = Conf.mapTiles[Conf.level][y][x];
-    var tile = Conf.map[Conf.level][y][x];
-    var lowerTile, upperTile;
-    var confirmBot = function(botText){
-        var frag = document.createDocumentFragment();
-        var spacer = document.createElement('br');
-        var btn = document.createElement('button');
-        btn.innerHTML = botText;
-        btn.id = 'confirmBuild';
-        btn.classList.add('context_button');
-        btn.classList.add('smoky_glass');
-        btn.classList.add('main_pointer');
-        frag.appendChild(spacer);
-        frag.appendChild(spacer);//I don't think these are doing anything... ?
-        frag.appendChild(btn);
-        frag.appendChild(spacer);
-        return frag;
-    };
-
-
-    if(Conf.level < 5) {
-        lowerTile = Conf.map[Conf.level + 1][y][x];
-    }
-    if(Conf.level > 0) {
-        upperTile = Conf.map[Conf.level - 1][y][x];
-    }
-    switch(Conf.clickedOn) {
-    case 'lander':
-        if(wetTest([y,x],Conf.level)){
-            printConsole(TRANS.onWater);
-        } else {
-            Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(210, x, y, Conf.level);
-            Conf.home = [x,y];
-            for(var j = 0; j < 6; j++) {
-                var tempY = adjacent(x, y, j)[0];
-                var tempX = adjacent(x, y, j)[1];
-                switch(j) {
-                case 1:
-                case 3:
-                case 5:
-                    Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(211, tempX, tempY, Conf.level);
-                    break;
-                case 0:
-                    Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(235, tempX, tempY, Conf.level);
-                    break;
-                case 2:
-                    Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(203, tempX, tempY, Conf.level);
-                    break;
-                case 4:
-                    Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(237, tempX, tempY, Conf.level);
-                    Conf.commTowers.push([tempX, tempY]);
-                    break;
-                default:
-                    console.log("The eagle most definitely has *not* landed");
-                }
-            }
-            Conf.buildings[37][1] = false;
-            var buildable = [0, 3, 8, 11, 17, 23, 25, 27, 32, 34, 35, 36];
-            for(var ref in buildable) {
-                Conf.buildings[buildable[ref]][1] = true;
-            }
-            for(var i = 0; i < Conf.robotsList.length; i++) {
-                Conf.robotsList[i][3] = true;
-            }
-            CneTools.checkBuildings();
-            execReview();
-            drawRadar();
-        }
-        break;
-    case 'dozer':
-        if(!direction) {
-            rightClicked(confirmBot(TRANS.confirmDoze));
-            document.getElementById('confirmBuild').onclick = function(){
-                console.log('how many times?');
-                clicked(true);
-                document.getElementById('confirmBuild').onclick = null;
-            };
-        } else {
-            if((hex && (hex.kind < 200 && hex.kind > 2)) || (typeof hex.kind !== 'number' && tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
-                printConsole(TRANS.noDoze);
-            } else if(!CneTools.inRange(x, y)){
-                printConsole(TRANS.outOfRange);
-            } else {
-                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(100, x, y, Conf.level);
-            }
-        }
-        break;
-    case 'digger':
-        if(!direction) {
-            rightClicked(confirmBot(TRANS.confirmDig));
-            document.getElementById('confirmBuild').onclick = function(){
-                clicked(true);
-                document.getElementById('confirmBuild').onclick = null;
-            };
-        } else {
-            //tile.digDown(x, y, lowerTile);
-            var DBelow = Conf.mapTiles[Conf.level + 1];
-            if(!CneTools.checkConnection(y,x)){
-                printConsole(TRANS.noConnection);
-            } else if(wetTest([y, x], Conf.level + 1)){
-                printConsole(TRANS.onWater);
-            } else if((hex && hex.kind >= 100) || (DBelow[y][x] && DBelow[y][x].kind >= 100)){
-                printConsole(TRANS.buildingPresent);
-            } else if((hex.kind > 3 && hex.kind < 9) || hex.kind > 11) {
-                printConsole(TRANS.noDig);
-            } else if(Conf.level === 4){
-                printConsole(TRANS.lastLevel);
-            } else if(!CneTools.inRange(x, y)){
-                printConsole(TRANS.outOfRange);
-            } else {
-                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level, true);
-                DBelow[y][x] = bobTheBuilder(101, x, y, Conf.level + 1, true);
-                for(var k = 0; k < 6; k++) {
-                    var belowAdj = DBelow[adjacent(x, y, k)[0]][adjacent(x, y, k)[1]];
-                    if((belowAdj.exists && (belowAdj.kind >= 100 || belowAdj[1].kind < 4)) || Conf.map[Conf.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]].kind === 4 || wetTest([adjacent(x, y, k)[0], adjacent(x, y, k)[1]], Conf.level + 1)) {
-                        //do nothing
-                    } else {
-                        Conf.mapTiles[Conf.level + 1][adjacent(x, y, k)[0]][adjacent(x, y, k)[1]] = bobTheBuilder(101101, adjacent(x, y, k)[1], adjacent(x, y, k)[0], Conf.level + 1);
-                    }
-                }
-            }
-        }
-        break;
-    case 'cavernDigger':
-        if(!direction) {
-            rightClicked(confirmBot(TRANS.confirmDigCavern));
-            document.getElementById('confirmBuild').onclick = function(){
-                clicked(true);
-                document.getElementById('confirmBuild').onclick = null;
-            };
-        } else {
-            if(wetTest([y, x], Conf.level)){
-                printConsole(TRANS.onWater);
-            } else if((hex && hex.kind > 3) || Conf.level === 0 || (hex.kind > 2 && hex.kind < 9) || hex.kind > 11) {
-                printConsole(TRANS.noCavern);
-            } else if(!CneTools.inRange(x, y)){
-                printConsole(TRANS.outOfRange);
-            } else {
-                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level);
-                for(var z = 0; z < 6; z++) {
-                    var around = Conf.mapTiles[Conf.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]];
-                    if((around && (around.kind >= 100 || around.kind < 4)) || Conf.map[Conf.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]].kind < 4 || wetTest([adjacent(x, y, z)[0], adjacent(x, y, z)[1]], Conf.level + 1)) {
-                        //do nothing
-                    } else {
-                        Conf.mapTiles[Conf.level][adjacent(x, y, z)[0]][adjacent(x, y, z)[1]] = bobTheBuilder(101101, adjacent(x, y, z)[1], adjacent(x, y, z)[0], Conf.level);
-                    }
-                }
-            }
-        }
-        break;
-    case 'miner':
-        if(!direction) {
-            rightClicked(confirmBot(TRANS.confirmMine));
-            document.getElementById('confirmBuild').onclick = function(){
-                clicked(true);
-                document.getElementById('confirmBuild').onclick = null;
-            };
-        } else {
-            if(wetTest([y, x], Conf.level + 1)){
-                printConsole(TRANS.onWater);
-            } else if(hex && hex.kind !== 221 && hex.kind >= 100) {
-                printConsole(TRANS.noMine);
-            } else if(Conf.level !== 0 && (!hex || hex && hex.kind !== 221)){
-                printConsole(TRANS.noMine);
-            } else if(Conf.level === 4) {
-                printConsole(TRANS.lastLevel);
-            } else if(!CneTools.inRange(x, y)){
-                printConsole(TRANS.outOfRange);
-            } else {
-                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(102, x, y, Conf.level, true);
-                Conf.mapTiles[Conf.level + 1][y][x] = bobTheBuilder(102102, x, y, Conf.level + 1, true);
-                for(var m = 0; m < 6; m++) {
-                    var mineY = adjacent(x, y, m)[0];
-                    var mineX = adjacent(x, y, m)[1];
-                    if(Conf.map[Conf.level][mineY][mineX].mineable) {
-                        Conf.mapTiles[Conf.level][mineY][mineX] = bobTheBuilder(102102, mineX, mineY, Conf.level, false);
-                    }
-                    if(Conf.map[Conf.level + 1][mineY][mineX].mineable) {
-                        Conf.mapTiles[Conf.level + 1][mineY][mineX] = bobTheBuilder(102102, mineX, mineY, Conf.level + 1, false);
-                    }
-                }
-            }
-        }
-        break;
-    case 'recycler':
-        if(!direction) {
-            rightClicked(confirmBot(TRANS.confirmRecycle));
-            document.getElementById('confirmBuild').onclick = function(){
-                clicked(true);
-                document.getElementById('confirmBuild').onclick = null;
-            };
-        } else {
-            if(hex && hex.kind >= 200){
-                recycle(hex.kind, x, y, Conf.level);
-            } else {
-                printConsole(TRANS.noRecycle);
-            }
-        }
-        //TODO: add recycle code
-        break;
-    default:
-        if(!direction){
-            rightClicked(resourceNeededList(Conf.clickedOn));
-            if(document.getElementById('confirmBuild')){
-                document.getElementById('confirmBuild').onclick = function(){
-                    clicked(true);
-                    document.getElementById('confirmBuild').onclick = null;
-                };}
-        } else {
-            if((CneTools.checkConnection(y, x) || Conf.clickedOn === 'commarray' || Conf.clickedOn === 'commarray2') && hex && hex.kind === 3) {
-                if(resourceNeededList(Conf.clickedOn, true)){
-                    Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(getBuildingRef(Conf.clickedOn), x, y, Conf.level);
-                }
-            } else {
-                !CneTools.checkConnection(y, x) ? printConsole(TRANS.noConnection) : printConsole(TRANS.notPrepared);
-            }
-        }
-    }
-    drawRadar();
-}
-
-
-/**
- * When a menu item is clicked, this remembers what it is until the next click 
- * @param {string} reference The menu item id that was clicked
+ * Given a building ID, will return the kind, and vice versa
+ * @param {(string|int)} reference The menu item id that was clicked, or its kind
  */
 function getBuildingRef(reference){
     switch(reference){
