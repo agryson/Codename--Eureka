@@ -340,16 +340,16 @@ var CneTools = {
 	* Advances the game by a given number of turns
 	* @param {int} turns Number of turns to advance by
 	*/
-	skipTurns: function(turns){
+	advanceTurns: function(turns){
 	    while(turns > 0){
 	        if(!Conf.buildings[37][1]) {
 	            var x;
 	            var y;
-	            setStats();
+	            Stats.setAll();
 	            for(y = 0; y < Conf.radarRad * 2; y++) {
 	                for(x = 0; x < Conf.radarRad * 2; x++) {
 	                    for(var l = 0; l < 5; l++) {
-	                        nextTurn(x, y, l);
+	                        Logic.nextTurn(x, y, l);
 	                    }
 	                }
 	            }
@@ -357,11 +357,11 @@ var CneTools = {
 	                Terminal.print(TRANS.noPower);
 	                Conf.blackout = 30;
 	            }
-	            saneStats();
+	            Stats.sanityCheck();
 	            if(turns === 1){
 	                Menu.recount('all');
 	                FileIO.saveGame(Conf);
-	                execReview();
+	                Stats.executiveReview();
 	                Research.fillPanel('overview');
 	                //setResearchClickers(researchPanel);
 	                Research.refreshMenu();
@@ -375,5 +375,16 @@ var CneTools = {
 	        }
 	        turns -=1;
 	    }
+	},
+
+	/**
+	* Handles what needs to be done if the page is visible or not (pause music etc.)
+	*/
+	pageVisHandler: function() {
+	  if (document.webkitHidden) {
+	    Music.pause();
+	  } else {
+	    Music.play();
+	  }
 	}
 }

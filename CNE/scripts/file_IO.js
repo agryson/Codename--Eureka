@@ -243,7 +243,7 @@ var FileIO = (function(){
                     CneTools.checkBuildings();
                     CneTools.checkRobots();
                     Menu.recount('all');
-                    execReview();
+                    Stats.executiveReview();
                     Research.refreshMenu();
                     Display.drawRadar();
                     Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;

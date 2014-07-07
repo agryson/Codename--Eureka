@@ -310,7 +310,7 @@ var Resources = {
             for(var k = 0; k < arr.length; k++){
                 Conf.procOres[arr[k][0]] -= arr[k][1];
             }
-            execReview();
+            Stats.executiveReview();
         } else {
             var shortage = TRANS.resourceShortage;
             for(var s = 1; s < arr.length; s++){

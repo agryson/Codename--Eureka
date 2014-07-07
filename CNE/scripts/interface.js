@@ -4,7 +4,7 @@
 * @todo This currently does too much direct manipulation, we should try to generalize
 */
 var Interface = (function(){
-    document.addEventListener("webkitvisibilitychange", pageVisHandler, false);
+    document.addEventListener("webkitvisibilitychange", CneTools.pageVisHandler, false);
     //Start Screen
     document.getElementById('maxIt').onclick = function(){
         if(document.getElementById('maxIt').classList.contains('full_screen_small')){
@@ -223,7 +223,7 @@ var Interface = (function(){
     };
 
     document.getElementById('10Week').onclick = function(){
-        execReview();
+        Stats.executiveReview();
     };
 
     document.getElementById("aluminiumRadarOpt").onclick = function(){
@@ -393,7 +393,7 @@ var Interface = (function(){
     };
 
     document.getElementById('turn').onclick = function() {
-        CneTools.skipTurns(1);
+        CneTools.advanceTurns(1);
     };
     document.getElementById('zoom').onchange = function() {
         var zoomLevel = document.getElementById('zoom').value;
@@ -477,7 +477,7 @@ var Interface = (function(){
                     Conf.robotsList[i][3] = true;
                 }
                 CneTools.checkBuildings();
-                execReview();
+                Stats.executiveReview();
                 Display.drawRadar();
             }
             break;
@@ -858,7 +858,7 @@ var Interface = (function(){
                 }
                 break;
             case 13: //enter (next turn)
-                CneTools.skipTurns(1);
+                CneTools.advanceTurns(1);
                 break;
             case 84: //t terminal
                 document.getElementById('consoleInput').focus();

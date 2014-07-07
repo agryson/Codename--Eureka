@@ -332,7 +332,7 @@ var Display = {
 	 */
 	drawMap: function() {
 	    var y, x, tileKind;
-	    mainLoop();
+	    Logic.main();
 	    requestAnimationFrame(Display.drawMap);
 	    Conf.mPanLoc.clearRect(0, 0, Conf.mPanCanvas.width, Conf.mPanCanvas.height);
 	    if(Conf.highlight) {

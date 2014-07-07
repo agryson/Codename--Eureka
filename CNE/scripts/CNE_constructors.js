@@ -248,6 +248,6 @@ function Construction() {
         if(!recycled){
             Terminal.print(TRANS.noRecyclers);
         }
-        execReview();
+        Stats.executiveReview();
     }
 }

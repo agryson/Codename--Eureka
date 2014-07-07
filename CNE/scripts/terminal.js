@@ -68,7 +68,7 @@ var Terminal = (function(){
         switch(input[0]){
             case TRANS.advance: //advance multiple turns
                 if(!isNaN(input[1])){
-                    CneTools.skipTurns(input[1]);
+                    CneTools.advanceTurns(input[1]);
                 } else {
                     _error(input[1], 'value', input[0], TRANS.integer);
                 }
