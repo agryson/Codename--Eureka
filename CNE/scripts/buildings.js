@@ -3,7 +3,6 @@
 * @namespace
 */
 var Build = (function(){
-	var publicMethods = {};
 	/**
 	* Builds everything, including temporary structures like drones, this is also 
 	* currently where all the parameters for the different buildings are stored
@@ -15,11 +14,12 @@ var Build = (function(){
 	* @param {int} level Level on which to build
 	* @param {bool} [builderBot] If this is a temporary, precursor structure or not
 	*/
-	publicMethods.start = function(kind, x, y, level, builderBot) {
+	function start(kind, x, y, level, builderBot) {
 	    console.log(kind);
 
 	    /**
 	    * Calculates the number of turns need to do something based on modifiers
+	    * @inner
 	    * @param {int} turns Base number of turns to calculate for
 	    * @return {int} Returns the modified value
 	    */
@@ -650,7 +650,7 @@ var Build = (function(){
 	 * @memberOf Build
 	 * @param {(string|int)} reference The menu item id that was clicked, or its kind
 	 */
-	publicMethods.getRef = function(reference){
+	function getRef(reference){
 	    switch(reference){
 	        case 'agri':
 	            return 200;
@@ -804,7 +804,7 @@ var Build = (function(){
 	* @memberOf Build
 	* @todo The resources used in this function should be generalized
 	*/
-	publicMethods.plan = function() {
+	function plan() {
 	    var identity = this.id;
 	    if(Conf.clickedOn === identity) {
 	        document.getElementById(Conf.clickedOn).classList.remove('menu_selected');
@@ -842,5 +842,9 @@ var Build = (function(){
 	    }
 	}
 
-	return publicMethods;
+	return {
+		plan: plan,
+		getRef: getRef,
+		start: start
+	};
 })();
