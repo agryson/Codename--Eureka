@@ -443,7 +443,7 @@ var Interface = (function(){
             if(CneTools.isWet([y,x],Conf.level)){
                 Terminal.print(TRANS.onWater);
             } else {
-                Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(210, x, y, Conf.level);
+                Conf.mapTiles[Conf.level][y][x] = Build.start(210, x, y, Conf.level);
                 Conf.home = [x,y];
                 for(var j = 0; j < 6; j++) {
                     var tempY = CneTools.adjacent(x, y, j)[0];
@@ -452,16 +452,16 @@ var Interface = (function(){
                     case 1:
                     case 3:
                     case 5:
-                        Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(211, tempX, tempY, Conf.level);
+                        Conf.mapTiles[0][tempY][tempX] = Build.start(211, tempX, tempY, Conf.level);
                         break;
                     case 0:
-                        Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(235, tempX, tempY, Conf.level);
+                        Conf.mapTiles[0][tempY][tempX] = Build.start(235, tempX, tempY, Conf.level);
                         break;
                     case 2:
-                        Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(203, tempX, tempY, Conf.level);
+                        Conf.mapTiles[0][tempY][tempX] = Build.start(203, tempX, tempY, Conf.level);
                         break;
                     case 4:
-                        Conf.mapTiles[0][tempY][tempX] = bobTheBuilder(237, tempX, tempY, Conf.level);
+                        Conf.mapTiles[0][tempY][tempX] = Build.start(237, tempX, tempY, Conf.level);
                         Conf.commTowers.push([tempX, tempY]);
                         break;
                     default:
@@ -495,7 +495,7 @@ var Interface = (function(){
                 } else if(!CneTools.inRange(x, y)){
                     Terminal.print(TRANS.outOfRange);
                 } else {
-                    Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(100, x, y, Conf.level);
+                    Conf.mapTiles[Conf.level][y][x] = Build.start(100, x, y, Conf.level);
                 }
             }
             break;
@@ -522,14 +522,14 @@ var Interface = (function(){
                 } else if(!CneTools.inRange(x, y)){
                     Terminal.print(TRANS.outOfRange);
                 } else {
-                    Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level, true);
-                    DBelow[y][x] = bobTheBuilder(101, x, y, Conf.level + 1, true);
+                    Conf.mapTiles[Conf.level][y][x] = Build.start(101, x, y, Conf.level, true);
+                    DBelow[y][x] = Build.start(101, x, y, Conf.level + 1, true);
                     for(var k = 0; k < 6; k++) {
                         var belowAdj = DBelow[CneTools.adjacent(x, y, k)[0]][CneTools.adjacent(x, y, k)[1]];
                         if((belowAdj.exists && (belowAdj.kind >= 100 || belowAdj[1].kind < 4)) || Conf.map[Conf.level + 1][CneTools.adjacent(x, y, k)[0]][CneTools.adjacent(x, y, k)[1]].kind === 4 || CneTools.isWet([CneTools.adjacent(x, y, k)[0], CneTools.adjacent(x, y, k)[1]], Conf.level + 1)) {
                             //do nothing
                         } else {
-                            Conf.mapTiles[Conf.level + 1][CneTools.adjacent(x, y, k)[0]][CneTools.adjacent(x, y, k)[1]] = bobTheBuilder(101101, CneTools.adjacent(x, y, k)[1], CneTools.adjacent(x, y, k)[0], Conf.level + 1);
+                            Conf.mapTiles[Conf.level + 1][CneTools.adjacent(x, y, k)[0]][CneTools.adjacent(x, y, k)[1]] = Build.start(101101, CneTools.adjacent(x, y, k)[1], CneTools.adjacent(x, y, k)[0], Conf.level + 1);
                         }
                     }
                 }
@@ -550,13 +550,13 @@ var Interface = (function(){
                 } else if(!CneTools.inRange(x, y)){
                     Terminal.print(TRANS.outOfRange);
                 } else {
-                    Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level);
+                    Conf.mapTiles[Conf.level][y][x] = Build.start(101, x, y, Conf.level);
                     for(var z = 0; z < 6; z++) {
                         var around = Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, z)[0]][CneTools.adjacent(x, y, z)[1]];
                         if((around && (around.kind >= 100 || around.kind < 4)) || Conf.map[Conf.level][CneTools.adjacent(x, y, z)[0]][CneTools.adjacent(x, y, z)[1]].kind < 4 || CneTools.isWet([CneTools.adjacent(x, y, z)[0], CneTools.adjacent(x, y, z)[1]], Conf.level + 1)) {
                             //do nothing
                         } else {
-                            Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, z)[0]][CneTools.adjacent(x, y, z)[1]] = bobTheBuilder(101101, CneTools.adjacent(x, y, z)[1], CneTools.adjacent(x, y, z)[0], Conf.level);
+                            Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, z)[0]][CneTools.adjacent(x, y, z)[1]] = Build.start(101101, CneTools.adjacent(x, y, z)[1], CneTools.adjacent(x, y, z)[0], Conf.level);
                         }
                     }
                 }
@@ -581,16 +581,16 @@ var Interface = (function(){
                 } else if(!CneTools.inRange(x, y)){
                     Terminal.print(TRANS.outOfRange);
                 } else {
-                    Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(102, x, y, Conf.level, true);
-                    Conf.mapTiles[Conf.level + 1][y][x] = bobTheBuilder(102102, x, y, Conf.level + 1, true);
+                    Conf.mapTiles[Conf.level][y][x] = Build.start(102, x, y, Conf.level, true);
+                    Conf.mapTiles[Conf.level + 1][y][x] = Build.start(102102, x, y, Conf.level + 1, true);
                     for(var m = 0; m < 6; m++) {
                         var mineY = CneTools.adjacent(x, y, m)[0];
                         var mineX = CneTools.adjacent(x, y, m)[1];
                         if(Conf.map[Conf.level][mineY][mineX].mineable) {
-                            Conf.mapTiles[Conf.level][mineY][mineX] = bobTheBuilder(102102, mineX, mineY, Conf.level, false);
+                            Conf.mapTiles[Conf.level][mineY][mineX] = Build.start(102102, mineX, mineY, Conf.level, false);
                         }
                         if(Conf.map[Conf.level + 1][mineY][mineX].mineable) {
-                            Conf.mapTiles[Conf.level + 1][mineY][mineX] = bobTheBuilder(102102, mineX, mineY, Conf.level + 1, false);
+                            Conf.mapTiles[Conf.level + 1][mineY][mineX] = Build.start(102102, mineX, mineY, Conf.level + 1, false);
                         }
                     }
                 }
@@ -623,7 +623,7 @@ var Interface = (function(){
             } else {
                 if((CneTools.checkConnection(y, x) || Conf.clickedOn === 'commarray' || Conf.clickedOn === 'commarray2') && hex && hex.kind === 3) {
                     if(Resources.required(Conf.clickedOn, true)){
-                        Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(getBuildingRef(Conf.clickedOn), x, y, Conf.level);
+                        Conf.mapTiles[Conf.level][y][x] = Build.start(Build.getRef(Conf.clickedOn), x, y, Conf.level);
                     }
                 } else {
                     !CneTools.checkConnection(y, x) ? Terminal.print(TRANS.noConnection) : Terminal.print(TRANS.notPrepared);

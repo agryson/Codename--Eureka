@@ -20,7 +20,7 @@ var CneTools = {
 	            case 0:
 	                if(Conf.level === 0) {
 	                    elem.classList.add('active');
-	                    document.getElementById(Conf.buildings[thing][0]).onclick = construct;
+	                    document.getElementById(Conf.buildings[thing][0]).onclick = Build.plan;
 	                } else {
 	                    elem.classList.remove('active');
 	                    document.getElementById(Conf.buildings[thing][0]).onclick = null;
@@ -29,7 +29,7 @@ var CneTools = {
 	            case 1:
 	                if(Conf.level > 0) {
 	                    elem.classList.add('active');
-	                    document.getElementById(Conf.buildings[thing][0]).onclick = construct;
+	                    document.getElementById(Conf.buildings[thing][0]).onclick = Build.plan;
 	                } else {
 	                    elem.classList.remove('active');
 	                    document.getElementById(Conf.buildings[thing][0]).onclick = null;
@@ -37,7 +37,7 @@ var CneTools = {
 	                break;
 	            default:
 	                elem.classList.add('active');
-	                document.getElementById(Conf.buildings[thing][0]).onclick = construct;
+	                document.getElementById(Conf.buildings[thing][0]).onclick = Build.plan;
 	            }
 	        } else {
 	            elem.classList.remove('menu_show');
@@ -70,7 +70,7 @@ var CneTools = {
 	            case 0:
 	                if(Conf.level === 0) {
 	                    c3po.classList.add('active');
-	                    c3po.onclick = construct;
+	                    c3po.onclick = Build.plan;
 	                } else {
 	                    c3po.classList.remove('active');
 	                    c3po.onclick = null;
@@ -79,7 +79,7 @@ var CneTools = {
 	            case 1:
 	                if(Conf.level > 0) {
 	                    c3po.classList.add('active');
-	                    c3po.onclick = construct;
+	                    c3po.onclick = Build.plan;
 	                } else {
 	                    c3po.classList.remove('active');
 	                    c3po.onclick = null;
@@ -87,7 +87,7 @@ var CneTools = {
 	                break;
 	            default:
 	                c3po.classList.add('active');
-	                c3po.onclick = construct;
+	                c3po.onclick = Build.plan;
 	            }
 	            if(wallE[1] - wallE[0] === 0) {
 	                c3po.classList.remove('active');
