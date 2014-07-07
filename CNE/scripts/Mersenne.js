@@ -238,11 +238,11 @@ var ClassicalNoise = function(r) { // Classic Perlin noise in 3D, for comparison
 ClassicalNoise.prototype.dot = function(g, x, y, z) {
   return g[0] * x + g[1] * y + g[2] * z;
 };
-/** @todo document this */
+/** Interplates between the provided values */
 ClassicalNoise.prototype.mix = function(a, b, t) {
   return(1.0 - t) * a + t * b;
 };
-/** @todo document this */
+/** Compute the fade curve value */
 ClassicalNoise.prototype.fade = function(t) {
   return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 };
