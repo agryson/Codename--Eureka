@@ -354,7 +354,7 @@ var CneTools = {
 	                }
 	            }
 	            if(Conf.energy[Conf.energy.length - 1] <= 10) {
-	                printConsole(TRANS.noPower);
+	                Terminal.print(TRANS.noPower);
 	                Conf.blackout = 30;
 	            }
 	            saneStats();
@@ -362,16 +362,16 @@ var CneTools = {
 	                reCount('all');
 	                FileIO.saveGame(Conf);
 	                execReview();
-	                fillResearchPanel('overview');
+	                Research.fillPanel('overview');
 	                //setResearchClickers(researchPanel);
-	                fillResearchMenu();
+	                Research.refreshMenu();
 	                Display.drawRadar();
 	                Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
 	                document.getElementById('consoleContent').innerHTML = '';
-	                printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
+	                Terminal.print(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
 	            }
 	        } else {
-	            printConsole(TRANS.setDown);
+	            Terminal.print(TRANS.setDown);
 	        }
 	        turns -=1;
 	    }

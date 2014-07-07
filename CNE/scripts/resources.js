@@ -318,7 +318,7 @@ var Resources = {
                     shortage += Conf.resourceNames[arr[s][0]] + ", ";
                 }
             }
-            printConsole(shortage.substring(0,shortage.length - 2)); //removes the space and comma
+            Terminal.print(shortage.substring(0,shortage.length - 2)); //removes the space and comma
         }
         return resourceCheck;
     }

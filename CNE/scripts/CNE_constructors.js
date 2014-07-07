@@ -240,13 +240,13 @@ function Construction() {
                     if(Conf.storageCap[Conf.storageCap.length - 1] - Conf.inStorage[Conf.inStorage.length - 1] >= recovered[j][1]){
                         Conf.procOres[recovered[j][0]] += recovered[j][1];
                     } else {
-                        printConsole(TRANS.recycleFailure);
+                        Terminal.print(TRANS.recycleFailure);
                     }
                 }
             }
         }
         if(!recycled){
-            printConsole(TRANS.noRecyclers);
+            Terminal.print(TRANS.noRecyclers);
         }
         execReview();
     }

@@ -244,11 +244,11 @@ var FileIO = (function(){
                     CneTools.checkRobots();
                     reCount('all');
                     execReview();
-                    fillResearchMenu();
+                    Research.refreshMenu();
                     Display.drawRadar();
                     Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
                     Tools.flush(document.getElementById('consoleContent'));
-                    printConsole(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
+                    Terminal.print(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
                     CneTools.moveTo(true, Conf.home[0], Conf.home[1], 0);
                 };
                 reader.readAsText(file);

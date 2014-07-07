@@ -308,7 +308,7 @@ var Interface = (function(){
         document.getElementById('messageContainer').classList.add('exec_hidden');
     };
     seeResearch.onclick = function(){
-        fillResearchMenu();
+        Research.refreshMenu();
         document.getElementById('researchContainer').classList.remove('exec_hidden');
     };
     researchBack.onclick = function(){
@@ -441,7 +441,7 @@ var Interface = (function(){
         switch(Conf.clickedOn) {
         case 'lander':
             if(CneTools.isWet([y,x],Conf.level)){
-                printConsole(TRANS.onWater);
+                Terminal.print(TRANS.onWater);
             } else {
                 Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(210, x, y, Conf.level);
                 Conf.home = [x,y];
@@ -491,9 +491,9 @@ var Interface = (function(){
                 };
             } else {
                 if((hex && (hex.kind < 200 && hex.kind > 2)) || (typeof hex.kind !== 'number' && tile.kind > 2 && tile.kind < 9) || tile.kind > 11) {
-                    printConsole(TRANS.noDoze);
+                    Terminal.print(TRANS.noDoze);
                 } else if(!CneTools.inRange(x, y)){
-                    printConsole(TRANS.outOfRange);
+                    Terminal.print(TRANS.outOfRange);
                 } else {
                     Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(100, x, y, Conf.level);
                 }
@@ -510,17 +510,17 @@ var Interface = (function(){
                 //tile.digDown(x, y, lowerTile);
                 var DBelow = Conf.mapTiles[Conf.level + 1];
                 if(!CneTools.checkConnection(y,x)){
-                    printConsole(TRANS.noConnection);
+                    Terminal.print(TRANS.noConnection);
                 } else if(CneTools.isWet([y, x], Conf.level + 1)){
-                    printConsole(TRANS.onWater);
+                    Terminal.print(TRANS.onWater);
                 } else if((hex && hex.kind >= 100) || (DBelow[y][x] && DBelow[y][x].kind >= 100)){
-                    printConsole(TRANS.buildingPresent);
+                    Terminal.print(TRANS.buildingPresent);
                 } else if((hex.kind > 3 && hex.kind < 9) || hex.kind > 11) {
-                    printConsole(TRANS.noDig);
+                    Terminal.print(TRANS.noDig);
                 } else if(Conf.level === 4){
-                    printConsole(TRANS.lastLevel);
+                    Terminal.print(TRANS.lastLevel);
                 } else if(!CneTools.inRange(x, y)){
-                    printConsole(TRANS.outOfRange);
+                    Terminal.print(TRANS.outOfRange);
                 } else {
                     Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level, true);
                     DBelow[y][x] = bobTheBuilder(101, x, y, Conf.level + 1, true);
@@ -544,11 +544,11 @@ var Interface = (function(){
                 };
             } else {
                 if(CneTools.isWet([y, x], Conf.level)){
-                    printConsole(TRANS.onWater);
+                    Terminal.print(TRANS.onWater);
                 } else if((hex && hex.kind > 3) || Conf.level === 0 || (hex.kind > 2 && hex.kind < 9) || hex.kind > 11) {
-                    printConsole(TRANS.noCavern);
+                    Terminal.print(TRANS.noCavern);
                 } else if(!CneTools.inRange(x, y)){
-                    printConsole(TRANS.outOfRange);
+                    Terminal.print(TRANS.outOfRange);
                 } else {
                     Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(101, x, y, Conf.level);
                     for(var z = 0; z < 6; z++) {
@@ -571,15 +571,15 @@ var Interface = (function(){
                 };
             } else {
                 if(CneTools.isWet([y, x], Conf.level + 1)){
-                    printConsole(TRANS.onWater);
+                    Terminal.print(TRANS.onWater);
                 } else if(hex && hex.kind !== 221 && hex.kind >= 100) {
-                    printConsole(TRANS.noMine);
+                    Terminal.print(TRANS.noMine);
                 } else if(Conf.level !== 0 && (!hex || hex && hex.kind !== 221)){
-                    printConsole(TRANS.noMine);
+                    Terminal.print(TRANS.noMine);
                 } else if(Conf.level === 4) {
-                    printConsole(TRANS.lastLevel);
+                    Terminal.print(TRANS.lastLevel);
                 } else if(!CneTools.inRange(x, y)){
-                    printConsole(TRANS.outOfRange);
+                    Terminal.print(TRANS.outOfRange);
                 } else {
                     Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(102, x, y, Conf.level, true);
                     Conf.mapTiles[Conf.level + 1][y][x] = bobTheBuilder(102102, x, y, Conf.level + 1, true);
@@ -607,7 +607,7 @@ var Interface = (function(){
                 if(hex && hex.kind >= 200){
                     recycle(hex.kind, x, y, Conf.level);
                 } else {
-                    printConsole(TRANS.noRecycle);
+                    Terminal.print(TRANS.noRecycle);
                 }
             }
             //TODO: add recycle code
@@ -626,7 +626,7 @@ var Interface = (function(){
                         Conf.mapTiles[Conf.level][y][x] = bobTheBuilder(getBuildingRef(Conf.clickedOn), x, y, Conf.level);
                     }
                 } else {
-                    !CneTools.checkConnection(y, x) ? printConsole(TRANS.noConnection) : printConsole(TRANS.notPrepared);
+                    !CneTools.checkConnection(y, x) ? Terminal.print(TRANS.noConnection) : Terminal.print(TRANS.notPrepared);
                 }
             }
         }
@@ -722,7 +722,7 @@ var Interface = (function(){
         if(document.activeElement === document.getElementById('consoleInput')){
             switch(e.keyCode){
                 case 13: //enter
-                    runConsole(document.getElementById('consoleInput').value);
+                    Terminal.run(document.getElementById('consoleInput').value);
                     break;
                 case 27:
                     document.getElementById('consoleInput').blur();
@@ -815,7 +815,7 @@ var Interface = (function(){
                 }
                 break;
             case 82://r (research)
-                fillResearchPanel('overview');
+                Research.fillPanel('overview');
                 document.getElementById('statsContainer').classList.add('exec_hidden');
                 document.getElementById('messageContainer').classList.add('exec_hidden');
                 document.getElementById('guideContainer').classList.add('exec_hidden');
