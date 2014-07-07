@@ -21,6 +21,8 @@ var Logic = (function(){
         Conf.augment ? Conf.animate += 1 : Conf.animate -= 1;
         if(Conf.animate === 0 || Conf.animate === N) {
             Conf.augment ? Conf.augment = false : Conf.augment = true;
+        }
+    }
 
     /**
     * Calculates what the state of the given tile should be in the next turn, setting 
@@ -29,7 +31,7 @@ var Logic = (function(){
     * @param {int} y Y coordinate of the tile to calculate
     * @param {int} level Level the tile is on
     */
-    function Logic.nextTurn(x, y, level) {
+    function nextTurn(x, y, level) {
         var tile = Conf.mapTiles[level][y][x];
 
         var checkMine = function(xIn, yIn, levelIn) {
@@ -228,10 +230,6 @@ var Logic = (function(){
                     }
                 }
             }
-        }
-    }
-
-
         }
     }
 

@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Namespace containing all of the User Interface listeners (clicks, taps etc.)
 * @namespace

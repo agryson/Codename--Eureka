@@ -1,3 +1,4 @@
+"use strict";
 //WORLD GENERATION****************************************************************
 /**
 * One big wrapper for everything needed to create the maps, resources rivers etc.
@@ -13,7 +14,6 @@ function NewGame(){
  */
   this.getSeed = function() {
     var input = document.getElementById('seed').value;
-    planetName = input;
     var popup = document.getElementById("popupContainer");
     var seedString = '';
     var seeder;

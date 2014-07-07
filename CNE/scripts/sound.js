@@ -1,3 +1,4 @@
+"use strict";
 /**
 * All of the music functions
 * @namespace Music

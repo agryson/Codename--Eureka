@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Wraps menu methods
 * @namespace

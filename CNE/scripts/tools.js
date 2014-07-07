@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Moduled namespace wrapper for all of the general use tools like random number generators,
 * basic DOM manipulation etc.

@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Wraps the construction relevant methods
 * @namespace

@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Namespace wrapper for all CNE specific tools
 * @namespace

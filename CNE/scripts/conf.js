@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Modularized config namespace that instantiates all our initial values
  * @namespace Conf

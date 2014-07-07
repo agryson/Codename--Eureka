@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Namespace wrapper for the display.
 * @namespace

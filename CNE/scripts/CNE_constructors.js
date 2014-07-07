@@ -1,3 +1,4 @@
+"use strict";
 /**
 * The main object for a tile, tracking its kind, and state, initially empty 
 * apart from resources

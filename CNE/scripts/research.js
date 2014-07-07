@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Wraps research related functionality
 * @namespace

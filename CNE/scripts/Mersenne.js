@@ -1,3 +1,4 @@
+"use strict";
 /**
   I've [Sean McCullough] wrapped Makoto Matsumoto and Takuji Nishimura's code in a namespace
   so it's better encapsulated. Now you can have multiple random number generators

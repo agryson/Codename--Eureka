@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Language strings. Updating index.html (and the language script it points to) will update the language everywhere
 * @global

@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Anything that effects player data regarding resources
 * @namespace

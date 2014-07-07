@@ -1,3 +1,4 @@
+"use strict";
 /**
 * Moduled namespace, exposing everything we need to manage save games, load games etc.
 * @namespace FileIO
