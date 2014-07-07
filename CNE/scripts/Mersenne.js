@@ -252,6 +252,7 @@ ClassicalNoise.prototype.fade = function(t) {
 * @param {float} y Y coordinate
 * @param {float} z Z coordinate
 * @returns {int}
+* @todo Confirm return value
 */
 ClassicalNoise.prototype.noise = function(x, y, z) {
   // Find unit grid cell containing point
