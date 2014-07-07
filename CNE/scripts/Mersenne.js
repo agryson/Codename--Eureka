@@ -1,27 +1,26 @@
-/*
-  I've wrapped Makoto Matsumoto and Takuji Nishimura's code in a namespace
+/**
+  I've [Sean McCullough] wrapped Makoto Matsumoto and Takuji Nishimura's code in a namespace
   so it's better encapsulated. Now you can have multiple random number generators
   and they won't stomp all over eachother's state.
   
   If you want to use this as a substitute for Math.random(), use the random()
   method like so:
-  
+  <pre>
   var m = new MersenneTwister();
   var randomNumber = m.random();
-  
+  </pre>
   You can also call the other genrand_{foo}() methods on the instance.
 
   If you want to use a specific seed in order to get a repeatable random
   sequence, pass an integer into the constructor:
-
+  <pre>
   var m = new MersenneTwister(123);
-
+  </pre>
   and that will always produce the same random sequence.
 
-  Sean McCullough (banksean@gmail.com)
-*/
-
-/*
+  
+  ###Original License
+  <pre>
    A C-program for MT19937, with initialization improved 2002/1/26.
    Coded by Takuji Nishimura and Makoto Matsumoto.
 
@@ -60,8 +59,15 @@
 
 
    Any feedback is very welcome.
-   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
-   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
+   {@link http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html}
+   {@link m-mat@math.sci.hiroshima-u.ac.jp}
+  </pre>
+
+
+  @author Sean McCullough <banksean@gmail.com>
+  @author Takuji Nishimura 
+  @author Makoto Matsumoto <m-mat@math.sci.hiroshima-u.ac.jp>
+  @constructor
 */
 var MersenneTwister = function(seed) { /* Period parameters */
     this.N = 624;
@@ -76,7 +82,7 @@ var MersenneTwister = function(seed) { /* Period parameters */
     this.init_genrand(seed);
   };
 
-/* initializes mt[N] with a seed */
+/** initializes mt[N] with a seed */
 MersenneTwister.prototype.init_genrand = function(s) {
   this.mt[0] = s >>> 0;
   for(this.mti = 1; this.mti < this.N; this.mti++) {
@@ -89,11 +95,11 @@ MersenneTwister.prototype.init_genrand = function(s) {
   }
 };
 
-/* initialize by an array with array-length */
-/* init_key is the array for initializing keys */
-/* key_length is its length */
-/* slight change for C++, 2004/2/26 */
-
+/** initialize by an array with array-length
+* @param {array} init_key Array for initializing keys
+* @param {int} key_length Length of init_key
+* slight change for C++, 2004/2/26
+*/
 MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
   var i, j, k;
   this.init_genrand(19650218);
@@ -126,7 +132,7 @@ MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
   this.mt[0] = 0x80000000; /* MSB is 1; assuring non-zero initial array */
 };
 
-/* generates a random number on [0,0xffffffff]-interval */
+/** generates a random number on [0,0xffffffff]-interval */
 MersenneTwister.prototype.genrand_int32 = function() {
   var y;
   var mag01 = new Array(0x0, this.MATRIX_A); /* mag01[x] = x * MATRIX_A  for x=0,1 */
@@ -162,44 +168,45 @@ MersenneTwister.prototype.genrand_int32 = function() {
   return y >>> 0;
 };
 
-/* generates a random number on [0,0x7fffffff]-interval */
+/** generates a random number on [0,0x7fffffff]-interval */
 MersenneTwister.prototype.genrand_int31 = function() {
   return(this.genrand_int32() >>> 1);
 };
 
-/* generates a random number on [0,1]-real-interval */
+/** generates a random number on [0,1]-real-interval */
 MersenneTwister.prototype.genrand_real1 = function() {
   return this.genrand_int32() * (1.0 / 4294967295.0); /* divided by 2^32-1 */
 };
 
-/* generates a random number on [0,1)-real-interval */
+/** generates a random number on [0,1)-real-interval */
 MersenneTwister.prototype.random = function() {
   return this.genrand_int32() * (1.0 / 4294967296.0); /* divided by 2^32 */
 };
 
-/* generates a random number on (0,1)-real-interval */
+/** generates a random number on (0,1)-real-interval */
 MersenneTwister.prototype.genrand_real3 = function() {
   return(this.genrand_int32() + 0.5) * (1.0 / 4294967296.0); /* divided by 2^32 */
 };
 
-/* generates a random number on [0,1) with 53-bit resolution*/
+/** generates a random number on [0,1) with 53-bit resolution*/
 MersenneTwister.prototype.genrand_res53 = function() {
   var a = this.genrand_int32() >>> 5,
     b = this.genrand_int32() >>> 6;
   return(a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
 };
 
-/* These real versions are due to Isaku Wada, 2002/01/09 added */
-
-//FOLLOWING INDENTED CODE WAS 'BORROWED' FROM STACK OVERFLOW
-// Ported from Stefan Gustavson's java implementation
-// http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-// Read Stefan's excellent paper for details on how this code works.
-//
-// Sean McCullough banksean@gmail.com
 /**
+ * ###{@link MersenneTwister|See here for original documentation}
+ * These real versions are due to Isaku Wada, 2002/01/09 added
+ * FOLLOWING INDENTED CODE WAS 'BORROWED' FROM STACK OVERFLOW
+ * Ported from Stefan Gustavson's java implementation
+ * {@link http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf}
+ * Read Stefan's excellent paper for details on how this code works.
  * You can pass in a random number generator object if you like.
  * It is assumed to have a random() method.
+ * @author Sean McCullough <banksean@gmail.com>
+ * @constructor
+ * @param {Object} [r] Random number generator object, assumed to have a <tt>random()</tt> method
  */
 var ClassicalNoise = function(r) { // Classic Perlin noise in 3D, for comparison
     if(r === undefined) r = Math;
@@ -227,20 +234,25 @@ var ClassicalNoise = function(r) { // Classic Perlin noise in 3D, for comparison
       this.perm[j] = this.p[j & 255];
     }
   };
-
+/** @todo document this */
 ClassicalNoise.prototype.dot = function(g, x, y, z) {
   return g[0] * x + g[1] * y + g[2] * z;
 };
-
+/** @todo document this */
 ClassicalNoise.prototype.mix = function(a, b, t) {
   return(1.0 - t) * a + t * b;
 };
-
+/** @todo document this */
 ClassicalNoise.prototype.fade = function(t) {
   return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 };
 
-// Classic Perlin noise, 3D version
+/** Classic Perlin noise, 3D version 
+* @param {float} x X coordinate
+* @param {float} y Y coordinate
+* @param {float} z Z coordinate
+* @returns {int}
+*/
 ClassicalNoise.prototype.noise = function(x, y, z) {
   // Find unit grid cell containing point
   var X = Math.floor(x);

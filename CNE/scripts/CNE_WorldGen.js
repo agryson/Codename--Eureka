@@ -86,7 +86,7 @@ function NewGame(){
     /**
      * Sets altitude according to the world generator results
      * @param  {int} x     X coordinate for the tile we're getting altitude for
-     * @param  {int} y     Y coordinate for the tile we're gettign altitude for
+     * @param  {int} y     Y coordinate for the tile we're getting altitude for
      * @param  {int} level What level are we working on?
      * @return {int}       The altitude for the tile
      */
