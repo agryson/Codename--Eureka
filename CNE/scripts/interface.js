@@ -39,7 +39,7 @@ var Interface = (function(){
         document.getElementById("popupContainer").classList.remove('popup_container_invisible');
         document.getElementById("popupContainer").classList.remove('popup_container_hidden');
         if(!exec.classList.contains('exec_hidden')){
-            menu(exec, execButton, 'exec_hidden');
+            Menu.open(exec, execButton, 'exec_hidden');
         }
         for(var i = 0; i < Conf.robotsList.length; i++) {
             Conf.robotsList[i][3] = false;
@@ -58,7 +58,7 @@ var Interface = (function(){
     document.getElementById('login').onclick = function() {
         var Generator = new NewGame();
         CneTools.checkBuildings();
-        reCount('all');
+        Menu.recount('all');
         Generator.getSeed();
     };
     document.getElementById('seed').onfocus = function(){
@@ -97,10 +97,10 @@ var Interface = (function(){
     //:Sound
     //Left Menu
     document.getElementById('leftMenuSlider').onmousedown = function() {
-        leftMenuResize(true);
+        Menu.resizeLeft(true);
     };
     document.getElementById('leftMenuSlider').onmouseup = function() {
-        leftMenuResize(false);
+        Menu.resizeLeft(false);
     };
     //!Left Menu
     //Canvas Map
@@ -167,7 +167,7 @@ var Interface = (function(){
     var radarBtnContainer = document.getElementById('radarBtnContainer');
     var radarButton = document.getElementById('radarButton');
     radarBtnContainer.onclick = function() {
-        menu(radar, radarButton, 'radar_hidden');
+        Menu.open(radar, radarButton, 'radar_hidden');
     };
     radar.onmouseout = function() {
         if(radar.classList.contains('radar_hidden')) {
@@ -274,7 +274,7 @@ var Interface = (function(){
     var execBtnContainer = document.getElementById('execBtnContainer');
     var execButton = document.getElementById('execButton');
     execBtnContainer.onclick = function() {
-        menu(exec, execButton, 'exec_hidden');
+        Menu.open(exec, execButton, 'exec_hidden');
         document.getElementById('statsContainer').classList.add('exec_hidden');
         document.getElementById('researchContainer').classList.add('exec_hidden');
         document.getElementById('messageContainer').classList.add('exec_hidden');
@@ -360,7 +360,7 @@ var Interface = (function(){
     };
 
     document.getElementById('globalReport').onclick = function() {
-        menu(exec, execButton, 'exec_hidden');
+        Menu.open(exec, execButton, 'exec_hidden');
     };
 
 
@@ -703,7 +703,7 @@ var Interface = (function(){
             }
         };
         Tools.flush(pop);
-        pop.appendChild(contextContent(content));
+        pop.appendChild(Menu.context(content));
         popFrame.style.top = event.clientY - 25 + 'px';
         popFrame.style.left = event.clientX - 10 + 'px';
         popFrame.style.display = 'inline-block';
@@ -791,27 +791,27 @@ var Interface = (function(){
                 document.body.style.cursor = "url('images/pointers/pointer.png'), default";
                 break;
             case 77:
-                menu(document.getElementById('radarContainer'), document.getElementById('radarButton'), 'radar_hidden');
+                Menu.open(document.getElementById('radarContainer'), document.getElementById('radarButton'), 'radar_hidden');
                 break;
             case 69:
                 document.getElementById('statsContainer').classList.add('exec_hidden');
                 document.getElementById('researchContainer').classList.add('exec_hidden');
                 document.getElementById('messageContainer').classList.add('exec_hidden');
                 document.getElementById('guideContainer').classList.add('exec_hidden');
-                menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 break;
             case 83://s (statistics)
                 document.getElementById('researchContainer').classList.add('exec_hidden');
                 document.getElementById('messageContainer').classList.add('exec_hidden');
                 document.getElementById('guideContainer').classList.add('exec_hidden');
                 if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-                    menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                    Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 }
                 if(document.getElementById('statsContainer').classList.contains('exec_hidden')){
                     document.getElementById('statsContainer').classList.remove('exec_hidden');
                 } else {
                     document.getElementById('statsContainer').classList.add('exec_hidden');
-                    menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                    Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 }
                 break;
             case 82://r (research)
@@ -820,13 +820,13 @@ var Interface = (function(){
                 document.getElementById('messageContainer').classList.add('exec_hidden');
                 document.getElementById('guideContainer').classList.add('exec_hidden');
                 if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-                    menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                    Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 }
                 if(document.getElementById('researchContainer').classList.contains('exec_hidden')){
                     document.getElementById('researchContainer').classList.remove('exec_hidden');
                 } else {
                     document.getElementById('researchContainer').classList.add('exec_hidden');
-                    menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                    Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 }
                 break;
             case 71://g (guide)
@@ -834,13 +834,13 @@ var Interface = (function(){
                 document.getElementById('researchContainer').classList.add('exec_hidden');
                 document.getElementById('messageContainer').classList.add('exec_hidden');
                 if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-                    menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                    Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 }
                 if(document.getElementById('guideContainer').classList.contains('exec_hidden')){
                     document.getElementById('guideContainer').classList.remove('exec_hidden');
                 } else {
                     document.getElementById('guideContainer').classList.add('exec_hidden');
-                    menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                    Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 }
                 break;
             case 67://c (communiqués)
@@ -848,13 +848,13 @@ var Interface = (function(){
                 document.getElementById('researchContainer').classList.add('exec_hidden');
                 document.getElementById('guideContainer').classList.add('exec_hidden');
                 if (document.getElementById('execDropDown').classList.contains('exec_hidden')) {
-                    menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                    Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 }
                 if(document.getElementById('messageContainer').classList.contains('exec_hidden')){
                     document.getElementById('messageContainer').classList.remove('exec_hidden');
                 } else {
                     document.getElementById('messageContainer').classList.add('exec_hidden');
-                    menu(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
+                    Menu.open(document.getElementById('execDropDown'), document.getElementById('execButton'), 'exec_hidden');
                 }
                 break;
             case 13: //enter (next turn)

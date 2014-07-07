@@ -242,7 +242,7 @@ var FileIO = (function(){
                     Conf.buildings[37][1] = false;
                     CneTools.checkBuildings();
                     CneTools.checkRobots();
-                    reCount('all');
+                    Menu.recount('all');
                     execReview();
                     Research.refreshMenu();
                     Display.drawRadar();

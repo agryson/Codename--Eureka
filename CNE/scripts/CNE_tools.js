@@ -359,7 +359,7 @@ var CneTools = {
 	            }
 	            saneStats();
 	            if(turns === 1){
-	                reCount('all');
+	                Menu.recount('all');
 	                FileIO.saveGame(Conf);
 	                execReview();
 	                Research.fillPanel('overview');

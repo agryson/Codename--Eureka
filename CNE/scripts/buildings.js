@@ -52,7 +52,7 @@ var Build = (function(){
 	            o.ref = CneTools.changeName(TRANS.preparing, Conf.map[level][y][x].ref);
 	            o.robot = 0;
 	            Conf.robotsList[0][0] += 1;
-	            reCount('dozer');
+	            Menu.recount('dozer');
 	            break;
 	        case 101:
 	            o.vital = true;
@@ -64,7 +64,7 @@ var Build = (function(){
 	            o.ref = CneTools.changeName(TRANS.digging, Conf.map[level][y][x].ref);
 	            o.robot = 1;
 	            Conf.robotsList[1][0] += 1;
-	            reCount('digger');
+	            Menu.recount('digger');
 	            break;
 	        case 101101:
 	            o.vital = true;
@@ -73,7 +73,7 @@ var Build = (function(){
 	            o.future = [Conf.map[level][y][x].kind - 5, TRANS.cavern];
 	            o.kind = 8;
 	            o.ref = CneTools.changeName(TRANS.diggingCavern, Conf.map[level][y][x].ref);
-	            reCount('cavernDigger');
+	            Menu.recount('cavernDigger');
 	            break;
 
 	        case 102:
@@ -87,7 +87,7 @@ var Build = (function(){
 	            o.mining = true;
 	            o.robot = 3;
 	            Conf.robotsList[3][0] += 1;
-	            reCount('miner');
+	            Menu.recount('miner');
 	            break;
 	        case 102102:
 	            o.vital = true;
