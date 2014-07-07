@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Codename Eureka Namespace: Resources</title>
+	<title>Codename Eureka Namespace: Menu</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -160,12 +160,12 @@
 					
 
 
-	<h1 class="page-title">Namespace: Resources</h1>
+	<h1 class="page-title">Namespace: Menu</h1>
 <section>
 
 <header>
     <h2>
-    Resources
+    Menu
     </h2>
     
 </header>
@@ -176,7 +176,7 @@
 
     
         
-            <div class="description"><p>Anything that effects player data regarding resources</p></div>
+            <div class="description"><p>Wraps menu methods</p></div>
         
 
         
@@ -206,8 +206,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="resources.js.html">scripts/resources.js</a>,
-				 <a href="resources.js.html#sunlight-1-line-5">line 5</a>
+				<a href="menus.js.html">scripts/menus.js</a>,
+				 <a href="menus.js.html#sunlight-1-line-5">line 5</a>
 			</li>
 		</ul>
 	</dd>
@@ -243,7 +243,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="reference"><span class="type-signature">&lt;static> </span>reference<span class="signature">(ref, dir)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="context"><span class="type-signature">&lt;static> </span>context<span class="signature">(content)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -251,7 +251,7 @@
     
     
     <div class="description">
-        <p>Cross references the indexes of processed minerals to their ores</p>
+        <p>Once a right click menu has been created, returns the HTML fragment to to be appended</p>
     </div>
     
 
@@ -285,183 +285,7 @@
 
         <tr>
             
-                <td class="name"><code>ref</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>dir</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>'Direction' of the conversion: (0 processed -&gt; ore; 1 ore -&gt; processed</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="resources.js.html">scripts/resources.js</a>,
-				 <a href="resources.js.html#sunlight-1-line-253">line 253</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-	<dt class="tag-todo">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>dir seems redundant here</li>
-			</ul>
-	</dd>
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">array</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="required"><span class="type-signature">&lt;static> </span>required<span class="signature">(building, getRec, recycling)</span><span class="type-signature"> &rarr; {array|bool|Object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Provides the list of materials needed, either as a directly usable array, a 
-boolean value representing availability or as a Document Fragment for use in 
-the context menu</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>building</code></td>
+                <td class="name"><code>content</code></td>
             
 
             <td class="type">
@@ -477,53 +301,7 @@ the context menu</p>
 
             
 
-            <td class="description last"><p>The building to get list for</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>getRec</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If true, will try to requisition the required materials, returning success or failure</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>recycling</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If true, will simply get the array of materials needed for a construction</p></td>
+            <td class="description last"><p>Html content to put into the right click menu</p></td>
         </tr>
 
 	
@@ -559,8 +337,8 @@ the context menu</p>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="resources.js.html">scripts/resources.js</a>,
-				 <a href="resources.js.html#sunlight-1-line-15">line 15</a>
+				<a href="menus.js.html">scripts/menus.js</a>,
+				 <a href="menus.js.html#sunlight-1-line-35">line 35</a>
 			</li>
 		</ul>
 	</dd>
@@ -587,7 +365,7 @@ the context menu</p>
     
             
 <div class="param-desc">
-    <p>Array of materials needed | Success or failure of requisition | Document Fragment listing material availability</p>
+    <p>Document Fragment to append</p>
 </div>
 
 
@@ -598,12 +376,6 @@ the context menu</p>
 	</dt>
 	<dd>
 		
-<span class="param-type">array</span>
-|
-
-<span class="param-type">bool</span>
-|
-
 <span class="param-type">Object</span>
 
 
@@ -619,7 +391,7 @@ the context menu</p>
         
             
 <dt>
-    <h4 class="name" id="requisition"><span class="type-signature">&lt;static> </span>requisition<span class="signature">(arr)</span><span class="type-signature"> &rarr; {bool}</span></h4>
+    <h4 class="name" id="open"><span class="type-signature">&lt;static> </span>open<span class="signature">(containerIn, buttonIn, hideClass)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -627,9 +399,7 @@ the context menu</p>
     
     
     <div class="description">
-        <p>Depending on availability, will take the resources indicated. If not all the 
-resources are available, it wil print the missing resources to the in-game
-console</p>
+        <p>Manages the opening and closing of menus</p>
     </div>
     
 
@@ -663,13 +433,13 @@ console</p>
 
         <tr>
             
-                <td class="name"><code>arr</code></td>
+                <td class="name"><code>containerIn</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">HTMLElement</span>
 
 
             
@@ -679,7 +449,53 @@ console</p>
 
             
 
-            <td class="description last"><p>Array of materials to requisition</p></td>
+            <td class="description last"><p>Container containing the menu to show or hide</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>buttonIn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Button for the container</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>hideClass</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Class that determines visibility of the container</p></td>
         </tr>
 
 	
@@ -715,8 +531,8 @@ console</p>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="resources.js.html">scripts/resources.js</a>,
-				 <a href="resources.js.html#sunlight-1-line-300">line 300</a>
+				<a href="menus.js.html">scripts/menus.js</a>,
+				 <a href="menus.js.html#sunlight-1-line-176">line 176</a>
 			</li>
 		</ul>
 	</dd>
@@ -727,12 +543,130 @@ console</p>
 	
 
 	
-	<dt class="tag-todo">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>This function should probably handle recycling as well</li>
-			</ul>
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="recount"><span class="type-signature">&lt;static> </span>recount<span class="signature">(which)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Recounts the number of bots available and updates the counter bars appropriately</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>which</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The type of robot we're dealing with</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="menus.js.html">scripts/menus.js</a>,
+				 <a href="menus.js.html#sunlight-1-line-136">line 136</a>
+			</li>
+		</ul>
 	</dd>
+	
+
+	
+
+	
+
 	
 </dl>
 
@@ -746,29 +680,268 @@ console</p>
     
     
     
-    <h5>Returns:</h5>
     
-            
-<div class="param-desc">
-    <p>Success or not</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">bool</span>
-
-
-	</dd>
-</dl>
-
+    
+</dd>
 
         
+            
+<dt>
+    <h4 class="name" id="resizeLeft"><span class="type-signature">&lt;static> </span>resizeLeft<span class="signature">(<span class="optional">bool</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>resizes the left menus on mouse drag</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>bool</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>check to see if we should be resizing</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="menus.js.html">scripts/menus.js</a>,
+				 <a href="menus.js.html#sunlight-1-line-122">line 122</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="resizeSplit"><span class="type-signature">&lt;private, static> </span>resizeSplit<span class="signature">(e)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Manages the actual values for the resized menu from <a href="Menu.html#resizeLeft"><code>Menu.resizeLeft</code></a></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The mousemove event</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="menus.js.html">scripts/menus.js</a>,
+				 <a href="menus.js.html#sunlight-1-line-12">line 12</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
