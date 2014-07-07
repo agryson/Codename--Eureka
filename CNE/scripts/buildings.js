@@ -1,3 +1,7 @@
+/**
+* Wraps the construction relevant methods
+* @namespace
+*/
 var Build = (function(){
 	var publicMethods = {};
 	/**
