@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Codename Eureka Source: scripts/research.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.spacelab.css">
+
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top ">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Codename Eureka</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="CneTools.html">CneTools</a>
+						</li>
+						
+						<li>
+							<a href="Conf.html">Conf</a>
+						</li>
+						
+						<li>
+							<a href="Display.html">Display</a>
+						</li>
+						
+						<li>
+							<a href="FileIO.html">FileIO</a>
+						</li>
+						
+						<li>
+							<a href="Interface.html">Interface</a>
+						</li>
+						
+						<li>
+							<a href="Music.html">Music</a>
+						</li>
+						
+						<li>
+							<a href="Research.html">Research</a>
+						</li>
+						
+						<li>
+							<a href="Resources.html">Resources</a>
+						</li>
+						
+						<li>
+							<a href="Terminal.html">Terminal</a>
+						</li>
+						
+						<li>
+							<a href="Tools.html">Tools</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="ClassicalNoise.html">ClassicalNoise</a>
+						</li>
+						
+						<li>
+							<a href="Construction.html">Construction</a>
+						</li>
+						
+						<li>
+							<a href="MersenneTwister.html">MersenneTwister</a>
+						</li>
+						
+						<li>
+							<a href="NewGame.html">NewGame</a>
+						</li>
+						
+						<li>
+							<a href="Terrain.html">Terrain</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#contextContent">contextContent</a>
+						</li>
+						
+						<li>
+							<a href="global.html#execReview">execReview</a>
+						</li>
+						
+						<li>
+							<a href="global.html#leftMenuResize">leftMenuResize</a>
+						</li>
+						
+						<li>
+							<a href="global.html#mainLoop">mainLoop</a>
+						</li>
+						
+						<li>
+							<a href="global.html#menu">menu</a>
+						</li>
+						
+						<li>
+							<a href="global.html#nextTurn">nextTurn</a>
+						</li>
+						
+						<li>
+							<a href="global.html#pageVisHandler">pageVisHandler</a>
+						</li>
+						
+						<li>
+							<a href="global.html#reCount">reCount</a>
+						</li>
+						
+						<li>
+							<a href="global.html#resize">resize</a>
+						</li>
+						
+						<li>
+							<a href="global.html#saneStats">saneStats</a>
+						</li>
+						
+						<li>
+							<a href="global.html#setStats">setStats</a>
+						</li>
+						
+						<li>
+							<a href="global.html#TRANS">TRANS</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: scripts/research.js</h1>
+    
+<section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">/**
+* Wraps research related functionality
+* @namespace
+* @todo These could probably be mostly split into tools, interface etc...
+*/
+var Research = (function(){
+	var publicMethods = {};
+	/**
+	* @private
+	* @memberOf Research
+	* Opens appropriate research panel when a research menu item is clicked
+	*/
+	function _clickedResearch(){
+	    var ident = this.id;
+	    console.log(ident);
+	    if(document.getElementById(ident + 'Cont')){
+	        document.getElementById(ident + 'Cont').classList.toggle('research_cont_hidden');
+	    }
+	    Research.fillPanel(ident);
+	    publicMethods.refreshMenu();
+	}
+
+	/**
+	* Returns the research progress as a percenteage
+	* @private
+	* @memberOf Research
+	* @param {string} ident The topic for which the research progress is needed
+	* @returns {int} Research progress as a percentage
+	*/
+	function _researchProgress(ident){
+	    var ref = _researchTopicRef(ident);
+	    var progress = ref[4] - ref[3];
+	    if(progress !== 0){
+	        progress = progress / ref[4];
+	    } else {
+	        return 0;
+	    }
+	    progress = progress * 100;
+	    progress -= progress%10;
+	    return progress;
+	}
+
+	/**
+	* Based on an input string, finds the corresponding {@link Conf.researchTopics} sub-array
+	* @private
+	* @memberOf Research
+	* @param {string} topic The topic for which a reference is needed
+	* @returns {array} The {@link Conf.researchTopics} sub-array that corresponds to &lt;tt>topic&lt;/tt>
+	*/
+	function _researchTopicRef(topic){
+	    var source = Conf.researchTopics[2];
+	    for(var i = 0; i &lt; source.length; i++){
+	        if(source[i][0] === topic){
+	            return source[i];
+	        } else {
+	            for(var j = 0; j &lt; source[i][2].length; j++){
+	                if(source[i][2][j][0] === topic){
+	                    return source[i][2][j];
+	                } else {
+	                    for(var k = 0; k &lt; source[i][2][j][2].length; k++){
+	                        if(source[i][2][j][2][k][0] === topic){
+	                            return source[i][2][j][2][k];
+	                        } else {
+	                            for(var l = 0; l &lt; source[i][2][j][2][k][2].length; l++){
+	                                if(source[i][2][j][2][k][2][l][0] === topic){
+	                                    return source[i][2][j][2][k][2][l];
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
+
+	/**
+	* Populates a list of labs that are actively researching hte given topic, and/or are available to research it
+	* @private
+	* @memberOf Research
+	* @param {string} ident The topic for which the player needs the lab list
+	*/
+	function _listLabs(ident){
+	    var frag = document.createDocumentFragment();
+	    var studyList = [];
+	    var cancelList = [];
+	    var available = document.createElement('h3');
+	    available.innerHTML = TRANS.availableLabs;
+	    frag.appendChild(available);
+	    var noAvailable = true;
+	    for(var j = 0; j &lt; Conf.researchLabs.length; j++){
+	        var freeLab = Conf.researchLabs[j];
+	        if(Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
+	            noAvailable = false;
+	            var itemFree = document.createElement('div');
+	            itemFree.classList.add('research_panel_item');
+	            var imgFree = document.createElement('img');
+	            imgFree.src = 'images/researchIllustrations/' + Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic + '.png';
+	            var refFree = document.createElement('p');
+	            refFree.innerHTML = Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
+	            var current = document.createElement('p');
+	            if(Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
+	                current.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
+	            } else {
+	                current.innerHTML = TRANS.currentResearch + ' ' + TRANS[Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic];
+	            }
+	            var studyBtn = document.createElement('button');
+	            studyBtn.id = 'studyBtn' + j;
+	            studyBtn.classList.add('green_glass');
+	            studyBtn.classList.add('main_pointer');
+	            studyBtn.innerHTML = TRANS.study + ' ' + TRANS[ident];
+	            studyList.push(['studyBtn' + j, freeLab]);
+	            itemFree.appendChild(studyBtn);
+	            itemFree.appendChild(imgFree);
+	            itemFree.appendChild(refFree);
+	            itemFree.appendChild(current);
+	            frag.appendChild(itemFree);
+	        }
+	    }
+	    if(noAvailable){
+	        noAvailable = document.createElement('h4');
+	        noAvailable.innerHTML = TRANS.none;
+	        frag.appendChild(noAvailable);
+	    }
+
+	    var activeLabs = document.createElement('h3');
+	    activeLabs.innerHTML = TRANS.active;
+	    frag.appendChild(activeLabs);
+	    var noActive = true;
+	    for(var i = 0; i &lt; Conf.researchLabs.length; i++){
+	        var lab = Conf.researchLabs[i];
+	        if(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic !== 'noResearch'){
+	            noActive = false;
+	            var item = document.createElement('div');
+	            item.classList.add('research_panel_item');
+	            var img = document.createElement('img');
+	            img.src = 'images/researchIllustrations/' + Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic + '.png';
+	            var ref = document.createElement('p');
+	            ref.innerHTML = Conf.mapTiles[lab[0]][lab[1]][lab[2]].ref;
+	            var current2 = document.createElement('p');
+	            current2.innerHTML = TRANS.currentResearch + ' ' + TRANS[Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
+	            var progressBar = document.createElement('div');
+	            progressBar.classList.add('research_bar_frame');
+	            progressBar.classList.add('research_progress_' + _researchProgress(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
+	            var cancelBtn = document.createElement('button');
+	            cancelBtn.id = 'cancelBtn' + i;
+	            cancelBtn.innerHTML = TRANS.stopResearch;
+	            cancelBtn.classList.add('red_glass');
+	            cancelBtn.classList.add('main_pointer');
+	            cancelList.push(['cancelBtn' + i, lab]);
+	            item.appendChild(cancelBtn);
+	            item.appendChild(img);
+	            item.appendChild(ref);
+	            item.appendChild(current2);
+	            item.appendChild(progressBar);
+	            frag.appendChild(item);
+	        }
+	    }
+	    if(noActive){
+	        noActive = document.createElement('h4');
+	        noActive.innerHTML = TRANS.none;
+	        frag.appendChild(noActive);
+	    }
+	    Tools.flush(document.getElementById('researchPanel'));
+	    document.getElementById('researchPanel').appendChild(frag);
+
+	    for(var s = 0; s &lt; studyList.length; s++){
+	        (function(_s){
+	            var id = studyList[s][0];
+	            var level = studyList[s][1][0];
+	            var y = studyList[s][1][1];
+	            var x = studyList[s][1][2];
+	            var obj = document.getElementById(id);
+	            var objFn = function(){
+	                Conf.mapTiles[level][y][x].researchTopic = ident;
+	                _listLabs(ident);
+	            };
+	            obj.addEventListener('click', objFn, false);
+	        })();
+	    }
+	    for(var c = 0; c &lt; cancelList.length; c++){
+	        (function(_c){
+	            var id = cancelList[c][0];
+	            var level = cancelList[c][1][0];
+	            var y = cancelList[c][1][1];
+	            var x = cancelList[c][1][2];
+	            var obj = document.getElementById(id);
+	            var objFn = function(){
+	                Conf.mapTiles[level][y][x].researchTopic = 'noResearch';
+	                _listLabs(ident);
+	            };
+	            obj.addEventListener('click', objFn, false);
+	        })();
+	    }
+	}
+
+	/**
+	* Refreshes the research menu
+	* @public
+	* @memberOf Research
+	*/
+	publicMethods.refreshMenu = function(){
+	    var source = Conf.researchTopics[2];
+
+	    //Tier0
+	    for(var i = 0; i &lt; source.length; i++){
+	        if(Conf.researchTopics[3] === 0){
+	            var tier0 = document.getElementById(source[i][0]);
+	            if(!tier0.classList.contains('research_active')){
+	                tier0.classList.add('research_active');
+	                tier0.innerHTML = TRANS[source[i][0]];
+	                tier0.onclick = _clickedResearch;
+	            }
+	            //Tier1
+	            for(var j = 0; j &lt; source[i][2].length; j++){
+	                if(source[i][3] === 0){
+	                    var tier1 = document.getElementById(source[i][2][j][0]);
+	                    if(!tier1.classList.contains('research_active')){
+	                        tier1.classList.add('research_active');
+	                        tier1.innerHTML = TRANS[source[i][2][j][0]];
+	                        console.log(source[i][2][j][0]);
+	                        tier1.onclick = _clickedResearch;
+	                    }
+	                    //Tier2
+	                    for(var k = 0; k &lt; source[i][2][j][2].length; k++){
+	                        if(source[i][2][j][3] === 0){
+	                            var tier2 = document.getElementById(source[i][2][j][2][k][0]);
+	                            if(!tier2.classList.contains('research_active')){
+	                                tier2.classList.add('research_active');
+	                                tier2.innerHTML = TRANS[source[i][2][j][2][k][0]];
+	                                tier2.onclick = _clickedResearch;
+	                            }
+	                            //Tier3
+	                            for(var l = 0; l &lt; source[i][2][j][2][k][2].length; l++){
+	                                if(source[i][2][j][2][k][3] === 0){
+	                                    var tier3 = document.getElementById(source[i][2][j][2][k][2][l][0]);
+	                                    if(!tier3.classList.contains('research_active')){
+	                                        tier3.innerHTML = TRANS[source[i][2][j][2][k][2][l][0]];
+	                                        tier3.onclick = _clickedResearch;
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	}
+
+	/**
+	* Populates the research panel with the appropriate information
+	* @public
+	* @memberOf Research
+	* @param {string} ident ID of menu item that was clicked
+	*/
+	publicMethods.fillPanel = function(ident){
+	    var frag = document.createDocumentFragment();
+	    var topicList = false;
+	    if(ident === 'overview'){
+	        var title = document.createElement('h2');
+	        title.innerHTML = TRANS.overview;
+	        frag.appendChild(title);
+	        var activeLabs = document.createElement('h3');
+	        activeLabs.innerHTML = TRANS.active;
+	        frag.appendChild(activeLabs);
+	        var noActive = true;
+	        for(var i = 0; i &lt; Conf.researchLabs.length; i++){
+	            var lab = Conf.researchLabs[i];
+	            if(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic !== 'noResearch'){
+	                noActive = false;
+	                var item = document.createElement('div');
+	                item.classList.add('research_panel_item');
+	                var img = document.createElement('img');
+	                img.src = 'images/researchIllustrations/' + Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic + '.png';
+	                var ref = document.createElement('p');
+	                ref.innerHTML = Conf.mapTiles[lab[0]][lab[1]][lab[2]].ref;
+	                var current = document.createElement('p');
+	                if(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic === 'noResearch'){
+	                    current.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
+	                } else {
+	                    current.innerHTML = TRANS.currentResearch + ' ' + TRANS[Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic];
+	                }
+	                var progressBar = document.createElement('div');
+	                progressBar.classList.add('research_bar_frame');
+	                progressBar.classList.add('research_progress_' + _researchProgress(Conf.mapTiles[lab[0]][lab[1]][lab[2]].researchTopic));
+	                item.appendChild(img);
+	                item.appendChild(ref);
+	                item.appendChild(current);
+	                item.appendChild(progressBar);
+	                frag.appendChild(item);
+	            }
+	        }
+	        if(noActive){
+	            noActive = document.createElement('h4');
+	            noActive.innerHTML = TRANS.none;
+	            frag.appendChild(noActive);
+	        }
+	        var available = document.createElement('h3');
+	        available.innerHTML = TRANS.availableLabs;
+	        frag.appendChild(available);
+	        var noAvailable = true;
+	        for(var j = 0; j &lt; Conf.researchLabs.length; j++){
+	            var freeLab = Conf.researchLabs[j];
+	            if(Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic === 'noResearch'){
+	                noAvailable = false;
+	                var itemFree = document.createElement('div');
+	                itemFree.classList.add('research_panel_item');
+	                var imgFree = document.createElement('img');
+	                imgFree.src = 'images/researchIllustrations/' + Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].researchTopic + '.png';
+	                var refFree = document.createElement('p');
+	                refFree.innerHTML = Conf.mapTiles[freeLab[0]][freeLab[1]][freeLab[2]].ref;
+	                var currentNone = document.createElement('p');
+	                currentNone.innerHTML = TRANS.currentResearch + ' ' + TRANS.none;
+	                itemFree.appendChild(imgFree);
+	                itemFree.appendChild(refFree);
+	                itemFree.appendChild(currentNone);
+	                frag.appendChild(itemFree);
+	            }
+	        }
+	        if(noAvailable){
+	            noAvailable = document.createElement('h4');
+	            noAvailable.innerHTML = TRANS.none;
+	            frag.appendChild(noAvailable);
+	        }
+	    } else {
+	        var topicArr = _researchTopicRef(ident);
+	        if(topicArr[3] > 0){
+	            topicList = true;
+	            var btn = document.createElement('button');
+	            btn.id = 'research' + ident;
+	            btn.classList.add('smoky_glass');
+	            btn.classList.add('main_pointer');
+	            btn.innerHTML = TRANS.study + ' ' + TRANS[ident];
+	            frag.appendChild(btn);
+	        }
+	        var progressBar2 = document.createElement('div');
+	        progressBar2.classList.add('research_bar_frame');
+	        progressBar2.classList.add('research_progress_' + _researchProgress(ident));
+	        frag.appendChild(progressBar2);
+	        var content = document.createElement('span');
+	        content.innerHTML = TRANS[ident + 'Content'];
+	        frag.appendChild(content);
+	        //get a reference to the research topic and add a button if it's studyable
+	    }
+	    Tools.flush(document.getElementById('researchPanel'));
+	    document.getElementById('researchPanel').appendChild(frag);
+
+	    if(topicList){
+	        document.getElementById('research' + ident).onclick = function(){
+	            _listLabs(ident);
+	        };
+	    }
+	}
+
+	/**
+	* Updates the research progress for the provided tile
+	* @public
+	* @memberOf Research
+	* @param {Object} tile Tile Object to update research progress for
+	*/
+	publicMethods.updateProgress = function(tile){
+		console.log(tile.researchTopic);
+        var topic = tile.researchTopic;
+        var labRef = _researchTopicRef(topic);
+        if(labRef[3] > 1){
+            labRef[3] -= 1;
+        } else if(labRef[3] === 1) {
+            labRef[3] = 0;
+            tile.researchTopic = 'noResearch';
+            //Set the research results here
+            switch(topic){
+                case "engineering":
+                    console.log('Just finished studying Engineering! :-D');
+                break;
+                case "agriculturalEngineering":
+                break;
+                case "hydroponics":
+                break;
+                case "noSoilFarming":
+                break;
+                case "xtremeTempAgriculture":
+                break;
+                case "electricalEngineering":
+                break;
+                case "commTech":
+                break;
+                case "pcbDesign":
+                break;
+                case "processors":
+                break;
+                case "robotics":
+                break;
+                case "geneticEngineering":
+                break;
+                case "animalGenetics":
+                break;
+                case "horticulturalGenetics":
+                break;
+                case "humanGenetics":
+                break;
+                case "longevityResearch":
+                break;
+                case "mechanicalEngineering":
+                break;
+                case "massProduction":
+                break;
+                case "mechatronics":
+                break;
+                case "plm":
+                break;
+                case "softwareEngineering":
+                break;
+                case "ai":
+                break;
+                case "culturalSensitivity":
+                break;
+                case "imageProcessing":
+                break;
+                case "naturalLanguage":
+                break;
+                case "neuralNetworks":
+                break;
+                case "geoEngineering":
+                break;
+                case "terraforming":
+                break;
+                case "weatherControl":
+                break;
+                case "science":
+                break;
+                case "physics":
+                break;
+                case "experimentalPhysics":
+                break;
+                case "advancedMaterials":
+                break;
+                case "compositieMaterials":
+                break;
+                case "selfHealingMaterials":
+                break;
+                case "conductivePolymers":
+                break;
+                case "opticalMaterials":
+                break;
+                case "nanotech":
+                break;
+                case "bioNeutralNano":
+                break;
+                case "ggam":
+                break;
+                case "nanoFab":
+                break;
+                case "theoreticalPhysics":
+                break;
+                case "astronomy":
+                break;
+                case "meteorology":
+                break;
+                case "nuclearPhysics":
+                break;
+                case "chemistry":
+                break;
+                case "organicChemistry":
+                break;
+                case "polymers":
+                break;
+                case "physicalChemistry":
+                break;
+                case "oreProcessing":
+                break;
+                case "metallurgy":
+                break;
+                case "pharmaceuticalChemistry":
+                break;
+                case "herbicides":
+                break;
+                case "medicines":
+                break;
+                case "biology":
+                break;
+                case "anatomy":
+                break;
+                case "horticulture":
+                break;
+                case "physiology":
+                break;
+                case "radiationEffects":
+                break;
+                case "lowGravEffects":
+                break;
+                case "medicine":
+                break;
+                case "oncology":
+                break;
+                case "orthopaedics":
+                break;
+                case "paedeatrics":
+                break;
+                case "placebos":
+                break;
+                case "traditional":
+                    //Do Nothing... har har har
+                break;
+                case "arts":
+                break;
+                case "sociology":
+                break;
+                case "socialPolicy":
+                break;
+                case "politicalScience":
+                break;
+                case "culturalRelations":
+                break;
+                case "philosophy":
+                break;
+                case "ethics":
+                break;
+                case "scientificTheory":
+                break;
+                case "classicalPhilosophy":
+                break;
+                default:
+                    console.log("What did you say you studied? " + topic);
+            }
+        }
+	}
+
+	return publicMethods;
+})();</pre>
+	</article>
+</section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a>
+		on 2014-07-07T20:51:50+02:00 using the <a
+			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<!--<script src="scripts/sunlight.js"></script>-->
+	<script src="scripts/docstrap.lib.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>
+		$( function () {
+			$( "[id*='$']" ).each( function () {
+				var $this = $( this );
+
+				$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+			} );
+
+			$( "#toc" ).toc( {
+				anchorName  : function ( i, heading, prefix ) {
+					return $( heading ).attr( "id" ) || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : "100px"
+			} );
+
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+			$( '.dropdown-toggle' ).dropdown();
+//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+			$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+				var $this = $( this );
+
+				var example = $this.find( "code" );
+				exampleText = example.html();
+				var lang = /{@lang (.*?)}/.exec( exampleText );
+				if ( lang && lang[1] ) {
+					exampleText = exampleText.replace( lang[0], "" );
+					example.html( exampleText );
+					lang = lang[1];
+				} else {
+					lang = "javascript";
+				}
+
+				if ( lang ) {
+
+					$this
+						.addClass( "sunlight-highlight-" + lang )
+						.addClass( "linenums" )
+						.html( example.html() );
+
+				}
+			} );
+
+			Sunlight.highlightAll( {
+				lineNumbers : true,
+				showMenu : true,
+				enableDoclinks : true
+			} );
+		} );
+	 </script>
+
+
+
+	<!--Navigation and Symbol Display-->
+	
+
+
+	<!--Google Analytics-->
+	
+
+</body>
+</html>

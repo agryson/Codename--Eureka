@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Codename Eureka Source: scripts/CNE_tools.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.spacelab.css">
+
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top ">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Codename Eureka</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="CneTools.html">CneTools</a>
+						</li>
+						
+						<li>
+							<a href="Conf.html">Conf</a>
+						</li>
+						
+						<li>
+							<a href="Display.html">Display</a>
+						</li>
+						
+						<li>
+							<a href="FileIO.html">FileIO</a>
+						</li>
+						
+						<li>
+							<a href="Interface.html">Interface</a>
+						</li>
+						
+						<li>
+							<a href="Music.html">Music</a>
+						</li>
+						
+						<li>
+							<a href="Research.html">Research</a>
+						</li>
+						
+						<li>
+							<a href="Resources.html">Resources</a>
+						</li>
+						
+						<li>
+							<a href="Terminal.html">Terminal</a>
+						</li>
+						
+						<li>
+							<a href="Tools.html">Tools</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="ClassicalNoise.html">ClassicalNoise</a>
+						</li>
+						
+						<li>
+							<a href="Construction.html">Construction</a>
+						</li>
+						
+						<li>
+							<a href="MersenneTwister.html">MersenneTwister</a>
+						</li>
+						
+						<li>
+							<a href="NewGame.html">NewGame</a>
+						</li>
+						
+						<li>
+							<a href="Terrain.html">Terrain</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#contextContent">contextContent</a>
+						</li>
+						
+						<li>
+							<a href="global.html#execReview">execReview</a>
+						</li>
+						
+						<li>
+							<a href="global.html#leftMenuResize">leftMenuResize</a>
+						</li>
+						
+						<li>
+							<a href="global.html#mainLoop">mainLoop</a>
+						</li>
+						
+						<li>
+							<a href="global.html#menu">menu</a>
+						</li>
+						
+						<li>
+							<a href="global.html#nextTurn">nextTurn</a>
+						</li>
+						
+						<li>
+							<a href="global.html#pageVisHandler">pageVisHandler</a>
+						</li>
+						
+						<li>
+							<a href="global.html#reCount">reCount</a>
+						</li>
+						
+						<li>
+							<a href="global.html#resize">resize</a>
+						</li>
+						
+						<li>
+							<a href="global.html#saneStats">saneStats</a>
+						</li>
+						
+						<li>
+							<a href="global.html#setStats">setStats</a>
+						</li>
+						
+						<li>
+							<a href="global.html#TRANS">TRANS</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: scripts/CNE_tools.js</h1>
+    
+<section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">/**
+* Namespace wrapper for all CNE specific tools
+* @namespace
+*/
+var CneTools = {
+
+	/**
+	 * Checks which buildings are available to the player and
+	 * populates the sidebar with those buildings
+	 */
+	checkBuildings: function() {
+	    for(var thing = 0; thing &lt; Conf.buildings.length; thing++) {
+	        var idString = Conf.buildings[thing][0];
+	        var elem = document.getElementById(idString);
+	        elem.classList.remove('menu_selected');
+	        if(Conf.buildings[thing][1]) {
+	            elem.classList.add('menu_show');
+	            elem.classList.remove('menu_hide');
+	            switch(Conf.buildings[thing][2]) {
+	            case 0:
+	                if(Conf.level === 0) {
+	                    elem.classList.add('active');
+	                    document.getElementById(Conf.buildings[thing][0]).onclick = Build.plan;
+	                } else {
+	                    elem.classList.remove('active');
+	                    document.getElementById(Conf.buildings[thing][0]).onclick = null;
+	                }
+	                break;
+	            case 1:
+	                if(Conf.level > 0) {
+	                    elem.classList.add('active');
+	                    document.getElementById(Conf.buildings[thing][0]).onclick = Build.plan;
+	                } else {
+	                    elem.classList.remove('active');
+	                    document.getElementById(Conf.buildings[thing][0]).onclick = null;
+	                }
+	                break;
+	            default:
+	                elem.classList.add('active');
+	                document.getElementById(Conf.buildings[thing][0]).onclick = Build.plan;
+	            }
+	        } else {
+	            elem.classList.remove('menu_show');
+	            elem.classList.add('menu_hide');
+	            if(Conf.clickedOn === idString) {
+	                Conf.clickedOn = 'none';
+	                document.body.style.cursor = "url('images/pointers/pointer.png'), default";
+	            }
+	        }
+	    }
+	    CneTools.checkRobots();
+	},
+
+
+
+	/**
+	* Manages what robots are available for the given context in the menu
+	*/
+	checkRobots: function() {
+	    //TODO: clean all this shit up
+	    for(var r2d2 in Conf.robotsList) {
+	        var wallE = Conf.robotsList[r2d2];
+	        var idString = wallE[2];
+	        var c3po = document.getElementById(idString);
+	        c3po.classList.remove('menu_selected');
+	        if(wallE[3]) {
+	            c3po.classList.add('menu_show');
+	            c3po.classList.remove('menu_hide');
+	            switch(wallE[4]) {
+	            case 0:
+	                if(Conf.level === 0) {
+	                    c3po.classList.add('active');
+	                    c3po.onclick = Build.plan;
+	                } else {
+	                    c3po.classList.remove('active');
+	                    c3po.onclick = null;
+	                }
+	                break;
+	            case 1:
+	                if(Conf.level > 0) {
+	                    c3po.classList.add('active');
+	                    c3po.onclick = Build.plan;
+	                } else {
+	                    c3po.classList.remove('active');
+	                    c3po.onclick = null;
+	                }
+	                break;
+	            default:
+	                c3po.classList.add('active');
+	                c3po.onclick = Build.plan;
+	            }
+	            if(wallE[1] - wallE[0] === 0) {
+	                c3po.classList.remove('active');
+	                c3po.onclick = null;
+	                //document.getElementById(wallE[2]).classList.add('menu_available');
+	                if(Conf.clickedOn === idString) {
+	                    Conf.clickedOn = 'none';
+	                    //document.getElementById(wallE[2]).classList.remove('menu_available');
+	                    document.body.style.cursor = "url('images/pointers/pointer.png'), default";
+	                }
+	            }
+	        } else {
+	            c3po.classList.remove('menu_show');
+	            c3po.classList.add('menu_hide');
+	        }
+	    }
+	    //special case for digger
+	    if(Conf.robotsList[1][1] - Conf.robotsList[1][0] &lt;= 1) {
+	        var rob = document.getElementById(Conf.robotsList[1][2]);
+	        rob.classList.remove('active');
+	        rob.onclick = null;
+	        //rob.style.background = '#000';
+	        if(Conf.clickedOn === 'digger' || (Conf.clickedOn === 'cavernDigger' &amp;&amp; Conf.robotsList[1][1] - Conf.robotsList[1][0] === 0)) {
+	            Conf.clickedOn = 'none';
+	            document.body.style.cursor = "url('images/pointers/pointer.png'), default";
+	        }
+	        if(Conf.robotsList[1][1] - Conf.robotsList[1][0] === 0) {
+	            var cavDig = document.getElementById('cavernDigger');
+	            cavDig.classList.remove('active');
+	            cavDig.onclick = null;
+	            //cavDig.style.background = '#000';
+	        }
+	    }
+	},
+
+	/**
+	 * Changes level from an input (slider etc.)
+	 * @param  {int} newLevel the level we would change to
+	 * @todo Maybe make a "navigate" namespace for radar and movement?
+	 */
+	changeLevel: function(newLevel) {
+	    Conf.level = parseInt(newLevel, 10);
+	    CneTools.checkBuildings();
+	    Display.drawRadar();
+	},
+
+	/**
+	* Determines if a point is within communications range of the colony or not
+	* @param {int} x X coordinate of point to test
+	* @param {int} y Y coordinate of point to test
+	* @returns {bool} Whether the point is in communications range or not
+	*/
+	inRange: function(x, y){
+	    for(var tower = 0; tower &lt; Conf.commTowers.length; tower++){
+	        var radius = 75 - Conf.level*10;
+	        var thisTower = Conf.mapTiles[0][Conf.commTowers[tower][1]][Conf.commTowers[tower][0]].kind;
+	        if(thisTower === 210 || thisTower === 237){
+	            radius -= 25;
+	        }
+	        if(Tools.distance(Conf.commTowers[tower][0], Conf.commTowers[tower][1], x, y) &lt;= radius){
+	            return true;
+	        }
+	    }
+	    return false;
+	},
+	
+	/**
+     * Moves the map to the provided location. Defaults to the mapped 
+     * coordinates of the mouse pointer
+     * @param {bool} [bool] Force a jump to a particular spot (see other parameters)
+     * @param {int} [x] X coordinate for where the map was clicked
+     * @param {int} [y] Y coordinate for where the map was clicked
+     * @param {int} [level] The level the player is on
+     */
+    moveTo: function(bool, x, y, level) {
+        if(bool){
+            Conf.retX = x + 1;
+            Conf.retY = y + 2;
+            Conf.level = level;
+        } else {
+            Conf.retX = Math.floor(Conf.mouseX - Conf.destinationWidth / 2);
+            Conf.retY = Conf.mouseY - 20;
+        }
+        Display.resizeMap();
+        Display.drawReticule();
+    },
+
+	/**
+	* Given two strings, will return a modified version (for tile references)
+	* @param {string} string String to be placed at begginning of modified string
+	* @param {string} orig Original string
+	* @returns {string} Returns &lt;tt>string&lt;/tt> + " #" + the first word after # in &lt;tt>orig&lt;/tt>
+	*/
+	changeName: function(string, orig) {
+	    return string + ' #' + orig.split('#')[1];
+	},
+
+	/**
+	* Checks connectivity of the provided tile with the colony (on the current level)
+	* @param {int} y Y coordinate to check
+	* @param {int} x X coordinate to check
+	* @returns {bool} Connected or not
+	*/
+	checkConnection: function(y, x) {
+	    var connected = false;
+	    for(var j = 0; j &lt; 6; j++) {
+	        if(Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, j)[0]][CneTools.adjacent(x, y, j)[1]] &amp;&amp; 
+	           (Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, j)[0]][CneTools.adjacent(x, y, j)[1]].kind === 211 || 
+	           Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, j)[0]][CneTools.adjacent(x, y, j)[1]].kind === 204)) {
+	            connected = true;
+	        }
+	    }
+	    return connected;
+	},
+
+	/**
+	 * Returns the adjacent tile reference in y and x (inverted for historical reasons)
+	 * @param  {int} x X coordiante for tile we want to get the adjacent tiles for
+	 * @param  {int} y Y coordiante for tile we want to get the adjacent tiles for
+	 * @param  {int} index Which tile are we checking? 0 for top left then count up
+	 * clockwise
+	 * @return {array} The coordinates for the tile at the provided index
+	 */
+	adjacent: function(x, y, index) {
+	    if(y % 2 === 0) {
+	        index += 6;
+	    }
+	    switch(index) {
+	    case 0:
+	        return [y + 1, x - 1];
+	    case 1:
+	    case 6:
+	        return [y + 1, x];
+	    case 2:
+	    case 8:
+	        return [y, x + 1];
+	    case 3:
+	    case 10:
+	        return [y - 1, x];
+	    case 4:
+	        return [y - 1, x - 1];
+	    case 5:
+	    case 11:
+	        return [y, x - 1];
+	    case 7:
+	        return [y + 1, x + 1];
+	    case 9:
+	        return [y - 1, x + 1];
+	    default:
+	        console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
+	    }
+	},
+
+	/**
+	 * Checks if any adjacent tiles are wet
+	 * @param  {array} yxArrayIn is an array of the y &amp; x coordinates of the tile to test
+	 * @param  {int} level provides the level to test on
+	 * @return {boolean} Wet or not
+	 */
+	isWet: function(yxArrayIn, level) {
+	    var yxArray = yxArrayIn.slice(0);
+	    for(var i = 0; i &lt; 6; i++) {
+	        if(Conf.map[level][CneTools.adjacent(yxArray[1], yxArray[0], i)[0]][CneTools.adjacent(yxArray[1], yxArray[0], i)[1]].kind === 4) {
+	            return true;
+	        }
+	    }
+	    return false;
+	},
+
+	/**
+	 * Gets the x or y value for the currently moused over tile
+	 * @param  {string} The axis we want the coordinate of
+	 * @return {int} The coordinate for desired axis
+	 */
+	getTile: function(axis) {
+	    var x, y, yDiff, xDiff, left, right;
+
+	    //set the general cases
+	    y = Math.floor(Conf.mouseY / (Conf.destinationHeight * 0.75));
+
+	    y % 2 !== 0 ? x = Math.floor((Conf.mouseX - Conf.destinationWidth / 2) / Conf.destinationWidth) : x = Math.floor(Conf.mouseX / Conf.destinationWidth);
+
+	    //corner case code
+	    yDiff = (Conf.mouseY / (Conf.destinationHeight * 0.75)) - y;
+	    if(yDiff &lt; 0.33) { //If we're in the top third of the reference rectangle
+	        //tells which intermediate block we're in...
+	        if(y % 2 !== 0) {
+	            xDiff = ((Conf.mouseX - Conf.destinationWidth / 2) / Conf.destinationWidth - x);
+	            //I now do some basic Pythagoras theorem to figure out which hexagon I'm in
+	            //Are we on the left or right hand side of the top third?
+	            if(xDiff &lt; 0.5) {
+	                left = 0.5 - xDiff; //Adjust to get the opposite length of the 60° internal angle
+	                if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) { //I multiply by 10 so that I'm not dealing with numbers less than 1
+	                    y -= 1; //change the reference appropriately
+	                }
+	            } else { //rinse repeat for all cases
+	                right = xDiff - 0.5;
+	                if(right * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
+	                    y -= 1;
+	                    x += 1;
+	                }
+	            }
+
+	        } else {
+	            xDiff = (Conf.mouseX / Conf.destinationWidth - x);
+	            if(xDiff &lt; 0.5) {
+	                left = 0.5 - xDiff;
+	                if(left * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
+	                    y -= 1;
+	                    x -= 1;
+	                }
+	            } else {
+	                right = xDiff - 0.5;
+	                if(right * 10 > yDiff * 10 * Math.tan(Math.PI / 3)) {
+	                    y -= 1;
+	                }
+	            }
+	        }
+
+	    }
+	    if(axis === 'x') { //return the appropriate tile axis reference
+	        return x;
+	    } else {
+	        return y;
+	    }
+	},
+
+	/**
+	 * Gets the mouse position on the main canvas
+	 * @param  {Object} canvas
+	 * @param  {Event} evt
+	 */
+	mouse: function(canvas, evt) {
+	    // get canvas position
+	    var obj = canvas;
+	    var top = 0;
+	    var left = 0;
+	    while(obj &amp;&amp; obj.tagName != 'BODY') {
+	        top += obj.offsetTop - 10;
+	        left += obj.offsetLeft;
+	        obj = obj.offsetParent;
+	    }
+
+	    // return relative mouse position
+	    Conf.mouseX = evt.clientX - left + window.pageXOffset + Conf.destinationWidth / 2;
+	    Conf.mouseY = evt.clientY - top + window.pageYOffset;
+	},
+
+	/**
+	* Advances the game by a given number of turns
+	* @param {int} turns Number of turns to advance by
+	*/
+	skipTurns: function(turns){
+	    while(turns > 0){
+	        if(!Conf.buildings[37][1]) {
+	            var x;
+	            var y;
+	            setStats();
+	            for(y = 0; y &lt; Conf.radarRad * 2; y++) {
+	                for(x = 0; x &lt; Conf.radarRad * 2; x++) {
+	                    for(var l = 0; l &lt; 5; l++) {
+	                        nextTurn(x, y, l);
+	                    }
+	                }
+	            }
+	            if(Conf.energy[Conf.energy.length - 1] &lt;= 10) {
+	                Terminal.print(TRANS.noPower);
+	                Conf.blackout = 30;
+	            }
+	            saneStats();
+	            if(turns === 1){
+	                reCount('all');
+	                FileIO.saveGame(Conf);
+	                execReview();
+	                Research.fillPanel('overview');
+	                //setResearchClickers(researchPanel);
+	                Research.refreshMenu();
+	                Display.drawRadar();
+	                Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
+	                document.getElementById('consoleContent').innerHTML = '';
+	                Terminal.print(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
+	            }
+	        } else {
+	            Terminal.print(TRANS.setDown);
+	        }
+	        turns -=1;
+	    }
+	}
+}
+</pre>
+	</article>
+</section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a>
+		on 2014-07-07T20:51:50+02:00 using the <a
+			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<!--<script src="scripts/sunlight.js"></script>-->
+	<script src="scripts/docstrap.lib.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>
+		$( function () {
+			$( "[id*='$']" ).each( function () {
+				var $this = $( this );
+
+				$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+			} );
+
+			$( "#toc" ).toc( {
+				anchorName  : function ( i, heading, prefix ) {
+					return $( heading ).attr( "id" ) || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : "100px"
+			} );
+
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+			$( '.dropdown-toggle' ).dropdown();
+//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+			$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+				var $this = $( this );
+
+				var example = $this.find( "code" );
+				exampleText = example.html();
+				var lang = /{@lang (.*?)}/.exec( exampleText );
+				if ( lang && lang[1] ) {
+					exampleText = exampleText.replace( lang[0], "" );
+					example.html( exampleText );
+					lang = lang[1];
+				} else {
+					lang = "javascript";
+				}
+
+				if ( lang ) {
+
+					$this
+						.addClass( "sunlight-highlight-" + lang )
+						.addClass( "linenums" )
+						.html( example.html() );
+
+				}
+			} );
+
+			Sunlight.highlightAll( {
+				lineNumbers : true,
+				showMenu : true,
+				enableDoclinks : true
+			} );
+		} );
+	 </script>
+
+
+
+	<!--Navigation and Symbol Display-->
+	
+
+
+	<!--Google Analytics-->
+	
+
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Codename Eureka Source: scripts/tools.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.spacelab.css">
+
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top ">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Codename Eureka</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="CneTools.html">CneTools</a>
+						</li>
+						
+						<li>
+							<a href="Conf.html">Conf</a>
+						</li>
+						
+						<li>
+							<a href="Display.html">Display</a>
+						</li>
+						
+						<li>
+							<a href="FileIO.html">FileIO</a>
+						</li>
+						
+						<li>
+							<a href="Interface.html">Interface</a>
+						</li>
+						
+						<li>
+							<a href="Music.html">Music</a>
+						</li>
+						
+						<li>
+							<a href="Research.html">Research</a>
+						</li>
+						
+						<li>
+							<a href="Resources.html">Resources</a>
+						</li>
+						
+						<li>
+							<a href="Terminal.html">Terminal</a>
+						</li>
+						
+						<li>
+							<a href="Tools.html">Tools</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="ClassicalNoise.html">ClassicalNoise</a>
+						</li>
+						
+						<li>
+							<a href="Construction.html">Construction</a>
+						</li>
+						
+						<li>
+							<a href="MersenneTwister.html">MersenneTwister</a>
+						</li>
+						
+						<li>
+							<a href="NewGame.html">NewGame</a>
+						</li>
+						
+						<li>
+							<a href="Terrain.html">Terrain</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#contextContent">contextContent</a>
+						</li>
+						
+						<li>
+							<a href="global.html#execReview">execReview</a>
+						</li>
+						
+						<li>
+							<a href="global.html#leftMenuResize">leftMenuResize</a>
+						</li>
+						
+						<li>
+							<a href="global.html#mainLoop">mainLoop</a>
+						</li>
+						
+						<li>
+							<a href="global.html#menu">menu</a>
+						</li>
+						
+						<li>
+							<a href="global.html#nextTurn">nextTurn</a>
+						</li>
+						
+						<li>
+							<a href="global.html#pageVisHandler">pageVisHandler</a>
+						</li>
+						
+						<li>
+							<a href="global.html#reCount">reCount</a>
+						</li>
+						
+						<li>
+							<a href="global.html#resize">resize</a>
+						</li>
+						
+						<li>
+							<a href="global.html#saneStats">saneStats</a>
+						</li>
+						
+						<li>
+							<a href="global.html#setStats">setStats</a>
+						</li>
+						
+						<li>
+							<a href="global.html#TRANS">TRANS</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: scripts/tools.js</h1>
+    
+<section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">/**
+* Moduled namespace wrapper for all of the general use tools like random number generators,
+* basic DOM manipulation etc.
+* @namespace Tools
+*/
+var Tools = (function(){
+	var toolbox = {
+		/**
+		* For a provided array, will return an array fo the max and min values
+		* @param {array} arrayIn Array to find the max/min values of
+		* @returns {array} The max/min values &lt;tt>[max,min]&lt;/tt> 
+		*/
+		getMaxMin: function(arrayIn){
+		    var max = 0;
+		    var min = 1000000;
+		    var maxTest, minTest;
+		    for(var i = 0; i &lt; arrayIn.length; i++){
+		        maxTest = Math.max.apply(null,arrayIn[i]);
+		        minTest = Math.min.apply(null,arrayIn[i]);
+		        if(maxTest > max){max = maxTest;}
+		        if(minTest &lt; min){min = minTest;}
+		        if(min &lt; 0){min = 0;}
+		    }
+		    max = Math.ceil(1 + max/50) * 50;
+		    min = Math.floor(min/50) * 50;
+		    return [max, min];
+		},
+		
+		/**
+		* Given a container element, will unhook all of the child elements (Chrome should 
+		* then remove the orphaned click listeners during garbage collection), thus 
+		* "flushing" the container
+		* @memberOf Tools
+		* @param {HTMLElement} elem Element to flush out
+		* @todo Confirm that Chrome removes orphaned click listeners
+		*/
+		flush: function(elem){
+		    //afaik, chrome will remove orphaned event listeners
+		    while (elem.lastChild) {
+		        elem.removeChild(elem.firstChild);
+		    }
+		},
+
+		/**
+		 * Generates a random number from minimum to minimum + range-1
+		 * @memberOf Tools
+		 * @param  {int} range The range of values to generate (i.e. '6' gives values from 0 to 5)
+		 * @param  {int} [base] A base modifier (i.e. '(6,2)' gives values from 2 to 7)
+		 * @param {bool} [seeded] Whether the generated number should use the game's seed or not
+		 * @return {int} The generated random number
+		 */
+		randomGenerator: function(range, base, seeded) {
+			var min = base || 0;
+			var randomNumber;
+			seeded ? randomNumber = Conf.rng.random() : randomNumber = Math.random();
+		    return Math.floor(randomNumber * range) + min;
+		},
+
+		/**
+		 * Returns the distance between two points
+		 * @memberOf Tools
+		 * @param  {int} x1 First point's X coordinate
+		 * @param  {int} y1 First point's Y coordinate 
+		 * @param  {int} x2 Second point's X coordinate
+		 * @param  {int} y2 Second point's Y coordinate
+		 * @return {float} The distance (in same units as provided)
+		 */
+		distance: function(x1, y1, x2, y2) {
+		    return Math.round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
+		},
+
+		/**
+		 * Random walk function for "clumpy" randomness. Will generate a number that 
+		 * oscillates around 0. for 'turn left, turn right, go straight'
+		 * @memberOf Tools
+		 * @return {int}
+		 * @todo This is actually never used, but may come in handy. Candidate for removal?
+		 */
+		randomWalk: function() {
+		    var walk = Math.floor(Math.random() * 3);
+		    switch(walk) {
+		    case 0:
+		        return -1;
+		    case 1:
+		        return 0;
+		    case 2:
+		        return 1;
+		    default:
+		        break;
+		    }
+		},
+
+		/**
+		* Inserts the provided string into the provided index. This protoypes 
+		* &lt;tt>String&lt;/tt>, so prefixing with &lt;tt>Tools.&lt;/tt> is unnessecary?
+		* @memberOf Tools
+		* @method
+		* @param {int} index Index at which to insert the string
+		* @param {string} string The string to insert
+		* @returns {string} Modified string
+		* @todo Figure out how to protoype properly in a module, this works, but
+		* I don't know how...
+		*/
+		insert : String.prototype.insert = function(index, string) {
+			console.log();
+	    	if(index > 0) {
+	    		return this.slice(0, index) + string + this.slice(index);
+	    	} else{
+	    		return string + this;
+	    	}
+		}
+	}
+
+	return toolbox;
+})();</pre>
+	</article>
+</section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a>
+		on 2014-07-07T20:51:50+02:00 using the <a
+			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<!--<script src="scripts/sunlight.js"></script>-->
+	<script src="scripts/docstrap.lib.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>
+		$( function () {
+			$( "[id*='$']" ).each( function () {
+				var $this = $( this );
+
+				$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+			} );
+
+			$( "#toc" ).toc( {
+				anchorName  : function ( i, heading, prefix ) {
+					return $( heading ).attr( "id" ) || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : "100px"
+			} );
+
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+			$( '.dropdown-toggle' ).dropdown();
+//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+			$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+				var $this = $( this );
+
+				var example = $this.find( "code" );
+				exampleText = example.html();
+				var lang = /{@lang (.*?)}/.exec( exampleText );
+				if ( lang && lang[1] ) {
+					exampleText = exampleText.replace( lang[0], "" );
+					example.html( exampleText );
+					lang = lang[1];
+				} else {
+					lang = "javascript";
+				}
+
+				if ( lang ) {
+
+					$this
+						.addClass( "sunlight-highlight-" + lang )
+						.addClass( "linenums" )
+						.html( example.html() );
+
+				}
+			} );
+
+			Sunlight.highlightAll( {
+				lineNumbers : true,
+				showMenu : true,
+				enableDoclinks : true
+			} );
+		} );
+	 </script>
+
+
+
+	<!--Navigation and Symbol Display-->
+	
+
+
+	<!--Google Analytics-->
+	
+
+</body>
+</html>
