@@ -1,7 +1,5 @@
 "use strict";
 /**
-* @public
-* @memberOf CneTools
 * Namespace wrapper for all CNE specific tools
 * @namespace
 */
