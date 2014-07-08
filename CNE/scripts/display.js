@@ -3,16 +3,16 @@
 * Namespace wrapper for the display.
 * @namespace
 */
-var Display = {
+var Display = (function(){
 	/**
 	* Sets the map's zoom to provided zoom level
 	* @param {int} zoomLevel The level of zoom that's needed
 	*/
-	zoom: function(zoomLevel) {
+	function zoom(zoomLevel) {
 	    Conf.destinationWidth = zoomLevel * 6 * 6;
 	    Conf.destinationHeight = zoomLevel * 7 * 6;
 	    Display.resizeMap();
-	},
+	}
 
 	/**
 	* Draws all graphs and charts for the statistics panel
@@ -22,7 +22,7 @@ var Display = {
 	* @param {bool} [from0] If true, forces y-axis to start from 0 rather than adapting to the data given
 	* @todo This should be generalized and then moved into tools.js
 	*/
-	drawGraph: function(type, outputId, sourceData, from0) {
+	function drawGraph(type, outputId, sourceData, from0) {
 	    var can = document.getElementById(outputId);
 	    var con = document.getElementById(outputId).getContext('2d');
 	    var canW = parseInt(can.width, 10);
@@ -217,12 +217,12 @@ var Display = {
 	            conL.closePath();
 	        }
 	    }
-	},
+	}
 
 	/**
 	 * Draws the radar properly
 	 */
-	drawRadar: function() {
+	function drawRadar() {
 	    Conf.radar.clearRect(0, 0, Conf.radarRad * 2, Conf.radarRad * 2);
 	    var radarPixels = Conf.radar.createImageData(Conf.radarRad * 2, Conf.radarRad * 2);
 	    var options = ["aluminiumRadarOpt","calciumRadarOpt","copperRadarOpt","goldRadarOpt","ironRadarOpt","leadRadarOpt","magnesiumRadarOpt","mercuryRadarOpt","phosphorousRadarOpt","potassiumRadarOpt","silverRadarOpt","sodiumRadarOpt","tinRadarOpt","zincRadarOpt"];
@@ -293,7 +293,7 @@ var Display = {
 	    Conf.level === 0 ? Conf.radar.fillStyle = "#000000" : Conf.radar.fillStyle = "#ffffff";
 	    Conf.radar.font = "14px Arial";
 	    Conf.radar.fillText('Depth: ' + Conf.level * 50 + 'm', 215, 298);
-	},
+	}
 
 
 
@@ -309,7 +309,7 @@ var Display = {
 	 * @param {int} modY From 0, move to the modYth sprite
 	 * @todo This could be simplified a lot and made to have optional arguments
 	 */
-	drawTile: function(tileType, tilePosX, tilePosY, source, destination, animateIt, modX, modY) {
+	function drawTile(tileType, tilePosX, tilePosY, source, destination, animateIt, modX, modY) {
 	    var sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY; //Canvas vars
 	    sourceWidth = 216; //original tile width
 	    sourceHeight = 252; //original tile height
@@ -323,7 +323,7 @@ var Display = {
 	    sourceX += sourceWidth * modX;
 	    sourceY = (tileType * sourceHeight) + (sourceHeight * modY);
 	    destination.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, Conf.destinationWidth, Conf.destinationHeight);
-	},
+	}
 
 
 
@@ -331,7 +331,7 @@ var Display = {
 	/**
 	 * Draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
 	 */
-	drawMap: function() {
+	function drawMap() {
 	    var y, x, tileKind;
 	    Logic.main();
 	    requestAnimationFrame(Display.drawMap);
@@ -358,14 +358,14 @@ var Display = {
 	            x++;
 	        }
 	    }
-	},
+	}
 
 
 
 	/**
 	 * Draws the current location on the small radar map
 	 */
-	drawReticule: function() {
+	function drawReticule() {
 	    Conf.radarLoc.clearRect(0, 0, Conf.radarRad * 2, Conf.radarRad * 2);
 	    Conf.radarLoc.beginPath();
 	    Conf.radarLoc.fillRect(Conf.retX - (Conf.xLimit / 2), Conf.retY - (Conf.yLimit / 2), Conf.xLimit, Conf.yLimit);
@@ -377,13 +377,13 @@ var Display = {
 	    Conf.radarLoc.strokeStyle = '#BD222A';
 	    Conf.radarLoc.stroke();
 	    Conf.radarLoc.closePath();
-	},
+	}
 
 	/**
 	* Fits the map to the screen
 	* @param {bool} [bool] Has the window been resized or not
 	*/
-	resizeMap: function(bool) {
+	function resizeMap(bool) {
 	    var quarterHeight = Math.floor(Conf.destinationHeight * 0.25);
 	    if(bool) {
 	        var overlay = document.getElementById('mPanOverlay');
@@ -434,4 +434,14 @@ var Display = {
 	    Display.drawRadar();
 	    Display.drawReticule();
 	}
-}
+
+	return {
+		zoom: zoom,
+		drawGraph: drawGraph,
+		drawRadar: drawRadar,
+		drawTile: drawTile,
+		drawMap: drawMap,
+		drawReticule: drawReticule,
+		resizeMap: resizeMap
+	}
+})();
