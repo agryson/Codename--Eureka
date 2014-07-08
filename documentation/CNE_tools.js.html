@@ -32,7 +32,8 @@
 						</li>
 						
 						<li>
-							<a href="CneTools.html">CneTools</a>
+							<a href="tools.CneTools.html">CneTools
+Namespace wrapper for all CNE specific tools.CneTools</a>
 						</li>
 						
 						<li>
@@ -52,7 +53,7 @@
 						</li>
 						
 						<li>
-							<a href="Menu.html">Menu</a>
+							<a href="Menu_.html">Menu</a>
 						</li>
 						
 						<li>
@@ -147,16 +148,20 @@
 		<pre
 			class="sunlight-highlight-javascript linenums">"use strict";
 /**
+* @public
+* @memberOf CneTools
 * Namespace wrapper for all CNE specific tools
 * @namespace
 */
-var CneTools = {
+var CneTools = (function(){
 
 	/**
+	* @public
+	* @memberOf CneTools
 	 * Checks which buildings are available to the player and
 	 * populates the sidebar with those buildings
 	 */
-	checkBuildings: function() {
+	function checkBuildings() {
 	    for(var thing = 0; thing &lt; Conf.buildings.length; thing++) {
 	        var idString = Conf.buildings[thing][0];
 	        var elem = document.getElementById(idString);
@@ -197,14 +202,16 @@ var CneTools = {
 	        }
 	    }
 	    CneTools.checkRobots();
-	},
+	}
 
 
 
 	/**
+	* @public
+	* @memberOf CneTools
 	* Manages what robots are available for the given context in the menu
 	*/
-	checkRobots: function() {
+	function checkRobots() {
 	    //TODO: clean all this shit up
 	    for(var r2d2 in Conf.robotsList) {
 	        var wallE = Conf.robotsList[r2d2];
@@ -269,26 +276,30 @@ var CneTools = {
 	            //cavDig.style.background = '#000';
 	        }
 	    }
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	 * Changes level from an input (slider etc.)
 	 * @param  {int} newLevel the level we would change to
 	 * @todo Maybe make a "navigate" namespace for radar and movement?
 	 */
-	changeLevel: function(newLevel) {
+	function changeLevel(newLevel) {
 	    Conf.level = parseInt(newLevel, 10);
 	    CneTools.checkBuildings();
 	    Display.drawRadar();
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	* Determines if a point is within communications range of the colony or not
 	* @param {int} x X coordinate of point to test
 	* @param {int} y Y coordinate of point to test
 	* @returns {bool} Whether the point is in communications range or not
 	*/
-	inRange: function(x, y){
+	function inRange(x, y){
 	    for(var tower = 0; tower &lt; Conf.commTowers.length; tower++){
 	        var radius = 75 - Conf.level*10;
 	        var thisTower = Conf.mapTiles[0][Conf.commTowers[tower][1]][Conf.commTowers[tower][0]].kind;
@@ -300,9 +311,11 @@ var CneTools = {
 	        }
 	    }
 	    return false;
-	},
+	}
 	
 	/**
+	* @public
+	* @memberOf CneTools
      * Moves the map to the provided location. Defaults to the mapped 
      * coordinates of the mouse pointer
      * @param {bool} [bool] Force a jump to a particular spot (see other parameters)
@@ -310,7 +323,7 @@ var CneTools = {
      * @param {int} [y] Y coordinate for where the map was clicked
      * @param {int} [level] The level the player is on
      */
-    moveTo: function(bool, x, y, level) {
+    function moveTo(bool, x, y, level) {
         if(bool){
             Conf.retX = x + 1;
             Conf.retY = y + 2;
@@ -321,25 +334,29 @@ var CneTools = {
         }
         Display.resizeMap();
         Display.drawReticule();
-    },
+    }
 
 	/**
+	* @public
+	* @memberOf CneTools
 	* Given two strings, will return a modified version (for tile references)
 	* @param {string} string String to be placed at begginning of modified string
 	* @param {string} orig Original string
 	* @returns {string} Returns &lt;tt>string&lt;/tt> + " #" + the first word after # in &lt;tt>orig&lt;/tt>
 	*/
-	changeName: function(string, orig) {
+	function changeName(string, orig) {
 	    return string + ' #' + orig.split('#')[1];
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	* Checks connectivity of the provided tile with the colony (on the current level)
 	* @param {int} y Y coordinate to check
 	* @param {int} x X coordinate to check
 	* @returns {bool} Connected or not
 	*/
-	checkConnection: function(y, x) {
+	function checkConnection(y, x) {
 	    var connected = false;
 	    for(var j = 0; j &lt; 6; j++) {
 	        if(Conf.mapTiles[Conf.level][CneTools.adjacent(x, y, j)[0]][CneTools.adjacent(x, y, j)[1]] &amp;&amp; 
@@ -349,9 +366,11 @@ var CneTools = {
 	        }
 	    }
 	    return connected;
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	 * Returns the adjacent tile reference in y and x (inverted for historical reasons)
 	 * @param  {int} x X coordiante for tile we want to get the adjacent tiles for
 	 * @param  {int} y Y coordiante for tile we want to get the adjacent tiles for
@@ -359,7 +378,7 @@ var CneTools = {
 	 * clockwise
 	 * @return {array} The coordinates for the tile at the provided index
 	 */
-	adjacent: function(x, y, index) {
+	function adjacent(x, y, index) {
 	    if(y % 2 === 0) {
 	        index += 6;
 	    }
@@ -387,15 +406,17 @@ var CneTools = {
 	    default:
 	        console.log('There was a problem jim, x:' + x + ' y:' + y + ' index:' + index);
 	    }
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	 * Checks if any adjacent tiles are wet
 	 * @param  {array} yxArrayIn is an array of the y &amp; x coordinates of the tile to test
 	 * @param  {int} level provides the level to test on
 	 * @return {boolean} Wet or not
 	 */
-	isWet: function(yxArrayIn, level) {
+	function isWet(yxArrayIn, level) {
 	    var yxArray = yxArrayIn.slice(0);
 	    for(var i = 0; i &lt; 6; i++) {
 	        if(Conf.map[level][CneTools.adjacent(yxArray[1], yxArray[0], i)[0]][CneTools.adjacent(yxArray[1], yxArray[0], i)[1]].kind === 4) {
@@ -403,14 +424,16 @@ var CneTools = {
 	        }
 	    }
 	    return false;
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	 * Gets the x or y value for the currently moused over tile
 	 * @param  {string} The axis we want the coordinate of
 	 * @return {int} The coordinate for desired axis
 	 */
-	getTile: function(axis) {
+	function getTile(axis) {
 	    var x, y, yDiff, xDiff, left, right;
 
 	    //set the general cases
@@ -461,14 +484,16 @@ var CneTools = {
 	    } else {
 	        return y;
 	    }
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	 * Gets the mouse position on the main canvas
 	 * @param  {Object} canvas
 	 * @param  {Event} evt
 	 */
-	mouse: function(canvas, evt) {
+	function mouse(canvas, evt) {
 	    // get canvas position
 	    var obj = canvas;
 	    var top = 0;
@@ -482,13 +507,15 @@ var CneTools = {
 	    // return relative mouse position
 	    Conf.mouseX = evt.clientX - left + window.pageXOffset + Conf.destinationWidth / 2;
 	    Conf.mouseY = evt.clientY - top + window.pageYOffset;
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	* Advances the game by a given number of turns
 	* @param {int} turns Number of turns to advance by
 	*/
-	advanceTurns: function(turns){
+	function advanceTurns(turns){
 	    while(turns > 0){
 	        if(!Conf.buildings[37][1]) {
 	            var x;
@@ -523,19 +550,37 @@ var CneTools = {
 	        }
 	        turns -=1;
 	    }
-	},
+	}
 
 	/**
+	* @public
+	* @memberOf CneTools
 	* Handles what needs to be done if the page is visible or not (pause music etc.)
 	*/
-	pageVisHandler: function() {
+	function pageVisHandler() {
 	  if (document.webkitHidden) {
 	    Music.pause();
 	  } else {
 	    Music.play();
 	  }
 	}
-}
+
+	return {
+		checkBuildings : checkBuildings,
+		checkRobots : checkRobots,
+		changeLevel : changeLevel,
+		inRange : inRange,
+		moveTo : moveTo,
+		changeName : changeName,
+		checkConnection : checkConnection,
+		adjacent : adjacent,
+		isWet : isWet,
+		getTile : getTile,
+		mouse : mouse,
+		advanceTurns : advanceTurns,
+		pageVisHandler : pageVisHandler
+	}
+})();
 </pre>
 	</article>
 </section>
@@ -552,7 +597,7 @@ var CneTools = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a>
-		on 2014-07-07T23:21:08+02:00 using the <a
+		on 2014-07-08T21:01:47+02:00 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
