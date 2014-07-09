@@ -271,7 +271,7 @@ var Display = (function(){
 	                }
 	                for(var j = 0; j < options.length; j++){
 	                    if(Conf.map[Conf.level][y][x].mineable && document.getElementById(options[j]).checked){
-	                        var ore = CneTools.Resources.reference(j, 0);
+	                        var ore = Resources.reference(j, 0);
 	                        for(var k = 0; k < ore.length; k++){
 	                            if(resourceOnTile[ore[k]]){
 	                                radarPixels.data[idx + i] = other[i];

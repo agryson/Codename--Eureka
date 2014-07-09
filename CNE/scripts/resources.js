@@ -3,17 +3,55 @@
 * Anything that effects player data regarding resources
 * @namespace
 */
-var Resources = {
+var Resources = (function(){
+    /**
+    * Depending on availability, will take the resources indicated. If not all the 
+    * resources are available, it wil print the missing resources to the in-game
+    * console
+    * @private
+    * @memberOf Resources
+    * @param {array} arr Array of materials to requisition
+    * @returns {bool} Success or not
+    * @todo This function should probably handle recycling as well
+    */
+    function _requisition(arr){//TODO set up recycling here
+        var resourceCheck = false;
+        var count = 0;
+        for(var j = 0; j < arr.length; j++){
+            if(Conf.procOres[arr[j][0]] >= arr[j][1]){
+                count += 1;
+            }
+        }
+        if(count === arr.length){
+            resourceCheck = true;
+            for(var k = 0; k < arr.length; k++){
+                Conf.procOres[arr[k][0]] -= arr[k][1];
+            }
+            Stats.executiveReview();
+        } else {
+            var shortage = TRANS.resourceShortage;
+            for(var s = 1; s < arr.length; s++){
+                if(Conf.procOres[arr[s][0]] < arr[s][1]){
+                    shortage += Conf.resourceNames[arr[s][0]] + ", ";
+                }
+            }
+            Terminal.print(shortage.substring(0,shortage.length - 2)); //removes the space and comma
+        }
+        return resourceCheck;
+    }
+    
     /**
     * Provides the list of materials needed, either as a directly usable array, a 
     * boolean value representing availability or as a Document Fragment for use in 
     * the context menu
+    * @public
+    * @memberOf Resources
     * @param {string} building The building to get list for
     * @param {bool} getRec If true, will try to requisition the required materials, returning success or failure
     * @param {bool} recycling If true, will simply get the array of materials needed for a construction
     * @returns {(array|bool|Object)} Array of materials needed | Success or failure of requisition | Document Fragment listing material availability
     */
-    required: function(building, getRec, recycling){
+    function required(building, getRec, recycling){
         var resourcesNeeded;
         var future;
         switch(building) {
@@ -210,7 +248,7 @@ var Resources = {
         if(recycling){
             return resourcesNeeded;
         } else if(getRec) {
-            return(Resources.requisition(resourcesNeeded));
+            return(_requisition(resourcesNeeded));
         } else {
             var frag = document.createDocumentFragment();
             var spacer = document.createElement('br');
@@ -242,16 +280,18 @@ var Resources = {
             console.log(frag);
             return frag;
         }
-    },
+    }
 
     /**
     * Cross references the indexes of processed minerals to their ores
+    * @public
+    * @memberOf Resources
     * @param {int} ref 
     * @param {int} dir 'Direction' of the conversion: (0 processed -> ore; 1 ore -> processed
     * @returns {array} 
     * @todo dir seems redundant here
     */
-    reference: function(ref,dir){
+    function reference(ref,dir){
         //dir should tell us if we're going from ore to processed or processed to ore
         //0 is from processed to ore
         //1 is from ore to processed
@@ -288,40 +328,11 @@ var Resources = {
             default:
                 console.log("Whoah Timmy! You don't wanna stick that in the furnace! " + ref + " " + dir);
         }
-    },
-
-    /**
-    * Depending on availability, will take the resources indicated. If not all the 
-    * resources are available, it wil print the missing resources to the in-game
-    * console
-    * @param {array} arr Array of materials to requisition
-    * @returns {bool} Success or not
-    * @todo This function should probably handle recycling as well
-    */
-    requisition: function(arr){//TODO set up recycling here
-        var resourceCheck = false;
-        var count = 0;
-        for(var j = 0; j < arr.length; j++){
-            if(Conf.procOres[arr[j][0]] >= arr[j][1]){
-                count += 1;
-            }
-        }
-        if(count === arr.length){
-            resourceCheck = true;
-            for(var k = 0; k < arr.length; k++){
-                Conf.procOres[arr[k][0]] -= arr[k][1];
-            }
-            Stats.executiveReview();
-        } else {
-            var shortage = TRANS.resourceShortage;
-            for(var s = 1; s < arr.length; s++){
-                if(Conf.procOres[arr[s][0]] < arr[s][1]){
-                    shortage += Conf.resourceNames[arr[s][0]] + ", ";
-                }
-            }
-            Terminal.print(shortage.substring(0,shortage.length - 2)); //removes the space and comma
-        }
-        return resourceCheck;
     }
-    
-}
+
+    return {
+        required: required,
+        reference: reference
+    }
+
+})();
