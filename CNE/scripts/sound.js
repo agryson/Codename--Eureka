@@ -12,47 +12,48 @@ var Music = (function(){
     var track2 = new Audio('sound/Shapeless_Clearside.mp3');
     var track3 = new Audio('sound/Coma_Clearside.mp3');
     var currentTrack = track0;
-    var jukebox = {
 
-        /**
-        * Toggles music on or off
-        * @memberOf Music
-        */
-        toggleMusic: function(){
-            if(!musicOn) {
-                musicOn = true;
-                jukebox.play();
-            } else {
-                musicOn = false;
-                jukebox.pause();
-            }
-        },
-        /**
-        * Pauses music
-        * @memberOf Music
-        */
-        pause: function() {
-            currentTrack.pause();
-        },
-        /**
-        * Plays music
-        * @memberOf Music
-        */
-        play: function() {
-            currentTrack.volume = volume;
-            musicOn ? currentTrack.play() : currentTrack.pause();
-        },
-        /**
-        * Sets volume to provided value
-        * @memberOf Music
-        * @param {float} val Desired volume level, from 0 to 1 (1 being 100%)
-        */
-        setVolume: function(val){
-            currentTrack.volume = val;
-            volume = val;
-        },
-
+    /**
+    * Toggles music on or off
+    * @memberOf Music
+    */
+    function toggleMusic(){
+        if(!musicOn) {
+            musicOn = true;
+            jukebox.play();
+        } else {
+            musicOn = false;
+            jukebox.pause();
+        }
     }
+
+    /**
+    * Pauses music
+    * @memberOf Music
+    */
+    function pause() {
+        currentTrack.pause();
+    }
+
+    /**
+    * Plays music
+    * @memberOf Music
+    */
+    function play() {
+        currentTrack.volume = volume;
+        musicOn ? currentTrack.play() : currentTrack.pause();
+    }
+
+    /**
+    * Sets volume to provided value
+    * @memberOf Music
+    * @param {float} val Desired volume level, from 0 to 1 (1 being 100%)
+    */
+    function setVolume(val){
+        currentTrack.volume = val;
+        volume = val;
+    }
+
     //Sounds
     track0.addEventListener('ended', function() {
         this.currentTime = 0;
@@ -79,5 +80,11 @@ var Music = (function(){
         track0.play();
     }, false);
     //!Sounds
-    return jukebox;
+    
+    return {
+        toggleMusic: toggleMusic,
+        pause: pause,
+        play: play,
+        setVolume: setVolume
+    } 
 })();

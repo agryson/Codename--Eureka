@@ -4,7 +4,6 @@
 * @namespace
 */
 var Terminal = (function(){
-    var terminal = {};
     /**
     * In the event of bad input to the in-game console, prints the error message
     * @private
@@ -22,11 +21,11 @@ var Terminal = (function(){
             if(lwrLimit){
                 errText += ' ' + TRANS.between + ' ' + lwrLimit + ' ' + TRANS.and + ' ' + uprLimit;
             }
-            Terminal.print(errText);
+            print(errText);
         } else if(err === 'command') {
-            Terminal.print('"' + text + '"' + ' ' + TRANS.commandErr);
+            print('"' + text + '"' + ' ' + TRANS.commandErr);
         } else {
-            Terminal.print(text + ' ' + TRANS.consoleInputErr);
+            print(text + ' ' + TRANS.consoleInputErr);
         }
     }
 
@@ -36,7 +35,7 @@ var Terminal = (function(){
     * @memberOf Terminal
     * @param {string} text Text to print
     */
-    terminal.print = function(text){
+    function print(text){
         if(!document.getElementById('console').classList.contains('console_open')){
             document.getElementById('console').classList.add('console_notif');
             setTimeout(function(){
@@ -60,9 +59,9 @@ var Terminal = (function(){
     * @memberOf Terminal
     * @param {string} text The text to parse and run
     */
-    terminal.run = function(text){
+    function run(text){
         document.getElementById('consoleInput').value = '';
-        Terminal.print(text);
+        print(text);
         var input = text.split(" ");
 
         //switch(text)
@@ -75,7 +74,7 @@ var Terminal = (function(){
                 }
                 break;
             case TRANS.hello:
-                Terminal.print(TRANS.world);
+                print(TRANS.world);
                 break;
             case TRANS.level:
                 if(input[1] >= 0 || input[1] <= 4){
@@ -91,11 +90,11 @@ var Terminal = (function(){
                 if(Conf.home){
                     CneTools.moveTo(true, Conf.home[0], Conf.home[1], 0);
                 } else {
-                    Terminal.print(TRANS.setDown);
+                    print(TRANS.setDown);
                 }
                 break;
             case TRANS.seed:
-                Terminal.print(Conf.inputSeed);
+                print(Conf.inputSeed);
                 break;
             case TRANS.zoom:
                 if(input[1] >= 1 || input[1] <= 6){
@@ -108,22 +107,22 @@ var Terminal = (function(){
             case TRANS.help:
                 switch(input[1]){
                     case TRANS.advance:
-                        Terminal.print(TRANS.advanceMan);
+                        print(TRANS.advanceMan);
                         break;
                     case TRANS.hello:
-                        Terminal.print(TRANS.helloMan);
+                        print(TRANS.helloMan);
                         break;
                     case TRANS.level:
-                        Terminal.print(TRANS.levelMan);
+                        print(TRANS.levelMan);
                         break;
                     case TRANS.home:
-                        Terminal.print(TRANS.home);
+                        print(TRANS.home);
                         break;
                     case TRANS.seed:
-                        Terminal.print(TRANS.seedMan);
+                        print(TRANS.seedMan);
                         break;
                     default:
-                        Terminal.print(TRANS.helpMan);
+                        print(TRANS.helpMan);
                 }
                 break;
             default:
@@ -132,5 +131,8 @@ var Terminal = (function(){
         document.getElementById('console').classList.add('console_open');
     }
 
-    return terminal;
+    return {
+        run: run,
+        print: print
+    }
 })();
