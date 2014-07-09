@@ -6,6 +6,8 @@
 var Stats = (function(){
 	/**
 	* Opens the Executive Review panel, coloring in all of the statistics when we need them
+	* @public
+	* @memberOf Stats
 	*/
 	function executiveReview() {
 	    var darkBlue = '#66D8FF';
@@ -129,6 +131,8 @@ var Stats = (function(){
 
 	/**
 	* Corrects the statistics for illogical stuff (percentages over 100 etc.)
+	* @public
+	* @memberOf Stats
 	*/
 	function sanityCheck(){
 	    if(Conf.crime[Conf.crime.length - 1] < 0){
@@ -169,6 +173,8 @@ var Stats = (function(){
 
 	/**
 	* Pushes all tracked data to the relevant places for in-game statistics
+	* @public
+	* @memberOf Stats
 	*/
 	function setAll() {
 	    Conf.crime.push(0);
