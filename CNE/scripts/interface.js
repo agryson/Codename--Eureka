@@ -712,14 +712,14 @@ var Interface = (function(){
         popFrame.addEventListener('mouseout', hide, false);
 
     }
-    var controls = {};
+
     /**
      * Generic keyboard listener
      * @memberOf Interface
      * @method keydown
      * @param  {Event} e The event passed in upon key press
      */
-    controls.keydown = function(e) {
+    function keydown(e) {
         if(document.activeElement === document.getElementById('consoleInput')){
             switch(e.keyCode){
                 case 13: //enter
@@ -876,5 +876,7 @@ var Interface = (function(){
     }
 
 
-    return controls;
+    return {
+        keydown: keydown
+    }
 })();

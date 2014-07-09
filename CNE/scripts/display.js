@@ -6,6 +6,8 @@
 var Display = (function(){
 	/**
 	* Sets the map's zoom to provided zoom level
+	* @public
+	* @memberOf Display
 	* @param {int} zoomLevel The level of zoom that's needed
 	*/
 	function zoom(zoomLevel) {
@@ -16,6 +18,8 @@ var Display = (function(){
 
 	/**
 	* Draws all graphs and charts for the statistics panel
+	* @public
+	* @memberOf Display
 	* @param {string} type The type of chart. Valid values are <tt>line</tt>, <tt>pie</tt> & <tt>bar</tt>
 	* @param {string} outputId The id of the canvas to draw to
 	* @param {array} sourceData The array of data to plot
@@ -221,6 +225,8 @@ var Display = (function(){
 
 	/**
 	 * Draws the radar properly
+	 * @public
+	 * @memberOf Display
 	 */
 	function drawRadar() {
 	    Conf.radar.clearRect(0, 0, Conf.radarRad * 2, Conf.radarRad * 2);
@@ -299,6 +305,8 @@ var Display = (function(){
 
 	/**
 	 * Accepts the kind of tile to draw, the x column number and the y column number, then draws it
+	 * @public
+	 * @memberOf Display
 	 * @param {int} tileType  Type of tile to draw
 	 * @param {int} tilePosX  Tile's x coordinate
 	 * @param {int} tilePosY  Tile's y coordinate
@@ -329,7 +337,10 @@ var Display = (function(){
 
 
 	/**
-	 * Draws the tiles, looping through the zoomMap's grid and placing the appropriate tile with respect to the reticule
+	 * Draws the tiles, looping through the zoomMap's grid and placing the 
+	 * appropriate tile with respect to the reticule
+	 * @public
+	 * @memberOf Display
 	 */
 	function drawMap() {
 	    var y, x, tileKind;
@@ -364,6 +375,8 @@ var Display = (function(){
 
 	/**
 	 * Draws the current location on the small radar map
+	 * @public
+	 * @memberOf Display
 	 */
 	function drawReticule() {
 	    Conf.radarLoc.clearRect(0, 0, Conf.radarRad * 2, Conf.radarRad * 2);
@@ -381,6 +394,8 @@ var Display = (function(){
 
 	/**
 	* Fits the map to the screen
+	* @public
+	* @memberOf Display
 	* @param {bool} [bool] Has the window been resized or not
 	*/
 	function resizeMap(bool) {

@@ -200,7 +200,7 @@ var Research = (function(){
 	* @public
 	* @memberOf Research
 	*/
-	publicMethods.refreshMenu = function(){
+	function refreshMenu(){
 	    var source = Conf.researchTopics[2];
 
 	    //Tier0
@@ -255,7 +255,7 @@ var Research = (function(){
 	* @memberOf Research
 	* @param {string} ident ID of menu item that was clicked
 	*/
-	publicMethods.fillPanel = function(ident){
+	function fillPanel(ident){
 	    var frag = document.createDocumentFragment();
 	    var topicList = false;
 	    if(ident === 'overview'){
@@ -360,7 +360,7 @@ var Research = (function(){
 	* @memberOf Research
 	* @param {Object} tile Tile Object to update research progress for
 	*/
-	publicMethods.updateProgress = function(tile){
+	function updateProgress(tile){
 		console.log(tile.researchTopic);
         var topic = tile.researchTopic;
         var labRef = _researchTopicRef(topic);
@@ -527,5 +527,9 @@ var Research = (function(){
         }
 	}
 
-	return publicMethods;
+	return {
+		refreshMenu: refreshMenu,
+		fillPanel: fillPanel,
+		updateProgress: updateProgress
+	}
 })();

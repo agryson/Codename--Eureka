@@ -10,7 +10,7 @@ var Menu = (function(){
 	* @memberOf Menu
 	* @param {event} e The mousemove event
 	*/
-	function resizeSplit(e) {
+	function _resizeSplit(e) {
 	    var current = e.clientY;
 	    var total = window.innerHeight;
 	    //var barThickness = Math.round((total/100)*2);
@@ -122,7 +122,7 @@ var Menu = (function(){
 	*/
 	function resizeLeft(bool) {
 	    if(bool) {
-	        document.getElementById('leftMenu').onmousemove = resizeSplit;
+	        document.getElementById('leftMenu').onmousemove = _resizeSplit;
 	    } else {
 	        document.getElementById('leftMenu').onmousemove = null;
 	    }

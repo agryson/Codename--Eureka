@@ -10,9 +10,9 @@ var FileIO = (function(){
     /**
     * Success handler, assigning the filesystem to something we can use and then
     * starts loading any existing games
-    * @param {DOMFileSystem} filesystem The filesystem passed in from openfs()
-    * @memberOf FileIO
     * @private
+    * @memberOf FileIO
+    * @param {DOMFileSystem} filesystem The filesystem passed in from openfs()
     */
     var _success = function(filesystem){
         fs = filesystem;
@@ -21,9 +21,9 @@ var FileIO = (function(){
 
     /**
     * Prints appropriate error information to console, if any
-    * @param {FileError} Error Error thrown
-    * @memberOf FileIO
     * @private
+    * @memberOf FileIO
+    * @param {FileError} Error Error thrown
     */
     var _errorHandler = function(e) {
       console.log(e.name + ' : ' + e.message);
