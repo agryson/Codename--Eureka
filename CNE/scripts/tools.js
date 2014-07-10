@@ -6,7 +6,9 @@
 */
 var Tools = (function(){
 	/**
-	* For a provided array, will return an array fo the max and min values
+	* For a provided array, will return an appropriately scaled range for chart axes etc. in increments of 50
+	* e.g. provide [130, 3] it will return [150, 0];
+	* (this is to leave room for the statistics)
 	* @param {array} arrayIn Array to find the max/min values of
 	* @returns {array} The max/min values <tt>[max,min]</tt> 
 	*/
@@ -15,8 +17,8 @@ var Tools = (function(){
 	    var min = 1000000;
 	    var maxTest, minTest;
 	    for(var i = 0; i < arrayIn.length; i++){
-	        maxTest = Math.max.apply(null,arrayIn[i]);
-	        minTest = Math.min.apply(null,arrayIn[i]);
+	        maxTest = arrayIn[i];
+	        minTest = arrayIn[i];
 	        if(maxTest > max){max = maxTest;}
 	        if(minTest < min){min = minTest;}
 	        if(min < 0){min = 0;}

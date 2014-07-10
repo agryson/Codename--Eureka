@@ -5,6 +5,8 @@
 * @todo This currently does too much direct manipulation, we should try to generalize
 */
 var Interface = (function(){
+    document.getElementById("runUnitTests").onclick = Test.startTests;
+
     document.addEventListener("webkitvisibilitychange", CneTools.pageVisHandler, false);
     //Start Screen
     document.getElementById('maxIt').onclick = function(){
