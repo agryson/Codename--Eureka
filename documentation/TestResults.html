@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Codename Eureka Namespace: Interface</title>
+	<title>Codename Eureka Namespace: TestResults</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -148,12 +148,12 @@
 					
 
 
-	<h1 class="page-title">Namespace: Interface</h1>
+	<h1 class="page-title">Namespace: TestResults</h1>
 <section>
 
 <header>
     <h2>
-    Interface
+    TestResults
     </h2>
     
 </header>
@@ -164,7 +164,7 @@
 
     
         
-            <div class="description"><p>Namespace containing all of the User Interface listeners (clicks, taps etc.)</p></div>
+            <div class="description"><p>Wrapper for any functions pertaining to the test results pane</p></div>
         
 
         
@@ -194,8 +194,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="interface.js.html">scripts/interface.js</a>,
-				 <a href="interface.js.html#sunlight-1-line-7">line 7</a>
+				<a href="test_results.js.html">scripts/test_results.js</a>,
+				 <a href="test_results.js.html#sunlight-1-line-9">line 9</a>
 			</li>
 		</ul>
 	</dd>
@@ -205,13 +205,6 @@
 
 	
 
-	
-	<dt class="tag-todo">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>This currently does too much direct manipulation, we should try to generalize</li>
-			</ul>
-	</dd>
 	
 </dl>
 
@@ -238,7 +231,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="clicked"><span class="type-signature">&lt;private, static> </span>clicked<span class="signature">(direction)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addToList"><span class="type-signature">&lt;static> </span>addToList<span class="signature">(message)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -246,8 +239,8 @@
     
     
     <div class="description">
-        <p>Performs the appropriate actions for the tile that is clicked upon depending on 
-the construction or robot chosen</p>
+        <p>Parses the type of message from the text preceding $, 
+then logs appropriate html to the window</p>
     </div>
     
 
@@ -281,258 +274,7 @@ the construction or robot chosen</p>
 
         <tr>
             
-                <td class="name"><code>direction</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">bool</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If true, action takes place, if not, will ask for confirmation</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="interface.js.html">scripts/interface.js</a>,
-				 <a href="interface.js.html#sunlight-1-line-413">line 413</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="keydown"><span class="type-signature">&lt;static> </span>keydown<span class="signature">(e)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Generic keyboard listener</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>e</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Event</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The event passed in upon key press</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="interface.js.html">scripts/interface.js</a>,
-				 <a href="interface.js.html#sunlight-1-line-718">line 718</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="move"><span class="type-signature">&lt;private, static> </span>move<span class="signature">(dir)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Depending on the key pressed, changes the reference reticule
-and then redraws the maps and radar</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>dir</code></td>
+                <td class="name"><code>message</code></td>
             
 
             <td class="type">
@@ -548,7 +290,7 @@ and then redraws the maps and radar</p>
 
             
 
-            <td class="description last"><p>is the direction to move</p></td>
+            <td class="description last"><p>The raw message from the event listener of the form type$description$value e.g. test$fail$function</p></td>
         </tr>
 
 	
@@ -584,133 +326,8 @@ and then redraws the maps and radar</p>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="interface.js.html">scripts/interface.js</a>,
-				 <a href="interface.js.html#sunlight-1-line-646">line 646</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="rightClick"><span class="type-signature">&lt;private, static> </span>rightClick<span class="signature">(content)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Upon right click, creates the context menu</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>content</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The content for the right click menu in html</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="interface.js.html">scripts/interface.js</a>,
-				 <a href="interface.js.html#sunlight-1-line-691">line 691</a>
+				<a href="test_results.js.html">scripts/test_results.js</a>,
+				 <a href="test_results.js.html#sunlight-1-line-17">line 17</a>
 			</li>
 		</ul>
 	</dd>

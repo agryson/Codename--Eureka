@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Codename Eureka Classes</title>
+	<title>Codename Eureka Source: scripts/test_results.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -142,153 +142,69 @@
 	<div class="row-fluid">
 
 		
-		<div class="span8">
-			
+			<div class="span12">
+				
 				<div id="main">
 					
 
 
-	<h1 class="page-title">Classes</h1>
+		<h1 class="page-title">Source: scripts/test_results.js</h1>
+    
 <section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">window.addEventListener("message", function(event) {
+	TestResults.addToList(event.data);
+});
 
-<header>
-    <h2>
-    
-    </h2>
-    
-</header>
+/**
+* Wrapper for any functions pertaining to the test results pane
+* @namespace
+*/
+var TestResults = (function(){
+	/**
+	* Parses the type of message from the text preceding $, 
+	* then logs appropriate html to the window
+	* @public
+	* @memberOf TestResults
+	* @param {string} message The raw message from the event listener of the form type$description$value e.g. test$fail$function
+	*/
+	function addToList(message){
+		var input = message.split('$');
+		var output = "";
+		switch(input[0]){
+			case 'clear':
+				document.body.innerHTML = "";
+				break;
+			case 'title':
+				output = "&lt;h2>" + input[1] + "&lt;/h2>";
+				break;
+			case 'time':
+				output = "&lt;h4>" + input[1] + "&lt;/h4>";
+				break;
+			case 'group':
+				output = "&lt;div class='test-group'>&lt;h3>" + input[1] + "&lt;/h3>&lt;ul>";
+				break;
+			case 'test':
+				output = "&lt;li class='" + input[2] + "'>" + input[1] + "&lt;/li>";
+				break;
+			case 'lastTest':
+				output = "&lt;li class='" + input[2] + "'>" + input[1] + "&lt;/li>&lt;/ul>&lt;div>";
+				break;
+			default:
+				output = "&lt;br>";
+		}
+		console.info(output);
+		document.body.innerHTML += output;
+	}
 
-<article>
-    <div class="container-overview">
-    
-
-    
-        
-
-        
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="ClassicalNoise.html">ClassicalNoise</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Construction.html">Construction</a></dt>
-            <dd></dd>
-        
-            <dt><a href="MersenneTwister.html">MersenneTwister</a></dt>
-            <dd></dd>
-        
-            <dt><a href="NewGame.html">NewGame</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Terrain.html">Terrain</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Namespaces</h3>
-
-        <dl>
-            <dt><a href="namespaces.html#Build"><a href="Build.html">Build</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#CneTools"><a href="CneTools.html">CneTools</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Conf"><a href="Conf.html">Conf</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Display"><a href="Display.html">Display</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#FileIO"><a href="FileIO.html">FileIO</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Interface"><a href="Interface.html">Interface</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Menu"><a href="Menu.html">Menu</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Music"><a href="Music.html">Music</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Research"><a href="Research.html">Research</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Resources"><a href="Resources.html">Resources</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Stats"><a href="Stats.html">Stats</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Terminal"><a href="Terminal.html">Terminal</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Test"><a href="Test.html">Test</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#TestResults"><a href="TestResults.html">TestResults</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Tools"><a href="Tools.html">Tools</a></a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
+	return {
+		addToList: addToList
+	}
+})();</pre>
+	</article>
 </section>
+
 
 
 
@@ -307,10 +223,6 @@
 				</footer>
 			</div>
 
-			
-			<div class="span3">
-				<div id="toc"></div>
-			</div>
 			
 			<br clear="both">
 		</div>

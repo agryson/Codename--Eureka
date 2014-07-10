@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Codename Eureka Classes</title>
+	<title>Codename Eureka Source: scripts/unit_tests.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -142,153 +142,109 @@
 	<div class="row-fluid">
 
 		
-		<div class="span8">
-			
+			<div class="span12">
+				
 				<div id="main">
 					
 
 
-	<h1 class="page-title">Classes</h1>
+		<h1 class="page-title">Source: scripts/unit_tests.js</h1>
+    
 <section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">/**
+* Wrapper for the Unit tests
+* @namespace
+* @todo create the assert function
+*/
+var Test = (function(){
 
-<header>
-    <h2>
-    
-    </h2>
-    
-</header>
+    var _results = null;
 
-<article>
-    <div class="container-overview">
-    
+    /**
+    * Opens the test result window if it's not already open and kicks off the test suite
+    * @public
+    * @memberOf Test
+    */
+    function startTests(){
+        if(chrome.app.window.getAll().length > 1){
+            console.info("Tests have already been run on this instance.");
+        } else {
+            console.info("Opening Test Suite");
+            chrome.app.window.create("CNE/test_results_pane.html", 
+                {
+                    id:"testLog",
+                    frame:"chrome"
+                }, 
+                function(resultWindow){
+                    _results = resultWindow.contentWindow;
+                    setTimeout(function(){
+                        _ping("clear");
+                        _ping("title$Starting Tests");
+                        _ping("time$" + new Date());
+                        _youMayBegin();
+                    }, 200);
+                });
+        }
 
-    
-        
+    };
 
-        
-<dl class="details">
-	
+    /**
+    * Loops through the test groups one by one
+    */
+    function _youMayBegin(){
+        var _tests = [
+            _testTools
+        ];
+        for (var i = _tests.length - 1; i >= 0; i--) {
+            _tests[i]();
+        };
+    }
 
-	
+    /**
+    * Takes incoming message and passes it via postMessage to the results pane
+    * @private
+    * @memberOf Test
+    * @param {string} message String formatted as type$message c.f. {@link TestResults.addToList}
+    */
+    function _ping(message){
+        console.debug(message);
+        _results.postMessage(message, '*');
+    };
 
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
+    /**
+    * Asserts a value, if true, passes, if not, fails
+    * @param {bool} test Function to test that should be posed to be a boolean (or at least truthy or falsy)
+    * @param {string} title Name of teh test being run
+    * @param {string} type Whether this is a normal test 'test' or the last test 'lastTest'
+    */
+    function assert(test, title, type){
+        if(test){
+            _ping(type + "$" + title + "$pass");
+        } else {
+            _ping(type + "$" + title + "$fail");
+        }
+    }
 
 
-        
-    
-    </div>
+    /**
+    * Tests the Tools namespace
+    */
+    function _testTools(){
+        _ping("group$Testing Tools");
+        assert((Tools.getMaxMin([1,100])[0] === 150 &amp;&amp; Tools.getMaxMin([1,100])[1] === 0), 'getMaxMin with [1, 100]', 'lastTest');
+        assert((Tools.getMaxMin([100,1000])[0] === 1050 &amp;&amp; Tools.getMaxMin([100,1000])[1] === 100), 'getMaxMin with [100, 1000]', 'lastTest');
+    }
 
-    
+    return {
+        startTests: startTests
+    }
 
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="ClassicalNoise.html">ClassicalNoise</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Construction.html">Construction</a></dt>
-            <dd></dd>
-        
-            <dt><a href="MersenneTwister.html">MersenneTwister</a></dt>
-            <dd></dd>
-        
-            <dt><a href="NewGame.html">NewGame</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Terrain.html">Terrain</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Namespaces</h3>
-
-        <dl>
-            <dt><a href="namespaces.html#Build"><a href="Build.html">Build</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#CneTools"><a href="CneTools.html">CneTools</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Conf"><a href="Conf.html">Conf</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Display"><a href="Display.html">Display</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#FileIO"><a href="FileIO.html">FileIO</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Interface"><a href="Interface.html">Interface</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Menu"><a href="Menu.html">Menu</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Music"><a href="Music.html">Music</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Research"><a href="Research.html">Research</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Resources"><a href="Resources.html">Resources</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Stats"><a href="Stats.html">Stats</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Terminal"><a href="Terminal.html">Terminal</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Test"><a href="Test.html">Test</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#TestResults"><a href="TestResults.html">TestResults</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#Tools"><a href="Tools.html">Tools</a></a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
+})();</pre>
+	</article>
 </section>
+
 
 
 
@@ -307,10 +263,6 @@
 				</footer>
 			</div>
 
-			
-			<div class="span3">
-				<div id="toc"></div>
-			</div>
 			
 			<br clear="both">
 		</div>
