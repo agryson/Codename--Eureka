@@ -16,7 +16,7 @@ var Test = (function(){
         if(chrome.app.window.getAll().length > 1){
             console.info("Tests have already been run on this instance.");
         } else {
-            //Setup
+            //Setup a test world
             var world = new NewGame();
             try{
                 FileIO.deleteGame("Running Tests");
@@ -108,7 +108,15 @@ var Test = (function(){
         'Conf exists',
         'test');
         assert(
-        (Conf.map.length >= 1 && Conf.map[1].length >= 1 && Conf.map[1][1].length >= 1),
+        (Conf.turn === 0),
+        'New game',
+        'test');
+        assert(
+        (Conf.inputSeed === "Running Tests"),
+        'Input seed correctly remembered',
+        'test');
+        assert(
+        (Conf.map.length >= 1 && Conf.map[0].length >= 1 && Conf.map[0][0].length >= 1),
         'Map has 3 dimensions',
         'test');
     }
