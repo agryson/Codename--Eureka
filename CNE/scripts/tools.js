@@ -9,7 +9,7 @@ var Tools = (function(){
 	* For a provided array, will return an appropriately scaled range for chart axes etc. in increments of 50
 	* e.g. provide [130, 3] it will return [150, 0];
 	* (this is to leave room for the statistics)
-	* @param {array} arrayIn Array to find the max/min values of
+	* @param {array} arrayIn Array of arrays to find the max/min values of i.e. [[],[],[]] etc.
 	* @returns {array} The max/min values <tt>[max,min]</tt> 
 	*/
 	function getMaxMin(arrayIn){
@@ -17,8 +17,8 @@ var Tools = (function(){
 	    var min = 1000000;
 	    var maxTest, minTest;
 	    for(var i = 0; i < arrayIn.length; i++){
-	        maxTest = arrayIn[i];
-	        minTest = arrayIn[i];
+	        maxTest = Math.max.apply(null,arrayIn[i]);
+	        minTest = Math.min.apply(null,arrayIn[i]);
 	        if(maxTest > max){max = maxTest;}
 	        if(minTest < min){min = minTest;}
 	        if(min < 0){min = 0;}
@@ -59,13 +59,13 @@ var Tools = (function(){
 	}
 
 	/**
-	 * Returns the distance between two points
+	 * Returns the distance between two points, rounded to nearest whole number
 	 * @memberOf Tools
 	 * @param  {int} x1 First point's X coordinate
 	 * @param  {int} y1 First point's Y coordinate 
 	 * @param  {int} x2 Second point's X coordinate
 	 * @param  {int} y2 Second point's Y coordinate
-	 * @return {float} The distance (in same units as provided)
+	 * @return {int} The distance (in same units as provided)
 	 */
 	function distance(x1, y1, x2, y2) {
 	    return Math.round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));

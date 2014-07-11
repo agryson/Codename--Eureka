@@ -25,22 +25,21 @@ var TestResults = (function(){
 				output = "<h2>" + input[1] + "</h2>";
 				break;
 			case 'time':
-				output = "<h4>" + input[1] + "</h4>";
+				output = "<h4>" + input[1] + "</h4><hr>";
 				break;
 			case 'group':
-				output = "<div class='test-group'><h3>" + input[1] + "</h3><ul>";
+				output = "<h3>" + input[1] + "</h3>";
 				break;
 			case 'test':
-				output = "<li class='" + input[2] + "'>" + input[1] + "</li>";
+				output = "<span class='" + input[2] + "'>" + input[1] + "</span><br>";
 				break;
 			case 'lastTest':
-				output = "<li class='" + input[2] + "'>" + input[1] + "</li></ul><div>";
+				output = "<span class='" + input[2] + "'>" + input[1] + "</span><hr>";
 				break;
 			default:
 				output = "<br>";
 		}
-		console.info(output);
-		document.body.innerHTML += output;
+			document.body.innerHTML += output;
 	}
 
 	return {
