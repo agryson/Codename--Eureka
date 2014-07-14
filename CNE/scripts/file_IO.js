@@ -15,53 +15,8 @@ var FileIO = (function(){
     * @return {blob} The save game JSON, blobbified
     */
     function _buildSave(Game){
-        var saveData = [
-        Conf.turn,
-        Conf.mapTiles,
-        Conf.home,
-        Conf.buildings,
-        Conf.robotsList,
-        Conf.commTowers,
-        Conf.recyclerList,
-        Conf.researchLabs,
-        Conf.researchTopics,
-        Conf.ores,
-        Conf.procOres,
-        Conf.inputSeed,
-        Conf.housing,
-        Conf.pop,
-        Conf.tossPop,
-        Conf.tossBabies,
-        Conf.tossStudents,
-        Conf.tossAdults,
-        Conf.hipPop,
-        Conf.hipBabies,
-        Conf.hipStudents,
-        Conf.hipAdults,
-        Conf.artPop,
-        Conf.artBabies,
-        Conf.artStudents,
-        Conf.artAdults,
-        Conf.employed,
-        Conf.sdf,
-        Conf.tossMorale,
-        Conf.hipMorale,
-        Conf.artMorale,
-        Conf.crime,
-        Conf.storageCap,
-        Conf.inStorage,
-        Conf.food,
-        Conf.energy,
-        Conf.air,
-        Conf.blackout,
-        Conf.noAir,
-        Conf.creche,
-        Conf.uni,
-        Conf.botAging,
-        Conf.leisure
-        ];
         var saveDataString = [];
-        saveDataString.push(JSON.stringify(saveData));
+        saveDataString.push(JSON.stringify(Conf.saveData()));
         var blob = new Blob(saveDataString);
         return blob;
     };
@@ -253,63 +208,7 @@ var FileIO = (function(){
             fileEntry.file(function(file){
                 var reader = new FileReader();
                 reader.onloadend = function(e){
-                    //TODO: make sure the type is conserved e.g. Conf.mapTiles**[]** = saveDataOut[1];
-                    var saveDataOut = JSON.parse(this.result);
-                    Conf.turn = saveDataOut[0];
-                    Conf.mapTiles = saveDataOut[1];
-                    Conf.home = saveDataOut[2];
-                    Conf.buildings = saveDataOut[3];
-                    Conf.robotsList = saveDataOut[4];
-                    Conf.commTowers = saveDataOut[5];
-                    Conf.recyclerList = saveDataOut[6];
-                    Conf.researchLabs = saveDataOut[7];
-                    Conf.researchTopics = saveDataOut[8];
-                    Conf.ores = saveDataOut[9];
-                    Conf.procOres = saveDataOut[10];
-                    Conf.inputSeed = saveDataOut[11];
-                    Conf.housing = saveDataOut[12];
-                    Conf.pop = saveDataOut[13];
-                    Conf.tossPop = saveDataOut[14];
-                    Conf.tossBabies = saveDataOut[15];
-                    Conf.tossStudents = saveDataOut[16];
-                    Conf.tossAdults = saveDataOut[17];
-                    Conf.hipPop = saveDataOut[18];
-                    Conf.hipBabies = saveDataOut[19];
-                    Conf.hipStudents = saveDataOut[20];
-                    Conf.hipAdults = saveDataOut[21];
-                    Conf.artPop = saveDataOut[22];
-                    Conf.artBabies = saveDataOut[23];
-                    Conf.artStudents = saveDataOut[24];
-                    Conf.artAdults = saveDataOut[25];
-                    Conf.employed = saveDataOut[26];
-                    Conf.sdf = saveDataOut[27];
-                    Conf.tossMorale = saveDataOut[28];
-                    Conf.hipMorale = saveDataOut[29];
-                    Conf.artMorale = saveDataOut[30];
-                    Conf.crime = saveDataOut[31];
-                    Conf.storageCap = saveDataOut[32];
-                    Conf.inStorage = saveDataOut[33];
-                    Conf.food = saveDataOut[34];
-                    Conf.energy = saveDataOut[35];
-                    Conf.air = saveDataOut[36];
-                    Conf.blackout = saveDataOut[37];
-                    Conf.noAir = saveDataOut[38];
-                    Conf.creche = saveDataOut[39];
-                    Conf.uni = saveDataOut[40];
-                    Conf.botAging = saveDataOut[41];
-                    Conf.leisure = saveDataOut[42];
-                    //Add code that gets read data and make Game equal to it...
-                    Conf.buildings[37][1] = false;
-                    CneTools.checkBuildings();
-                    CneTools.checkRobots();
-                    Menu.recount('all');
-                    Stats.executiveReview();
-                    Research.refreshMenu();
-                    Display.drawRadar();
-                    Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
-                    Tools.flush(document.getElementById('consoleContent'));
-                    Terminal.print(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
-                    CneTools.moveTo(true, Conf.home[0], Conf.home[1], 0);
+                    Conf.saveData(JSON.parse(this.result));
                 };
                 reader.readAsText(file);
             }, _errorHandler);

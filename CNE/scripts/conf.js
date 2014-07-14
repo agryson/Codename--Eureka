@@ -659,6 +659,82 @@ var Conf = (function(){
     _INIT.leisure = 0;
 
     /**
+    * Handles save and load data (managaing what needs to be saved)
+    * @memberof Conf
+    * @method saveData
+    * @param {array} [dataIn] If loading, this is the data to load
+    */
+    _INIT.saveData = function(dataIn){
+        var thingsToSave = [
+                "turn",
+                "mapTiles",
+                "home",
+                "buildings",
+                "robotsList",
+                "commTowers",
+                "recyclerList",
+                "researchLabs",
+                "researchTopics",
+                "ores",
+                "procOres",
+                "inputSeed",
+                "housing",
+                "pop",
+                "tossPop",
+                "tossBabies",
+                "tossStudents",
+                "tossAdults",
+                "hipPop",
+                "hipBabies",
+                "hipStudents",
+                "hipAdults",
+                "artPop",
+                "artBabies",
+                "artStudents",
+                "artAdults",
+                "employed",
+                "sdf",
+                "tossMorale",
+                "hipMorale",
+                "artMorale",
+                "crime",
+                "storageCap",
+                "inStorage",
+                "food",
+                "energy",
+                "air",
+                "blackout",
+                "noAir",
+                "creche",
+                "uni",
+                "botAging",
+                "leisure"
+            ];
+        if(dataIn === undefined){
+            var saveData = [];
+            for (var i = thingsToSave.length - 1; i >= 0; i--) {
+                saveData.push(Conf[thingsToSave[i]]);
+            };
+            return saveData;
+        } else {
+            for(var i = thingsToSave.length - 1; i >= 0; i--) {
+                Conf[thingsToSave[i]] = dataIn[thingsToSave.length - (i + 1)];
+            };
+            Conf.buildings[37][1] = false;
+            CneTools.checkBuildings();
+            CneTools.checkRobots();
+            Menu.recount('all');
+            Stats.executiveReview();
+            Research.refreshMenu();
+            Display.drawRadar();
+            Conf.turnNum.innerHTML = TRANS.weekCounter + Conf.turn;
+            Tools.flush(document.getElementById('consoleContent'));
+            Terminal.print(TRANS.itIsNow + ' ' + TRANS.week + ' ' + Conf.turn);
+            CneTools.moveTo(true, Conf.home[0], Conf.home[1], 0);
+        }
+    }
+
+    /**
     * Reinitializes Conf
     * @memberof Conf
     * @method reset
@@ -666,6 +742,7 @@ var Conf = (function(){
     _INIT.reset = function(){
         Conf = Object.create(_INIT);
     }
+
 
     /**
     * Returns a copy of _INIT
