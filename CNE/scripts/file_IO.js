@@ -126,7 +126,7 @@ var FileIO = (function(){
         * a list of save games)
         * @return {array} Returns an array of FileEntry objects
         */
-        var toArray = function(list) {
+        function toArray(list) {
             return Array.prototype.slice.call(list || [], 0);
         };
 
@@ -135,7 +135,7 @@ var FileIO = (function(){
         * @param {array} list The array of save games available
         * @todo The list parameter here, and the one in {@link toArray} could be confused, we should consider changing one or the other
         */
-        var listResults = function(list){
+        function listResults(list){
             var fragment = document.createDocumentFragment();
             var title = document.createElement('span');
             title.innerHTML = TRANS.saves;
