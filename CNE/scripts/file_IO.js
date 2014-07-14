@@ -5,7 +5,66 @@
 */
 var FileIO = (function(){
     var fs = null;
-    var publicFunctions = {};
+
+    /**
+    * Creates the appropriate format to save
+    * @memberOf FileIO
+    * @private
+    * @function buildSave
+    * @param {Object} Game Game object to be saved
+    * @return {blob} The save game JSON, blobbified
+    */
+    function _buildSave(Game){
+        var saveData = [
+        Conf.turn,
+        Conf.mapTiles,
+        Conf.home,
+        Conf.buildings,
+        Conf.robotsList,
+        Conf.commTowers,
+        Conf.recyclerList,
+        Conf.researchLabs,
+        Conf.researchTopics,
+        Conf.ores,
+        Conf.procOres,
+        Conf.inputSeed,
+        Conf.housing,
+        Conf.pop,
+        Conf.tossPop,
+        Conf.tossBabies,
+        Conf.tossStudents,
+        Conf.tossAdults,
+        Conf.hipPop,
+        Conf.hipBabies,
+        Conf.hipStudents,
+        Conf.hipAdults,
+        Conf.artPop,
+        Conf.artBabies,
+        Conf.artStudents,
+        Conf.artAdults,
+        Conf.employed,
+        Conf.sdf,
+        Conf.tossMorale,
+        Conf.hipMorale,
+        Conf.artMorale,
+        Conf.crime,
+        Conf.storageCap,
+        Conf.inStorage,
+        Conf.food,
+        Conf.energy,
+        Conf.air,
+        Conf.blackout,
+        Conf.noAir,
+        Conf.creche,
+        Conf.uni,
+        Conf.botAging,
+        Conf.leisure
+        ];
+        var saveDataString = [];
+        saveDataString.push(JSON.stringify(saveData));
+        var blob = new Blob(saveDataString);
+        return blob;
+    };
 
     /**
     * Success handler, assigning the filesystem to something we can use and then
@@ -14,7 +73,7 @@ var FileIO = (function(){
     * @memberOf FileIO
     * @param {DOMFileSystem} filesystem The filesystem passed in from openfs()
     */
-    var _success = function(filesystem){
+    function _success(filesystem){
         fs = filesystem;
         FileIO.loadList();
     };
@@ -25,7 +84,7 @@ var FileIO = (function(){
     * @memberOf FileIO
     * @param {FileError} Error Error thrown
     */
-    var _errorHandler = function(e) {
+    function _errorHandler(e) {
       console.log(e.name + ' : ' + e.message);
     };
 
@@ -34,16 +93,16 @@ var FileIO = (function(){
     * @memberOf FileIO
     * @function openfs
     */
-    publicFunctions.openfs = function(){
+    function openfs(){
         window.webkitRequestFileSystem(window.PERSISTENT, 50*1024*1024 /*50MB*/, _success, _errorHandler);
     };
 
     /**
     * Fills the list of loadable games from the file system
+    * @public
     * @memberOf FileIO
-    * @function loadList
     */
-    publicFunctions.loadList = function(){
+    function loadList(){
         var dirReader = fs.root.createReader();
         var entries = [];
 
@@ -150,11 +209,11 @@ var FileIO = (function(){
 
     /**
     * Deletes the game from the filesystem
+    * @public
     * @memberOf FileIO
-    * @function deleteGame
     * @param {string} name The name of the save game to delete
     */
-    publicFunctions.deleteGame = function(name){
+    function deleteGame(name){
         fs.root.getFile(name, {create: false}, function(fileEntry) {fileEntry.remove(function() {
                 console.log(name + ' has been removed.');
                 FileIO.loadList();
@@ -164,11 +223,11 @@ var FileIO = (function(){
 
     /**
     * Saves the game to filesystem
+    * @public
     * @memberOf FileIO
-    * @function saveGame
     * @param {Object} Game Game object to save
     */
-    publicFunctions.saveGame = function(Game){
+    function saveGame(Game){
         fs.root.getFile(Conf.inputSeed, {create: true}, function(fileEntry) {
             fileEntry.createWriter(function(fileWriter){
                 fileWriter.onwriteend = function(e){
@@ -185,11 +244,11 @@ var FileIO = (function(){
     /**
     * Manages game loads, assigning the values to their proper places, effectively 
     * taking a fresh config and overwriting with the saved values
+    * @public
     * @memberOf FileIO
-    * @function loadGame
     * @param {Object} Game Game object (default) that will be loaded onto
     */
-    publicFunctions.loadGame = function(Game){
+    function loadGame(Game){
         fs.root.getFile(Conf.inputSeed, {}, function(fileEntry) {
             fileEntry.file(function(file){
                 var reader = new FileReader();
@@ -257,68 +316,15 @@ var FileIO = (function(){
         }, _errorHandler);
     };
 
-    /**
-    * Creates the appropriate format to save
-    * @memberOf FileIO
-    * @private
-    * @function buildSave
-    * @param {Object} Game Game object to be saved
-    * @return {blob} The save game JSON, blobbified
-    */
-    var _buildSave = function(Game){
-        var saveData = [
-        Conf.turn,
-        Conf.mapTiles,
-        Conf.home,
-        Conf.buildings,
-        Conf.robotsList,
-        Conf.commTowers,
-        Conf.recyclerList,
-        Conf.researchLabs,
-        Conf.researchTopics,
-        Conf.ores,
-        Conf.procOres,
-        Conf.inputSeed,
-        Conf.housing,
-        Conf.pop,
-        Conf.tossPop,
-        Conf.tossBabies,
-        Conf.tossStudents,
-        Conf.tossAdults,
-        Conf.hipPop,
-        Conf.hipBabies,
-        Conf.hipStudents,
-        Conf.hipAdults,
-        Conf.artPop,
-        Conf.artBabies,
-        Conf.artStudents,
-        Conf.artAdults,
-        Conf.employed,
-        Conf.sdf,
-        Conf.tossMorale,
-        Conf.hipMorale,
-        Conf.artMorale,
-        Conf.crime,
-        Conf.storageCap,
-        Conf.inStorage,
-        Conf.food,
-        Conf.energy,
-        Conf.air,
-        Conf.blackout,
-        Conf.noAir,
-        Conf.creche,
-        Conf.uni,
-        Conf.botAging,
-        Conf.leisure
-        ];
-        var saveDataString = [];
-        saveDataString.push(JSON.stringify(saveData));
-        var blob = new Blob(saveDataString);
-        return blob;
-    };
 
     /**
     * Exposed functions
     */
-    return publicFunctions;
+    return {
+        openfs : openfs,
+        loadList : loadList,
+        deleteGame : deleteGame,
+        saveGame : saveGame,
+        loadGame : loadGame
+    }
 })();
