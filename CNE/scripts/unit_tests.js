@@ -6,6 +6,10 @@
 var Test = (function(){
 
     var _results = null;
+    var _tests = [
+        _Tools,
+        _generateWorld
+    ];
 
     /**
     * Opens the test result window if it's not already open and kicks off the test suite
@@ -48,6 +52,8 @@ var Test = (function(){
 
     /**
     * Loops through the test groups one by one
+    * @private
+    * @memberOf Test
     */
     function _youMayBegin(){
         for (var i = _tests.length - 1; i >= 0; i--) {
@@ -68,15 +74,25 @@ var Test = (function(){
 
     /**
     * Asserts a value, if true, passes, if not, fails
+    * @public 
+    * @memberOf Test
     * @param {bool} test Function to test that should be posed to be a boolean (or at least truthy or falsy)
     * @param {string} title Name of the test being run
     * @param {string} type Whether this is a normal test 'test' or the last test 'lastTest'
     */
     function assert(test, title, type){
-        if(test){
-            _ping(type + "$&#x2713;&nbsp;" + title + "$pass");
+        if(chrome.app.window.get("testLog") !== null){
+            if(test){
+                _ping(type + "$&#x2713;&nbsp;" + title + "$pass");
+            } else {
+                _ping(type + "$&#x2717;&nbsp;" + title + "$fail");
+            }
         } else {
-            _ping(type + "$&#x2717;&nbsp;" + title + "$fail");
+            if(test){
+                console.info(title + " : PASS");
+            } else {
+                console.error(title + " : FAIL");
+            }
         }
     }
 
@@ -101,6 +117,9 @@ var Test = (function(){
             'lastTest');
     }
 
+    /**
+    * Tests World generation
+    */
     function _generateWorld(){
         _ping("group$Testing: World Generation");
         assert(
@@ -121,13 +140,10 @@ var Test = (function(){
         'test');
     }
 
-    var _tests = [
-        _Tools,
-        _generateWorld
-    ];
 
     return {
-        startTests: startTests
+        startTests: startTests,
+        assert: assert
     }
 
 })();
