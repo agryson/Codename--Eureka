@@ -7,21 +7,6 @@ var FileIO = (function(){
     var fs = null;
 
     /**
-    * Creates the appropriate format to save
-    * @memberOf FileIO
-    * @private
-    * @function buildSave
-    * @param {Object} Game Game object to be saved
-    * @return {blob} The save game JSON, blobbified
-    */
-    function _buildSave(Game){
-        var saveDataString = [];
-        saveDataString.push(JSON.stringify(Conf.saveData()));
-        var blob = new Blob(saveDataString);
-        return blob;
-    };
-
-    /**
     * Success handler, assigning the filesystem to something we can use and then
     * starts loading any existing games
     * @private
@@ -191,7 +176,7 @@ var FileIO = (function(){
                 fileWriter.onerror = function(e){
                     console.log('File write failed: ' + e.toString());
                 };
-                fileWriter.write(_buildSave(Game));
+                fileWriter.write(new Blob([JSON.stringify(Conf.saveData())]));
             }, _errorHandler);
         }, _errorHandler);
     };
