@@ -89,7 +89,7 @@ var TRANS = {
 	help : "help",
     seed : "password",
 	zoom : "zoom",
-
+	didYouMean : "Did you mean?",
 
 	advanceMan : "advance: (e.g. 'advance 5') Will advance the number of turns given",
 	helloMan : "hello: (e.g. 'hello') Will say hello to the world",

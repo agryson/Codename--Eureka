@@ -732,6 +732,9 @@ var Interface = (function(){
                     document.getElementById('consoleInput').value = '';
                     document.getElementById('console').classList.remove('console_open');
                     break;
+                case 9:
+                    Terminal.autoComplete(document.getElementById('consoleInput').value);
+                    break;
                 default:
                     console.log('in the console' + e.keyCode);
             }

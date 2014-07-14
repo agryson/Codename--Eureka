@@ -4,6 +4,15 @@
 * @namespace
 */
 var Terminal = (function(){
+    var _commands = {
+        advance: TRANS.advance,
+        hello: TRANS.hello,
+        level: TRANS.level,
+        home: TRANS.home,
+        seed: TRANS.seed,
+        zoom: TRANS.zoom,
+        help: TRANS.help
+    }
     /**
     * In the event of bad input to the in-game console, prints the error message
     * @private
@@ -66,17 +75,17 @@ var Terminal = (function(){
 
         //switch(text)
         switch(input[0]){
-            case TRANS.advance: //advance multiple turns
+            case _commands.advance: //advance multiple turns
                 if(!isNaN(input[1])){
                     CneTools.advanceTurns(input[1]);
                 } else {
                     _error(input[1], 'value', input[0], TRANS.integer);
                 }
                 break;
-            case TRANS.hello:
+            case _commands.hello:
                 print(TRANS.world);
                 break;
-            case TRANS.level:
+            case _commands.level:
                 if(input[1] >= 0 || input[1] <= 4){
                     Conf.level = parseInt(input[1], 10);
                     CneTools.checkBuildings();
@@ -86,17 +95,17 @@ var Terminal = (function(){
                     _error(input[1], 'value', input[0], TRANS.integer, 0, 4);
                 }
                 break;
-            case TRANS.home:
+            case _commands.home:
                 if(Conf.home){
                     CneTools.moveTo(true, Conf.home[0], Conf.home[1], 0);
                 } else {
                     print(TRANS.setDown);
                 }
                 break;
-            case TRANS.seed:
+            case _commands.seed:
                 print(Conf.inputSeed);
                 break;
-            case TRANS.zoom:
+            case _commands.zoom:
                 if(input[1] >= 1 || input[1] <= 6){
                     document.getElementById('zoom').value = input[1];
                     Display.zoom(input[1]);
@@ -104,7 +113,7 @@ var Terminal = (function(){
                     _error(input[1], 'value', input[0], TRANS.integer, 1, 6);
                 }
                 break;
-            case TRANS.help:
+            case _commands.help:
                 switch(input[1]){
                     case TRANS.advance:
                         print(TRANS.advanceMan);
@@ -131,8 +140,39 @@ var Terminal = (function(){
         document.getElementById('console').classList.add('console_open');
     }
 
+    /**
+    * Searches available commands for something that matches input text, printing it to the console
+    * @public
+    * @memberOf Terminal
+    * @param {string} text String to test for command matches
+    */
+    function autoComplete(text){      
+        var candidates = [];
+        for(var command in _commands) {
+            if(command.substring(0, text.length) === text && text !== ""){
+                candidates.push(command);
+            }
+        };
+        if(candidates.length > 1){
+            var helpString = "";
+            for (var i = candidates.length - 1; i >= 0; i--) {
+                helpString += candidates[i] + " ";
+            };
+            print(TRANS.didYouMean);
+            print(helpString);
+        } else if(candidates.length === 0){
+            //Do nothing
+        } else {
+            document.getElementById('consoleInput').value = candidates[0];
+        }
+        setTimeout(function(){
+            document.getElementById('consoleInput').focus();
+            }, 10);
+    }
+
     return {
         run: run,
-        print: print
+        print: print,
+        autoComplete: autoComplete
     }
 })();
