@@ -1,28 +1,15 @@
-##Codename Eureka - Documentation
-###Introduction
-Welcome to the Codename Eureka Documentation. Codename Eureka is a turn based, single player space-colony sim. These pages provide all the functional documentation. If instead you're looking for general information on development, story, UI design etc., you should instead [check out the wiki](http://gryson.duckdns.org:4269/mediawiki).
+#Intro
+*Codename: Eureka* is the working title for a space colony sim I've been working on for a little while
 
-Developed mainly for pleasure and education, we use git for source code management, mediawiki for documentation, mantis for bug tracking, all hosted on a Raspberry Pi hooked up to a 200Mbps connection in Paris (with daily backups).
+The web is most certainly the future (and arguably the present) of computing, but when it comes to games there's still something lacking.
+The vast majority (arguably _all_) modern browser based games are what could be considered "casual", the type of game designed to be played for short periods of time, with little personal investment in the experience over a longer period of time.
+While I love casual games, I also love marshmallows - that doesn't mean marshmallows should be all I eat.
 
-###Getting Started
-You can clone the git repo like so:
-<pre>git clone ssh://git@gryson.duckdns.org:4242/Codename--Eureka</pre>
-_(You need to have previously provided your ssh pubkey)_
+With *Codename: Eureka*, we on the team are hoping to provide a richer, more in-depth and engaging game.
 
-You can build Codename Eureka [using this guide](http://gryson.duckdns.org:4269/mediawiki/index.php/Building_Codename_Eureka)
-
-
-##Useful Links
-###General Interest
-- [Story](http://gryson.duckdns.org:4269/mediawiki/index.php/Story)
-- [Design Guidelines](http://gryson.duckdns.org:4269/mediawiki/index.php/Design_Guidelines)
-- [Dev Guidelines](http://gryson.duckdns.org:4269/mediawiki/index.php/Dev_Guidelines)
-
-###Development
-If you're looking to develop for *Codename Eureka*, you'll need to have a look at the following resources:
-- [The wiki](http://gryson.duckdns.org:4269/mediawiki)
-- [The repo tracker](http://gryson.duckdns.org:4269/gitweb)
-- [The bugtracker](http://gryson.duckdns.org:4269/mantis)
+Mainly prototypes for the moment until design has progressed more.
+If it sounds like something you'd like to take part in, please get in touch!
+This is not just about code, we need creative writers, artists, musical types - any skill you have could be useful.
 
 ##Sources:
 - Terrain textures are heavily modified from textures I found on [Mayang.com](http://www.mayang.com/textures/)
